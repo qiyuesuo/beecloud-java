@@ -21,7 +21,7 @@ public class BCPayTest {
 
 	@Test
 	public void testPay() {
-		BCPayResult result = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, "ruitest0715015566", "ruirui中国总过中国", null, "http://beecloud.cn", null, null, null);
+		BCPayResult result = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, "ruitest0715015566", "中国总过中国总过中国总过中国总过", null, "http://beecloud.cn", null, null, null);
 		System.out.println("test");
 	}
 	
