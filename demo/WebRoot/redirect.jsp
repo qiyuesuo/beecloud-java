@@ -78,7 +78,7 @@
 			}
             
 		} else if (type.equals("wechatQr")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, bill_no, "买水", null, null, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, bill_no, "买水", null, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 			}
 			else {
