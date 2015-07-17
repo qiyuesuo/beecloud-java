@@ -50,14 +50,14 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 * （必填）订单总金额， 只能为整数，单位为分，例如 1	
 	 * @param bill_no 
 	 * （必填）商户订单号, 32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如（201506101035040000001）
-	 * @param buyer_id 
-	 * （必填）消费者ID， 消费者在商户系统内的唯一标识
 	 * @param title 
 	 * （必填）订单标题， 32个字节内，最长支持16个汉字	
 	 * @param optional
 	 * （选填）附加数据， 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据	
 	 * @param return_url
 	 * （选填）同步返回页面	， 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。当 channel 参数为 ALI_WEB 或 ALI_QRCODE 或 UN_WEB时为必填
+	 * @param openid
+	 * （选填）  微信公众号支付(WX_JSAPI)必填
 	 * @param show_url
 	 * （选填）商品展示地址，需以http://开头的完整路径，例如：http://www.商户网址.com/myorder.
 	 * @param qr_pay_mode
@@ -115,6 +115,9 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	                    if (ret.containsKey("code_url") && null != ret.get("code_url")) {
 	                        result.setCode_url(ret.get("code_url").toString());
 	                        result.setType(RESULT_TYPE.OK);
+	                    } else if (channel.equals(PAY_CHANNEL.WX_JSAPI)) {
+	                    	result.setType(RESULT_TYPE.OK);
+	                    	result.setWxJSAPIMap(generateWXJSAPIMap(ret));
 	                    }
                 	}else if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE)) {
                 		if (ret.containsKey("html") && null != ret.get("html") && 
@@ -147,7 +150,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
         return result;
     }
     
-    /**
+	/**
      * @param channel
      * （必填）渠道类型， 根据不同场景选择不同的支付方式，包含：
 	 * 	WX  微信
@@ -157,9 +160,9 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
      * （必填）商户退款单号	， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
      * 例如：201506101035040000001	
      * @param bill_no
-     * （DIRECT_REFUND和PRE_REFUND时必填） 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一	
+     * （必填）商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一	
      * @param refund_fee
-     * （DIRECT_REFUND和PRE_REFUND时必填）退款金额， 只能为整数，单位为分，例如1	
+     * （必填）退款金额， 只能为整数，单位为分，例如1	
      * @param optional
      * （选填）附加数据 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，例如{"key1":"value1","key2":"value2",...}	
      * @return BCPayResult
@@ -228,18 +231,19 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
     /**
      * @param channel
      * （必填）渠道类型， 根据不同场景选择不同的支付方式，包含：
+     *  WX
      * 	WX_APP 微信手机APP支付
 	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	WX_JSAPI 微信公众号支付
+	 *  ALI
 	 * 	ALI_APP 支付宝APP支付
 	 * 	ALI_WEB 支付宝网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
+	 * 	UN
 	 * 	UN_APP 银联APP支付
 	 * 	UN_WEB 银联网页支付
      * @param bill_no
-     * （DIRECT_REFUND和PRE_REFUND时必填） 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一
-     * @param buyer_id
-     * （必填）消费者ID， 消费者在商户系统内的唯一标识， 32个字节以内
+     * （选填） 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一
      * @param start_time 
      * （选填） 起始时间， 毫秒时间戳, 13位
      * @param end_time
@@ -510,4 +514,25 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 		}
 		return bcRefundList;
     }
+    
+    /**
+     * Generate a map for JSAPI payment to receive.
+     * @param ret
+     * @return
+     */
+    private static Map<String, Object> generateWXJSAPIMap(
+			Map<String, Object> ret) {
+		HashMap map = new HashMap<String, Object>();
+		map.put("app_id", ret.get("app_id"));
+		map.put("package", ret.get("package"));
+		map.put("nonce_str", ret.get("nonce_str"));
+		map.put("timestamp", ret.get("timestamp"));
+		map.put("pay_sign", ret.get("pay_sign"));
+		map.put("app_id", ret.get("app_id"));
+		map.put("sign_type", ret.get("sign_type"));
+		
+		return map;
+	}
+
+    
 }

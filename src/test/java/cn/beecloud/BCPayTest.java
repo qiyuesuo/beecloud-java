@@ -21,7 +21,7 @@ public class BCPayTest {
 
 	@Test
 	public void testPay() {
-		BCPayResult result = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, "ruitest0715", "ruirui", null, "http://beecloud.cn", null, null, null);
+		BCPayResult result = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, "ruitest0715015566", "ruirui中国总过中国", null, "http://beecloud.cn", null, null, null);
 		System.out.println("test");
 	}
 	
@@ -29,7 +29,7 @@ public class BCPayTest {
 	public void testRefund() {
 		
 		
-		BCPayResult result = BCPay.startBCRefund(PAY_CHANNEL.WX, "20150716abcdefghij", "327c4023fc3b46fd9caceaf3cd3bb3d6", 1, null);
+		BCPayResult result = BCPay.startBCRefund(PAY_CHANNEL.WX, "201507170000", "327c4023fc3b46fd9caceaf3cd3bb3d6", 2, null);
 		System.out.println("test1");
 	
 		result = BCPay.startBCRefund(PAY_CHANNEL.UN,  "201507142677696345", null, 1, null);
@@ -43,6 +43,7 @@ public class BCPayTest {
 	@Test
 	public void testQueryBill() {
 		BCQueryResult bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.ALI_WEB, null, null, null, null, null);
+		System.out.println("test1");
 	}
 	
 	@Test
@@ -52,6 +53,7 @@ public class BCPayTest {
 	
 	@Test
 	public void testQueryWeChatRefundStatus() {
-		BCQueryStatusResult result = BCPay.startWeChatRefundStatusQuery("20150520refund001");
+		BCQueryStatusResult result = BCPay.startWeChatRefundStatusQuery("201507149424f344");
+		System.out.println("test1");
 	}
 }

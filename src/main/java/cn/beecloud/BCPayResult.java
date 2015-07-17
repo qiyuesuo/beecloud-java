@@ -1,5 +1,7 @@
 package cn.beecloud;
 
+import java.util.Map;
+
 import cn.beecloud.BCEumeration.RESULT_TYPE;
 
 /**
@@ -26,7 +28,7 @@ public class BCPayResult {
 	
 	private String url;
 	
-
+	private Map<String, Object> wxJSAPIMap;
 
 	public RESULT_TYPE getType() {
 		return type;
@@ -97,5 +99,13 @@ public class BCPayResult {
 
 	public void setErr_detail(String err_detail) {
 		this.err_detail = err_detail;
-	} 
+	}
+
+	public Map<String, Object> getWxJSAPIMap() {
+		return wxJSAPIMap;
+	}
+
+	public void setWxJSAPIMap(Map<String, Object> wxJSAPIMap) {
+		this.wxJSAPIMap = wxJSAPIMap;
+	}
 }
