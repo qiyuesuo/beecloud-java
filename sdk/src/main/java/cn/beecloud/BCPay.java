@@ -469,6 +469,8 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
     	
     }
     
+    
+    
     /**
      * The method is used to generate Order list by query.
      * @param bills

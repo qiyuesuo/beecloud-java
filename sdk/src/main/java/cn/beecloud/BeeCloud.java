@@ -8,7 +8,7 @@ public class BeeCloud {
     public static final double kBeeCloudVersionNumber = 1.01;
 
     /**
-     * ����appID��appSecret���ڳ���ʼʱ����һ�鼴��
+     * 设置appID和appSecret，在程序开始时运行一遍即可
      *
      * @param appID
      * @param appSecret
@@ -21,7 +21,7 @@ public class BeeCloud {
     }
 
     /**
-     * ����masterkey, ����ACL����Ԥ��
+     * 设置masterkey, 后续ACL需求预留
      *
      * @param masterKey
      */
@@ -30,7 +30,7 @@ public class BeeCloud {
     }
 
     /**
-     * �������糬ʱʱ��, ��λms, Ĭ��5000
+     * 设置网络超时时间, 单位ms, 默认5000
      *
      * @param timeout
      */
@@ -39,7 +39,7 @@ public class BeeCloud {
     }
 
     /**
-     * �����Ƿ���Ҫ���ػ����ƶ����ݼ�Ԫ����, Ĭ��Ϊtrue
+     * 设置是否需要本地缓存云端数据及元数据, 默认为true
      *
      * @param needLocalCache
      */
@@ -48,9 +48,8 @@ public class BeeCloud {
     }
 
     /**
-     * ������б��ػ���
+     * 清除所有本地缓存
      */
     public static void clearAllCache() {
-    	
     }
 }
