@@ -101,7 +101,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
         
         Client client = BCAPIClient.client;
         WebTarget target = client.target("http://58.211.191.123:8080/1/rest/bill");
-//        WebTarget target = client.target("http://192.168.1.101:8080/1/rest/pay");
+//        WebTarget target = client.target("http://192.168.1.112:8080/1/rest/bill");
         try {
             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
             if (response.getStatus() == 200) {
@@ -109,30 +109,29 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 
                 boolean isSuccess = (ret.containsKey("result_code") && StrUtil
                                 .toStr(ret.get("result_code")).equals("0"));
-
                 if (isSuccess) {
                 	if (channel.equals(PAY_CHANNEL.WX_NATIVE)){
 	                    if (ret.containsKey("code_url") && null != ret.get("code_url")) {
 	                        result.setCode_url(ret.get("code_url").toString());
 	                        result.setType(RESULT_TYPE.OK);
-	                    } else if (channel.equals(PAY_CHANNEL.WX_JSAPI)) {
-	                    	result.setType(RESULT_TYPE.OK);
-	                    	result.setWxJSAPIMap(generateWXJSAPIMap(ret));
-	                    }
-                	}else if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE)) {
+	                    } 
+                	} else if (channel.equals(PAY_CHANNEL.WX_JSAPI)) {
+                    	result.setType(RESULT_TYPE.OK);
+                    	result.setWxJSAPIMap(generateWXJSAPIMap(ret));
+                    } else if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE)) {
                 		if (ret.containsKey("html") && null != ret.get("html") && 
                 				ret.containsKey("url") && null != ret.get("url")) {
 	                        result.setHtml(ret.get("html").toString());
 	                        result.setUrl(ret.get("url").toString());
 	                        result.setType(RESULT_TYPE.OK);
 	                    }
-                	}else if (channel.equals(PAY_CHANNEL.UN_WEB)) {
+                	} else if (channel.equals(PAY_CHANNEL.UN_WEB)) {
                 		if (ret.containsKey("html") && null != ret.get("html")) {
 	                        result.setHtml(ret.get("html").toString());
 	                        result.setType(RESULT_TYPE.OK);
 	                    }
                 	}
-                }else {
+                } else {
                 	result.setErrMsg(ret.get("result_msg").toString());
                 	result.setErr_detail(ret.get("err_detail").toString());
                 	result.setType(RESULT_TYPE.RUNTIME_ERROR);
@@ -205,14 +204,14 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
              		if (channel.equals(PAY_CHANNEL.ALI)) {
             			result.setUrl(ret.get("url").toString());
             			result.setType(RESULT_TYPE.OK);
-            		}else if (channel.equals(PAY_CHANNEL.UN)) {
+            		} else if (channel.equals(PAY_CHANNEL.UN)) {
             			result.setSucessMsg(ret.get("respMsg").toString());
             			result.setType(RESULT_TYPE.OK);
-            		}else {
+            		} else {
             			result.setSucessMsg(ValidationUtil.REFUND_ACCEPT);
             			result.setType(RESULT_TYPE.OK);
             		}
-                 }else {
+                 } else {
                 	result.setErrMsg(ret.get("result_msg").toString());
                  	result.setErr_detail(ret.get("err_detail").toString());
                  	result.setType(RESULT_TYPE.RUNTIME_ERROR);
@@ -470,6 +469,8 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
     	
     }
     
+    
+    
     /**
      * The method is used to generate Order list by query.
      * @param bills
@@ -523,13 +524,12 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
     private static Map<String, Object> generateWXJSAPIMap(
 			Map<String, Object> ret) {
 		HashMap map = new HashMap<String, Object>();
-		map.put("app_id", ret.get("app_id"));
+		map.put("appId", ret.get("app_id"));
 		map.put("package", ret.get("package"));
-		map.put("nonce_str", ret.get("nonce_str"));
-		map.put("timestamp", ret.get("timestamp"));
-		map.put("pay_sign", ret.get("pay_sign"));
-		map.put("app_id", ret.get("app_id"));
-		map.put("sign_type", ret.get("sign_type"));
+		map.put("nonceStr", ret.get("nonce_str"));
+		map.put("timeStamp", ret.get("timestamp"));
+		map.put("paySign", ret.get("pay_sign"));
+		map.put("signType", ret.get("sign_type"));
 		
 		return map;
 	}
