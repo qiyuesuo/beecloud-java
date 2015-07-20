@@ -35,7 +35,8 @@
 <body>
 	<%
 		//以下代码用session获得交易信息，可由商户根据自己的项目决定实现方式
-		String return_url = "http://localhost:9999/PC-Web-Pay-Demo/return_url.jsp";
+		//return_url示例（商户根据自身系统指定）
+		String return_url = "http://localhost:8080/PC-Web-Pay-Demo/return_url.jsp";
 		String seller_email = "admin@beecloud.cn";
 		
 		//模拟商户的交易编号
