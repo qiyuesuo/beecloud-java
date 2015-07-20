@@ -4,11 +4,11 @@ public class BeeCloud {
     /**
      * BeeCloud SDK release version.
      */
-    public static final String kBeeCloudVersionString = "0.1.0";
-    public static final double kBeeCloudVersionNumber = 0.10;
+    public static final String kBeeCloudVersionString = "1.0.1";
+    public static final double kBeeCloudVersionNumber = 1.01;
 
     /**
-     * ÉèÖÃappIDºÍappSecret£¬ÔÚ³ÌÐò¿ªÊ¼Ê±ÔËÐÐÒ»±é¼´¿É
+     * ï¿½ï¿½ï¿½ï¿½appIDï¿½ï¿½appSecretï¿½ï¿½ï¿½Ú³ï¿½ï¿½ï¿½Ê¼Ê±ï¿½ï¿½ï¿½ï¿½Ò»ï¿½é¼´ï¿½ï¿½
      *
      * @param appID
      * @param appSecret
@@ -21,7 +21,7 @@ public class BeeCloud {
     }
 
     /**
-     * ÉèÖÃmasterkey, ºóÐøACLÐèÇóÔ¤Áô
+     * ï¿½ï¿½ï¿½ï¿½masterkey, ï¿½ï¿½ï¿½ï¿½ACLï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½
      *
      * @param masterKey
      */
@@ -30,7 +30,7 @@ public class BeeCloud {
     }
 
     /**
-     * ÉèÖÃÍøÂç³¬Ê±Ê±¼ä, µ¥Î»ms, Ä¬ÈÏ5000
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç³¬Ê±Ê±ï¿½ï¿½, ï¿½ï¿½Î»ms, Ä¬ï¿½ï¿½5000
      *
      * @param timeout
      */
@@ -39,7 +39,7 @@ public class BeeCloud {
     }
 
     /**
-     * ÉèÖÃÊÇ·ñÐèÒª±¾µØ»º´æÔÆ¶ËÊý¾Ý¼°ÔªÊý¾Ý, Ä¬ÈÏÎªtrue
+     * ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Ø»ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½Ôªï¿½ï¿½ï¿½ï¿½, Ä¬ï¿½ï¿½Îªtrue
      *
      * @param needLocalCache
      */
@@ -48,7 +48,7 @@ public class BeeCloud {
     }
 
     /**
-     * Çå³ýËùÓÐ±¾µØ»º´æ
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½Ø»ï¿½ï¿½ï¿½
      */
     public static void clearAllCache() {
     	

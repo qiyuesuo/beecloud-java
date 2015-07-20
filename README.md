@@ -1,5 +1,36 @@
 # beecloud-java-sdk
+
+![pass](https://img.shields.io/badge/Build-pass-green.svg) ![MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![v1.0.0beta](https://img.shields.io/badge/Version-v1.0.1beta-blue.svg)
+
 BeeCloud Java SDK (Open Source)
+
+本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api)开发的 java SDK, 适用于 jre 1.6及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
+
+# **安装**
+
+1.从BeeCloud官网下载带依赖的jar文件,然后导入到自己的工程依赖包中。（请注意beta版本不支持从官网下载）
+
+
+2.若是工程采用maven进行依赖配置，可在自己工程的pom.xml文件里加入以下配置
+\<dependency\>   
+    &ensp;&ensp;\<groupId\>cn.beecloud\</groupId\>
+   &ensp;&ensp;\<artifactId\>beecloud-java-sdk-beta\</artifactId\>
+   &ensp;&ensp;\<version\>1.0.1\</version\>
+\</dependency\>
+工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
+
+
+# **注册**
+
+三个步骤，2分钟轻松搞定： 1. 注册开发者：猛击这里注册成为[BeeCloud](https://beecloud.cn/register/)开发者。 2. 注册应用：使用注册的账号登陆[控制台](https://beecloud.cn/login/)后，点击"+创建App"创建新应用 3.在代码中注册：
+
+BeeCloud.registerApp(appid, appsecret);
+
+
+# **使用方法**
+
+具体使用请参考项目中的 PC-Web-Pay-Demo 工程
+
 
 ## <a name="payment">支付</a>
 

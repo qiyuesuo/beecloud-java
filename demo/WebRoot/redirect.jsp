@@ -8,6 +8,8 @@
 <%@ page import="cn.beecloud.BCEumeration.*"%>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="net.sf.json.JSONObject" %>
+<%@ page import="java.util.Map" %>
 
 <%
 	/* *
@@ -50,8 +52,8 @@
 		String type = request.getParameter("paytype");
 
 		BeeCloud.registerApp("0950c062-5e41-44e3-8f52-f89d8cf2b6eb", "a5571c5a-591e-4fb9-bd92-0283782af00d");
-		//BCPayResult的type字段有OK和非OK两种，当type字段是OK时（对应值为0），result字段的值是支付所需的html或者code_url,
-		//当type的字段为非OK的时候，result的字段的值为具体的错误信息。商户系统可以任意显示，打印或者记录日志。
+		//BCPayResult的type字段有OK和非OK两种，当type字段是OK时（对应值为0），bcPayResult包含支付所需的内容如html或者code_url或者支付成功信息,
+		//当type的字段为非OK的时候，，bcPayResult包含通用错误和具体的错误信息。商户系统可以任意显示，打印或者记录日志。
 		BCPayResult bcPayResult = new BCPayResult();
 		
 		if (type.equals("alipay")) {
@@ -86,7 +88,23 @@
 				out.println(bcPayResult.getErrMsg());
 				out.println(bcPayResult.getErr_detail());
 			}
-		} else if (type.equals("unionpay")) {
+		} else if (type.equals("wechatJSAPI")) {
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, bill_no, "买水", null, null, "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null);
+			System.out.println(bcPayResult.getType());
+			if (bcPayResult.getType().ordinal() == 0) {
+				Map<String, Object> map = bcPayResult.getWxJSAPIMap();
+				JSONObject jsonObject = JSONObject.fromObject(map);
+				String payArg = "<script type=\"text/javascript\" src=\"wxjsapi.js\"></script><script>callpay(" + jsonObject + ");</script>";
+				out.println(payArg);
+			}
+			else {
+				//handle the error message as you wish！
+				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getErr_detail());
+			}
+		}
+		
+		else if (type.equals("unionpay")) {
 			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, bill_no, "买水", null, return_url, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
@@ -122,5 +140,6 @@
     if (type == 'wechatQr' && isCodeUrl == 0) {
         makeqrcode();
     }
+    
 </script>
 </html>
