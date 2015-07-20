@@ -94,8 +94,13 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
         	param.put("openid", openid);
         if (!StrUtil.empty(show_url))
         	param.put("show_url", show_url);
-        if (qr_pay_mode != null)
-        	param.put("qr_pay_mode", qr_pay_mode.ordinal() == 2 ? qr_pay_mode.ordinal() +1:qr_pay_mode.ordinal());
+        if (qr_pay_mode != null) {
+        	if (qr_pay_mode.ordinal() == 2) {
+        		param.put("qr_pay_mode", String.valueOf(qr_pay_mode.ordinal() +1));
+        	} else {
+        		param.put("qr_pay_mode", String.valueOf(qr_pay_mode.ordinal()));
+        	}
+        }
         
         result = new BCPayResult();
         
