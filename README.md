@@ -12,11 +12,14 @@ BeeCloud Java SDK (Open Source)
 
 
 2.若是工程采用maven进行依赖配置，可在自己工程的pom.xml文件里加入以下配置
-\<dependency\>   
-    &ensp;&ensp;\<groupId\>cn.beecloud\</groupId\>
-   &ensp;&ensp;\<artifactId\>beecloud-java-sdk-beta\</artifactId\>
-   &ensp;&ensp;\<version\>1.0.1\</version\>
-\</dependency\>
+
+```xml
+<dependency>   
+    <groupId>cn.beecloud</groupId>
+    <artifactId>beecloud-java-sdk-beta\</artifactId>
+    <version>1.0.1</version>
+</dependency>
+```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
 
 
