@@ -474,7 +474,22 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
     	
     }
     
-    
+    /**
+     * @param sign
+     *            Webhook提供的签名
+     * @param timestamp
+     *            Webhook提供的timestamp，注意是String格式
+     * @return 签名是否正确
+     */
+    public static boolean verifySign(String sign, String timestamp) {
+        String mySign = MD5.sign(BCCache.getAppID() + BCCache.getAppSecret(),
+                        timestamp, "UTF-8");
+        
+        if (sign.equals(mySign))
+            return true;
+        else
+            return false;
+    }
     
     /**
      * The method is used to generate Order list by query.

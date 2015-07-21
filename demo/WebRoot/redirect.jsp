@@ -126,7 +126,6 @@
     var isCodeUrl = <%=bcPayResult.getType().ordinal()%>;
     var codeUrl = '<%=bcPayResult.getCode_url()%>';
             function makeqrcode() {
-            	alert(codeUrl);
                 var qr = qrcode(10, 'M');
                 qr.addData(codeUrl);
                 qr.make();

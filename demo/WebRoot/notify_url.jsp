@@ -1,6 +1,13 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@page import="net.sf.json.JSONObject"%>
 <%@page import="java.io.BufferedReader"%>
+<%@page import="java.io.InputStream" %>
 <%@page import="com.sun.org.apache.xpath.internal.operations.Bool"%>
+<%@page import="java.io.UnsupportedEncodingException" %>
+<%@page import="org.apache.commons.codec.digest.DigestUtils" %>
+<%@ page import="java.util.*"%>
+<%@ page import="cn.beecloud.*"%>
 <%
 	/* *
 	 功能：BeeCloud服务器异步通知页面
@@ -17,14 +24,46 @@
 	 //********************************
 	 * */
 %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ page import="java.util.*"%>
-<%@ page import="cn.beecloud.*"%>
+
+
+<%!
+
+	boolean verify(String sign, String text, String key, String input_charset) {
+	    text = text + key;
+	    String mysign = DigestUtils.md5Hex(getContentBytes(text, input_charset));
+	    
+	    long timeDifference = System.currentTimeMillis() - Long.valueOf(key);
+	    if (mysign.equals(sign) && timeDifference > 300000) {
+	        return true;
+	    } else {
+	        return false;
+	    }
+	}
+	
+	boolean verifySign(String sign, String timestamp) {
+		return verify(sign, BCCache.getAppID() + BCCache.getAppSecret(),
+	            timestamp, "UTF-8");
+	}
+
+	
+	
+	byte[] getContentBytes(String content, String charset) {
+        if (charset == null || "".equals(charset)) {
+            return content.getBytes();
+        }
+        try {
+            return content.getBytes(charset);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("MD5签名过程中出现错误,指定的编码集不对,您目前指定的编码集是:" + charset);
+        }
+    }
+%>
+
 <%
-	BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c");
+	BeeCloud.registerApp("0950c062-5e41-44e3-8f52-f89d8cf2b6eb", "a5571c5a-591e-4fb9-bd92-0283782af00d");
 	StringBuffer json = new StringBuffer();
 	String line = null;
+	
 	try {
 		BufferedReader reader = request.getReader();
 		while ((line = reader.readLine()) != null) {
@@ -33,24 +72,23 @@
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
+	
 	JSONObject jsonObj = JSONObject.fromObject(json.toString());
 
 	String sign = jsonObj.getString("sign");
 
 	String timestamp = jsonObj.getString("timestamp");
 
-	boolean status = BCPay.verifySign(sign, timestamp);
+	boolean status = verifySign(sign, timestamp);
 	
-	if (jsonObj.isNull("messageDetail")) {
+	if (!jsonObj.containsKey("messageDetail")) {
 		out.println("error: messageDetailNull"); 
 	}
-	// System.out.println(jsonObj.getString("messageDetail"));
 
 	if (status) {//验证成功
 
 		out.println("success"); //请不要修改或删除
 
-		//////////////////////////////////////////////////////////////////////////////////////////
 	} else {//验证失败
 		out.println("fail");
 	}
