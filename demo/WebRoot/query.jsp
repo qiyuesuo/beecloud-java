@@ -32,7 +32,7 @@ BeeCloud.registerApp("0950c062-5e41-44e3-8f52-f89d8cf2b6eb", "a5571c5a-591e-4fb9
 	
 	if(queryRefund != null) {
 		if (querytype.equals("aliQuery")) {
-			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.ALI_WEB, null, null, null, null, null, null);
+			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.ALI, null, null, null, null, null, null);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());

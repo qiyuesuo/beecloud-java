@@ -110,11 +110,25 @@ if (bcPayResult.getType().ordinal() == 0) {
 }
 ```
 
+#### <a name="ali_wap">阿里移动网页调用</a>
+正确状态调用getHtml()方法或者getUrl()方法，getHtml()方法返回html,如将html输出至页面，即可开始支付。getUrl()方法返回支付宝跳转url,推荐使用html。
+```java
+bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, bill_no, "买水", null, null, null, null, null);
+if (bcPayResult.getType().ordinal() == 0) {
+	out.println(bcPayResult.getHtml());
+}
+else {
+	//handle the error message as you wish！
+	out.println(bcPayResult.getErrMsg());
+	out.println(bcPayResult.getErr_detail());
+}
+```
+
 代码中的各个参数含义如下：
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：WX_NATIVE 微信公众号二维码支付<br/>WX_JSAPI 微信公众号支付<br/>ALI_WEB 支付宝网页支付<br/>ALI_QRCODE 支付宝内嵌二维码支付<br/>UN_WEB 银联网页支付， （必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX_NATIVE 微信公众号二维码支付<br/>WX_JSAPI 微信公众号支付<br/>ALI_WEB 支付宝网页支付<br/>ALI_QRCODE 支付宝内嵌二维码支付<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br/>UN_WEB 银联网页支付， （必填）
 total_fee | 订单总金额， 只能为整数，单位为分，例如 1，（必填）
 bill_no | 商户订单号, 32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如(201506101035040000001),（必填）
 title | 订单标题， 32个字节内，最长支持16个汉字，（必填）
@@ -220,7 +234,7 @@ if (bcQueryResult.getType().ordinal() == 0) {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付，（必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付，（必填）
 bill_no | 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一，	（选填）
 start_time | 起始时间， 毫秒时间戳, 13位，（选填）  
 end_time | 结束时间， 毫秒时间戳, 13位，（选填）  

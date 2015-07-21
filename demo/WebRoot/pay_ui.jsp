@@ -149,6 +149,10 @@ input {
 					<input type="radio"  value="alipayQr" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/alis.png" alt="">
 				</li>
+				<!-- li onclick="paySwitch(this)">
+					<input type="radio"  value="alipayWAP" name="paytype">
+					<img src="http://beeclouddoc.qiniudn.com/alis.png" alt="">
+				</li-->
 				<!-- i onclick="paySwitch(this)">
 					<input type="radio"  value="wechatJSAPI" name="paytype">
 					<img src="http://7xavqo.com1.z0.glb.clouddn.com/wechatgzh.png" alt="">

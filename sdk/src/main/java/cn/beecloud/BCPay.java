@@ -45,6 +45,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	WX_JSAPI 微信公众号支付
 	 * 	ALI_WEB 支付宝网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
+	 *  ALI_WAP: 支付宝移动网页支付
 	 * 	UN_WEB 银联网页支付
 	 * @param total_fee 
 	 * （必填）订单总金额， 只能为整数，单位为分，例如 1	
@@ -123,7 +124,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
                 	} else if (channel.equals(PAY_CHANNEL.WX_JSAPI)) {
                     	result.setType(RESULT_TYPE.OK);
                     	result.setWxJSAPIMap(generateWXJSAPIMap(ret));
-                    } else if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE)) {
+                    } else if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE) || channel.equals(PAY_CHANNEL.ALI_WAP)) {
                 		if (ret.containsKey("html") && null != ret.get("html") && 
                 				ret.containsKey("url") && null != ret.get("url")) {
 	                        result.setHtml(ret.get("html").toString());
@@ -242,6 +243,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 *  ALI
 	 * 	ALI_APP 支付宝APP支付
 	 * 	ALI_WEB 支付宝网页支付
+	 *  ALI_WAP: 支付宝移动网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
 	 * 	UN
 	 * 	UN_APP 银联APP支付
@@ -325,12 +327,16 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
     /**
      * @param channel
      * （必填）渠道类型， 根据不同场景选择不同的支付方式，包含：
-     *  WX_APP 微信手机APP支付
+     *  WX
+     * 	WX_APP 微信手机APP支付
 	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	WX_JSAPI 微信公众号支付
+	 *  ALI
 	 * 	ALI_APP 支付宝APP支付
 	 * 	ALI_WEB 支付宝网页支付
+	 *  ALI_WAP: 支付宝移动网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
+	 * 	UN
 	 * 	UN_APP 银联APP支付
 	 * 	UN_WEB 银联网页支付
      * @param refund_no

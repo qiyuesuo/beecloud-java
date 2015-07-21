@@ -37,6 +37,7 @@
 		//以下代码用session获得交易信息，可由商户根据自己的项目决定实现方式
 		//return_url示例（商户根据自身系统指定）
 		String return_url = "http://localhost:8080/PC-Web-Pay-Demo/return_url.jsp";
+		String front_url = "http://localhost:8080/PC-Web-Pay-Demo/front_url.jsp";
 		String seller_email = "admin@beecloud.cn";
 		
 		//模拟商户的交易编号
@@ -80,6 +81,18 @@
 				out.println(bcPayResult.getErr_detail());
 			}
             
+		} else if (type.equals("alipayWAP")) {
+			
+            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, bill_no, "买水", null, null, null, null, null);
+            if (bcPayResult.getType().ordinal() == 0) {
+				out.println(bcPayResult.getHtml());
+			}
+			else {
+				//handle the error message as you wish！
+				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getErr_detail());
+			}
+            
 		} else if (type.equals("wechatQr")) {
 			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, bill_no, "买水", null, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
@@ -106,7 +119,7 @@
 		}
 		
 		else if (type.equals("unionpay")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, bill_no, "买水", null, return_url, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, bill_no, "买水", null, front_url, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
