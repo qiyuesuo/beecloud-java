@@ -4,7 +4,7 @@
 
 BeeCloud Java SDK (Open Source)
 
-本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api)开发的 java SDK, 适用于 jre 1.6及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
+本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api)开发的Java SDK，适用于JRE 1.6及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
 # **安装**
 
@@ -25,14 +25,20 @@ BeeCloud Java SDK (Open Source)
 
 # **注册**
 
-三个步骤，2分钟轻松搞定： 1. 注册开发者：猛击这里注册成为[BeeCloud](https://beecloud.cn/register/)开发者。 2. 注册应用：使用注册的账号登陆[控制台](https://beecloud.cn/login/)后，点击"+创建App"创建新应用 3.在代码中注册：
+三个步骤，2分钟轻松搞定： 
 
-BeeCloud.registerApp(appid, appsecret);
+1. 注册开发者：猛击这里注册成为[BeeCloud](https://beecloud.cn/register/)开发者。 
+
+2. 注册应用：使用注册的账号登陆[控制台](https://beecloud.cn/login/)后，点击"+创建App"创建新应用
+
+3. 在代码中注册：
+
+  BeeCloud.registerApp(appid, appsecret);
 
 
 # **使用方法**
 
-具体使用请参考项目中的 PC-Web-Pay-Demo 工程
+具体使用请参考本目录下的demo项目
 
 
 ## <a name="payment">支付</a>
@@ -46,8 +52,7 @@ BeeCloud.registerApp(appid, appsecret);
 bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, bill_no, "买水", null, null, null , null, null);
 if (bcPayResult.getType().ordinal() == 0) {
 	System.out.println(bcPayResult.getCode_url());
-}
-else {
+} else {
 	//handle the error message as you wish！
 	out.println(bcPayResult.getErrMsg());
 	out.println(bcPayResult.getErr_detail());
@@ -59,8 +64,7 @@ else {
 bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, bill_no, "买水", null, null, "openid000000001", null, null);
 if (bcPayResult.getType().ordinal() == 0) {
 	System.out.println(bcPayResult.getWxJSAPIMap());
-}
-else {
+} else {
 	//handle the error message as you wish！
 	out.println(bcPayResult.getErrMsg());
 	out.println(bcPayResult.getErr_detail());
@@ -73,8 +77,7 @@ else {
 bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, bill_no, "买水", null, return_url, null, null, null);
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getHtml());
-}
-else {
+} else {
 	//handle the error message as you wish！
 	out.println(bcPayResult.getErrMsg());
 	out.println(bcPayResult.getErr_detail());
@@ -88,8 +91,7 @@ bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, bill_no, "农夫山泉", 
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getHtml());
 	out.println(bcPayResult.getUrl());
-}
-else {
+} else {
 	//handle the error message as you wish！
 	out.println(bcPayResult.getErrMsg());
 	out.println(bcPayResult.getErr_detail());
@@ -103,8 +105,7 @@ bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, bill_no, "农夫山泉
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getHtml());
 	out.println(bcPayResult.getUrl());
-}
-else {
+} else {
 	//handle the error message as you wish！
 	out.println(bcPayResult.getErrMsg());
 	out.println(bcPayResult.getErr_detail());
@@ -211,7 +212,7 @@ WX、WX_NATIVE、WX_JSAPI、ALI、ALI_APP、ALI_WEB、ALI_QRCODE、UN、UN_APP�
 bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.UN, null, null, null, null, null, null);
 if (bcQueryResult.getType().ordinal() == 0) {
 	pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
-}else {
+} else {
 	out.println(bcQueryResult.getErrMsg());
 	out.println(bcQueryResult.getErr_detail());
 }
