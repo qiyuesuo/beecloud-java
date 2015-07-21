@@ -1,8 +1,6 @@
-# beecloud-java-sdk
+# BeeCloud Java SDK (Open Source)
 
 ![pass](https://img.shields.io/badge/Build-pass-green.svg) ![MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![v1.0.0beta](https://img.shields.io/badge/Version-v1.0.1beta-blue.svg)
-
-BeeCloud Java SDK (Open Source)
 
 本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api)开发的Java SDK，适用于JRE 1.6及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
