@@ -30,29 +30,21 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; UTF-8">
-<title>return</title>
+<title>Return Url</title>
 </head>
 <body>
 	<%
-		Object respCode = request.getParameter("respCode");
-		Object respMsg = request.getParameter("respMsg");
 		Object trade_status = request.getParameter("trade_status");
 		
-		
-		if(respCode != null && respMsg != null) {
-			if ("00".equals(respCode.toString()) && "success".equals(respMsg.toString())) {
-				//成功逻辑
-				out.println("<h3>银联网页支付成功，商户应自行实现成功逻辑！</h3>");
-			} else {
-				out.println("<h3>银联网页支付未成功，商户应自行实现失败逻辑！</h3>");
-			}
-		} else if (trade_status.toString() != null) {
-			if (trade_status.equals("TRADE_SUCCESS") || "TRADE_FINISH".equals(trade_status)) {
+		if(trade_status != null) {
+			if (trade_status.toString().equals("TRADE_SUCCESS") || "TRADE_FINISH".equals(trade_status.toString())) {
 				//成功逻辑
 				out.println("<h3>支付宝网页支付成功，商户应自行实现成功逻辑！</h3>");
 			} else {
 				out.println("<h3>支付宝网支付未成功，商户应自行实现失败逻辑！</h3>");
 			}
+		} else {
+			out.println("<h3>支付宝网支付未收到同步通知，商户应自行实现逻辑！</h3>");
 		}
 			
 	%>

@@ -14,16 +14,9 @@ public class BCCache {
     private static int networkTimeout = 500000;
     public static String[] apiHostArray = initApiHostArray();
 
-    static String getAppSecret() {
-        return appSecret;
-    }
 
     static void setAppSecret(String appSecret) {
         BCCache.appSecret = appSecret;
-    }
-
-    static String getAppID() {
-        return appID;
     }
 
     static void setAppID(String appID) {
@@ -63,5 +56,13 @@ public class BCCache {
     	apiHostArray[3] = "https://apihz.beecloud.cn";
     	
     	return apiHostArray;
+    }
+    
+    public static String getAppSecret() {
+        return appSecret;
+    }
+    
+    public static String getAppID() {
+        return appID;
     }
 }
