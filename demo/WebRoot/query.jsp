@@ -2,6 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="cn.beecloud.*"%>
+<%@ page import="java.util.Date"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -51,7 +52,7 @@ BeeCloud.registerApp("0950c062-5e41-44e3-8f52-f89d8cf2b6eb", "a5571c5a-591e-4fb9
 				out.println(bcQueryResult.getErr_detail());
 			}
 		} else if (querytype.equals("unionQuery")) {
-			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.UN_WEB, null, null, null, null, null, null);
+			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.UN, null, null, null, null, null, null);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
@@ -73,7 +74,8 @@ BeeCloud.registerApp("0950c062-5e41-44e3-8f52-f89d8cf2b6eb", "a5571c5a-591e-4fb9
 			}
 		
 		} else if (querytype.equals("wechatQuery")) {
-			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.WX, null, null, null, null, 50);
+			//bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.WX, null, null, null, null, 50);
+			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.WX, null, null, new Date(), null, null);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
@@ -83,7 +85,7 @@ BeeCloud.registerApp("0950c062-5e41-44e3-8f52-f89d8cf2b6eb", "a5571c5a-591e-4fb9
 				out.println(bcQueryResult.getErr_detail());
 			}
 		} else if (querytype.equals("unionQuery")) {
-			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.UN_WEB, null, null, null, null, null);
+			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.UN, null, null, null, null, null);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());

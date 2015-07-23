@@ -117,15 +117,11 @@ public class ValidationUtil
 	}
 
 	public static BCQueryResult validateQueryBill(PAY_CHANNEL channel,
-			String bill_no, Long start_time, Long end_time, Integer limit) {
+			String bill_no, Integer limit) {
 		 if (channel == null) {
 			return new BCQueryResult(CHANNEL_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
 		 } else if (!StrUtil.empty(bill_no) && !bill_no.matches("[0-9A-Za-z]{1,32}")) {
 			return new BCQueryResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
-		 } else if (start_time != null && !start_time.toString().matches("\\d{13}")) {
-			return new BCQueryResult(START_TIME_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
-		 } else if (end_time != null && !end_time.toString().matches("\\d{13}")) {
-			return new BCQueryResult(END_TIME_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		 } else if (limit != null && limit > 50) {
 			return new BCQueryResult(LIMIT_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		 }
@@ -134,7 +130,7 @@ public class ValidationUtil
 	}
 
 	public static BCQueryResult validateQueryRefund(PAY_CHANNEL channel, String bill_no,
-			String refund_no, Long start_time, Long end_time, Integer limit) {
+			String refund_no, Integer limit) {
 		if (channel == null) {
 			return new BCQueryResult(CHANNEL_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
 		} else if (!StrUtil.empty(bill_no) && !bill_no.matches("[0-9A-Za-z]{1,32}")) {
@@ -142,10 +138,6 @@ public class ValidationUtil
 		} else if (!StrUtil.empty(refund_no) && (!refund_no.substring(8, refund_no.length()).matches("[0-9A-Za-z]{3,24}") || 
 				 refund_no.substring(8, refund_no.length()).matches("000")) ) {
 			return new BCQueryResult(REFUND_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
-		} else if (start_time != null && !start_time.toString().matches("\\d{13}")) {
-			return new BCQueryResult(START_TIME_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
-		} else if (end_time != null && !end_time.toString().matches("\\d{13}")) {
-			return new BCQueryResult(END_TIME_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		} else if (limit != null && limit > 50) {
 			return new BCQueryResult(LIMIT_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		}

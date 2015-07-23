@@ -11,6 +11,7 @@ package cn.beecloud;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -251,20 +252,20 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
      * @param bill_no
      * （选填） 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一
      * @param start_time 
-     * （选填） 起始时间， 毫秒时间戳, 13位
+     * （选填） 起始时间， Date类型
      * @param end_time
-     * （选填） 结束时间， 毫秒时间戳, 13位	
+     * （选填） 结束时间，Date类型
      * @param skip
      * （选填） 查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	
      * @param limit
      * （选填） 查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
      * @return BCQueryResult
      */
-    public static BCQueryResult startQueryBill(PAY_CHANNEL channel, String bill_no, Long start_time, Long end_time, Integer skip, Integer limit) {
+    public static BCQueryResult startQueryBill(PAY_CHANNEL channel, String bill_no, Date start_time, Date end_time, Integer skip, Integer limit) {
     	
     	BCQueryResult result;
     	
-    	result = ValidationUtil.validateQueryBill(channel, bill_no, start_time, end_time, limit);
+    	result = ValidationUtil.validateQueryBill(channel, bill_no, limit);
     	
     	if (result.getType().ordinal() != 0) {
     		return result;
@@ -276,10 +277,14 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
          param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
          param.put("channel", channel.toString());
          param.put("bill_no", bill_no);
-         param.put("start_time", start_time);
-         param.put("end_time", end_time);
          param.put("skip", skip);
          param.put("limit", limit);
+         if (start_time != null) {
+        	 param.put("start_time", start_time.getTime());
+         }
+         if (end_time != null) {
+        	 param.put("end_time", end_time.getTime());
+         }
          
          result = new BCQueryResult();
     	
@@ -344,19 +349,19 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
      * @param buyer_id
      * （必填）消费者ID， 消费者在商户系统内的唯一标识， 32个字节以内
      * @param start_time
-     * （选填） 起始时间， 毫秒时间戳, 13位
+     * （选填） 起始时间， Date类型
      * @param end_time
-     * （选填） 结束时间， 毫秒时间戳, 13位	
+     * （选填） 结束时间， Date类型
      * @param skip
      * （选填） 查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	
      * @param limit
      * （选填） 查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
      * @return BCQueryResult
      */
-    public static BCQueryResult startQueryRefund(PAY_CHANNEL channel, String bill_no, String refund_no, Long start_time, Long end_time, Integer skip, Integer limit) {
+    public static BCQueryResult startQueryRefund(PAY_CHANNEL channel, String bill_no, String refund_no, Date start_time, Date end_time, Integer skip, Integer limit) {
     	
     	BCQueryResult result;
-    	result = ValidationUtil.validateQueryRefund(channel, bill_no, refund_no, start_time, end_time, limit);
+    	result = ValidationUtil.validateQueryRefund(channel, bill_no, refund_no, limit);
 		if (result.getType().ordinal() != 0) {
 			return result;
 		}
@@ -370,8 +375,12 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
         param.put("channel", channel.toString());
         param.put("bill_no", bill_no);
         param.put("refund_no", refund_no);
-        param.put("start_time", start_time);
-        param.put("end_time", end_time);
+        if (start_time != null) {
+        	param.put("start_time", start_time.getTime());
+        }
+        if (end_time != null) {
+        	param.put("end_time", end_time.getTime());
+        }
         param.put("skip", skip);
         param.put("limit", limit);
 	    Client client = BCAPIClient.client;
