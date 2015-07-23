@@ -1,5 +1,6 @@
 package cn.beecloud;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -40,12 +41,6 @@ public class ValidationUtil
 	private final static String TITLE_FORMAT_INVALID =
 			"title 是一个长度不超过32字节的字符串！";
 	
-	private final static String START_TIME_FORMAT_INVALID =
-			"start_time 是一个长度为13位的数字时间戳！";
-	
-	private final static String END_TIME_FORMAT_INVALID =
-			"end_time 是一个长度为13位的数字时间戳！";
-	
 	private final static String LIMIT_FORMAT_INVALID =
 			"limit 的最大长度为50！";
 	
@@ -80,8 +75,6 @@ public class ValidationUtil
 			return new BCPayResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		} else if (StrUtil.empty(title)) {
 			return new BCPayResult(TITLE_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
-		} else if (title.getBytes().length > 32) {
-			return new BCPayResult(TITLE_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		} else if (StrUtil.empty(return_url) && 
 				(channel.equals(PAY_CHANNEL.ALI_WEB) || 
 						channel.equals(PAY_CHANNEL.ALI_QRCODE) || 
@@ -89,7 +82,16 @@ public class ValidationUtil
 			return new BCPayResult(RETURN_URL_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
 		} else if (channel.equals(PAY_CHANNEL.WX_JSAPI) && StrUtil.empty(openid)){
 			return new BCPayResult(OPENID_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
-		}
+		} else
+			try {
+				if (title.getBytes("GBK").length > 32) {
+					return new BCPayResult(TITLE_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+				}
+			} catch (UnsupportedEncodingException e) {
+				if (title.length() > 16) {
+					return new BCPayResult(TITLE_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+				}
+			}
 		
 		return new BCPayResult(RESULT_TYPE.OK);	
 	}

@@ -1,3 +1,4 @@
+<%@page import="java.util.HashMap"%>
 <%@page import="java.util.Random"%>
 <%@page import="com.sun.org.apache.xalan.internal.xsltc.compiler.sym"%>
 <%@page import="cn.beecloud.BeeCloud"%>
@@ -50,6 +51,9 @@
 				.getAttribute("anti_phishing_key");
 		String exter_invoke_ip = (String) session
 				.getAttribute("exter_invoke_ip");
+		
+		Map optional = new HashMap();
+		optional.put("test", "test");
 
 		String type = request.getParameter("paytype");
 
@@ -94,7 +98,7 @@
 			}
             
 		} else if (type.equals("wechatQr")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, bill_no, "买水", null, null, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, bill_no, "买水", optional, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 			}
 			else {
