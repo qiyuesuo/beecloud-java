@@ -123,7 +123,7 @@
 		}
 		
 		else if (type.equals("unionpay")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, bill_no, "买水", null, front_url, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, bill_no, "买水", optional, front_url, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
