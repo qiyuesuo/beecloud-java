@@ -313,11 +313,14 @@ Pull Request要求
 
 # **联系我们**
 •如果有什么问题，可以到 321545822 BeeCloud开发者大联盟QQ群提问
-•更详细的文档，见源代码的注释以及[官方文档](https://beecloud.cn/doc/java.php)
-•如果发现了bug，欢迎提交[issue](https://github.com/beecloud/beecloud-java/issues)
-•如果有新的需求，欢迎提交[issue](https://github.com/beecloud/beecloud-java/issues)
 
-# **联系我们**
+•更详细的文档，见源代码的注释以及[官方文档](https://beecloud.cn/doc/java.php)
+
+•如果发现了bug，欢迎提交[issue](https://github.com/beecloud/beecloud-java/issues)
+
+•如果有新的需求，欢x迎提交[issue](https://github.com/beecloud/beecloud-java/issues)
+
+# **代码许可**
 The MIT License (MIT).
 
 
