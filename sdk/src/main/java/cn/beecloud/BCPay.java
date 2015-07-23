@@ -9,6 +9,7 @@
  */
 package cn.beecloud;
 
+import java.beans.beancontext.BeanContextProxy;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -107,8 +108,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
         result = new BCPayResult();
         
         Client client = BCAPIClient.client;
-        WebTarget target = client.target("http://58.211.191.123:8080/1/rest/bill");
-//        WebTarget target = client.target("http://192.168.1.112:8080/1/rest/bill");
+        WebTarget target = client.target(BCUtilPrivate.getkApiPay());
         try {
             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
             if (response.getStatus() == 200) {
@@ -196,42 +196,40 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
          	result = new BCPayResult();
          
          	Client client = BCAPIClient.client;
-//         	WebTarget target = client.target(BCUtilPrivate.getkApiRefund());
-//         	WebTarget target = client.target("http://192.168.1.112:8080/1/rest/refund");
-         	WebTarget target = client.target("http://58.211.191.123:8080/1/rest/refund");
-        try {
-             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
-             if (response.getStatus() == 200) {
-                 Map<String, Object> ret = response.readEntity(Map.class);
-
-                 boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                                 .toStr(ret.get("result_code")).equals("0"));
-
-                 if (isSuccess) {
-             		if (channel.equals(PAY_CHANNEL.ALI)) {
-            			result.setUrl(ret.get("url").toString());
-            			result.setType(RESULT_TYPE.OK);
-            		} else if (channel.equals(PAY_CHANNEL.UN)) {
-            			result.setSucessMsg(ret.get("respMsg").toString());
-            			result.setType(RESULT_TYPE.OK);
-            		} else {
-            			result.setSucessMsg(ValidationUtil.REFUND_ACCEPT);
-            			result.setType(RESULT_TYPE.OK);
-            		}
-                 } else {
-                	result.setErrMsg(ret.get("result_msg").toString());
-                 	result.setErr_detail(ret.get("err_detail").toString());
-                 	result.setType(RESULT_TYPE.RUNTIME_ERROR);
-                 }
-             } else {
-             	result.setErrMsg("Not correct response!");
-             	result.setType(RESULT_TYPE.RUNTIME_ERROR);
-             }
-         } catch (Exception e) {
-         	result.setErrMsg("Network error!");
-         	result.setType(RESULT_TYPE.RUNTIME_ERROR);
-         }
-         return result;
+         	WebTarget target = client.target(BCUtilPrivate.getkApiRefund());
+	        try {
+	             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
+	             if (response.getStatus() == 200) {
+	                 Map<String, Object> ret = response.readEntity(Map.class);
+	
+	                 boolean isSuccess = (ret.containsKey("result_code") && StrUtil
+	                                 .toStr(ret.get("result_code")).equals("0"));
+	
+	                 if (isSuccess) {
+	             		if (channel.equals(PAY_CHANNEL.ALI)) {
+	            			result.setUrl(ret.get("url").toString());
+	            			result.setType(RESULT_TYPE.OK);
+	            		} else if (channel.equals(PAY_CHANNEL.UN)) {
+	            			result.setSucessMsg(ret.get("respMsg").toString());
+	            			result.setType(RESULT_TYPE.OK);
+	            		} else {
+	            			result.setSucessMsg(ValidationUtil.REFUND_ACCEPT);
+	            			result.setType(RESULT_TYPE.OK);
+	            		}
+	                 } else {
+	                	result.setErrMsg(ret.get("result_msg").toString());
+	                 	result.setErr_detail(ret.get("err_detail").toString());
+	                 	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+	                 }
+	             } else {
+	             	result.setErrMsg("Not correct response!");
+	             	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+	             }
+	         } catch (Exception e) {
+	         	result.setErrMsg("Network error!");
+	         	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+	         }
+	         return result;
     }
     
     /**
@@ -291,7 +289,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
     	Client client = BCAPIClient.client;
     	  
     	StringBuilder sb = new StringBuilder();   
-        sb.append("http://58.211.191.123:8080/1/rest/bills?para=");
+        sb.append(BCUtilPrivate.getkApiQueryBill());
         try {
             sb.append(URLEncoder.encode(
                             JSONObject.fromObject(param).toString(), "UTF-8"));
@@ -346,8 +344,6 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	UN_WEB 银联网页支付
      * @param refund_no
      * （DIRECT_REFUND和PRE_REFUND时必填）退款金额， 只能为整数，单位为分，例如1	
-     * @param buyer_id
-     * （必填）消费者ID， 消费者在商户系统内的唯一标识， 32个字节以内
      * @param start_time
      * （选填） 起始时间， Date类型
      * @param end_time
@@ -386,8 +382,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	    Client client = BCAPIClient.client;
      	
      	StringBuilder sb = new StringBuilder();
-        sb.append("http://58.211.191.123:8080/1/rest/refunds?para=");
-//     	sb.append("http://192.168.1.112:8080/1/rest/refund/query?para=");
+     	sb.append(BCUtilPrivate.getkApiQueryRefund());
          
         try {
              sb.append(URLEncoder.encode(
@@ -449,8 +444,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
         
         result = new BCQueryStatusResult();
         StringBuilder sb = new StringBuilder();   
-        sb.append("http://58.211.191.123:8080/1/rest/refund/status?para=");
-//        sb.append("http://192.168.1.101:8080/1/rest/refund/status?para=");
+        sb.append(BCUtilPrivate.getkApiQueryWXRefundStatus());
         
         
         Client client = BCAPIClient.client;

@@ -2,6 +2,9 @@ package cn.beecloud;
 
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,7 +24,7 @@ public class BCPayTest {
 
 	@Test
 	public void testPay() {
-		BCPayResult result = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, "ruitest0715015566", "中国总过中国总过中国总过中国总过", null, "http://beecloud.cn", null, null, null);
+		BCPayResult result = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, "ruitest071501556677", "中国总过中国总过中国总过中国总过", null, "http://beecloud.cn", null, null, null);
 		System.out.println("test");
 	}
 	

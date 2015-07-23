@@ -74,8 +74,7 @@ BeeCloud.registerApp("0950c062-5e41-44e3-8f52-f89d8cf2b6eb", "a5571c5a-591e-4fb9
 			}
 		
 		} else if (querytype.equals("wechatQuery")) {
-			//bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.WX, null, null, null, null, 50);
-			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.WX, null, null, new Date(), null, null);
+			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.WX, null, null, null, null, null);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
