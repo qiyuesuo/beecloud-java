@@ -4,6 +4,8 @@
 <%@ page import="cn.beecloud.*"%>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -18,10 +20,12 @@
 <%
 	String bill_no = request.getParameter("bill_no");
 	String channelString = request.getParameter("channel");
+	Map optional = new HashMap();
+	optional.put("test", "test");
 	Integer refund_fee = Integer.parseInt(request.getParameter("total_fee"));
 	PAY_CHANNEL channel = channelString.equals("WX")?PAY_CHANNEL.WX:channelString.equals("ALI")?PAY_CHANNEL.ALI:PAY_CHANNEL.UN;
 	String refund_no = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
-	BCPayResult result = BCPay.startBCRefund(channel, refund_no, bill_no, refund_fee, null);
+	BCPayResult result = BCPay.startBCRefund(channel, refund_no, bill_no, refund_fee, optional);
 	if (result.getType().ordinal() == 0 ) {
 		if (channel.equals(PAY_CHANNEL.WX)) {
 			out.println(result.getSucessMsg());

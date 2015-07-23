@@ -9,8 +9,10 @@
  */
 package cn.beecloud;
 
+import java.beans.beancontext.BeanContextProxy;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	WX_JSAPI 微信公众号支付
 	 * 	ALI_WEB 支付宝网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
+	 *  ALI_WAP: 支付宝移动网页支付
 	 * 	UN_WEB 银联网页支付
 	 * @param total_fee 
 	 * （必填）订单总金额， 只能为整数，单位为分，例如 1	
@@ -105,8 +108,8 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
         result = new BCPayResult();
         
         Client client = BCAPIClient.client;
+//        WebTarget target = client.target(BCUtilPrivate.getkApiPay());
         WebTarget target = client.target("http://58.211.191.123:8080/1/rest/bill");
-//        WebTarget target = client.target("http://192.168.1.112:8080/1/rest/bill");
         try {
             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
             if (response.getStatus() == 200) {
@@ -123,7 +126,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
                 	} else if (channel.equals(PAY_CHANNEL.WX_JSAPI)) {
                     	result.setType(RESULT_TYPE.OK);
                     	result.setWxJSAPIMap(generateWXJSAPIMap(ret));
-                    } else if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE)) {
+                    } else if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE) || channel.equals(PAY_CHANNEL.ALI_WAP)) {
                 		if (ret.containsKey("html") && null != ret.get("html") && 
                 				ret.containsKey("url") && null != ret.get("url")) {
 	                        result.setHtml(ret.get("html").toString());
@@ -195,41 +198,40 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
          
          	Client client = BCAPIClient.client;
 //         	WebTarget target = client.target(BCUtilPrivate.getkApiRefund());
-//         	WebTarget target = client.target("http://192.168.1.112:8080/1/rest/refund");
          	WebTarget target = client.target("http://58.211.191.123:8080/1/rest/refund");
-        try {
-             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
-             if (response.getStatus() == 200) {
-                 Map<String, Object> ret = response.readEntity(Map.class);
-
-                 boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                                 .toStr(ret.get("result_code")).equals("0"));
-
-                 if (isSuccess) {
-             		if (channel.equals(PAY_CHANNEL.ALI)) {
-            			result.setUrl(ret.get("url").toString());
-            			result.setType(RESULT_TYPE.OK);
-            		} else if (channel.equals(PAY_CHANNEL.UN)) {
-            			result.setSucessMsg(ret.get("respMsg").toString());
-            			result.setType(RESULT_TYPE.OK);
-            		} else {
-            			result.setSucessMsg(ValidationUtil.REFUND_ACCEPT);
-            			result.setType(RESULT_TYPE.OK);
-            		}
-                 } else {
-                	result.setErrMsg(ret.get("result_msg").toString());
-                 	result.setErr_detail(ret.get("err_detail").toString());
-                 	result.setType(RESULT_TYPE.RUNTIME_ERROR);
-                 }
-             } else {
-             	result.setErrMsg("Not correct response!");
-             	result.setType(RESULT_TYPE.RUNTIME_ERROR);
-             }
-         } catch (Exception e) {
-         	result.setErrMsg("Network error!");
-         	result.setType(RESULT_TYPE.RUNTIME_ERROR);
-         }
-         return result;
+	        try {
+	             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
+	             if (response.getStatus() == 200) {
+	                 Map<String, Object> ret = response.readEntity(Map.class);
+	
+	                 boolean isSuccess = (ret.containsKey("result_code") && StrUtil
+	                                 .toStr(ret.get("result_code")).equals("0"));
+	
+	                 if (isSuccess) {
+	             		if (channel.equals(PAY_CHANNEL.ALI)) {
+	            			result.setUrl(ret.get("url").toString());
+	            			result.setType(RESULT_TYPE.OK);
+	            		} else if (channel.equals(PAY_CHANNEL.UN)) {
+	            			result.setSucessMsg(ret.get("respMsg").toString());
+	            			result.setType(RESULT_TYPE.OK);
+	            		} else {
+	            			result.setSucessMsg(ValidationUtil.REFUND_ACCEPT);
+	            			result.setType(RESULT_TYPE.OK);
+	            		}
+	                 } else {
+	                	result.setErrMsg(ret.get("result_msg").toString());
+	                 	result.setErr_detail(ret.get("err_detail").toString());
+	                 	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+	                 }
+	             } else {
+	             	result.setErrMsg("Not correct response!");
+	             	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+	             }
+	         } catch (Exception e) {
+	         	result.setErrMsg("Network error!");
+	         	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+	         }
+	         return result;
     }
     
     /**
@@ -242,6 +244,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 *  ALI
 	 * 	ALI_APP 支付宝APP支付
 	 * 	ALI_WEB 支付宝网页支付
+	 *  ALI_WAP: 支付宝移动网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
 	 * 	UN
 	 * 	UN_APP 银联APP支付
@@ -249,20 +252,20 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
      * @param bill_no
      * （选填） 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一
      * @param start_time 
-     * （选填） 起始时间， 毫秒时间戳, 13位
+     * （选填） 起始时间， Date类型
      * @param end_time
-     * （选填） 结束时间， 毫秒时间戳, 13位	
+     * （选填） 结束时间，Date类型
      * @param skip
      * （选填） 查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	
      * @param limit
      * （选填） 查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
      * @return BCQueryResult
      */
-    public static BCQueryResult startQueryBill(PAY_CHANNEL channel, String bill_no, Long start_time, Long end_time, Integer skip, Integer limit) {
+    public static BCQueryResult startQueryBill(PAY_CHANNEL channel, String bill_no, Date start_time, Date end_time, Integer skip, Integer limit) {
     	
     	BCQueryResult result;
     	
-    	result = ValidationUtil.validateQueryBill(channel, bill_no, start_time, end_time, limit);
+    	result = ValidationUtil.validateQueryBill(channel, bill_no, limit);
     	
     	if (result.getType().ordinal() != 0) {
     		return result;
@@ -274,17 +277,21 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
          param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
          param.put("channel", channel.toString());
          param.put("bill_no", bill_no);
-         param.put("start_time", start_time);
-         param.put("end_time", end_time);
          param.put("skip", skip);
          param.put("limit", limit);
+         if (start_time != null) {
+        	 param.put("start_time", start_time.getTime());
+         }
+         if (end_time != null) {
+        	 param.put("end_time", end_time.getTime());
+         }
          
          result = new BCQueryResult();
     	
     	Client client = BCAPIClient.client;
     	  
     	StringBuilder sb = new StringBuilder();   
-        sb.append("http://58.211.191.123:8080/1/rest/bills?para=");
+        sb.append(BCUtilPrivate.getkApiQueryBill());
         try {
             sb.append(URLEncoder.encode(
                             JSONObject.fromObject(param).toString(), "UTF-8"));
@@ -325,32 +332,34 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
     /**
      * @param channel
      * （必填）渠道类型， 根据不同场景选择不同的支付方式，包含：
-     *  WX_APP 微信手机APP支付
+     *  WX
+     * 	WX_APP 微信手机APP支付
 	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	WX_JSAPI 微信公众号支付
+	 *  ALI
 	 * 	ALI_APP 支付宝APP支付
 	 * 	ALI_WEB 支付宝网页支付
+	 *  ALI_WAP: 支付宝移动网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
+	 * 	UN
 	 * 	UN_APP 银联APP支付
 	 * 	UN_WEB 银联网页支付
      * @param refund_no
      * （DIRECT_REFUND和PRE_REFUND时必填）退款金额， 只能为整数，单位为分，例如1	
-     * @param buyer_id
-     * （必填）消费者ID， 消费者在商户系统内的唯一标识， 32个字节以内
      * @param start_time
-     * （选填） 起始时间， 毫秒时间戳, 13位
+     * （选填） 起始时间， Date类型
      * @param end_time
-     * （选填） 结束时间， 毫秒时间戳, 13位	
+     * （选填） 结束时间， Date类型
      * @param skip
      * （选填） 查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	
      * @param limit
      * （选填） 查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
      * @return BCQueryResult
      */
-    public static BCQueryResult startQueryRefund(PAY_CHANNEL channel, String bill_no, String refund_no, Long start_time, Long end_time, Integer skip, Integer limit) {
+    public static BCQueryResult startQueryRefund(PAY_CHANNEL channel, String bill_no, String refund_no, Date start_time, Date end_time, Integer skip, Integer limit) {
     	
     	BCQueryResult result;
-    	result = ValidationUtil.validateQueryRefund(channel, bill_no, refund_no, start_time, end_time, limit);
+    	result = ValidationUtil.validateQueryRefund(channel, bill_no, refund_no, limit);
 		if (result.getType().ordinal() != 0) {
 			return result;
 		}
@@ -364,15 +373,18 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
         param.put("channel", channel.toString());
         param.put("bill_no", bill_no);
         param.put("refund_no", refund_no);
-        param.put("start_time", start_time);
-        param.put("end_time", end_time);
+        if (start_time != null) {
+        	param.put("start_time", start_time.getTime());
+        }
+        if (end_time != null) {
+        	param.put("end_time", end_time.getTime());
+        }
         param.put("skip", skip);
         param.put("limit", limit);
 	    Client client = BCAPIClient.client;
      	
      	StringBuilder sb = new StringBuilder();
-        sb.append("http://58.211.191.123:8080/1/rest/refunds?para=");
-//     	sb.append("http://192.168.1.112:8080/1/rest/refund/query?para=");
+     	sb.append(BCUtilPrivate.getkApiQueryRefund());
          
         try {
              sb.append(URLEncoder.encode(
@@ -434,8 +446,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
         
         result = new BCQueryStatusResult();
         StringBuilder sb = new StringBuilder();   
-        sb.append("http://58.211.191.123:8080/1/rest/refund/status?para=");
-//        sb.append("http://192.168.1.101:8080/1/rest/refund/status?para=");
+        sb.append(BCUtilPrivate.getkApiQueryWXRefundStatus());
         
         
         Client client = BCAPIClient.client;

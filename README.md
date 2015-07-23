@@ -110,11 +110,25 @@ if (bcPayResult.getType().ordinal() == 0) {
 }
 ```
 
+#### <a name="ali_wap">阿里移动网页调用</a>
+正确状态调用getHtml()方法或者getUrl()方法，getHtml()方法返回html,如将html输出至页面，即可开始支付。getUrl()方法返回支付宝跳转url,推荐使用html。
+```java
+bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, bill_no, "买水", null, null, null, null, null);
+if (bcPayResult.getType().ordinal() == 0) {
+	out.println(bcPayResult.getHtml());
+}
+else {
+	//handle the error message as you wish！
+	out.println(bcPayResult.getErrMsg());
+	out.println(bcPayResult.getErr_detail());
+}
+```
+
 代码中的各个参数含义如下：
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：WX_NATIVE 微信公众号二维码支付<br/>WX_JSAPI 微信公众号支付<br/>ALI_WEB 支付宝网页支付<br/>ALI_QRCODE 支付宝内嵌二维码支付<br/>UN_WEB 银联网页支付， （必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX_NATIVE 微信公众号二维码支付<br/>WX_JSAPI 微信公众号支付<br/>ALI_WEB 支付宝网页支付<br/>ALI_QRCODE 支付宝内嵌二维码支付<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br/>UN_WEB 银联网页支付， （必填）
 total_fee | 订单总金额， 只能为整数，单位为分，例如 1，（必填）
 bill_no | 商户订单号, 32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如(201506101035040000001),（必填）
 title | 订单标题， 32个字节内，最长支持16个汉字，（必填）
@@ -183,7 +197,7 @@ refund_fee | 退款金额，只能为整数，单位为分，例如1，（必填
 optional   |  附加数据 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，例如{"key1":"value1","key2":"value2",...}, （选填）
 return | BCPayResult, 根据type决定返回内容
 
-## <a name="payment">订单查询</a>
+## <a name="billQuery">订单查询</a>
 
 调用以下接口发起订单查询并将得到BCQueryResult对象，BCQueryResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErr_detail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。调用参数中，channel参数包含以下取值：
 WX、WX_NATIVE、WX_JSAPI、ALI、ALI_APP、ALI_WEB、ALI_QRCODE、UN、UN_APP、UN_WEB。其中WX、ALI、UN是其他子渠道的父渠道，返回的是各种子渠道返回结果的并集。
@@ -200,7 +214,7 @@ if (bcQueryResult.getType().ordinal() == 0) {
 	out.println(bcQueryResult.getErr_detail());
 }
 ```
-## <a name="payment">退款查询</a>
+## <a name="refundQuery">退款查询</a>
 调用以下接口发起退款查询并将得到BCQueryResult对象，BCQueryResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErr_detail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。调用参数中，channel参数包含以下取值：
 WX、WX_NATIVE、WX_JSAPI、ALI、ALI_APP、ALI_WEB、ALI_QRCODE、UN、UN_APP、UN_WEB。其中WX、ALI、UN是其他子渠道的父渠道，返回的是各种子渠道返回结果的并集。
 
@@ -220,17 +234,17 @@ if (bcQueryResult.getType().ordinal() == 0) {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付，（必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付，（必填）
 bill_no | 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一，	（选填）
-start_time | 起始时间， 毫秒时间戳, 13位，（选填）  
-end_time | 结束时间， 毫秒时间戳, 13位，（选填）  
+start_time | 起始时间， Date类型，（选填）  
+end_time | 结束时间， Date类型， （选填）  
 skip   |  查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	, （选填）
 limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
 return | BCQueryResult, 根据type决定返回内容
 
 
 
-## <a name="payment">微信退款状态查询</a>
+## <a name="wxRefundStatusQuery">微信退款状态查询</a>
 调用以下接口发起微信退款状态查询并将得到BCQueryStatusResult对象，BCQueryStatusResult对象包含两种状态，正确状态和错误状态，正确状态的BCQueryStatusResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErr_detail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。调用参数中，channel参数包含以下取值：
 WX、WX_NATIVE、WX_JSAPI、ALI、ALI_APP、ALI_WEB、ALI_QRCODE、UN、UN_APP、UN_WEB。其中WX、ALI、UN是其他子渠道的父渠道，返回的是各种子渠道返回结果的并集。
 
