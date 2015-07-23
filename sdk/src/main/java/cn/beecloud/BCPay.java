@@ -449,7 +449,6 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
         
         Client client = BCAPIClient.client;
         
-//        WebTarget target = client.target("http://192.168.1.101:8080/1/rest/pay");
         try {
         	sb.append(URLEncoder.encode(
                     JSONObject.fromObject(param).toString(), "UTF-8"));
