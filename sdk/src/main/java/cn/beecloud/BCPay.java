@@ -108,8 +108,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
         result = new BCPayResult();
         
         Client client = BCAPIClient.client;
-//        WebTarget target = client.target(BCUtilPrivate.getkApiPay());
-        WebTarget target = client.target("http://58.211.191.123:8080/1/rest/bill");
+        WebTarget target = client.target(BCUtilPrivate.getkApiPay());
         try {
             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
             if (response.getStatus() == 200) {
@@ -197,8 +196,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
          	result = new BCPayResult();
          
          	Client client = BCAPIClient.client;
-//         	WebTarget target = client.target(BCUtilPrivate.getkApiRefund());
-         	WebTarget target = client.target("http://58.211.191.123:8080/1/rest/refund");
+         	WebTarget target = client.target(BCUtilPrivate.getkApiRefund());
 	        try {
 	             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
 	             if (response.getStatus() == 200) {
@@ -451,7 +449,6 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
         
         Client client = BCAPIClient.client;
         
-//        WebTarget target = client.target("http://192.168.1.101:8080/1/rest/pay");
         try {
         	sb.append(URLEncoder.encode(
                     JSONObject.fromObject(param).toString(), "UTF-8"));

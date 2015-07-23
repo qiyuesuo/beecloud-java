@@ -200,7 +200,7 @@ return | BCPayResult, 根据type决定返回内容
 ## <a name="billQuery">订单查询</a>
 
 调用以下接口发起订单查询并将得到BCQueryResult对象，BCQueryResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErr_detail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。调用参数中，channel参数包含以下取值：
-WX、WX_NATIVE、WX_JSAPI、ALI、ALI_APP、ALI_WEB、ALI_QRCODE、UN、UN_APP、UN_WEB。其中WX、ALI、UN是其他子渠道的父渠道，返回的是各种子渠道返回结果的并集。
+WX、WX_NATIVE、WX_JSAPI、ALI、ALI_APP、ALI_WEB、ALI_QRCODE、ALI_WAP、UN、UN_APP、UN_WEB。其中WX、ALI、UN是其他子渠道的父渠道，返回的是各种子渠道返回结果的并集。
 
 正确状态调用bcQueryResult.getBcOrders()方法返回订单(BCOrderBean)的list集合。调用者可任意遍历，显示这个订单的list对象。
 
@@ -216,7 +216,7 @@ if (bcQueryResult.getType().ordinal() == 0) {
 ```
 ## <a name="refundQuery">退款查询</a>
 调用以下接口发起退款查询并将得到BCQueryResult对象，BCQueryResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErr_detail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。调用参数中，channel参数包含以下取值：
-WX、WX_NATIVE、WX_JSAPI、ALI、ALI_APP、ALI_WEB、ALI_QRCODE、UN、UN_APP、UN_WEB。其中WX、ALI、UN是其他子渠道的父渠道，返回的是各种子渠道返回结果的并集。
+WX、WX_NATIVE、WX_JSAPI、ALI、ALI_APP、ALI_WEB、ALI_QRCODE、ALI_WAP、UN、UN_APP、UN_WEB。其中WX、ALI、UN是其他子渠道的父渠道，返回的是各种子渠道返回结果的并集。
 
 正确状态调用bcQueryResult.getBcRefundList()方法返回退款记录(BCRefundBean)的list集合。调用者可任意遍历，显示这个退款记录的list对象。
 
@@ -264,3 +264,60 @@ if (result.getType().ordinal() == 0 ) {
 key | 说明
 ---- | -----
 refund_no | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是退款发起当日日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。，（必填）
+
+# **Demo**
+项目文件夹demo为我们的样例项目，详细展示如何使用java sdk.
+•关于支付宝的return_url
+
+请参考demo中的 return_url.jsp 
+•关于银联的return_url
+
+请参考demo中的 front_url.jsp
+•关于weekhook的接收
+
+请参考demo中的 notify_url.jsp  文档请阅读 ![webhook](https://beecloud.cn/doc/java.php#webhook)
+
+# **测试**
+TODO
+
+# **常见问题**
+待补充
+
+# **代码贡献**
+我们非常欢迎大家来贡献代码，我们会向贡献者致以最诚挚的敬意。
+
+一般可以通过在Github上提交![Pull Request](https://github.com/beecloud/beecloud-java)来贡献代码。
+
+Pull Request要求
+
+•代码规范 
+
+
+•代码格式化 
+
+
+•必须添加测试！ - 如果没有测试（单元测试、集成测试都可以），那么提交的补丁是不会通过的。
+
+
+•记得更新文档 - 保证 README.md 以及其他相关文档及时更新，和代码的变更保持一致性。
+
+
+•创建feature分支 - 最好不要从你的master分支提交 pull request。
+
+
+•一个feature提交一个pull请求 - 如果你的代码变更了多个操作，那就提交多个pull请求吧。
+
+
+•清晰的commit历史 - 保证你的pull请求的每次commit操作都是有意义的。如果你开发中需要执行多次的即时commit操作，那么请把它们放到一起再提交pull请求。
+
+
+# **联系我们**
+•如果有什么问题，可以到 321545822 BeeCloud开发者大联盟QQ群提问
+•更详细的文档，见源代码的注释以及![官方文档](https://beecloud.cn/doc/java.php)
+•如果发现了bug，欢迎提交![issue](https://github.com/beecloud/beecloud-java/issues)
+•如果有新的需求，欢迎提交![issue](https://github.com/beecloud/beecloud-java/issues)
+
+# **联系我们**
+The MIT License (MIT).
+
+
