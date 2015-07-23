@@ -275,7 +275,7 @@ refund_no | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 
 请参考demo中的 front_url.jsp
 •关于weekhook的接收
 
-请参考demo中的 notify_url.jsp  文档请阅读 ![webhook](https://beecloud.cn/doc/java.php#webhook)
+请参考demo中的 notify_url.jsp  文档请阅读 [webhook](https://beecloud.cn/doc/java.php#webhook)
 
 # **测试**
 TODO
@@ -286,7 +286,7 @@ TODO
 # **代码贡献**
 我们非常欢迎大家来贡献代码，我们会向贡献者致以最诚挚的敬意。
 
-一般可以通过在Github上提交![Pull Request](https://github.com/beecloud/beecloud-java)来贡献代码。
+一般可以通过在Github上提交[Pull Request](https://github.com/beecloud/beecloud-java)来贡献代码。
 
 Pull Request要求
 
@@ -313,9 +313,9 @@ Pull Request要求
 
 # **联系我们**
 •如果有什么问题，可以到 321545822 BeeCloud开发者大联盟QQ群提问
-•更详细的文档，见源代码的注释以及![官方文档](https://beecloud.cn/doc/java.php)
-•如果发现了bug，欢迎提交![issue](https://github.com/beecloud/beecloud-java/issues)
-•如果有新的需求，欢迎提交![issue](https://github.com/beecloud/beecloud-java/issues)
+•更详细的文档，见源代码的注释以及[官方文档](https://beecloud.cn/doc/java.php)
+•如果发现了bug，欢迎提交[issue](https://github.com/beecloud/beecloud-java/issues)
+•如果有新的需求，欢迎提交[issue](https://github.com/beecloud/beecloud-java/issues)
 
 # **联系我们**
 The MIT License (MIT).
