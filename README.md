@@ -14,7 +14,7 @@
 ```xml
 <dependency>   
     <groupId>cn.beecloud</groupId>
-    <artifactId>beecloud-java-sdk-beta\</artifactId>
+    <artifactId>beecloud-java-sdk-beta</artifactId>
     <version>1.0.2</version>
 </dependency>
 ```
@@ -97,12 +97,14 @@ if (bcPayResult.getType().ordinal() == 0) {
 ```
 
 #### <a name="ali_qrcode">阿里扫码调用</a>
-正确状态调用getHtml()方法或者getUrl()方法，getHtml()方法返回html,如将html输出至页面，即可开始支付。getUrl()方法返回支付宝内嵌二维码地址。
+正确状态调用getHtml()方法或者getUrl()方法，getHtml()方法返回html,如将html输出至页面，即可开始扫描支付。getUrl()方法返回支付宝内嵌二维码地址。需使用```<iframe>```加载此url
 ```java
 bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, bill_no, "农夫山泉", null, "http://beecloud.cn", null, null, null);
 if (bcPayResult.getType().ordinal() == 0) {
+    //使用html示例
 	out.println(bcPayResult.getHtml());
-	out.println(bcPayResult.getUrl());
+	//使用url示例
+	out.println("<html><iframe width='420' height='330' name='url' frameborder='0' src='" + bcPayResult.getUrl() + "'></iframe</html>");
 } else {
 	//handle the error message as you wish！
 	out.println(bcPayResult.getErrMsg());
