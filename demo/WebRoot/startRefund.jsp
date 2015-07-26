@@ -18,14 +18,14 @@
 </head>
 <body>
 <%
-	String bill_no = request.getParameter("bill_no");
+	String billNo = request.getParameter("bill_no");
 	String channelString = request.getParameter("channel");
 	Map optional = new HashMap();
 	optional.put("test", "test");
-	Integer refund_fee = Integer.parseInt(request.getParameter("total_fee"));
+	Integer refundFee = Integer.parseInt(request.getParameter("total_fee"));
 	PAY_CHANNEL channel = channelString.equals("WX")?PAY_CHANNEL.WX:channelString.equals("ALI")?PAY_CHANNEL.ALI:PAY_CHANNEL.UN;
-	String refund_no = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
-	BCPayResult result = BCPay.startBCRefund(channel, refund_no, bill_no, refund_fee, optional);
+	String refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
+	BCPayResult result = BCPay.startBCRefund(channel, refundNo, billNo, refundFee, null);
 	if (result.getType().ordinal() == 0 ) {
 		if (channel.equals(PAY_CHANNEL.WX)) {
 			out.println(result.getSucessMsg());
@@ -36,7 +36,7 @@
 		}
 	} else {
 		out.println(result.getErrMsg());
-		out.println(result.getErr_detail());
+		out.println(result.getErrDetail());
 	}
 %>
 </body>

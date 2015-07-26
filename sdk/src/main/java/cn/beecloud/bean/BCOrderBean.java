@@ -6,11 +6,11 @@ package cn.beecloud.bean;
  */
 public class BCOrderBean {
 
-	private String bill_no;
+	private String billNo;
 	
-	private String buyer_id;
+	private String buyerId;
 	
-	private String total_fee;
+	private String totalFee;
 	
 	private String title;
 	
@@ -18,34 +18,34 @@ public class BCOrderBean {
 	
 	private String channel;
 	
-	private boolean spay_result;
+	private boolean spayResult;
     
-	private long created_time;
+	private long createdTime;
 	
 	private String dateTime;
 
-	public String getBill_no() {
-		return bill_no;
+	public String getBillNo() {
+		return billNo;
 	}
 
-	public void setBill_no(String bill_no) {
-		this.bill_no = bill_no;
+	public void setBillNo(String billNo) {
+		this.billNo = billNo;
 	}
 
-	public String getBuyer_id() {
-		return buyer_id;
+	public String getBuyerId() {
+		return buyerId;
 	}
 
-	public void setBuyer_id(String buyer_id) {
-		this.buyer_id = buyer_id;
+	public void setBuyerId(String buyerId) {
+		this.buyerId = buyerId;
 	}
 
-	public String getTotal_fee() {
-		return total_fee;
+	public String getTotalFee() {
+		return totalFee;
 	}
 
-	public void setTotal_fee(String total_fee) {
-		this.total_fee = total_fee;
+	public void setTotalFee(String totalFee) {
+		this.totalFee = totalFee;
 	}
 
 	public String getTitle() {
@@ -64,20 +64,20 @@ public class BCOrderBean {
 		this.desc = desc;
 	}
 
-	public boolean isSpay_result() {
-		return spay_result;
+	public boolean isSpayResult() {
+		return spayResult;
 	}
 
-	public void setSpay_result(boolean spay_result) {
-		this.spay_result = spay_result;
+	public void setSpayResult(boolean spayResult) {
+		this.spayResult = spayResult;
 	}
 
-	public long getCreated_time() {
-		return created_time;
+	public long getCreatedTime() {
+		return createdTime;
 	}
 
-	public void setCreated_time(long created_time) {
-		this.created_time = created_time;
+	public void setCreatedTime(long createdTime) {
+		this.createdTime = createdTime;
 	}
 
 	public String getDateTime() {

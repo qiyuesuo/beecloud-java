@@ -34,10 +34,10 @@
 </head>
 <body>
 	<%
-		Object trade_status = request.getParameter("trade_status");
+		Object tradeStatus = request.getParameter("trade_status");
 		
-		if(trade_status != null) {
-			if (trade_status.toString().equals("TRADE_SUCCESS") || "TRADE_FINISH".equals(trade_status.toString())) {
+		if(tradeStatus != null) {
+			if (tradeStatus.toString().equals("TRADE_SUCCESS") || "TRADE_FINISH".equals(tradeStatus.toString())) {
 				//成功逻辑
 				out.println("<h3>支付宝网页支付成功，商户应自行实现成功逻辑！</h3>");
 			} else {

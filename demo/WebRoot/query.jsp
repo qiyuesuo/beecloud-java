@@ -38,7 +38,7 @@
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 			}else {
 				out.println(bcQueryResult.getErrMsg());
-				out.println(bcQueryResult.getErr_detail());
+				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("wechatQuery")) {
 			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.WX, null, null, null, null, null, null);
@@ -48,7 +48,7 @@
 				pageContext.setAttribute("isWeChat", true);
 			}else {
 				out.println(bcQueryResult.getErrMsg());
-				out.println(bcQueryResult.getErr_detail());
+				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("unionQuery")) {
 			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.UN, null, null, null, null, null, null);
@@ -57,7 +57,7 @@
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 			}else {
 				out.println(bcQueryResult.getErrMsg());
-				out.println(bcQueryResult.getErr_detail());
+				out.println(bcQueryResult.getErrDetail());
 			}
 		}
 	}else {
@@ -69,7 +69,7 @@
 				pageContext.setAttribute("channel", "ALI");
 			} else {
 				out.println(bcQueryResult.getErrMsg());
-				out.println(bcQueryResult.getErr_detail());
+				out.println(bcQueryResult.getErrDetail());
 			}
 		
 		} else if (querytype.equals("wechatQuery")) {
@@ -80,7 +80,7 @@
 				pageContext.setAttribute("channel", "WX");
 			} else {
 				out.println(bcQueryResult.getErrMsg());
-				out.println(bcQueryResult.getErr_detail());
+				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("unionQuery")) {
 			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.UN, null, null, null, null, null);
@@ -90,7 +90,7 @@
 				pageContext.setAttribute("channel", "UN");
 			} else {
 				out.println(bcQueryResult.getErrMsg());
-				out.println(bcQueryResult.getErr_detail());
+				out.println(bcQueryResult.getErrDetail());
 			}
 		}
 	}
@@ -98,10 +98,10 @@
 <c:if test="${billSize != null and billSize !=0}">
 	<table border="3" class="table"><tr><th>订单号</th><th>总金额</th><th>标题</th><th>渠道</th><th>已付款</th><th>创建时间</th><th>发起退款</th></tr>
 		<c:forEach var="bill" items="${bills}" varStatus="index"> 
-			<tr><td>${bill.bill_no}</td><td>${bill.total_fee}</td><td>${bill.title}</td><td>${bill.channel}</td><td>${bill.spay_result}</td><td>${bill.dateTime}</td>
-				<c:if test="${bill.spay_result == true}">
+			<tr><td>${bill.billNo}</td><td>${bill.totalFee}</td><td>${bill.title}</td><td>${bill.channel}</td><td>${bill.spayResult}</td><td>${bill.dateTime}</td>
+				<c:if test="${bill.spayResult == true}">
 					<td align="center" >
-						<input class="button" type="button" onclick="startRefund('${bill.bill_no}', ${bill.total_fee}, '${channel}')" value="退款"/>
+						<input class="button" type="button" onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${channel}')" value="退款"/>
 					</td>
 				</c:if>
 			</tr>
@@ -111,10 +111,10 @@
 <c:if test="${refundSize != null and refundSize !=0}">
 	<table border="3" class="table"><tr><th>订单号</th><th>退款单号</th><th>订单金额</th><th>退款金额</th><th>渠道</th><th>是否结束</th><th>是否退款</th><th>退款创建时间</th><c:if test="${isWeChat != null}"><th>退款状态查询</th></c:if></tr>
 		<c:forEach var="refund" items="${refundList}" varStatus="index"> 
-			<tr align="center" ><td>${refund.bill_no}</td><td>${refund.refund_no}</td><td>${refund.total_fee}</td><td>${refund.refund_fee}</td><td>${refund.channel}</td><td>${refund.finished}</td><td>${refund.refunded}</td><td>${refund.dateTime}</td>
+			<tr align="center" ><td>${refund.billNo}</td><td>${refund.refundNo}</td><td>${refund.totalFee}</td><td>${refund.refundFee}</td><td>${refund.channel}</td><td>${refund.finished}</td><td>${refund.refunded}</td><td>${refund.dateTime}</td>
 			<c:if test="${isWeChat != null}">
 			<td>
-			<input class="button" type="button" onclick="queryStatus('${refund.refund_no}')" value="查询"/>
+			<input class="button" type="button" onclick="queryStatus('${refund.refundNo}')" value="查询"/>
 			</td>
 			</c:if>
 			</tr>

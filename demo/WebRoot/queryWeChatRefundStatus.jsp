@@ -19,7 +19,7 @@
 		out.println(result.getRefundStatus());
 	} else {
 		out.println(result.getErrMsg());
-		out.println(result.getErr_detail());
+		out.println(result.getErrDetail());
 	}
 %>
 </body>

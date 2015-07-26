@@ -9,13 +9,13 @@ import java.util.Map;
  */
 public class BCRefundBean {
 	
-	private String bill_no;
+	private String billNo;
 	
-	private String refund_no;
+	private String refundNo;
 	
-	private String total_fee;
+	private String totalFee;
 	
-	private String refund_fee;
+	private String refundFee;
 	
 	private String channel;
 	
@@ -25,36 +25,36 @@ public class BCRefundBean {
 	
 	private String dateTime;
 
-	public String getBill_no() {
-		return bill_no;
+	public String getBillNo() {
+		return billNo;
 	}
 
-	public void setBill_no(String bill_no) {
-		this.bill_no = bill_no;
+	public void setBillNo(String billNo) {
+		this.billNo = billNo;
 	}
 
-	public String getRefund_no() {
-		return refund_no;
+	public String getRefundNo() {
+		return refundNo;
 	}
 
-	public void setRefund_no(String refund_no) {
-		this.refund_no = refund_no;
+	public void setRefundNo(String refundNo) {
+		this.refundNo = refundNo;
 	}
 
-	public String getTotal_fee() {
-		return total_fee;
+	public String getTotalFee() {
+		return totalFee;
 	}
 
-	public void setTotal_fee(String total_fee) {
-		this.total_fee = total_fee;
+	public void setTotalFee(String totalFee) {
+		this.totalFee = totalFee;
 	}
 
-	public String getRefund_fee() {
-		return refund_fee;
+	public String getRefundFee() {
+		return refundFee;
 	}
 
-	public void setRefund_fee(String refund_fee) {
-		this.refund_fee = refund_fee;
+	public void setRefundFee(String refundFee) {
+		this.refundFee = refundFee;
 	}
 
 	public String getDateTime() {
