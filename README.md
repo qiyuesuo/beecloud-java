@@ -6,7 +6,7 @@
 
 # **安装**
 
-1.从[github](https://github.com/beecloud/beecloud-rest-api/releases)下载带依赖的jar文件,然后导入到自己的工程依赖包中。
+1.从[github](https://github.com/beecloud/beecloud-java/releases)下载带依赖的jar文件,然后导入到自己的工程依赖包中。
 
 
 2.若是工程采用maven进行依赖配置，可在自己工程的pom.xml文件里加入以下配置
