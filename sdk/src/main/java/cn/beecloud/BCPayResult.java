@@ -18,11 +18,11 @@ public class BCPayResult {
 	
 	private String errMsg;
 	
-	private String err_detail;
+	private String errDetail;
 	
 	private RESULT_TYPE type;
 	
-	private String code_url;
+	private String codeUrl;
 	
 	private String html;
 	
@@ -53,12 +53,12 @@ public class BCPayResult {
 		this.type = type;
 	}
 
-	public String getCode_url() {
-		return code_url;
+	public String getCodeUrl() {
+		return codeUrl;
 	}
 
-	public void setCode_url(String code_url) {
-		this.code_url = code_url;
+	public void setCodeUrl(String codeUrl) {
+		this.codeUrl = codeUrl;
 	}
 
 	public String getHtml() {
@@ -93,12 +93,12 @@ public class BCPayResult {
 		this.sucessMsg = sucessMsg;
 	}
 
-	public String getErr_detail() {
-		return err_detail;
+	public String getErrDetail() {
+		return errDetail;
 	}
 
-	public void setErr_detail(String err_detail) {
-		this.err_detail = err_detail;
+	public void setErrDetail(String errDetail) {
+		this.errDetail = errDetail;
 	}
 
 	public Map<String, Object> getWxJSAPIMap() {

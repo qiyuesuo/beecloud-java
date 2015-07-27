@@ -18,7 +18,7 @@ public class BCQueryResult {
 	
 	private String errMsg;
 	
-	private String err_detail;
+	private String errDetail;
 	
 	private RESULT_TYPE type;
 	
@@ -64,12 +64,12 @@ public class BCQueryResult {
 		this.bcOrders = bcOrders;
 	}
 
-	public String getErr_detail() {
-		return err_detail;
+	public String getErrDetail() {
+		return errDetail;
 	}
 
-	public void setErr_detail(String err_detail) {
-		this.err_detail = err_detail;
+	public void setErrDetail(String errDetail) {
+		this.errDetail = errDetail;
 	}
 
 	public List<BCRefundBean> getBcRefundList() {

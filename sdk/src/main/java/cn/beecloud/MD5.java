@@ -21,12 +21,12 @@ class MD5 {
      *
      * @param text          需要签名的字符串
      * @param key           密钥
-     * @param input_charset 编码格式
+     * @param inputCharset 编码格式
      * @return 签名结果
      */
-    static String sign(String text, String key, String input_charset) {
+    static String sign(String text, String key, String inputCharset) {
         text = text + key;
-        return DigestUtils.md5Hex(getContentBytes(text, input_charset));
+        return DigestUtils.md5Hex(getContentBytes(text, inputCharset));
     }
 
     /**
@@ -35,12 +35,12 @@ class MD5 {
      * @param text          需要签名的字符串
      * @param sign          签名结果
      * @param key           密钥
-     * @param input_charset 编码格式
+     * @param inputCharset 编码格式
      * @return 签名结果
      */
-    static boolean verify(String text, String sign, String key, String input_charset) {
+    static boolean verify(String text, String sign, String key, String inputCharset) {
         text = text + key;
-        String mysign = DigestUtils.md5Hex(getContentBytes(text, input_charset));
+        String mysign = DigestUtils.md5Hex(getContentBytes(text, inputCharset));
         if (mysign.equals(sign)) {
             return true;
         } else {

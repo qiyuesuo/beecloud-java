@@ -24,7 +24,9 @@ public class BCPayTest {
 
 	@Test
 	public void testPay() {
-		BCPayResult result = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, "ruitest071501556677", "中国总过中国总过中国总过中国总过", null, "http://beecloud.cn", null, null, null);
+		Map map = new HashMap();
+		map.put("opchannel", "1002");
+		BCPayResult result = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, "201507240100010000006235", "气费", map, "http://118.186.253.55:8889/V04/99bill.html", null, null, null);
 		System.out.println("test");
 	}
 	

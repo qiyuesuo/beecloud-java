@@ -37,23 +37,19 @@
 	<%
 		//以下代码用session获得交易信息，可由商户根据自己的项目决定实现方式
 		//return_url示例（商户根据自身系统指定）
-		String return_url = "http://localhost:8080/PC-Web-Pay-Demo/return_url.jsp";
-		String front_url = "http://localhost:8080/PC-Web-Pay-Demo/front_url.jsp";
-		String seller_email = "admin@beecloud.cn";
+		String returnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url.jsp";
+		String frontUrl = "http://localhost:8080/PC-Web-Pay-Demo/front_url.jsp";
+		String sellerEmail = "admin@beecloud.cn";
 		
 		//模拟商户的交易编号
-		String bill_no = BCUtil.generateRandomUUIDPure();
+		String billNo = BCUtil.generateRandomUUIDPure();
 		String subject = "water";
-		String total_fee = "1";
+		String totalFee = "1";
 		String body = "test";
-		String show_url = (String) session.getAttribute("show_url");
-		String anti_phishing_key = (String) session
-				.getAttribute("anti_phishing_key");
-		String exter_invoke_ip = (String) session
-				.getAttribute("exter_invoke_ip");
+		String showUrl = (String) session.getAttribute("showUrl");
 		
 		Map optional = new HashMap();
-		optional.put("test", "test");
+		optional.put("opchannel", "1002");
 
 		String type = request.getParameter("paytype");
 
@@ -64,50 +60,50 @@
 		
 		if (type.equals("alipay")) {
 			
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, bill_no, "买水", null, return_url, "openid0000000000001", null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, billNo, "买水", null, returnUrl, "openid0000000000001", null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
 			else {
 				//handle the error message as you wish！
 				out.println(bcPayResult.getErrMsg());
-				out.println(bcPayResult.getErr_detail());
+				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("alipayQr")) {
 			
-            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, bill_no, "买水", null, return_url, null, null, QR_PAY_MODE.MODE_BRIEF_FRONT);
+            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, billNo, "买水", null, returnUrl, null, null, QR_PAY_MODE.MODE_BRIEF_FRONT);
             if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
 			else {
 				//handle the error message as you wish！
 				out.println(bcPayResult.getErrMsg());
-				out.println(bcPayResult.getErr_detail());
+				out.println(bcPayResult.getErrDetail());
 			}
             
 		} else if (type.equals("alipayWAP")) {
 			
-            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, bill_no, "买水", null, null, null, null, null);
+            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, billNo, "买水", null, null, null, null, null);
             if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
 			else {
 				//handle the error message as you wish！
 				out.println(bcPayResult.getErrMsg());
-				out.println(bcPayResult.getErr_detail());
+				out.println(bcPayResult.getErrDetail());
 			}
             
 		} else if (type.equals("wechatQr")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, bill_no, "买水", optional, null, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, billNo, "买水", null, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 			}
 			else {
 				//handle the error message as you wish！
 				out.println(bcPayResult.getErrMsg());
-				out.println(bcPayResult.getErr_detail());
+				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("wechatJSAPI")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, bill_no, "买水", null, null, "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, billNo, "买水", null, null, "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null);
 			System.out.println(bcPayResult.getType());
 			if (bcPayResult.getType().ordinal() == 0) {
 				Map<String, Object> map = bcPayResult.getWxJSAPIMap();
@@ -118,19 +114,19 @@
 			else {
 				//handle the error message as you wish！
 				out.println(bcPayResult.getErrMsg());
-				out.println(bcPayResult.getErr_detail());
+				out.println(bcPayResult.getErrDetail());
 			}
 		}
 		
 		else if (type.equals("unionpay")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, bill_no, "买水", optional, front_url, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, billNo, "买水", optional, frontUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
 			else {
 				//handle the error message as you wish！
 				out.println(bcPayResult.getErrMsg());
-				out.println(bcPayResult.getErr_detail());
+				out.println(bcPayResult.getErrDetail());
 			}
 		}
 	%>
@@ -141,7 +137,7 @@
 <script type="text/javascript">
     var type = '<%=type%>';
     var isCodeUrl = <%=bcPayResult.getType().ordinal()%>;
-    var codeUrl = '<%=bcPayResult.getCode_url()%>';
+    var codeUrl = '<%=bcPayResult.getCodeUrl()%>';
             function makeqrcode() {
                 var qr = qrcode(10, 'M');
                 qr.addData(codeUrl);
