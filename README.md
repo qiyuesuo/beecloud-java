@@ -297,7 +297,42 @@ refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 �
 TODO
 
 # **常见问题**
-待补充
+- 网页在手机上如何使用微信支付？  
+1.由于微信的限制，现在手机网页只能在微信APP内实现使用微信支付，即微信公众号支付（WX_JSAPI）  
+2.WX_JSAPI支付配置相对复杂，请参考[微信文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_1)  
+3.示例代码，调用js方法`callpay()`即可使用
+
+```js
+function onBridgeReady(){
+   WeixinJSBridge.invoke(
+       'getBrandWCPayRequest', {
+           //以下参数的值由BCPayByChannel方法返回来的数据填入即可
+           "appId" : "wx2421b1c4370ec43b",          
+           "timeStamp":" 1395712654",              
+           "nonceStr" : "e61463f8efa94090b1f366cccfbbb444",
+           "package" : "prepay_id=u802345jgfjsdfgsdg888",  
+           "signType" : "MD5",     
+           "paySign" : "70EA570631E4BB79628FBCA90534C63FF7FADD89" 
+       },
+       function(res){     
+           if(res.err_msg == "get_brand_wcpay_request:ok" ) {}     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
+       }
+   ); 
+}
+function callpay()
+{
+    if (typeof WeixinJSBridge == "undefined"){
+        if( document.addEventListener ){
+            document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+        }else if (document.attachEvent){
+            document.attachEvent('WeixinJSBridgeReady', jsApiCall); 
+            document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+        }
+    }else{
+        jsApiCall();
+    }
+}
+```
 
 # **代码贡献**
 我们非常欢迎大家来贡献代码，我们会向贡献者致以最诚挚的敬意。
