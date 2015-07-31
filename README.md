@@ -291,7 +291,7 @@ refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 �
 请参考demo中的 front_url.jsp
 •关于weekhook的接收
 
-请参考demo中的 notify_url.jsp  文档请阅读 [webhook](https://beecloud.cn/doc/java.php#webhook)
+请参考demo中的 notify_url.jsp  文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
 
 # **测试**
 TODO
