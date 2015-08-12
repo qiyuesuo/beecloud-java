@@ -365,7 +365,7 @@ Pull Request要求
 ## 联系我们
 •如果有什么问题，可以到 321545822 BeeCloud开发者大联盟QQ群提问
 
-•更详细的文档，见源代码的注释以及[官方文档](https://beecloud.cn/doc/java.php)
+•更详细的文档，见源代码的注释以及[官方文档](https://beecloud.cn/doc/?index=4)
 
 •如果发现了bug，欢迎提交[issue](https://github.com/beecloud/beecloud-java/issues)
 
