@@ -26,7 +26,7 @@ public class BCPayTest {
 	public void testPay() {
 		Map map = new HashMap();
 		map.put("opchannel", "1002");
-		BCPayResult result = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, "201507240100010000006235", "气费", map, "http://118.186.253.55:8889/V04/99bill.html", null, null, null);
+		BCPayResult result = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, "201508130100010000005644", "气费", map, "http://118.186.253.55:8889/V04/99bill.html", null, null, null);
 		System.out.println("test");
 	}
 	

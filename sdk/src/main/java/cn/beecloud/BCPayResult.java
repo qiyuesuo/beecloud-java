@@ -28,6 +28,8 @@ public class BCPayResult {
 	
 	private String url;
 	
+	private String aliQrCode;
+	
 	private Map<String, Object> wxJSAPIMap;
 
 	public RESULT_TYPE getType() {
@@ -107,5 +109,13 @@ public class BCPayResult {
 
 	public void setWxJSAPIMap(Map<String, Object> wxJSAPIMap) {
 		this.wxJSAPIMap = wxJSAPIMap;
+	}
+
+	public String getAliQrCode() {
+		return aliQrCode;
+	}
+
+	public void setAliQrCode(String aliQrCode) {
+		this.aliQrCode = aliQrCode;
 	}
 }

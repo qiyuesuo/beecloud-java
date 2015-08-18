@@ -1,3 +1,4 @@
+<%@page import="java.util.Calendar"%>
 <%@page import="cn.beecloud.BCEumeration.PAY_CHANNEL"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -32,7 +33,7 @@
 	
 	if(queryRefund != null) {
 		if (querytype.equals("aliQuery")) {
-			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.ALI, null, null, null, null, null, null);
+			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.ALI, null, null, null, null, null, 25);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
@@ -59,10 +60,22 @@
 				out.println(bcQueryResult.getErrMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
+		} else if (querytype.equals("noChannelQuery")) {
+			Date date = new Date();
+			Calendar c = Calendar.getInstance();  
+			c.add(Calendar.MINUTE, -120);
+			bcQueryResult = BCPay.startQueryRefund(null, null, null, null, date, null, 50);
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
+				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			}
 		}
 	}else {
 		if (querytype.equals("aliQuery")) {
-			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.ALI_WEB, null, null, null, null, null);
+			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.ALI, null, null, null, null, null);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
@@ -83,11 +96,25 @@
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("unionQuery")) {
-			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.UN, null, null, null, null, null);
+			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.UN, null, null, null, null, 50);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
 				pageContext.setAttribute("channel", "UN");
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			}
+		} else if (querytype.equals("noChannelQuery")) {
+			Date date = new Date();
+			Calendar c = Calendar.getInstance();  
+			c.add(Calendar.MINUTE, -60);
+			bcQueryResult = BCPay.startQueryBill(null, null, null, null, null, null);
+			//bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.UN, null, c.getTime(), date, null, 50);
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
+				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
+				pageContext.setAttribute("channel", null);
 			} else {
 				out.println(bcQueryResult.getErrMsg());
 				out.println(bcQueryResult.getErrDetail());
@@ -100,9 +127,9 @@
 		<c:forEach var="bill" items="${bills}" varStatus="index"> 
 			<tr><td>${bill.billNo}</td><td>${bill.totalFee}</td><td>${bill.title}</td><td>${bill.channel}</td><td>${bill.spayResult}</td><td>${bill.dateTime}</td>
 				<c:if test="${bill.spayResult == true}">
-					<td align="center" >
-						<input class="button" type="button" onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${channel}')" value="退款"/>
-					</td>
+						<td align="center" >
+							<input class="button" type="button" onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${channel}')" value="退款"/>
+						</td>
 				</c:if>
 			</tr>
 		</c:forEach> 

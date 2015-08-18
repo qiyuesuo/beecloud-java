@@ -20,8 +20,20 @@ public class ValidationUtil
 	private final static String BILL_NO_FORMAT_INVALID =
 			"bill_no 是一个长度不超过32字符的数字字母字符串！";
 	
+	private final static String BATCH_NO_FORMAT_INVALID =
+			"batch_no 是一个长度在11到32个字符的数字字母字符串！";
+	
 	private final static String BILL_NO_EMPTY =
 			"bill_no 必填！";
+	
+	private final static String BATCH_NO_EMPTY =
+			"batch_no 必填！";
+	
+	private final static String TRANSFER_DATA_EMPTY =
+			"transfer_data 必填！";
+	
+	private final static String ACCOUNT_NAME_EMPTY =
+			"account_name 必填！";
 	
 	private final static String TITLE_EMPTY =
 			"title 必填！";
@@ -54,7 +66,7 @@ public class ValidationUtil
 	
 	final static String REFUND_REJECT = "退款被拒绝！ ";
 	
-	final static String REFUND_ACCEPT = "退款被同意！ ";
+	final static String REFUND_SUCCESS = "退款已经成功！ ";
 	
 	public static BCPayResult validateResultFromBackend(Map<String, Object> ret) {
 		
@@ -98,9 +110,7 @@ public class ValidationUtil
 
 	public static BCPayResult validateBCRefund(PAY_CHANNEL channel,
 			String refundNo, String billNo) {
-		 if (channel == null) {
-			return new BCPayResult(CHANNEL_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
-		 } else if (!channel.equals(PAY_CHANNEL.WX) && !channel.equals(PAY_CHANNEL.ALI) && !channel.equals(PAY_CHANNEL.UN)) {
+		 if (channel != null && !channel.equals(PAY_CHANNEL.WX) && !channel.equals(PAY_CHANNEL.ALI) && !channel.equals(PAY_CHANNEL.UN)) {
 			 return new BCPayResult(CHANNEL_INVALID_FOR_REFUND, RESULT_TYPE.VALIDATION_ERROR);
 		 } else if (StrUtil.empty(refundNo)) {
 			return new BCPayResult(REFUND_NO_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
@@ -120,9 +130,7 @@ public class ValidationUtil
 
 	public static BCQueryResult validateQueryBill(PAY_CHANNEL channel,
 			String billNo, Integer limit) {
-		 if (channel == null) {
-			return new BCQueryResult(CHANNEL_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
-		 } else if (!StrUtil.empty(billNo) && !billNo.matches("[0-9A-Za-z]{1,32}")) {
+		 if (channel != null && !StrUtil.empty(billNo) && !billNo.matches("[0-9A-Za-z]{1,32}")) {
 			return new BCQueryResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		 } else if (limit != null && limit > 50) {
 			return new BCQueryResult(LIMIT_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
@@ -133,9 +141,7 @@ public class ValidationUtil
 
 	public static BCQueryResult validateQueryRefund(PAY_CHANNEL channel, String billNo,
 			String refundNo, Integer limit) {
-		if (channel == null) {
-			return new BCQueryResult(CHANNEL_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
-		} else if (!StrUtil.empty(billNo) && !billNo.matches("[0-9A-Za-z]{1,32}")) {
+		if (!StrUtil.empty(billNo) && !billNo.matches("[0-9A-Za-z]{1,32}")) {
 			return new BCQueryResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		} else if (!StrUtil.empty(refundNo) && (!refundNo.substring(8, refundNo.length()).matches("[0-9A-Za-z]{3,24}") || 
 				refundNo.substring(8, refundNo.length()).matches("000")) ) {
@@ -153,6 +159,22 @@ public class ValidationUtil
 			return new BCQueryStatusResult(REFUND_NO_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
 		}
 		return new BCQueryStatusResult(RESULT_TYPE.OK);
+	}
+
+	public static BCPayResult validateBCTransfer(String channel,
+			String batchNo, String accountName, String transferData) {
+		if (channel == null) {
+			return new BCPayResult(CHANNEL_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (batchNo == null) {
+			return new BCPayResult(BATCH_NO_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (!batchNo.matches("[0-9A-Za-z]{11,32}")) {
+			return new BCPayResult(BATCH_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (accountName == null) {
+			return new BCPayResult(ACCOUNT_NAME_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (transferData == null) {
+			return new BCPayResult(TRANSFER_DATA_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
+		}
+		return new BCPayResult(RESULT_TYPE.OK);
 	}
 		
 }
