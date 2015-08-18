@@ -8,10 +8,10 @@
 <%@ page import="cn.beecloud.BCEumeration.PAY_CHANNEL"%>
 <%@ page import="cn.beecloud.BCEumeration.*"%>
 <%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="java.util.Date" %>
+<%@ page import="java.util.*" %>
 <%@ page import="net.sf.json.JSONObject" %>
 <%@ page import="java.util.Map" %>
-
+<%@ page import="cn.beecloud.bean.TransferData"%>
 <%
 	/* *
 	 功能：商户结算跳转至指定支付方式页面
@@ -105,9 +105,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
             
-		} 
-		
-		else if (type.equals("wechatQr")) {
+		} else if (type.equals("wechatQr")) {
 			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, "aabbbccdddeeffff22334455tr", "买水", null, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 			}
@@ -130,12 +128,27 @@
 				out.println(bcPayResult.getErrMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
-		}
-		
-		else if (type.equals("unionpay")) {
+		} else if (type.equals("unionpay")) {
 			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, "aabbbccdddeeffff22334455tr", "买矿泉水", optional, frontUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
+			}
+			else {
+				//handle the error message as you wish！
+				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getErrDetail());
+			}
+		} else if (type.equals("alitransfer")) {
+			List<TransferData> list = new ArrayList<TransferData>();
+			TransferData data1 = new TransferData("transfertest11221", "13584809743", "袁某某", 1, "赏赐");
+			TransferData data2 = new TransferData("transfertest11221", "13584809742", "张某某", 1, "赏赐");
+			list.add(data1);
+			list.add(data2);
+			
+			
+			bcPayResult = BCPay.startTransfer(PAY_CHANNEL.ALI, "transfertest1122transfertest1125", "苏州比可网络科技有限公司", list);
+			if (bcPayResult.getType().ordinal() == 0) {
+				response.sendRedirect(bcPayResult.getUrl());
 			}
 			else {
 				//handle the error message as you wish！

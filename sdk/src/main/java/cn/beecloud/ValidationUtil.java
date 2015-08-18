@@ -3,10 +3,12 @@ package cn.beecloud;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
+import cn.beecloud.bean.TransferData;
 
 /**
  * This class is used to unify the validation for all the
@@ -31,6 +33,21 @@ public class ValidationUtil
 	
 	private final static String TRANSFER_DATA_EMPTY =
 			"transfer_data 必填！";
+	
+	private final static String TRANSFER_ID_EMPTY =
+			"transferId 不能为空！";
+	
+	private final static String RECEIVER_ACCOUNT_EMPTY =
+			"receiverAccount 不能为空！";
+	
+	private final static String RECEIVER_NAME_EMPTY =
+			"receiverName 不能为空！";
+	
+	private final static String TRANSFER_FEE_EMPTY =
+			"transferFee 不能为空！";
+	
+	private final static String TRANSFER_NOTE_EMPTY =
+			"transferNote 不能为空！";
 	
 	private final static String ACCOUNT_NAME_EMPTY =
 			"account_name 必填！";
@@ -61,6 +78,15 @@ public class ValidationUtil
 	
 	private final static String CHANNEL_INVALID_FOR_REFUND =
 			"退款只支持WX, UN, ALI !";
+	
+	private final static String TRANSFER_ID_FORMAT_EMPTY = 
+			"transferId 是一个长度不超过32字符的数字字母字符串！";
+	
+	private final static String TRANSFER_LIST_SIZE_INVALID = 
+			"transferData 长度不能超过1000！";
+	
+	private final static String CHANNEL_SUPPORT_INVALID =
+			"批量打款仅支持ALI";
 	
 	final static String PRE_REFUND_SUCCEED = "预退款成功！ ";
 	
@@ -161,10 +187,12 @@ public class ValidationUtil
 		return new BCQueryStatusResult(RESULT_TYPE.OK);
 	}
 
-	public static BCPayResult validateBCTransfer(String channel,
-			String batchNo, String accountName, String transferData) {
+	public static BCPayResult validateBCTransfer(PAY_CHANNEL channel,
+			String batchNo, String accountName, List<TransferData> transferData) {
 		if (channel == null) {
 			return new BCPayResult(CHANNEL_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (!channel.equals(PAY_CHANNEL.ALI)) { 
+			return new BCPayResult(CHANNEL_SUPPORT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		} else if (batchNo == null) {
 			return new BCPayResult(BATCH_NO_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
 		} else if (!batchNo.matches("[0-9A-Za-z]{11,32}")) {
@@ -173,6 +201,25 @@ public class ValidationUtil
 			return new BCPayResult(ACCOUNT_NAME_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
 		} else if (transferData == null) {
 			return new BCPayResult(TRANSFER_DATA_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
+		}
+		for(TransferData data : transferData) {
+			if (StrUtil.empty(data.getTransferId())) {
+				return new BCPayResult(TRANSFER_ID_EMPTY, RESULT_TYPE.VALIDATION_ERROR); 
+			} else if (!data.getTransferId().matches("[0-9A-Za-z]{1,32}")) {
+				return new BCPayResult(TRANSFER_ID_FORMAT_EMPTY, RESULT_TYPE.VALIDATION_ERROR); 
+			} else if (StrUtil.empty(data.getReceiverAccount())) {
+				return new BCPayResult(RECEIVER_ACCOUNT_EMPTY, RESULT_TYPE.VALIDATION_ERROR); 
+			} else if (StrUtil.empty(data.getReceiverName())) {
+				return new BCPayResult(RECEIVER_NAME_EMPTY, RESULT_TYPE.VALIDATION_ERROR); 
+			} else if (StrUtil.empty(data.getTransferFee())) {
+				return new BCPayResult(TRANSFER_FEE_EMPTY, RESULT_TYPE.VALIDATION_ERROR); 
+			} else if (StrUtil.empty(data.getTransferNote())) {
+				return new BCPayResult(TRANSFER_NOTE_EMPTY, RESULT_TYPE.VALIDATION_ERROR); 
+			}
+		}
+		
+		if (transferData.size() > 1000) {
+			return new BCPayResult(TRANSFER_LIST_SIZE_INVALID, RESULT_TYPE.VALIDATION_ERROR); 
 		}
 		return new BCPayResult(RESULT_TYPE.OK);
 	}

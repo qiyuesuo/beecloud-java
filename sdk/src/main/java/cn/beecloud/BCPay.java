@@ -27,6 +27,7 @@ import cn.beecloud.BCEumeration.QR_PAY_MODE;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
 import cn.beecloud.bean.BCOrderBean;
 import cn.beecloud.bean.BCRefundBean;
+import cn.beecloud.bean.TransferData;
 import net.sf.json.JSONObject;
 
 /**
@@ -494,7 +495,18 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
     	
     }
     
-    public static BCPayResult startTransfer(String channel, String batchNo, String accountName, String transferData) {
+    /**
+     * @param channel
+     * （必填）渠道类型， 暂时只支持ALI 
+     * @param batchNo 
+     * （必填） 批量付款批号， 此次批量付款的唯一标示，11-32位数字字母组合
+     * @param accountName
+     * （必填） 付款方的支付宝账户名, 支付宝账户名称,例如:毛毛
+     * @param transferData
+     * （必填） 付款的详细数据 {TransferData} 的 List集合。
+     * @return BCPayResult
+     */
+    public static BCPayResult startTransfer(PAY_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) {
     	BCPayResult result;
     	result = ValidationUtil.validateBCTransfer(channel, batchNo, accountName, transferData);
     	
@@ -506,51 +518,52 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
     	param.put("app_id", BCCache.getAppID());
     	param.put("timestamp", System.currentTimeMillis());
     	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
-    		param.put("channel", channel.toString());
+		param.put("channel", channel.toString());
     	param.put("batch_no", batchNo);
     	param.put("account_name", accountName);
-//    	param.put("refund_fee", refundFee);
-//    	if (optional != null && optional.size() > 0)
-//    		param.put("optional", optional);
+    	List<Map<String, Object>> transferList = new ArrayList<Map<String, Object>>();
+    	for (TransferData data : transferData) {
+    		Map<String, Object> map = new HashMap<String, Object>();
+    		map.put("transfer_id", data.getTransferId());
+    		map.put("receiver_account", data.getReceiverAccount());
+    		map.put("receiver_name", data.getReceiverName());
+    		map.put("transfer_fee", data.getTransferFee());
+    		map.put("transfer_note", data.getTransferNote());
+    		transferList.add(map);
+    	}
+    	param.put("transfer_data", transferList);
          
-         	result = new BCPayResult();
-         
-         	Client client = BCAPIClient.client;
+     	result = new BCPayResult();
+     
+     	Client client = BCAPIClient.client;
 
-         	WebTarget target = client.target(BCUtilPrivate.getkApiRefund());
-         	try {
-	             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
-	             if (response.getStatus() == 200) {
-	                 Map<String, Object> ret = response.readEntity(Map.class);
-	
-	                 boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-	                                 .toStr(ret.get("result_code")).equals("0"));
-	
-	                 if (isSuccess) {
-	             		if (channel.equals(PAY_CHANNEL.ALI)) {
-	            			result.setUrl(ret.get("url").toString());
-	            			result.setType(RESULT_TYPE.OK);
-	            		} else if (channel.equals(PAY_CHANNEL.UN)) {
-	            			result.setSucessMsg(ret.get("respMsg").toString());
-	            			result.setType(RESULT_TYPE.OK);
-	            		} else {
-	            			result.setSucessMsg(ValidationUtil.REFUND_SUCCESS);
-	            			result.setType(RESULT_TYPE.OK);
-	            		}
-	                 } else {
-	                	result.setErrMsg(ret.get("result_msg").toString());
-	                 	result.setErrDetail(ret.get("err_detail").toString());
-	                 	result.setType(RESULT_TYPE.RUNTIME_ERROR);
-	                 }
-	             } else {
-	             	result.setErrMsg("Not correct response!");
-	             	result.setType(RESULT_TYPE.RUNTIME_ERROR);
-	             }
-	         } catch (Exception e) {
-	         	result.setErrMsg("Network error!");
-	         	result.setType(RESULT_TYPE.RUNTIME_ERROR);
-	         }
-	         return result;
+     	WebTarget target = client.target(BCUtilPrivate.getkApiTransfer());
+     	try {
+             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
+             if (response.getStatus() == 200) {
+                 Map<String, Object> ret = response.readEntity(Map.class);
+
+                 boolean isSuccess = (ret.containsKey("result_code") && StrUtil
+                                 .toStr(ret.get("result_code")).equals("0"));
+
+                 if (isSuccess) {
+        			result.setUrl(ret.get("url").toString());
+        			result.setType(RESULT_TYPE.OK);
+          
+                 } else {
+                	result.setErrMsg(ret.get("result_msg").toString());
+                 	result.setErrDetail(ret.get("err_detail").toString());
+                 	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+                 }
+             } else {
+             	result.setErrMsg("Not correct response!");
+             	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+             }
+         } catch (Exception e) {
+         	result.setErrMsg("Network error!");
+         	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+         }
+         return result;
     }
     
     /**

@@ -161,6 +161,10 @@ input {
 					<input type="radio"  value="aliOfflineQr" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/aliofflineqr.png" alt="">
 				</li>
+				<li onclick="paySwitch(this)">
+					<input type="radio"  value="alitransfer" name="paytype">
+					<img src="http://beeclouddoc.qiniudn.com/alitransfer.png" alt="">
+				</li>
   		    </ul>
 		</div>
 		<div style="clear: both;">
