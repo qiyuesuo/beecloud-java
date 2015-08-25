@@ -1,10 +1,10 @@
-# BeeCloud Java SDK (Open Source)
+## BeeCloud Java SDK (Open Source)
 
 ![pass](https://img.shields.io/badge/Build-pass-green.svg) ![MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![v2.0.0](https://img.shields.io/badge/Version-v2.0.0-blue.svg)
 
 本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api)开发的Java SDK，适用于JRE 1.6及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
-# **安装**
+## 安装
 
 1.从[github](https://github.com/beecloud/beecloud-java/releases)下载带依赖的jar文件,然后导入到自己的工程依赖包中。
 
@@ -21,7 +21,7 @@
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
 
 
-# **注册**
+## 注册
 
 三个步骤，2分钟轻松搞定： 
 
@@ -34,12 +34,12 @@
   BeeCloud.registerApp(appid, appsecret);
 
 
-# **使用方法**
+## 使用方法
 
 具体使用请参考本目录下的demo项目
 
 
-## <a name="payment">支付</a>
+### <a name="payment">支付</a>
 
 调用以下接口发起支付并将得到BCPayResult对象，BCPayResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。
 #### <a name="wx_native">微信扫码调用</a>
@@ -142,7 +142,7 @@ qrPayMode | 二维码类型，二维码类型含义MODE_BRIEF_FRONT： 订单码
 return   |  BCPayResult对象， 根据type决定返回内容
 
 
-## <a name="refund">退款</a>
+### <a name="refund">退款</a>
 调用以下接口发起退款并将得到BCPayResult对象，BCPayResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。。
 
 #### <a name="wx_refund">微信调用</a>
@@ -199,7 +199,7 @@ refundFee | 退款金额，只能为整数，单位为分，例如1，（必填�
 optional   |  附加数据 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，例如{"key1":"value1","key2":"value2",...}, （选填）
 return | BCPayResult, 根据type决定返回内容
 
-## <a name="billQuery">订单查询</a>
+### <a name="billQuery">订单查询</a>
 
 调用以下接口发起订单查询并将得到BCQueryResult对象，BCQueryResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。调用参数中，channel参数包含以下取值：
 WX、WX_NATIVE、WX_JSAPI、ALI、ALI_APP、ALI_WEB、ALI_QRCODE、ALI_WAP、UN、UN_APP、UN_WEB。其中WX、ALI、UN是其他子渠道的父渠道，返回的是各种子渠道返回结果的并集。
@@ -229,7 +229,7 @@ skip   |  查询起始位置	 默认为0。设置为10，表示忽略满足条�
 limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
 return | BCQueryResult, 根据type决定返回内容
 
-## <a name="refundQuery">退款查询</a>
+### <a name="refundQuery">退款查询</a>
 调用以下接口发起退款查询并将得到BCQueryResult对象，BCQueryResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。调用参数中，channel参数包含以下取值：
 WX、WX_NATIVE、WX_JSAPI、ALI、ALI_APP、ALI_WEB、ALI_QRCODE、ALI_WAP、UN、UN_APP、UN_WEB。其中WX、ALI、UN是其他子渠道的父渠道，返回的是各种子渠道返回结果的并集。
 
@@ -260,7 +260,7 @@ return | BCQueryResult, 根据type决定返回内容
 
 
 
-## <a name="wxRefundStatusQuery">微信退款状态查询</a>
+### <a name="wxRefundStatusQuery">微信退款状态查询</a>
 调用以下接口发起微信退款状态查询并将得到BCQueryStatusResult对象，BCQueryStatusResult对象包含两种状态，正确状态和错误状态，正确状态的BCQueryStatusResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。调用参数中，channel参数包含以下取值：
 WX、WX_NATIVE、WX_JSAPI、ALI、ALI_APP、ALI_WEB、ALI_QRCODE、UN、UN_APP、UN_WEB。其中WX、ALI、UN是其他子渠道的父渠道，返回的是各种子渠道返回结果的并集。
 
@@ -281,7 +281,7 @@ key | 说明
 ---- | -----
 refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是退款发起当日日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。，（必填）
 
-# **Demo**
+## Demo
 项目文件夹demo为我们的样例项目，详细展示如何使用java sdk.
 •关于支付宝的return_url
 
@@ -291,15 +291,56 @@ refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 �
 请参考demo中的 front_url.jsp
 •关于weekhook的接收
 
-请参考demo中的 notify_url.jsp  文档请阅读 [webhook](https://beecloud.cn/doc/java.php#webhook)
+请参考demo中的 notify_url.jsp  文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
 
-# **测试**
+## 测试
 TODO
 
-# **常见问题**
-待补充
+## 常见问题
+- 网页在手机上如何使用微信支付？  
+1.由于微信的限制，现在手机网页只能在微信APP内实现使用微信支付，即微信公众号支付（WX_JSAPI）  
+2.WX_JSAPI支付配置相对复杂，请参考[微信文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_1)  
+3.示例代码，调用js方法`callpay()`即可使用
 
-# **代码贡献**
+```js
+function onBridgeReady(){
+   WeixinJSBridge.invoke(
+       'getBrandWCPayRequest', {
+           //以下参数的值由BCPayByChannel方法返回来的数据填入即可
+           "appId" : "wx2421b1c4370ec43b",          
+           "timeStamp":" 1395712654",              
+           "nonceStr" : "e61463f8efa94090b1f366cccfbbb444",
+           "package" : "prepay_id=u802345jgfjsdfgsdg888",  
+           "signType" : "MD5",     
+           "paySign" : "70EA570631E4BB79628FBCA90534C63FF7FADD89" 
+       },
+       function(res){     
+           if(res.err_msg == "get_brand_wcpay_request:ok" ) {}     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
+       }
+   ); 
+}
+function callpay()
+{
+    if (typeof WeixinJSBridge == "undefined"){
+        if( document.addEventListener ){
+            document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+        }else if (document.attachEvent){
+            document.attachEvent('WeixinJSBridgeReady', jsApiCall); 
+            document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+        }
+    }else{
+        jsApiCall();
+    }
+}
+```
+- 根据app_id找不到对应的APP/keyspace或者app_sign不正确,或者timestamp不是当前UTC，可能的原因：系统时间不准确 app_id和secret填写不正确，请以此排查如下：<br>
+1.appid和appSecret填写是否一致<br>
+2.校准系统时间
+- 支付宝吊起支付返回调试错误，请回到请求来源地，重新发起请求。错误代码ILLEGAL_PARTNER，可能的原因：使用了测试账号test@beecloud.cn的支付宝支付参数。请使用自己申请的支付账号。
+
+
+
+## 代码贡献
 我们非常欢迎大家来贡献代码，我们会向贡献者致以最诚挚的敬意。
 
 一般可以通过在Github上提交[Pull Request](https://github.com/beecloud/beecloud-java)来贡献代码。
@@ -327,16 +368,16 @@ Pull Request要求
 •清晰的commit历史 - 保证你的pull请求的每次commit操作都是有意义的。如果你开发中需要执行多次的即时commit操作，那么请把它们放到一起再提交pull请求。
 
 
-# **联系我们**
-•如果有什么问题，可以到 321545822 BeeCloud开发者大联盟QQ群提问
+## 联系我们
+•如果有什么问题，可以到BeeCloud开发者1群:**321545822** 或 BeeCloud开发者2群:**427128840** 提问
 
-•更详细的文档，见源代码的注释以及[官方文档](https://beecloud.cn/doc/java.php)
+•更详细的文档，见源代码的注释以及[官方文档](https://beecloud.cn/doc/?index=4)
 
 •如果发现了bug，欢迎提交[issue](https://github.com/beecloud/beecloud-java/issues)
 
 •如果有新的需求，欢x迎提交[issue](https://github.com/beecloud/beecloud-java/issues)
 
-# **代码许可**
+## 代码许可
 The MIT License (MIT).
 
 

@@ -53,7 +53,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 * @param totalFee 
 	 * （必填）订单总金额， 只能为整数，单位为分，例如 1	
 	 * @param billNo 
-	 * （必填）商户订单号, 32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如（201506101035040000001）
+	 * （必填）商户订单号, 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如（201506101035040000001）
 	 * @param title 
 	 * （必填）订单标题， 32个字节内，最长支持16个汉字	
 	 * @param optional
@@ -172,7 +172,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
      * （必填）商户退款单号	， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
      * 例如：201506101035040000001	
      * @param billNo
-     * （必填）商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一	
+     * （必填）商户订单号， 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一	
      * @param refundFee
      * （必填）退款金额， 只能为整数，单位为分，例如1	
      * @param optional
@@ -253,7 +253,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	UN_APP 银联APP支付
 	 * 	UN_WEB 银联网页支付
      * @param billNo
-     * （选填） 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一
+     * （选填） 商户订单号， 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一
      * @param startTime 
      * （选填） 起始时间， Date类型
      * @param endTime
@@ -268,7 +268,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
     	
     	BCQueryResult result;
     	
-    	result = ValidationUtil.validateQueryBill(channel, billNo, limit);
+    	result = ValidationUtil.validateQueryBill( billNo, limit);
     	
     	if (result.getType().ordinal() != 0) {
     		return result;
@@ -368,7 +368,7 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
     public static BCQueryResult startQueryRefund(PAY_CHANNEL channel, String billNo, String refundNo, Date startTime, Date endTime, Integer skip, Integer limit) {
     	
     	BCQueryResult result;
-    	result = ValidationUtil.validateQueryRefund(channel, billNo, refundNo, limit);
+    	result = ValidationUtil.validateQueryRefund(billNo, refundNo, limit);
 		if (result.getType().ordinal() != 0) {
 			return result;
 		}

@@ -50,7 +50,7 @@ public class BCPayTest {
 	
 	@Test
 	public void testQueryBill() {
-		BCQueryResult bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.ALI_WEB, null, null, null, null, null);
+		BCQueryResult bcQueryResult = BCPay.startQueryBill(null, "1122366773", null, null, null, 50);
 		System.out.println("test1");
 	}
 	
@@ -74,7 +74,7 @@ public class BCPayTest {
 		list.add(data2);
 		
 		
-		BCPayResult result = BCPay.startTransfer(PAY_CHANNEL.ALI, "transfertest1122transfertest1122", "13861331391", list);
+		BCPayResult result = BCPay.startTransfer(PAY_CHANNEL.ALI, "transfertest1122transfertest2233", "13861331391", list);
 		System.out.println("test transfer!");
 	}
 }

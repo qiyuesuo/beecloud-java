@@ -109,7 +109,7 @@ public class ValidationUtil
 			return new BCPayResult(CHANNEL_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
 		} else if (StrUtil.empty(billNo)) {
 			return new BCPayResult(BILL_NO_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
-		} else if (!billNo.matches("[0-9A-Za-z]{1,32}")) {
+		} else if (!billNo.matches("[0-9A-Za-z]{8,32}")) {
 			return new BCPayResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		} else if (StrUtil.empty(title)) {
 			return new BCPayResult(TITLE_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
@@ -147,16 +147,15 @@ public class ValidationUtil
 			return new BCPayResult(REFUND_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		 } else if (StrUtil.empty(billNo)) {
 			return new BCPayResult(BILL_NO_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
-		 } else if (!billNo.matches("[0-9A-Za-z]{1,32}")) {
+		 } else if (!billNo.matches("[0-9A-Za-z]{8,32}")) {
 			return new BCPayResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		 } 
 		 
 		 return new BCPayResult(RESULT_TYPE.OK);	
 	}
 
-	public static BCQueryResult validateQueryBill(PAY_CHANNEL channel,
-			String billNo, Integer limit) {
-		 if (channel != null && !StrUtil.empty(billNo) && !billNo.matches("[0-9A-Za-z]{1,32}")) {
+	public static BCQueryResult validateQueryBill(String billNo, Integer limit) {
+		 if (!StrUtil.empty(billNo) && !billNo.matches("[0-9A-Za-z]{8,32}")) {
 			return new BCQueryResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		 } else if (limit != null && limit > 50) {
 			return new BCQueryResult(LIMIT_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
@@ -165,9 +164,9 @@ public class ValidationUtil
 		 return new BCQueryResult(RESULT_TYPE.OK);
 	}
 
-	public static BCQueryResult validateQueryRefund(PAY_CHANNEL channel, String billNo,
+	public static BCQueryResult validateQueryRefund(String billNo,
 			String refundNo, Integer limit) {
-		if (!StrUtil.empty(billNo) && !billNo.matches("[0-9A-Za-z]{1,32}")) {
+		if (!StrUtil.empty(billNo) && !billNo.matches("[0-9A-Za-z]{8,32}")) {
 			return new BCQueryResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
 		} else if (!StrUtil.empty(refundNo) && (!refundNo.substring(8, refundNo.length()).matches("[0-9A-Za-z]{3,24}") || 
 				refundNo.substring(8, refundNo.length()).matches("000")) ) {
