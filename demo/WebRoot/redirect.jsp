@@ -53,14 +53,14 @@
 
 		String type = request.getParameter("paytype");
 
-		BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c");
+		BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
 		//BCPayResult的type字段有OK和非OK两种，当type字段是OK时（对应值为0），bcPayResult包含支付所需的内容如html或者code_url或者支付成功信息,
 		//当type的字段为非OK的时候，，bcPayResult包含通用错误和具体的错误信息。商户系统可以任意显示，打印或者记录日志。
 		BCPayResult bcPayResult = new BCPayResult();
 		
 		if (type.equals("alipay")) {
 			
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, "aabbbccdddeeffff22334455tr", "买水", optional, returnUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, billNo, "买水", optional, returnUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
@@ -71,7 +71,7 @@
 			}
 		} else if (type.equals("alipayQr")) {
 			
-            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, "aabbbccdddeeffff22334455tr", "买水", null, returnUrl, null, null, QR_PAY_MODE.MODE_BRIEF_FRONT);
+            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, billNo, "买水", null, returnUrl, null, null, QR_PAY_MODE.MODE_BRIEF_FRONT);
             if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
@@ -83,7 +83,7 @@
             
 		} else if (type.equals("alipayWAP")) {
 			
-            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, "aabbbccdddeeffff22334455tr", "买水", null, null, null, null, null);
+            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, billNo, "买水", null, null, null, null, null);
             if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
@@ -95,7 +95,7 @@
             
 		} else if (type.equals("aliOfflineQr")) {
 			
-            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_OFFLINE_QRCODE, 1, "aabbbccdddeeffff22334455tr", "买水", null, null, null, null, null);
+            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_OFFLINE_QRCODE, 1, billNo, "买水", null, null, null, null, null);
             if (bcPayResult.getType().ordinal() == 0) {
 				//out.println(bcPayResult.getHtml());
 			}
@@ -106,7 +106,7 @@
 			}
             
 		} else if (type.equals("wechatQr")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, "aabbbccdddeeffff22334455tr", "买水", null, null, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, billNo, "买水", null, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 			}
 			else {
@@ -129,7 +129,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("unionpay")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, "aabbbccdddeeffff22334455tr", "买矿泉水", optional, frontUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
@@ -141,12 +141,12 @@
 		} else if (type.equals("alitransfer")) {
 			List<TransferData> list = new ArrayList<TransferData>();
 			TransferData data1 = new TransferData("transfertest11221", "13584809743", "袁某某", 1, "赏赐");
-			TransferData data2 = new TransferData("transfertest11221", "13584809742", "张某某", 1, "赏赐");
+			TransferData data2 = new TransferData("transfertest11222", "13584809742", "张某某", 1, "赏赐");
 			list.add(data1);
 			list.add(data2);
 			
 			
-			bcPayResult = BCPay.startTransfer(PAY_CHANNEL.ALI, "transfertest1122transfertest1125", "苏州比可网络科技有限公司", list);
+			bcPayResult = BCPay.startTransfer(PAY_CHANNEL.ALI, "transfertest1122transfe", "苏州比可网络科技有限公司", list);
 			if (bcPayResult.getType().ordinal() == 0) {
 				response.sendRedirect(bcPayResult.getUrl());
 			}
