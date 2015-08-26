@@ -17,6 +17,7 @@ public class BCEumeration {
 		ALI_WEB,
 		ALI_WAP,
 		ALI_QRCODE,
+		ALI_OFFLINE_QRCODE,
 		UN,
 		UN_APP,
 		UN_WEB

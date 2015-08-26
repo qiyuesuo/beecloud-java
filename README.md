@@ -15,7 +15,7 @@
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
@@ -221,7 +221,7 @@ if (bcQueryResult.getType().ordinal() == 0) {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付，（必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付，（选填）
 billNo | 商户订单号，
 startTime | 起始时间， Date类型，（选填）  
 endTime | 结束时间， Date类型， （选填）  
@@ -249,7 +249,7 @@ if (bcQueryResult.getType().ordinal() == 0) {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付，（必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付，（选填）
 billNo | 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一, （选填）
 refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”	，（选填）
 startTime | 起始时间， Date类型，（选填）  
@@ -280,6 +280,36 @@ if (result.getType().ordinal() == 0 ) {
 key | 说明
 ---- | -----
 refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是退款发起当日日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。，（必填）
+
+### <a name="ali_transfer">支付宝批量打款</a>
+调用以下接口发起支付宝批量打款并将得到得到BCPayResult对象，BCPayResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。
+
+正确状态调用getUrl()方法完成批量打款。
+
+```java
+List<TransferData> list = new ArrayList<TransferData>();
+	TransferData data1 = new TransferData("transfertest11221", "13584809743", "袁某某", 1, "赏赐");
+	TransferData data2 = new TransferData("transfertest11222", "13584809742", "张某某", 1, "赏赐");
+	list.add(data1);
+	list.add(data2);
+	
+	
+	bcPayResult = BCPay.startTransfer(PAY_CHANNEL.ALI, "transfertest1122transfe", "苏州比可网络科技有限公司", list);
+	if (bcPayResult.getType().ordinal() == 0) {
+		response.sendRedirect(bcPayResult.getUrl());
+	}
+	else {
+		//handle the error message as you wish！
+		out.println(bcPayResult.getErrMsg());
+		out.println(bcPayResult.getErrDetail());
+	}
+```
+key | 说明
+---- | -----
+channel | 渠道类型， 暂时只支持ALI（必填）
+batchNo | 批量付款批号， 此次批量付款的唯一标示，11-32位数字字母组合（必填）
+accountName | 付款方的支付宝账户名, 支付宝账户名称,例如:毛毛（必填）
+transferData | 付款的详细数据 {TransferData} 的 List集合。（必填）
 
 ## Demo
 项目文件夹demo为我们的样例项目，详细展示如何使用java sdk.

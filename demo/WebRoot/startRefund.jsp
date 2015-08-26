@@ -19,19 +19,20 @@
 <body>
 <%
 	String billNo = request.getParameter("bill_no");
-	String channelString = request.getParameter("channel");
+	Object channelObject = request.getParameter("channel");
 	Map optional = new HashMap();
 	optional.put("test", "test");
 	Integer refundFee = Integer.parseInt(request.getParameter("total_fee"));
-	PAY_CHANNEL channel = channelString.equals("WX")?PAY_CHANNEL.WX:channelString.equals("ALI")?PAY_CHANNEL.ALI:PAY_CHANNEL.UN;
+	PAY_CHANNEL channel = null;
+	if (channelObject != null && !channelObject.equals(""))
+		channel = channelObject.toString().equals("WX")?PAY_CHANNEL.WX:channelObject.toString().equals("ALI")?PAY_CHANNEL.ALI:PAY_CHANNEL.UN;
+	System.out.println("channel:" +channel);
 	String refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
-	BCPayResult result = BCPay.startBCRefund(channel, refundNo, billNo, refundFee, null);
+	BCPayResult result = BCPay.startBCRefund(channel, refundNo, billNo, refundFee, optional);
 	if (result.getType().ordinal() == 0 ) {
-		if (channel.equals(PAY_CHANNEL.WX)) {
-			out.println(result.getSucessMsg());
-		} else if (channel.equals(PAY_CHANNEL.ALI)) {
+		if (result.getUrl() != null) {
 			response.sendRedirect(result.getUrl());
-		} else if (channel.equals(PAY_CHANNEL.UN)) {
+		} else {
 			out.println(result.getSucessMsg());
 		}
 	} else {

@@ -157,6 +157,14 @@ input {
 					<input type="radio"  value="wechatJSAPI" name="paytype">
 					<img src="http://7xavqo.com1.z0.glb.clouddn.com/wechatgzh.png" alt="">
 				</li-->
+				<li onclick="paySwitch(this)">
+					<input type="radio"  value="aliOfflineQr" name="paytype">
+					<img src="http://beeclouddoc.qiniudn.com/aliofflineqr.png" alt="">
+				</li>
+				<li onclick="paySwitch(this)">
+					<input type="radio"  value="alitransfer" name="paytype">
+					<img src="http://beeclouddoc.qiniudn.com/alitransfer.png" alt="">
+				</li>
   		    </ul>
 		</div>
 		<div style="clear: both;">
@@ -184,6 +192,10 @@ input {
 				<li onclick="querySwitch(this)">
 					<input type="radio"  value="unionQuery" name="querytype">
 					<img src="http://beeclouddoc.qiniudn.com/unionpay.png" alt="">
+				</li>
+				<li onclick="querySwitch(this)">
+					<input type="radio"  value="noChannelQuery" name="querytype">
+					<img src="http://beeclouddoc.qiniudn.com/unionpay1122.png" alt="无渠道查询">
 				</li>
   		    </ul>
 		</div>
