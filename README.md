@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 
-![pass](https://img.shields.io/badge/Build-pass-green.svg) ![MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![v2.0.0](https://img.shields.io/badge/Version-v2.0.0-blue.svg)
+![pass](https://img.shields.io/badge/Build-pass-green.svg) ![MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![v2.1.0](https://img.shields.io/badge/Version-v2.1.0-blue.svg)
 
 本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api)开发的Java SDK，适用于JRE 1.6及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
@@ -130,16 +130,18 @@ else {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX_NATIVE 微信公众号二维码支付<br/>WX_JSAPI 微信公众号支付<br/>ALI_WEB 支付宝网页支付<br/>ALI_QRCODE 支付宝内嵌二维码支付<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br/>UN_WEB 银联网页支付， （必填）
-totalFee | 订单总金额， 只能为整数，单位为分，例如 1，（必填）
-billNo | 商户订单号, 32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如(201506101035040000001),（必填）
-title | 订单标题， 32个字节内，最长支持16个汉字，（必填）
-optional | 附加数据， 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，（选填）
-returnUrl | 同步返回页面	， 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。当 channel 参数为 ALI_WEB 或 ALI_QRCODE 或 UN_WEB时为必填，（选填）
-openId | 微信公众号支付(WX_JSAPI)必填，（选填）
-showUrl | 商品展示地址，需以http://开头的完整路径，例如：http://www.商户网址.com/myorder，（选填）
-qrPayMode | 二维码类型，二维码类型含义MODE_BRIEF_FRONT： 订单码-简约前置模式, 对应 iframe 宽度不能小于 600px, 高度不能小于 300px<br>MODE_FRONT： 订单码-前置模式, 对应 iframe 宽度不能小于 300px, 高度不能小于 600px<br>MODE_MINI_FRONT： 订单码-迷你前置模式, 对应 iframe 宽度不能小于 75px, 高度不能小于 75px ，（选填）
-return   |  BCPayResult对象， 根据type决定返回内容
+channel | （必填）渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX_NATIVE 微信公众号二维码支付<br/>WX_JSAPI 微信公众号支付<br/>ALI_WEB 支付宝网页支付<br/>ALI_QRCODE 支付宝内嵌二维码支付<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br/>UN_WEB 银联网页支付  
+totalFee | （必填）订单总金额， 只能为整数，单位为分，例如 1  
+billNo | （必填）商户订单号, 32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如(201506101035040000001)  
+title | （必填）订单标题， 32个字节内，最长支持16个汉字  
+optional | （选填）附加数据， 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据  
+returnUrl | （选填）同步返回页面， 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。当 channel 参数为 ALI_WEB 或 ALI_QRCODE 或 UN_WEB时为必填  
+openId | （选填）微信公众号支付(WX_JSAPI)必填  
+showUrl | （选填）商品展示地址，需以http://开头的完整路径，例如：http://www.商户网址.com/myorder  
+qrPayMode | （选填）二维码类型，二维码类型含义MODE_BRIEF_FRONT： 订单码-简约前置模式, 对应 iframe 宽度不能小于 600px, 高度不能小于 300px<br>MODE_FRONT： 订单码-前置模式, 对应 iframe 宽度不能小于 300px, 高度不能小于 600px<br>MODE_MINI_FRONT： 订单码-迷你前置模式, 对应 iframe 宽度不能小于 75px, 高度不能小于 75px  
+
+
+返回结果：BCPayResult对象， 根据type决定返回内容
 
 
 ### <a name="refund">退款</a>
@@ -192,12 +194,15 @@ if (bcPayResult.getType().ordinal() == 0) {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX  微信<br>ALI 支付宝<br>UN 银联，（必填）
-refundNo | 商户退款单号	， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”，例如：201506101035040000001	（必填）
-billNo | 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一，（必填）  
-refundFee | 退款金额，只能为整数，单位为分，例如1，（必填）  
-optional   |  附加数据 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，例如{"key1":"value1","key2":"value2",...}, （选填）
-return | BCPayResult, 根据type决定返回内容
+channel | （必填）渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX  微信<br>ALI 支付宝<br>UN 银联  
+refundNo | （必填）商户退款单号	， 格式为:退款日期(8位) + 流水号(3~24   位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”，例如：201506101035040000001  
+billNo | （必填）商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一  
+refundFee | （必填）退款金额，只能为整数，单位为分，例如1  
+optional   | （选填）附加数据 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，例如{"key1":"value1","key2":"value2",...}  
+
+
+返回结果：BCPayResult, 根据type决定返回内容
+
 
 ### <a name="billQuery">订单查询</a>
 
@@ -221,13 +226,16 @@ if (bcQueryResult.getType().ordinal() == 0) {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付，（选填）
-billNo | 商户订单号，
-startTime | 起始时间， Date类型，（选填）  
-endTime | 结束时间， Date类型， （选填）  
-skip   |  查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	, （选填）
-limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
-return | BCQueryResult, 根据type决定返回内容
+channel | （选填）渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付  
+billNo | （选填）商户订单号  
+startTime | （选填）起始时间， Date类型    
+endTime | （选填）结束时间， Date类型  
+skip   |  （选填）查询起始位置	 默认为0. 设置为10，表示忽略满足条件的前10条数据  
+limit |  （选填）查询的条数， 默认为10，最大为50. 设置为10，表示只查询满足条件的10条数据	
+
+
+返回结果：BCQueryResult, 根据type决定返回内容
+
 
 ### <a name="refundQuery">退款查询</a>
 调用以下接口发起退款查询并将得到BCQueryResult对象，BCQueryResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。调用参数中，channel参数包含以下取值：
@@ -249,15 +257,16 @@ if (bcQueryResult.getType().ordinal() == 0) {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付，（选填）
-billNo | 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一, （选填）
-refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”	，（选填）
-startTime | 起始时间， Date类型，（选填）  
-endTime | 结束时间， Date类型， （选填）  
-skip   |  查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	, （选填）
-limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
-return | BCQueryResult, 根据type决定返回内容
+channel | （选填）渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付  
+billNo | （选填）商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一  
+refundNo | （选填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受"000"  
+startTime | （选填）起始时间， Date类型  
+endTime | （选填）结束时间， Date类型  
+skip   |  （选填）查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据  
+limit |  （选填）查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据  
 
+
+返回结果：BCQueryResult, 根据type决定返回内容
 
 
 ### <a name="wxRefundStatusQuery">微信退款状态查询</a>
@@ -279,7 +288,8 @@ if (result.getType().ordinal() == 0 ) {
 
 key | 说明
 ---- | -----
-refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是退款发起当日日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。，（必填）
+refundNo | （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24位)。不可重复，且退款日期必须是退款发起当日日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受"000"  
+
 
 ### <a name="ali_transfer">支付宝批量打款</a>
 调用以下接口发起支付宝批量打款并将得到得到BCPayResult对象，BCPayResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。
@@ -306,10 +316,10 @@ List<TransferData> list = new ArrayList<TransferData>();
 ```
 key | 说明
 ---- | -----
-channel | 渠道类型， 暂时只支持ALI（必填）
-batchNo | 批量付款批号， 此次批量付款的唯一标示，11-32位数字字母组合（必填）
-accountName | 付款方的支付宝账户名, 支付宝账户名称,例如:毛毛（必填）
-transferData | 付款的详细数据 {TransferData} 的 List集合。（必填）
+channel | （必填）渠道类型， 暂时只支持ALI  
+batchNo | （必填）批量付款批号， 此次批量付款的唯一标示，11-32位数字字母组合  
+accountName | （必填）付款方的支付宝账户名, 支付宝账户名称,例如:毛毛  
+transferData | （必填）付款的详细数据 {TransferData} 的 List集合  
 
 ## Demo
 项目文件夹demo为我们的样例项目，详细展示如何使用java sdk.
