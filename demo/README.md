@@ -6,7 +6,7 @@ BeeCloud Java SDK Demo(Open Source)
 
 # **安装部署**
 
-1.将Demo文件夹拷贝至tomcat的（可以去掉.classpath， .project，README.md等文件）webapps文件夹下。启动tomcat,访问Demo项目。或者导入Demo项目至eclipse, 以war包导出并拷贝至tomcat的webapps文件夹下，启动tomcat并访问Demo。
+1.在Tomcat的webapps文件夹下新建工程文件夹目录javaSDKDemo, 将Demo文件夹内WebRoot文件夹下的所有文件拷贝至javaSDKDemo下（可以去掉.classpath， .project，README.md等文件）。启动tomcat,访问javaSDKDemo项目。或者导入Demo项目至eclipse, 以war包导出并拷贝至tomcat的webapps文件夹下，启动tomcat并访问Demo。
 
 
 2.Tomcat的JRE 版本需要在1.6以上。
