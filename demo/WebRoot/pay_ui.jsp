@@ -165,6 +165,30 @@ input {
 					<input type="radio"  value="alitransfer" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/alitransfer.png" alt="">
 				</li>
+				<li onclick="paySwitch(this)">
+					<input type="radio"  value="yeeWap" name="paytype">
+					<img src="http://beeclouddoc.qiniudn.com/yeeWap.png" alt="YEE WAP">
+				</li>
+				<li onclick="paySwitch(this)">
+					<input type="radio"  value="yeeWeb" name="paytype">
+					<img src="http://beeclouddoc.qiniudn.com/yeeWap.png" alt="YEE WEB">
+				</li>
+				<li onclick="paySwitch(this)">
+					<input type="radio"  value="jdWap" name="paytype">
+					<img src="http://beeclouddoc.qiniudn.com/yeeWap.png" alt="JD　WAP">
+				</li>
+				<li onclick="paySwitch(this)">
+					<input type="radio"  value="jdWeb" name="paytype">
+					<img src="http://beeclouddoc.qiniudn.com/yeeWap.png" alt="JD　WEB">
+				</li>
+				<li onclick="paySwitch(this)">
+					<input type="radio"  value="kqWap" name="paytype">
+					<img src="http://beeclouddoc.qiniudn.com/yeeWap.png" alt="KUAIQIAN WAP">
+				</li>
+				<li onclick="paySwitch(this)">
+					<input type="radio"  value="kqWeb" name="paytype">
+					<img src="http://beeclouddoc.qiniudn.com/yeeWap.png" alt="KUAIQIAN WEB">
+				</li>
   		    </ul>
 		</div>
 		<div style="clear: both;">

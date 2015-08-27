@@ -14,8 +14,8 @@
 <link href="demo.css" rel="stylesheet" type="text/css"/>
 <title>redirect</title>
 <script type="text/javascript">
-	function queryStatus(refund_no) {
-		window.location.href="queryWeChatRefundStatus.jsp?refund_no=" + refund_no;
+	function queryStatus(channel, refund_no) {
+		window.location.href="queryWeChatRefundStatus.jsp?refund_no=" + refund_no + "&channel=" + channel;
 	}
 	
 	function startRefund(bill_no, total_fee, channel) {
@@ -141,7 +141,7 @@
 			<tr align="center" ><td>${refund.billNo}</td><td>${refund.refundNo}</td><td>${refund.totalFee}</td><td>${refund.refundFee}</td><td>${refund.channel}</td><td>${refund.finished}</td><td>${refund.refunded}</td><td>${refund.dateTime}</td>
 			<c:if test="${isWeChat != null}">
 			<td>
-			<input class="button" type="button" onclick="queryStatus('${refund.refundNo}')" value="查询"/>
+			<input class="button" type="button" onclick="queryStatus('${refund.channel}','${refund.refundNo}')" value="查询"/>
 			</td>
 			</c:if>
 			</tr>

@@ -53,7 +53,7 @@
 
 		String type = request.getParameter("paytype");
 
-		BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c");
+		BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
 		//BCPayResult的type字段有OK和非OK两种，当type字段是OK时（对应值为0），bcPayResult包含支付所需的内容如html或者code_url或者支付成功信息,
 		//当type的字段为非OK的时候，，bcPayResult包含通用错误和具体的错误信息。商户系统可以任意显示，打印或者记录日志。
 		BCPayResult bcPayResult = new BCPayResult();
@@ -155,7 +155,67 @@
 				out.println(bcPayResult.getErrMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
-		}
+		} else if (type.equals("yeeWap")) {
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WAP, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
+			if (bcPayResult.getType().ordinal() == 0) {
+				response.sendRedirect(bcPayResult.getUrl());
+			}
+			else {
+				//handle the error message as you wish！
+				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getErrDetail());
+			}
+		} else if (type.equals("yeeWeb")) {
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WEB, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
+			if (bcPayResult.getType().ordinal() == 0) {
+				response.sendRedirect(bcPayResult.getUrl());
+			}
+			else {
+				//handle the error message as you wish！
+				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getErrDetail());
+			}
+		} else if (type.equals("jdWap")) {
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.JD_WAP, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
+			if (bcPayResult.getType().ordinal() == 0) {
+				out.println(bcPayResult.getHtml());
+			}
+			else {
+				//handle the error message as you wish！
+				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getErrDetail());
+			}
+		} else if (type.equals("jdWeb")) {
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.JD_WEB, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
+			if (bcPayResult.getType().ordinal() == 0) {
+				out.println(bcPayResult.getHtml());
+			}
+			else {
+				//handle the error message as you wish！
+				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getErrDetail());
+			}
+		} else if (type.equals("kqWeb")) {
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WEB, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
+			if (bcPayResult.getType().ordinal() == 0) {
+				out.println(bcPayResult.getHtml());
+			}
+			else {
+				//handle the error message as you wish！
+				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getErrDetail());
+			}
+		} else if (type.equals("kqWap")) {
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WAP, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
+			if (bcPayResult.getType().ordinal() == 0) {
+				out.println(bcPayResult.getHtml());
+			}
+			else {
+				//handle the error message as you wish！
+				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getErrDetail());
+			}
+		} 
 	%>
 <div align="center" id="qrcode">
 </div>
