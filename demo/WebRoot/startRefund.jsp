@@ -25,17 +25,17 @@
 	Integer refundFee = Integer.parseInt(request.getParameter("total_fee"));
 	PAY_CHANNEL channel = null;
 	if (channelObject != null && !channelObject.equals("")) {
-		if (channelObject.toString().equals("WX")) {
+		if (channelObject.toString().contains("WX")) {
 			channel = PAY_CHANNEL.WX;
-		} else if (channelObject.toString().equals("ALI")) {
+		} else if (channelObject.toString().contains("ALI")) {
 			channel = PAY_CHANNEL.ALI;
-		} else if (channelObject.toString().equals("UN")) {
+		} else if (channelObject.toString().contains("UN")) {
 			channel = PAY_CHANNEL.UN;
-		} else if (channelObject.toString().equals("YEE")) {
+		} else if (channelObject.toString().contains("YEE")) {
 			channel = PAY_CHANNEL.YEE;
-		} else if (channelObject.toString().equals("JD")) {
+		} else if (channelObject.toString().contains("JD")) {
 			channel = PAY_CHANNEL.JD;
-		} else if (channelObject.toString().equals("KUAIQIAN")) {
+		} else if (channelObject.toString().contains("KUAIQIAN")) {
 			channel = PAY_CHANNEL.KUAIQIAN;
 		}
 	}
