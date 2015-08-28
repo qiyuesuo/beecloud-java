@@ -14,7 +14,8 @@
 </head>
 <body>
 <%
-	String channel = request.getParameter("channel");
+	String subChannel = request.getParameter("channel");
+	String channel = subChannel.split("_")[0];
 	String refund_no = request.getParameter("refund_no");
 	PAY_CHANNEL channelEnum = PAY_CHANNEL.valueOf(channel);
 	

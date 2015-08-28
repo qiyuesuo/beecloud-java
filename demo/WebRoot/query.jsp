@@ -46,7 +46,7 @@
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
-				pageContext.setAttribute("isWeChat", true);
+				pageContext.setAttribute("refundUpdate", true);
 			}else {
 				out.println(bcQueryResult.getErrMsg());
 				out.println(bcQueryResult.getErrDetail());
@@ -60,7 +60,45 @@
 				out.println(bcQueryResult.getErrMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
-		} else if (querytype.equals("noChannelQuery")) {
+		} else if (querytype.equals("yeeQuery")) {
+			Date date = new Date();
+			Calendar c = Calendar.getInstance();  
+			c.add(Calendar.MINUTE, -120);
+			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.YEE, null, null, null, date, null, 50);
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
+				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
+				pageContext.setAttribute("refundUpdate", true);
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			}
+		} else if (querytype.equals("jdQuery")) {
+			Date date = new Date();
+			Calendar c = Calendar.getInstance();  
+			c.add(Calendar.MINUTE, -120);
+			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.JD, null, null, null, date, null, 50);
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
+				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			} 
+		} else if (querytype.equals("kqQuery")) {
+			Date date = new Date();
+			Calendar c = Calendar.getInstance();  
+			c.add(Calendar.MINUTE, -120);
+			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.KUAIQIAN, null, null, null, date, null, 50);
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
+				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
+				pageContext.setAttribute("refundUpdate", true);
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			} 
+		}else if (querytype.equals("noChannelQuery")) {
 			Date date = new Date();
 			Calendar c = Calendar.getInstance();  
 			c.add(Calendar.MINUTE, -120);
@@ -72,7 +110,7 @@
 				out.println(bcQueryResult.getErrMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
-		}
+		} 
 	}else {
 		if (querytype.equals("aliQuery")) {
 			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.ALI, null, null, null, null, null);
@@ -105,6 +143,16 @@
 				out.println(bcQueryResult.getErrMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
+		} else if (querytype.equals("yeeQuery")) {
+			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.YEE, null, null, null, null, 50);
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
+				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
+				pageContext.setAttribute("channel", "YEE");
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			}
 		} else if (querytype.equals("noChannelQuery")) {
 			Date date = new Date();
 			Calendar c = Calendar.getInstance();  
@@ -114,6 +162,7 @@
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
+				pageContext.setAttribute("refundUpdate", true);
 				pageContext.setAttribute("channel", null);
 			} else {
 				out.println(bcQueryResult.getErrMsg());
@@ -139,7 +188,7 @@
 	<table border="3" class="table"><tr><th>订单号</th><th>退款单号</th><th>订单金额</th><th>退款金额</th><th>渠道</th><th>是否结束</th><th>是否退款</th><th>退款创建时间</th><c:if test="${isWeChat != null}"><th>退款状态查询</th></c:if></tr>
 		<c:forEach var="refund" items="${refundList}" varStatus="index"> 
 			<tr align="center" ><td>${refund.billNo}</td><td>${refund.refundNo}</td><td>${refund.totalFee}</td><td>${refund.refundFee}</td><td>${refund.channel}</td><td>${refund.finished}</td><td>${refund.refunded}</td><td>${refund.dateTime}</td>
-			<c:if test="${isWeChat != null}">
+			<c:if test="${refundUpdate != null}">
 			<td>
 			<input class="button" type="button" onclick="queryStatus('${refund.channel}','${refund.refundNo}')" value="查询"/>
 			</td>

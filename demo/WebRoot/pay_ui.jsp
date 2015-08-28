@@ -167,27 +167,27 @@ input {
 				</li>
 				<li onclick="paySwitch(this)">
 					<input type="radio"  value="yeeWap" name="paytype">
-					<img src="http://beeclouddoc.qiniudn.com/yeeWap.png" alt="YEE WAP">
+					<img src="http://beeclouddoc.qiniudn.com/ybwap.png" alt="YEE WAP">
 				</li>
 				<li onclick="paySwitch(this)">
 					<input type="radio"  value="yeeWeb" name="paytype">
-					<img src="http://beeclouddoc.qiniudn.com/yeeWap.png" alt="YEE WEB">
+					<img src="http://beeclouddoc.qiniudn.com/yb.png" alt="YEE WEB">
 				</li>
 				<li onclick="paySwitch(this)">
 					<input type="radio"  value="jdWap" name="paytype">
-					<img src="http://beeclouddoc.qiniudn.com/yeeWap.png" alt="JD　WAP">
+					<img src="http://beeclouddoc.qiniudn.com/jdwap.png" alt="JD　WAP">
 				</li>
 				<li onclick="paySwitch(this)">
 					<input type="radio"  value="jdWeb" name="paytype">
-					<img src="http://beeclouddoc.qiniudn.com/yeeWap.png" alt="JD　WEB">
+					<img src="http://beeclouddoc.qiniudn.com/jd.png" alt="JD　WEB">
 				</li>
 				<li onclick="paySwitch(this)">
 					<input type="radio"  value="kqWap" name="paytype">
-					<img src="http://beeclouddoc.qiniudn.com/yeeWap.png" alt="KUAIQIAN WAP">
+					<img src="http://beeclouddoc.qiniudn.com/kqwap.png" alt="KUAIQIAN WAP">
 				</li>
 				<li onclick="paySwitch(this)">
 					<input type="radio"  value="kqWeb" name="paytype">
-					<img src="http://beeclouddoc.qiniudn.com/yeeWap.png" alt="KUAIQIAN WEB">
+					<img src="http://beeclouddoc.qiniudn.com/kq.png" alt="KUAIQIAN WEB">
 				</li>
   		    </ul>
 		</div>
@@ -216,6 +216,18 @@ input {
 				<li onclick="querySwitch(this)">
 					<input type="radio"  value="unionQuery" name="querytype">
 					<img src="http://beeclouddoc.qiniudn.com/unionpay.png" alt="">
+				</li>
+				<li onclick="querySwitch(this)">
+					<input type="radio"  value="yeeQuery" name="querytype">
+					<img src="http://beeclouddoc.qiniudn.com/yb.png" alt="YEE">
+				</li>
+				<li onclick="querySwitch(this)">
+					<input type="radio"  value="jdQuery" name="querytype">
+					<img src="http://beeclouddoc.qiniudn.com/jd.png" alt="YEE">
+				</li>
+				<li onclick="querySwitch(this)">
+					<input type="radio"  value="kqQuery" name="querytype">
+					<img src="http://beeclouddoc.qiniudn.com/kq.png" alt="YEE">
 				</li>
 				<li onclick="querySwitch(this)">
 					<input type="radio"  value="noChannelQuery" name="querytype">

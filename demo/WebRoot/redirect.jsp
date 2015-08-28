@@ -49,7 +49,7 @@
 		String showUrl = (String) session.getAttribute("showUrl");
 		
 		Map optional = new HashMap();
-		optional.put("opchannel", "1002");
+		optional.put("rui", "测试");
 
 		String type = request.getParameter("paytype");
 
