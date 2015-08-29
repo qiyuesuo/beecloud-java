@@ -151,11 +151,29 @@
 				out.println(bcQueryResult.getErrMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
+		} else if (querytype.equals("jdQuery")) {
+			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.JD, null, null, null, null, 50);
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
+				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			}
+		} else if (querytype.equals("kqQuery")) {
+			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.KUAIQIAN, null, null, null, null, 50);
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
+				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			}
 		} else if (querytype.equals("noChannelQuery")) {
 			Date date = new Date();
 			Calendar c = Calendar.getInstance();  
 			c.add(Calendar.MINUTE, -60);
-			bcQueryResult = BCPay.startQueryBill(null, null, null, null, null, null);
+			bcQueryResult = BCPay.startQueryBill(null, null, null, null, null, 50);
 			//bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.UN, null, c.getTime(), date, null, 50);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
