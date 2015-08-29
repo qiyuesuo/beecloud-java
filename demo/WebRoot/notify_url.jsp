@@ -33,7 +33,7 @@
 	    String mysign = DigestUtils.md5Hex(getContentBytes(text, input_charset));
 	    
 	    long timeDifference = System.currentTimeMillis() - Long.valueOf(key);
-	    if (mysign.equals(sign) && timeDifference > 300000) {
+	    if (mysign.equals(sign) && timeDifference <= 300000) {
 	        return true;
 	    } else {
 	        return false;
