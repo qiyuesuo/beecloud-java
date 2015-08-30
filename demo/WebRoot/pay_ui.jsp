@@ -142,6 +142,10 @@ input {
 					<img src="http://beeclouddoc.qiniudn.com/wechats.png" alt="">
 				</li>
 				<li onclick="paySwitch(this)">
+					<input type="radio"  value="wechatJSAPI" name="paytype">
+					<img src="http://7xavqo.com1.z0.glb.clouddn.com/wechatgzh.png" alt="">
+				</li>
+				<li onclick="paySwitch(this)">
 					<input type="radio"  value="unionpay" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/unionpay.png" alt="">
 				</li>
@@ -152,14 +156,6 @@ input {
 				<li onclick="paySwitch(this)">
 					<input type="radio"  value="alipayWAP" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/aliwap.png" alt="">
-				</li>
-				<!-- i onclick="paySwitch(this)">
-					<input type="radio"  value="wechatJSAPI" name="paytype">
-					<img src="http://7xavqo.com1.z0.glb.clouddn.com/wechatgzh.png" alt="">
-				</li-->
-				<li onclick="paySwitch(this)">
-					<input type="radio"  value="aliOfflineQr" name="paytype">
-					<img src="http://beeclouddoc.qiniudn.com/aliofflineqr.png" alt="">
 				</li>
 				<li onclick="paySwitch(this)">
 					<input type="radio"  value="alitransfer" name="paytype">

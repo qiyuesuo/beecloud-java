@@ -43,12 +43,11 @@ public class BCPay {
 	/**
 	 * @param channel 
 	 * （必填）渠道类型， 根据不同场景选择不同的支付方式，包含：
-s	 * 	WX_NATIVE 微信公众号二维码支付
+	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	WX_JSAPI 微信公众号支付
 	 * 	ALI_WEB 支付宝网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
 	 *  ALI_WAP: 支付宝移动网页支付
-	 *  ALI_OFFLINE_QRCODE 支付宝线下二维码支付
 	 * 	UN_WEB 银联网页支付
 	 * @param totalFee 
 	 * （必填）订单总金额， 只能为整数，单位为分，例如 1	
@@ -133,11 +132,6 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	                        result.setUrl(ret.get("url").toString());
 	                        result.setType(RESULT_TYPE.OK);
 	                    }
-                	} else if (channel.equals(PAY_CHANNEL.ALI_OFFLINE_QRCODE)) {
-                		if (ret.containsKey("qr_code") && null != ret.get("qr_code")) {
-                			result.setAliQrCode(ret.get("qr_code").toString());
-                			result.setType(RESULT_TYPE.OK);
-                		}
                 	} else if (channel.equals(PAY_CHANNEL.UN_WEB)) {
                 		if (ret.containsKey("html") && null != ret.get("html")) {
 	                        result.setHtml(ret.get("html").toString());
@@ -248,7 +242,6 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	ALI_WEB 支付宝网页支付
 	 *  ALI_WAP: 支付宝移动网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
-	 *  ALI_OFFLINE_QRCODE 支付宝线下二维码支付
 	 * 	UN
 	 * 	UN_APP 银联APP支付
 	 * 	UN_WEB 银联网页支付
@@ -347,7 +340,6 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	ALI_WEB 支付宝网页支付
 	 *  ALI_WAP: 支付宝移动网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
-	 *  ALI_OFFLINE_QRCODE 支付宝线下二维码支付
 	 * 	UN
 	 * 	UN_APP 银联APP支付
 	 * 	UN_WEB 银联网页支付
