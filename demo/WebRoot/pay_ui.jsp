@@ -128,7 +128,7 @@ input {
 		<p>请选择支付方式</p>
 	</div>
 	<div>
-		支付平台<span>(推荐支付宝、微信用户使用)</span>
+		支付平台
 	</div>
 	<form action="redirect.jsp" method="POST" target="_blank">
 		<div>
@@ -198,7 +198,7 @@ input {
 	
 	<hr/>
 	<div>
-		<h2>订单查询及发起退款，退款查询，微信退款状态查询</h2>
+		<h2>订单查询及发起退款，退款查询，退款状态查询</h2>
 		<p>请选择渠道进行操作</p>
 	</div>
 	
