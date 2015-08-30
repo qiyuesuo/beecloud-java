@@ -48,7 +48,6 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	ALI_WEB 支付宝网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
 	 *  ALI_WAP: 支付宝移动网页支付
-	 *  ALI_OFFLINE_QRCODE 支付宝线下二维码支付
 	 * 	UN_WEB 银联网页支付
 	 *  JD_WAP: 京东移动网页支付
 	 *  JD_WEB: 京东PC网页支付
@@ -139,11 +138,6 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	                        result.setUrl(ret.get("url").toString());
 	                        result.setType(RESULT_TYPE.OK);
 	                    }
-                	} else if (channel.equals(PAY_CHANNEL.ALI_OFFLINE_QRCODE)) {
-                		if (ret.containsKey("qr_code") && null != ret.get("qr_code")) {
-                			result.setAliQrCode(ret.get("qr_code").toString());
-                			result.setType(RESULT_TYPE.OK);
-                		}
                 	} else if (channel.equals(PAY_CHANNEL.UN_WEB) || channel.equals(PAY_CHANNEL.JD_WAP)
                 			|| channel.equals(PAY_CHANNEL.JD_WEB) || channel.equals(PAY_CHANNEL.KUAIQIAN_WAP) 
                 			|| channel.equals(PAY_CHANNEL.KUAIQIAN_WEB)) {
@@ -264,7 +258,6 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	ALI_WEB 支付宝网页支付
 	 *  ALI_WAP: 支付宝移动网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
-	 *  ALI_OFFLINE_QRCODE 支付宝线下二维码支付
 	 * 	UN
 	 * 	UN_APP 银联APP支付
 	 * 	UN_WEB 银联网页支付
@@ -277,6 +270,9 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 *  KUAIQIAN
 	 *	KUAIQIAN_WAP: 快钱移动网页支付
 	 *	KUAIQIAN_WEB: 快钱PC网页支付
+	 *  PAYPAL
+	 *  PAYPAL_SANDBOX: paypal 沙箱环境订单
+	 *  PAYPAL_LIVE: paypal 生产环境订单
      * @param billNo
      * （选填） 商户订单号， 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一
      * @param startTime 
