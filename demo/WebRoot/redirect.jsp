@@ -60,7 +60,7 @@
 		
 		if (type.equals("alipay")) {
 			
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, "111111111112233333344445566", "买水", optional, returnUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, billNo, "买水", optional, returnUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
@@ -106,7 +106,7 @@
 			}
             
 		} else if (type.equals("wechatQr")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, "1111111111122333333444455", "买水", null, null, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, billNo, "买水", null, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 			}
 			else {
@@ -129,7 +129,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("unionpay")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, "11111111111223333334444", "买矿泉水", optional, frontUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
@@ -146,7 +146,7 @@
 			list.add(data2);
 			
 			
-			bcPayResult = BCPay.startTransfer(PAY_CHANNEL.ALI, "transfertest112233", "苏州比可网络科技有限公司", list);
+			bcPayResult = BCPay.startTransfer(PAY_CHANNEL.ALI, billNo, "苏州比可网络科技有限公司", list);
 			if (bcPayResult.getType().ordinal() == 0) {
 				response.sendRedirect(bcPayResult.getUrl());
 			}
@@ -156,7 +156,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("yeeWap")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WAP, 1, "1111111111122333333444455", "买矿泉水", optional, frontUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WAP, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				response.sendRedirect(bcPayResult.getUrl());
 			}
@@ -196,7 +196,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("kqWeb")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WEB, 1, "111111111112233333344445", "买矿泉水", optional, frontUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WEB, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
