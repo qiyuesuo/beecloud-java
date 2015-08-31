@@ -41,7 +41,7 @@
 	}
 	System.out.println("channel:" +channel);
 	String refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
-	BCPayResult result = BCPay.startBCRefund(channel, refundNo, billNo, refundFee, optional);
+	BCPayResult result = BCPay.startBCRefund(channel, "20150831001", billNo, refundFee, optional);
 	if (result.getType().ordinal() == 0 ) {
 		if (result.getUrl() != null) {
 			response.sendRedirect(result.getUrl());
