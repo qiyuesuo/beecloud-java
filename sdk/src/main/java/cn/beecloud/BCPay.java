@@ -43,7 +43,7 @@ public class BCPay {
 	/**
 	 * @param channel 
 	 * （必填）渠道类型， 根据不同场景选择不同的支付方式，包含：
-s	 * 	WX_NATIVE 微信公众号二维码支付
+	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	WX_JSAPI 微信公众号支付
 	 * 	ALI_WEB 支付宝网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
@@ -368,7 +368,6 @@ s	 * 	WX_NATIVE 微信公众号二维码支付
 	 * 	ALI_WEB 支付宝网页支付
 	 *  ALI_WAP: 支付宝移动网页支付
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
-	 *  ALI_OFFLINE_QRCODE 支付宝线下二维码支付
 	 * 	UN
 	 * 	UN_APP 银联APP支付
 	 * 	UN_WEB 银联网页支付
