@@ -166,7 +166,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("yeeWeb")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WEB, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WEB, 1, billNo, "买矿泉水", optional, "http://localhost:8080/PC-Web-Pay-Demo/yeeWebReturnUrl.jsp", null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				response.sendRedirect(bcPayResult.getUrl());
 			}
