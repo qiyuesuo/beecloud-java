@@ -62,7 +62,7 @@ class BCUtilPrivate {
 		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/refunds?para=";
 	}
 	
-	static String getkApiQueryWXRefundStatus() {
+	static String getkApiRefundUpdate() {
 		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/refund/status?para=";
 	}
 	

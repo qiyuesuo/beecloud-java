@@ -24,11 +24,24 @@
 	optional.put("test", "test");
 	Integer refundFee = Integer.parseInt(request.getParameter("total_fee"));
 	PAY_CHANNEL channel = null;
-	if (channelObject != null && !channelObject.equals(""))
-		channel = channelObject.toString().equals("WX")?PAY_CHANNEL.WX:channelObject.toString().equals("ALI")?PAY_CHANNEL.ALI:PAY_CHANNEL.UN;
+	if (channelObject != null && !channelObject.equals("")) {
+		if (channelObject.toString().contains("WX")) {
+			channel = PAY_CHANNEL.WX;
+		} else if (channelObject.toString().contains("ALI")) {
+			channel = PAY_CHANNEL.ALI;
+		} else if (channelObject.toString().contains("UN")) {
+			channel = PAY_CHANNEL.UN;
+		} else if (channelObject.toString().contains("YEE")) {
+			channel = PAY_CHANNEL.YEE;
+		} else if (channelObject.toString().contains("JD")) {
+			channel = PAY_CHANNEL.JD;
+		} else if (channelObject.toString().contains("KUAIQIAN")) {
+			channel = PAY_CHANNEL.KUAIQIAN;
+		}
+	}
 	System.out.println("channel:" +channel);
 	String refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
-	BCPayResult result = BCPay.startBCRefund(channel, refundNo, billNo, refundFee, optional);
+	BCPayResult result = BCPay.startBCRefund(channel, "20150831001", billNo, refundFee, optional);
 	if (result.getType().ordinal() == 0 ) {
 		if (result.getUrl() != null) {
 			response.sendRedirect(result.getUrl());

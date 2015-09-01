@@ -49,6 +49,12 @@ public class BCPay {
 	 * 	ALI_QRCODE 支付宝内嵌二维码支付
 	 *  ALI_WAP: 支付宝移动网页支付
 	 * 	UN_WEB 银联网页支付
+	 *  JD_WAP: 京东移动网页支付
+	 *  JD_WEB: 京东PC网页支付
+	 *  YEE_WAP: 易宝移动网页支付
+	 *  YEE_WEB: 易宝PC网页支付
+	 *	KUAIQIAN_WAP: 快钱移动网页支付
+	 *	KUAIQIAN_WEB: 快钱PC网页支付
 	 * @param totalFee 
 	 * （必填）订单总金额， 只能为整数，单位为分，例如 1	
 	 * @param billNo 
@@ -132,9 +138,16 @@ public class BCPay {
 	                        result.setUrl(ret.get("url").toString());
 	                        result.setType(RESULT_TYPE.OK);
 	                    }
-                	} else if (channel.equals(PAY_CHANNEL.UN_WEB)) {
+                	} else if (channel.equals(PAY_CHANNEL.UN_WEB) || channel.equals(PAY_CHANNEL.JD_WAP)
+                			|| channel.equals(PAY_CHANNEL.JD_WEB) || channel.equals(PAY_CHANNEL.KUAIQIAN_WAP) 
+                			|| channel.equals(PAY_CHANNEL.KUAIQIAN_WEB)) {
                 		if (ret.containsKey("html") && null != ret.get("html")) {
 	                        result.setHtml(ret.get("html").toString());
+	                        result.setType(RESULT_TYPE.OK);
+	                    }
+                	} else if (channel.equals(PAY_CHANNEL.YEE_WAP) || channel.equals(PAY_CHANNEL.YEE_WEB) ) {
+                		if (ret.containsKey("url") && null != ret.get("url")) {
+	                        result.setUrl(ret.get("url").toString());
 	                        result.setType(RESULT_TYPE.OK);
 	                    }
                 	}
@@ -162,6 +175,9 @@ public class BCPay {
 	 * 	WX  微信
 	 * 	ALI 支付宝
 	 * 	UN 银联
+	 * 	YEE 易宝
+	 *  JD 京东
+	 *  KUAIQIAN 快钱
      * @param refundNo
      * （必填）商户退款单号	， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
      * 例如：201506101035040000001	
@@ -245,6 +261,18 @@ public class BCPay {
 	 * 	UN
 	 * 	UN_APP 银联APP支付
 	 * 	UN_WEB 银联网页支付
+	 *  JD
+	 *  JD_WAP: 京东移动网页支付
+	 *  JD_WEB: 京东PC网页支付
+	 *  YEE
+	 *  YEE_WAP: 易宝移动网页支付
+	 *  YEE_WEB: 易宝PC网页支付
+	 *  KUAIQIAN
+	 *	KUAIQIAN_WAP: 快钱移动网页支付
+	 *	KUAIQIAN_WEB: 快钱PC网页支付
+	 *  PAYPAL
+	 *  PAYPAL_SANDBOX: paypal 沙箱环境订单
+	 *  PAYPAL_LIVE: paypal 生产环境订单
      * @param billNo
      * （选填） 商户订单号， 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一
      * @param startTime 
@@ -343,6 +371,15 @@ public class BCPay {
 	 * 	UN
 	 * 	UN_APP 银联APP支付
 	 * 	UN_WEB 银联网页支付
+	 *  JD
+	 *  JD_WAP: 京东移动网页支付
+	 *  JD_WEB: 京东PC网页支付
+	 *  YEE
+	 *  YEE_WAP: 易宝移动网页支付
+	 *  YEE_WEB: 易宝PC网页支付
+	 *  KUAIQIAN
+	 *	KUAIQIAN_WAP: 快钱移动网页支付
+	 *	KUAIQIAN_WEB: 快钱PC网页支付
 	 * @param billNo
      * （选填） 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一
      * @param refundNo
@@ -429,9 +466,14 @@ public class BCPay {
     /**
      * @param refundNo
      * （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。	
+     * @param channel
+     * (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含：
+     *  YEE 易宝
+	 *  WX 微信
+	 *  KUAIQIAN 快钱
      * @return BCQueryStatusResult
      */
-    public static BCQueryStatusResult startWeChatRefundStatusQuery(String refundNo) {
+    public static BCQueryStatusResult startRefundUpdate(PAY_CHANNEL channel, String refundNo) {
 
     	BCQueryStatusResult result;
     	result = ValidationUtil.validateQueryRefundStatus(refundNo);
@@ -444,12 +486,12 @@ public class BCPay {
         param.put("app_id", BCCache.getAppID());
         param.put("timestamp", System.currentTimeMillis());
         param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
-        param.put("channel", "WX");
+        param.put("channel", channel.toString());
         param.put("refund_no", refundNo);
         
         result = new BCQueryStatusResult();
         StringBuilder sb = new StringBuilder();   
-        sb.append(BCUtilPrivate.getkApiQueryWXRefundStatus());
+        sb.append(BCUtilPrivate.getkApiRefundUpdate());
         
         
         Client client = BCAPIClient.client;

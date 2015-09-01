@@ -61,7 +61,7 @@ public class BCPayTest {
 	
 	@Test
 	public void testQueryWeChatRefundStatus() {
-		BCQueryStatusResult result = BCPay.startWeChatRefundStatusQuery("201507149424f344");
+		BCQueryStatusResult result = BCPay.startRefundUpdate(PAY_CHANNEL.WX, "201507149424f344");
 		System.out.println("test1");
 	}
 	

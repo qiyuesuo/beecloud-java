@@ -20,7 +20,16 @@ public class BCEumeration {
 		ALI_OFFLINE_QRCODE,
 		UN,
 		UN_APP,
-		UN_WEB
+		UN_WEB,
+		YEE,
+		YEE_WEB,
+		YEE_WAP,
+		JD,
+		JD_WEB,
+		JD_WAP,
+		KUAIQIAN,
+		KUAIQIAN_WAP,
+		KUAIQIAN_WEB
 	}
 
 	public enum QR_PAY_MODE {
