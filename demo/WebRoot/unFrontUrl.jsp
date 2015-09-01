@@ -30,7 +30,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; UTF-8">
-<title>Front Url</title>
+<title>UN Front Url</title>
 </head>
 <body>
 	<%

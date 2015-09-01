@@ -37,8 +37,11 @@
 	<%
 		//以下代码用session获得交易信息，可由商户根据自己的项目决定实现方式
 		//return_url示例（商户根据自身系统指定）
-		String returnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url.jsp";
-		String frontUrl = "http://localhost:8080/PC-Web-Pay-Demo/front_url.jsp";
+		String yeeWebReturnUrl = "http://localhost:8080/PC-Pay-Demo/yeeWebReturnUrl.jsp";
+		String jdReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/jdReturnUrl.jsp";
+		String kqReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/kqReturnUrl.jsp";
+		String aliReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/aliReturnUrl.jsp";
+		String unFrontUrl = "http://localhost:8080/PC-Web-Pay-Demo/unFrontUrl.jsp";
 		String sellerEmail = "admin@beecloud.cn";
 		
 		//模拟商户的交易编号
@@ -53,14 +56,14 @@
 
 		String type = request.getParameter("paytype");
 
-		BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
+		BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c");
 		//BCPayResult的type字段有OK和非OK两种，当type字段是OK时（对应值为0），bcPayResult包含支付所需的内容如html或者code_url或者支付成功信息,
 		//当type的字段为非OK的时候，，bcPayResult包含通用错误和具体的错误信息。商户系统可以任意显示，打印或者记录日志。
 		BCPayResult bcPayResult = new BCPayResult();
 		
 		if (type.equals("alipay")) {
 			
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, billNo, "买水", optional, returnUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, billNo, "买水", optional, aliReturnUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
@@ -71,7 +74,7 @@
 			}
 		} else if (type.equals("alipayQr")) {
 			
-            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, billNo, "买水", null, returnUrl, null, null, QR_PAY_MODE.MODE_BRIEF_FRONT);
+            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, billNo, "买水", null, aliReturnUrl, null, null, QR_PAY_MODE.MODE_BRIEF_FRONT);
             if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
@@ -83,21 +86,9 @@
             
 		} else if (type.equals("alipayWAP")) {
 			
-            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, billNo, "买水", null, null, null, null, null);
+            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, billNo, "买水", null, aliReturnUrl, null, null, null);
             if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
-			}
-			else {
-				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
-				out.println(bcPayResult.getErrDetail());
-			}
-            
-		} else if (type.equals("aliOfflineQr")) {
-			
-            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_OFFLINE_QRCODE, 1, billNo, "买水", null, null, null, null, null);
-            if (bcPayResult.getType().ordinal() == 0) {
-				//out.println(bcPayResult.getHtml());
 			}
 			else {
 				//handle the error message as you wish！
@@ -129,7 +120,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("unionpay")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, billNo, "买矿泉水", optional, unFrontUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
@@ -156,7 +147,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("yeeWap")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WAP, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WAP, 1, billNo, "买矿泉水", optional, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				response.sendRedirect(bcPayResult.getUrl());
 			}
@@ -166,7 +157,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("yeeWeb")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WEB, 1, billNo, "买矿泉水", optional, "http://localhost:8080/PC-Web-Pay-Demo/yeeWebReturnUrl.jsp", null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WEB, 1, billNo, "买矿泉水", optional, yeeWebReturnUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				response.sendRedirect(bcPayResult.getUrl());
 			}
@@ -176,7 +167,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("jdWap")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.JD_WAP, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.JD_WAP, 1, billNo, "买矿泉水", optional, jdReturnUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
@@ -186,7 +177,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("jdWeb")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.JD_WEB, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.JD_WEB, 1, billNo, "买矿泉水", optional, jdReturnUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
@@ -196,7 +187,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("kqWeb")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WEB, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WEB, 1, billNo, "买矿泉水", optional, kqReturnUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
@@ -206,7 +197,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("kqWap")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WAP, 1, billNo, "买矿泉水", optional, frontUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WAP, 1, billNo, "买矿泉水", optional, kqReturnUrl, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getHtml());
 			}
