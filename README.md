@@ -1,12 +1,16 @@
 ## BeeCloud Java SDK (Open Source)
 
-![pass](https://img.shields.io/badge/Build-pass-green.svg) ![MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![v2.2.0](https://img.shields.io/badge/Version-v2.2.0-blue.svg)
+![pass](https://img.shields.io/badge/Build-pass-green.svg) ![MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![v2.2.0](https://img.shields.io/badge/Version-v2.2.0-blue.svg) 
 
-本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api)开发的Java SDK，适用于JRE 1.6及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
+## 简介
+
+本SDK的官方GitHub项目地址是 [https://github.com/beecloud/beecloud-java](https://github.com/beecloud/beecloud-java)
+
+本SDK的是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api)开发的Java SDK，适用于JRE 1.6及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
 ## 安装
 
-1.从[github](https://github.com/beecloud/beecloud-java/releases)下载带依赖的jar文件,然后导入到自己的工程依赖包中。
+1.从[github](https://github.com/beecloud/beecloud-java/releases)下载带依赖的jar文件,然后导入到自己的工程依赖包中
 
 
 2.若是工程采用maven进行依赖配置，可在自己工程的pom.xml文件里加入以下配置
@@ -25,7 +29,7 @@
 
 三个步骤，2分钟轻松搞定： 
 
-1. 注册开发者：猛击这里注册成为[BeeCloud](https://beecloud.cn/register/)开发者。 
+1. 注册开发者：猛击这里注册成为[BeeCloud](https://beecloud.cn/register/)开发者
 
 2. 注册应用：使用注册的账号登陆[控制台](https://beecloud.cn/login/)后，点击"+创建App"创建新应用
 
