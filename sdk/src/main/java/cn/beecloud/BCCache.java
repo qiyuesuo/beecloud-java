@@ -50,10 +50,10 @@ public class BCCache {
     static String[] initApiHostArray()
     {
     	apiHostArray = new String[4];
-    	apiHostArray[0] = "https://apisz.beecloud.cn";
-    	apiHostArray[1] = "https://apiqd.beecloud.cn";
-    	apiHostArray[2] = "https://apibj.beecloud.cn";
-    	apiHostArray[3] = "https://apihz.beecloud.cn";
+    	apiHostArray[0] = "http://192.168.0.5:8080";
+    	apiHostArray[1] = "http://192.168.0.5:8080";
+    	apiHostArray[2] = "http://192.168.0.5:8080";
+    	apiHostArray[3] = "http://192.168.0.5:8080";
     	
     	return apiHostArray;
     }

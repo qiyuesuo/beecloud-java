@@ -43,6 +43,8 @@
 	String refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 	BCPayResult result = BCPay.startBCRefund(channel, "20150831001", billNo, refundFee, optional);
 	if (result.getType().ordinal() == 0 ) {
+		out.println(result.getObjectId());
+		Thread.sleep(5000);
 		if (result.getUrl() != null) {
 			response.sendRedirect(result.getUrl());
 		} else {

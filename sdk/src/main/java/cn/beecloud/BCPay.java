@@ -123,6 +123,7 @@ public class BCPay {
                 boolean isSuccess = (ret.containsKey("result_code") && StrUtil
                                 .toStr(ret.get("result_code")).equals("0"));
                 if (isSuccess) {
+                	result.setObjectId(ret.get("id").toString());
                 	if (channel.equals(PAY_CHANNEL.WX_NATIVE)){
 	                    if (ret.containsKey("code_url") && null != ret.get("code_url")) {
 	                        result.setCodeUrl(ret.get("code_url").toString());
@@ -225,6 +226,7 @@ public class BCPay {
 	                                 .toStr(ret.get("result_code")).equals("0"));
 	
 	                 if (isSuccess) {
+	                	 result.setObjectId(ret.get("id").toString());
 	             		if (ret.containsKey("url")) {
 	            			result.setUrl(ret.get("url").toString());
 	            		} 
