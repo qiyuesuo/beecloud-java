@@ -4,7 +4,7 @@
 
 ## 简介
 
-本SDK的官方GitHub项目地址是 [https://github.com/beecloud/beecloud-java](https://github.com/beecloud/beecloud-java)
+本项目的官方GitHub地址是 [https://github.com/beecloud/beecloud-java](https://github.com/beecloud/beecloud-java)
 
 本SDK的是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api)开发的Java SDK，适用于JRE 1.6及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
