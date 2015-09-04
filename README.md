@@ -232,6 +232,39 @@ qrPayMode | 二维码类型，二维码类型含义MODE_BRIEF_FRONT： 订单码
 return   |  BCPayResult对象， 根据type决定返回内容
 
 
+### <a name="transfer">批量打款</a>
+调用以下接口发起批量退款并将得到BCPayResult对象，BCPayResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。正确状态调用getUrl()方法，getUrl()方法返回跳转url,如跳转至此url页面，即可开始支付。
+
+```java
+List<TransferData> list = new ArrayList<TransferData>();
+TransferData data1 = new TransferData("transfertest11223", "13584809743", "袁某某", 1, "赏赐");
+TransferData data2 = new TransferData("transfertest11224", "13584809742", "张某某", 1, "赏赐");
+list.add(data1);
+list.add(data2);
+
+
+bcPayResult = BCPay.startTransfer(PAY_CHANNEL.ALI, billNo, "苏州比可网络科技有限公司", list);
+if (bcPayResult.getType().ordinal() == 0) {
+	response.sendRedirect(bcPayResult.getUrl());
+}
+else {
+	//handle the error message as you wish！
+	out.println(bcPayResult.getErrMsg());
+	out.println(bcPayResult.getErrDetail());
+}
+```
+
+代码中的各个参数含义如下：
+
+key | 说明
+---- | -----
+channel | 渠道类型， 暂时只支持ALI，（必填）
+batchNo | 批量付款批号， 此次批量付款的唯一标示，11-32位数字字母组合，（必填）
+accountName | 付款方的支付宝账户名, 支付宝账户名称,例如:毛毛，（必填）  
+transferData |  付款的详细数据 {TransferData} 的 List集合，（必填）  
+return | BCPayResult, 根据type决定返回内容
+
+
 ### <a name="refund">退款</a>
 调用以下接口发起退款并将得到BCPayResult对象，BCPayResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。。
 
@@ -342,13 +375,22 @@ channel | 渠道类型， 包含WX、YEE和KUAIQIAN（必填）
 ## Demo
 项目文件夹demo为我们的样例项目，详细展示如何使用java sdk.
 •关于支付宝的return_url
+请参考demo中的 aliReturnUrl.jsp 
 
-请参考demo中的 return_url.jsp 
 •关于银联的return_url
+请参考demo中的 unFrontUrl.jsp
 
-请参考demo中的 front_url.jsp
+•关于京东的return_url
+请参考demo中的 jdReturnUrl.jsp
+
+•关于快钱的return_url
+请参考demo中的 kqReturnUrl.jsp
+
+•关于易宝网银的return_url
+请参考demo中的 yeeWebReturnUrl.jsp
+
+
 •关于weekhook的接收
-
 请参考demo中的 notify_url.jsp  文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
 
 ## 测试
