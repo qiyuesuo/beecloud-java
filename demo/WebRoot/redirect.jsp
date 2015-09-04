@@ -63,7 +63,7 @@
 		
 		if (type.equals("alipay")) {
 			
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, billNo, "买水", optional, aliReturnUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, billNo, "买水", optional, aliReturnUrl, null, null, null, 0);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -76,7 +76,7 @@
 			}
 		} else if (type.equals("alipayQr")) {
 			
-            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, billNo, "买水", null, aliReturnUrl, null, null, QR_PAY_MODE.MODE_BRIEF_FRONT);
+            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, billNo, "买水", null, aliReturnUrl, null, null, QR_PAY_MODE.MODE_BRIEF_FRONT, 86400*3);
             if (bcPayResult.getType().ordinal() == 0) {
             	out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -90,7 +90,7 @@
             
 		} else if (type.equals("alipayWAP")) {
 			
-            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, billNo, "买水", null, aliReturnUrl, null, null, null);
+            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, billNo, "买水", null, aliReturnUrl, null, null, null, 86400*3);
             if (bcPayResult.getType().ordinal() == 0) {
             	out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -103,7 +103,7 @@
 			}
             
 		} else if (type.equals("wechatQr")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, billNo, "买水", null, null, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, billNo, "买水", null, null, null, null, null, 86400*3);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -114,7 +114,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("wechatJSAPI")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, billNo, "买水", null, null, "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, billNo, "买水", null, null, "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null, 86400*3);
 			System.out.println(bcPayResult.getType());
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
@@ -130,7 +130,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("unionpay")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, billNo, "买矿泉水", optional, unFrontUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, billNo, "买矿泉水", optional, unFrontUrl, null, null, null, 86400*3);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -161,7 +161,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("yeeWap")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WAP, 1, billNo, "买矿泉水", optional, null, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WAP, 1, billNo, "买矿泉水", optional, null, null, null, null, 86400*3);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -173,7 +173,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("yeeWeb")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WEB, 1, billNo, "买矿泉水", optional, yeeWebReturnUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WEB, 1, billNo, "买矿泉水", optional, yeeWebReturnUrl, null, null, null, 86400*3);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -185,7 +185,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("jdWap")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.JD_WAP, 1, billNo, "买矿泉水", optional, jdReturnUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.JD_WAP, 1, billNo, "买矿泉水", optional, jdReturnUrl, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -197,7 +197,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("jdWeb")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.JD_WEB, 1, billNo, "买矿泉水", optional, jdReturnUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.JD_WEB, 1, billNo, "买矿泉水", optional, jdReturnUrl, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -209,7 +209,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("kqWeb")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WEB, 1, billNo, "买矿泉水", optional, kqReturnUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WEB, 1, billNo, "买矿泉水", optional, kqReturnUrl, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -221,7 +221,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("kqWap")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WAP, 1, billNo, "买矿泉水", optional, kqReturnUrl, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WAP, 1, billNo, "买矿泉水", optional, kqReturnUrl, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);

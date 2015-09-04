@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.bean.TransferData;
+import cn.beecloud.bean.*;;
 
 public class BCPayTest {
 
@@ -22,14 +23,14 @@ public class BCPayTest {
 
 	@Before
 	public void setUp() throws Exception {
-		BeeCloud.registerApp(TestConstant.KTestAppID, TestConstant.kTestAppSecret);
+//		BeeCloud.registerApp(TestConstant.KTestAppID, TestConstant.kTestAppSecret);
 	}
 
 	@Test
 	public void testPay() {
 		Map map = new HashMap();
 		map.put("opchannel", "1002");
-		BCPayResult result = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, "201508130100010000005644", "气费", map, "http://118.186.253.55:8889/V04/99bill.html", null, null, null);
+		BCPayResult result = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, "201508130100010000005644", "气费", map, "http://118.186.253.55:8889/V04/99bill.html", null, null, null,null);
 		System.out.println("test");
 	}
 	

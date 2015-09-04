@@ -74,11 +74,12 @@ public class BCPay {
 		MODE_BRIEF_FRONT： 订单码-简约前置模式, 对应 iframe 宽度不能小于 600px, 高度不能小于 300px
  		MODE_FRONT： 订单码-前置模式, 对应 iframe 宽度不能小于 300px, 高度不能小于 600px
  		MODE_MINI_FRONT： 订单码-迷你前置模式, 对应 iframe 宽度不能小于 75px, 高度不能小于 75px 
+	 * @param billTimeoutValue 
 	 * @return BCPayResult
 	 */
     public static BCPayResult startBCPay(PAY_CHANNEL channel, int totalFee,
                     String billNo, String title,
-                    Map<String, String> optional, String returnUrl, String openId, String showUrl, QR_PAY_MODE qrPayMode) {
+                    Map<String, String> optional, String returnUrl, String openId, String showUrl, QR_PAY_MODE qrPayMode, Integer billTimeoutＳeconds) {
     	
     	BCPayResult result;
     	result = ValidationUtil.validateBCPay(channel, billNo, title, returnUrl, openId);
@@ -110,7 +111,9 @@ public class BCPay {
         		param.put("qr_pay_mode", String.valueOf(qrPayMode.ordinal()));
         	}
         }
-        
+        if (billTimeoutＳeconds != null) {
+        	param.put("bill_timeout", billTimeoutＳeconds);
+        }
         result = new BCPayResult();
         
         Client client = BCAPIClient.client;
