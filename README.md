@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 
-![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v2.2.0](https://img.shields.io/badge/Version-v2.2.0-blue.svg) 
+![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/Version-v2.2.0-blue.svg) 
 
 ## 简介
 
