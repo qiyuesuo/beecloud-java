@@ -149,7 +149,9 @@ public class BCPay {
 	                        result.setHtml(ret.get("html").toString());
 	                        result.setType(RESULT_TYPE.OK);
 	                    }
-                	} else if (channel.equals(PAY_CHANNEL.YEE_WAP) || channel.equals(PAY_CHANNEL.YEE_WEB) ) {
+                	} else if (channel.equals(PAY_CHANNEL.YEE_WAP) || channel.equals(PAY_CHANNEL.YEE_WEB) || 
+                			channel.equals(PAY_CHANNEL.BD_WEB) || 
+                			channel.equals(PAY_CHANNEL.BD_WAP) ) {
                 		if (ret.containsKey("url") && null != ret.get("url")) {
 	                        result.setUrl(ret.get("url").toString());
 	                        result.setType(RESULT_TYPE.OK);

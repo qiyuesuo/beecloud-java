@@ -29,7 +29,9 @@ public class BCEumeration {
 		JD_WAP,
 		KUAIQIAN,
 		KUAIQIAN_WAP,
-		KUAIQIAN_WEB
+		KUAIQIAN_WEB,
+		BD_WEB,
+		BD_WAP
 	}
 
 	public enum QR_PAY_MODE {

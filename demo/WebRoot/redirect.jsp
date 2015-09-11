@@ -63,7 +63,7 @@
 		
 		if (type.equals("alipay")) {
 			
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, billNo, "买水", optional, aliReturnUrl, null, null, null, 0);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, billNo, "买水", optional, aliReturnUrl, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -76,7 +76,7 @@
 			}
 		} else if (type.equals("alipayQr")) {
 			
-            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, billNo, "买水", null, aliReturnUrl, null, null, QR_PAY_MODE.MODE_BRIEF_FRONT, 86400*3);
+            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, billNo, "买水", null, aliReturnUrl, null, null, QR_PAY_MODE.MODE_BRIEF_FRONT, 65);
             if (bcPayResult.getType().ordinal() == 0) {
             	out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -90,7 +90,7 @@
             
 		} else if (type.equals("alipayWAP")) {
 			
-            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, billNo, "买水", null, aliReturnUrl, null, null, null, 86400*3);
+            bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, billNo, "买水", null, aliReturnUrl, null, null, null, 183);
             if (bcPayResult.getType().ordinal() == 0) {
             	out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -103,7 +103,7 @@
 			}
             
 		} else if (type.equals("wechatQr")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, billNo, "买水", null, null, null, null, null, 86400*3);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, billNo, "买水", null, null, null, null, null, 183);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -130,7 +130,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("unionpay")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, billNo, "买矿泉水", optional, unFrontUrl, null, null, null, 86400*3);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, billNo, "买矿泉水", optional, unFrontUrl, null, null, null, 121);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -161,7 +161,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("yeeWap")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WAP, 1, billNo, "买矿泉水", optional, null, null, null, null, 86400*3);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WAP, 2, billNo, "买矿泉水", optional, null, null, null, null, 121);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -173,7 +173,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("yeeWeb")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WEB, 1, billNo, "买矿泉水", optional, yeeWebReturnUrl, null, null, null, 86400*3);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WEB, 1, billNo, "买矿泉水", optional, yeeWebReturnUrl, null, null, null, 30);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -232,7 +232,31 @@
 				out.println(bcPayResult.getErrMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
-		} 
+		} else if (type.equals("bdWeb")) {
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.BD_WEB, 1, billNo, "买矿泉水", null, kqReturnUrl, null, null, null, null);
+			if (bcPayResult.getType().ordinal() == 0) {
+				out.println(bcPayResult.getObjectId());
+				Thread.sleep(5000);
+				response.sendRedirect(bcPayResult.getUrl());
+			}
+			else {
+				//handle the error message as you wish！
+				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getErrDetail());
+			}
+		} else if (type.equals("bdWap")) {
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.BD_WAP, 1, billNo, "买矿泉水", null, kqReturnUrl, null, null, null, null);
+			if (bcPayResult.getType().ordinal() == 0) {
+				out.println(bcPayResult.getObjectId());
+				Thread.sleep(5000);
+				response.sendRedirect(bcPayResult.getUrl());
+			}
+			else {
+				//handle the error message as you wish！
+				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getErrDetail());
+			}
+		}
 	%>
 <div align="center" id="qrcode">
 </div>

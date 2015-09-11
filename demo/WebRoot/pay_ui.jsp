@@ -185,6 +185,14 @@ input {
 					<input type="radio"  value="kqWeb" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/kq.png" alt="KUAIQIAN WEB">
 				</li>
+				<li onclick="paySwitch(this)">
+					<input type="radio"  value="bdWeb" name="paytype">
+					<img src="http://beeclouddoc.qiniudn.com/bd.png" alt="KUAIQIAN WEB">
+				</li>
+				<li onclick="paySwitch(this)">
+					<input type="radio"  value="bdWap" name="paytype">
+					<img src="http://beeclouddoc.qiniudn.com/bdWap.png" alt="KUAIQIAN WEB">
+				</li>
   		    </ul>
 		</div>
 		<div style="clear: both;">
