@@ -161,7 +161,9 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("yeeWap")) {
+			BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0");
 			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WAP, 2, billNo, "买矿泉水", optional, null, null, null, null, 121);
+			BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);

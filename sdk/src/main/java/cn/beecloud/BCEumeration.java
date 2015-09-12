@@ -30,6 +30,7 @@ public class BCEumeration {
 		KUAIQIAN,
 		KUAIQIAN_WAP,
 		KUAIQIAN_WEB,
+		BD,
 		BD_WEB,
 		BD_WAP
 	}

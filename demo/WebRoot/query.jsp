@@ -101,7 +101,20 @@
 				out.println(bcQueryResult.getErrMsg());
 				out.println(bcQueryResult.getErrDetail());
 			} 
-		}else if (querytype.equals("noChannelQuery")) {
+		} else if (querytype.equals("bdQuery")) {
+			Date date = new Date();
+			Calendar c = Calendar.getInstance();  
+			c.add(Calendar.MINUTE, -120);
+			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.BD, null, null, null, date, null, 50);
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
+				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
+				pageContext.setAttribute("refundUpdate", true);
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			} 
+		} else if (querytype.equals("noChannelQuery")) {
 			Date date = new Date();
 			Calendar c = Calendar.getInstance();  
 			c.add(Calendar.MINUTE, -120);
@@ -171,7 +184,16 @@
 				out.println(bcQueryResult.getErrMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
-		} else if (querytype.equals("noChannelQuery")) {
+		} else if (querytype.equals("bdQuery")) {
+			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.BD, null, null, null, null, 50);
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
+				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			}
+		}else if (querytype.equals("noChannelQuery")) {
 			Date date = new Date();
 			Calendar c = Calendar.getInstance();  
 			c.add(Calendar.MINUTE, -60);
@@ -211,7 +233,7 @@
 	<table border="3" class="table"><tr><th>订单号</th><th>退款单号</th><th>订单金额</th><th>退款金额</th><th>渠道</th><th>是否结束</th><th>是否退款</th><th>退款创建时间</th><c:if test="${isWeChat != null}"><th>退款状态查询</th></c:if></tr>
 		<c:forEach var="refund" items="${refundList}" varStatus="index"> 
 			<tr align="center" ><td>${refund.billNo}</td><td>${refund.refundNo}</td><td>${refund.totalFee}</td><td>${refund.refundFee}</td><td>${refund.channel}</td><td>${refund.finished}</td><td>${refund.refunded}</td><td>${refund.dateTime}</td>
-			<c:if test="${fn:containsIgnoreCase(refund.channel,'WX') || fn:containsIgnoreCase(refund.channel,'YEE') || fn:containsIgnoreCase(refund.channel,'KUAIQIAN')}">
+			<c:if test="${fn:containsIgnoreCase(refund.channel,'WX') || fn:containsIgnoreCase(refund.channel,'YEE') || fn:containsIgnoreCase(refund.channel,'BD') || fn:containsIgnoreCase(refund.channel,'KUAIQIAN')}">
 			<td>
 			<input class="button" type="button" onclick="queryStatus('${refund.channel}','${refund.refundNo}')" value="查询"/>
 			</td>
