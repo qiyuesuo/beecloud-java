@@ -226,6 +226,10 @@ input {
 					<img src="http://beeclouddoc.qiniudn.com/yb.png" alt="YEE">
 				</li>
 				<li onclick="querySwitch(this)">
+					<input type="radio"  value="yeeWapQuery" name="querytype">
+					<img src="http://beeclouddoc.qiniudn.com/ybwap.png" alt="YEE">
+				</li>
+				<li onclick="querySwitch(this)">
 					<input type="radio"  value="jdQuery" name="querytype">
 					<img src="http://beeclouddoc.qiniudn.com/jd.png" alt="YEE">
 				</li>

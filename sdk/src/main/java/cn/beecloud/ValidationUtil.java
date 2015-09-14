@@ -137,7 +137,7 @@ public class ValidationUtil
 	public static BCPayResult validateBCRefund(PAY_CHANNEL channel,
 			String refundNo, String billNo) {
 		 if (channel != null && !channel.equals(PAY_CHANNEL.WX) && !channel.equals(PAY_CHANNEL.ALI) && !channel.equals(PAY_CHANNEL.UN) 
-				 && !channel.equals(PAY_CHANNEL.YEE) && !channel.equals(PAY_CHANNEL.JD) && !channel.equals(PAY_CHANNEL.KUAIQIAN)) {
+				 && !channel.equals(PAY_CHANNEL.YEE) && !channel.equals(PAY_CHANNEL.JD) && !channel.equals(PAY_CHANNEL.KUAIQIAN) && !channel.equals(PAY_CHANNEL.BD)) {
 			 return new BCPayResult(CHANNEL_INVALID_FOR_REFUND, RESULT_TYPE.VALIDATION_ERROR);
 		 } else if (StrUtil.empty(refundNo)) {
 			return new BCPayResult(REFUND_NO_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
