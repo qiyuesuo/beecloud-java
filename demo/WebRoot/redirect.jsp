@@ -12,7 +12,9 @@
 <%@ page import="net.sf.json.JSONObject" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="cn.beecloud.bean.TransferData"%>
-<%
+<%@ page import="java.net.URLEncoder"%>
+<%@ page import="java.net.URLEncoder"%>
+<%@ page import="org.apache.log4j.*"%>
 	/* *
 	 功能：商户结算跳转至指定支付方式页面
 	 版本：3.3
@@ -35,6 +37,8 @@
 </head>
 <body>
 	<%
+	
+		Logger log = Logger.getLogger(this.getClass());
 		//以下代码用session获得交易信息，可由商户根据自己的项目决定实现方式
 		//return_url示例（商户根据自身系统指定）
 		String yeeWebReturnUrl = "http://localhost:8080/PC-Pay-Demo/yeeWebReturnUrl.jsp";
@@ -43,6 +47,11 @@
 		String aliReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/aliReturnUrl.jsp";
 		String unFrontUrl = "http://localhost:8080/PC-Web-Pay-Demo/unFrontUrl.jsp";
 		String sellerEmail = "admin@beecloud.cn";
+		
+		String wxJSAPAppId = "wxtest2015";
+		String wxJSAPIRedirectUrl = "https://apitest.beecloud.cn/demo/wxJSAPIRedirectUrl.jsp?appid=" + wxJSAPAppId;
+		String encodedWXJSAPIRedirectUrl = URLEncoder.encode(wxJSAPIRedirectUrl, "utf-8");
+		
 		
 		//模拟商户的交易编号
 		String billNo = BCUtil.generateRandomUUIDPure();
@@ -103,6 +112,7 @@
 			}
             
 		} else if (type.equals("wechatQr")) {
+			response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect");
 			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, billNo, "买水", null, null, null, null, null, 121);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
@@ -114,6 +124,9 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("wechatJSAPI")) {
+			String redirectUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + wxJSAPAppId+ "&redirect_uri=" + encodedWXJSAPIRedirectUrl + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
+			log.info("wx jsapi redirct url:" + redirectUrl);
+			response.redirect(redirectUrl);
 			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, billNo, "买水", null, null, "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null, 121);
 			System.out.println(bcPayResult.getType());
 			if (bcPayResult.getType().ordinal() == 0) {

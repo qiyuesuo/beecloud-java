@@ -57,9 +57,17 @@ class BCUtilPrivate {
 	static String getkApiQueryBill() {
 		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/bills?para=";
 	}
+	
+	static String getkApiQueryBillById() {
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/bill";
+	}
 
 	static String getkApiQueryRefund() {
 		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/refunds?para=";
+	}
+	
+	static String getkApiQueryRefundById() {
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/refund";
 	}
 	
 	static String getkApiRefundUpdate() {

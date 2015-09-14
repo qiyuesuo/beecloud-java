@@ -18,11 +18,21 @@ public class BCOrderBean {
 	
 	private String channel;
 	
+	private String subChannel;
+	
+	private String channelTradeNo;
+	
+	private String optional;
+	
 	private boolean spayResult;
     
 	private long createdTime;
 	
+	private long updateTime;
+	
 	private String dateTime;
+	
+	private String updateDateTime;
 
 	public String getBillNo() {
 		return billNo;
@@ -94,5 +104,45 @@ public class BCOrderBean {
 
 	public void setChannel(String channel) {
 		this.channel = channel;
+	}
+	
+	public long getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(long updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public String getUpdateDateTime() {
+		return updateDateTime;
+	}
+
+	public void setUpdateDateTime(String updateDateTime) {
+		this.updateDateTime = updateDateTime;
+	}
+
+	public String getSubChannel() {
+		return subChannel;
+	}
+
+	public void setSubChannel(String subChannel) {
+		this.subChannel = subChannel;
+	}
+
+	public String getChannelTradeNo() {
+		return channelTradeNo;
+	}
+
+	public void setChannelTradeNo(String channelTradeNo) {
+		this.channelTradeNo = channelTradeNo;
+	}
+
+	public String getOptional() {
+		return optional;
+	}
+
+	public void setOptional(String optional) {
+		this.optional = optional;
 	}
 }
