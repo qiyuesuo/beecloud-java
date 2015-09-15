@@ -18,9 +18,9 @@
 </head>
 <body>
 <%
-
+	
 	Logger log = Logger.getLogger(this.getClass());
-
+	System.out.println("here");
 	String billNo = BCUtil.generateRandomUUIDPure();
 	String subject = "测试";
 	String totalFee = "1";
@@ -36,8 +36,10 @@
 	
 
 	String appid = request.getParameter("appid");
+	log.info("appid:" + appid);
  	String secret = "53e3943476118a3dff21fb95848de6d7";
 	String code = request.getParameter("code");
+	log.info("code:" + code);
 	if (code != null) {
 		String result = sendGet("https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appid + "&secret=" + secret + "&code=CODE&grant_type=authorization_code");
 		log.info("result:" + result);
@@ -70,7 +72,7 @@
 %>
 
 <%! 
-	String sendGet(String url) {
+	String sendGet(String url) throws Exception{
 		String result = "";
 		BufferedReader in = null;
 		URL realUrl = new URL(url);
@@ -94,5 +96,6 @@
 	    while ((line = in.readLine()) != null) {
 	        result += line;
 	    }
+	    return result;
 	}
 %>

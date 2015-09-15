@@ -48,9 +48,8 @@
 		String unFrontUrl = "http://localhost:8080/PC-Web-Pay-Demo/unFrontUrl.jsp";
 		String sellerEmail = "admin@beecloud.cn";
 		
-		String wxJSAPAppId = "wxtest2015";
-		String wxJSAPIRedirectUrl = "https://apitest.beecloud.cn/demo/wxJSAPIRedirectUrl.jsp?appid=" + wxJSAPAppId;
-		String encodedWXJSAPIRedirectUrl = URLEncoder.encode(wxJSAPIRedirectUrl, "utf-8");
+		String wxJSAPAppId = "wx119a2bda81854ae0";
+		String wxJSAPIRedirectUrl = "https://apitest.beecloud.cn/demo/wxJSAPIRedirectUrl.jsp";
 		
 		
 		//模拟商户的交易编号
@@ -124,9 +123,9 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("wechatJSAPI")) {
-			String redirectUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + wxJSAPAppId+ "&redirect_uri=" + encodedWXJSAPIRedirectUrl + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
+			String redirectUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + wxJSAPAppId+ "&redirect_uri=" + wxJSAPIRedirectUrl + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
 			log.info("wx jsapi redirct url:" + redirectUrl);
-			response.redirect(redirectUrl);
+			response.sendRedirect(redirectUrl);
 			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, billNo, "买水", null, null, "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null, 121);
 			System.out.println(bcPayResult.getType());
 			if (bcPayResult.getType().ordinal() == 0) {
