@@ -193,9 +193,11 @@ public class BCPay {
      * （必填）退款金额， 只能为整数，单位为分，例如1	
      * @param optional
      * （选填）附加数据 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，例如{"key1":"value1","key2":"value2",...}	
+     * @param needApproval
+     * （必填） 标识该笔是预退款还是直接退款
      * @return BCPayResult
      */
-    public static BCPayResult startBCRefund(PAY_CHANNEL channel, String refundNo, String billNo, int refundFee, Map optional) {
+    public static BCPayResult startBCRefund(PAY_CHANNEL channel, String refundNo, String billNo, int refundFee, Map optional, boolean needApproval) {
     	 
     	BCPayResult result;
     	result = ValidationUtil.validateBCRefund(channel, refundNo, billNo);
@@ -214,6 +216,7 @@ public class BCPay {
     	param.put("refund_no", refundNo);
     	param.put("bill_no", billNo);
     	param.put("refund_fee", refundFee);
+    	param.put("need_approval", needApproval);
     	if (optional != null && optional.size() > 0)
     		param.put("optional", optional);
          

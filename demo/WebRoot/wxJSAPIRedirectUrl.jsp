@@ -14,13 +14,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; UTF-8">
-<title>WX JSAPI Redirect Url/title>
+<title>WX JSAPI Redirect Url</title>
 </head>
 <body>
 <%
 	
 	Logger log = Logger.getLogger(this.getClass());
-	System.out.println("here");
 	String billNo = BCUtil.generateRandomUUIDPure();
 	String subject = "测试";
 	String totalFee = "1";
@@ -35,13 +34,22 @@
 	BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
 	
 
-	String appid = request.getParameter("appid");
+	String appid = "wx419f04c4a731303d";
 	log.info("appid:" + appid);
- 	String secret = "53e3943476118a3dff21fb95848de6d7";
+ 	String secret = "21e4b4593ddd200dd77c751f4b964963";
 	String code = request.getParameter("code");
 	log.info("code:" + code);
+	
+	String jsapiString = "";
+	String jsapiAppid ="";
+	String timeStamp ="";
+	String nonceStr = "";
+	String jsapipackage = "";
+	String signType = "";
+	String paySign = "";
+	
 	if (code != null) {
-		String result = sendGet("https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appid + "&secret=" + secret + "&code=CODE&grant_type=authorization_code");
+		String result = sendGet("https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appid + "&secret=" + secret + "&code=" + code + "&grant_type=authorization_code");
 		log.info("result:" + result);
 		JSONObject resultObject = JSONObject.fromObject(result);
 		if (resultObject.containsKey("errcode")) {
@@ -50,15 +58,22 @@
 			String openId = resultObject.get("openid").toString();
 			log.info("openid:" + openId);
 			
-			BCPayResult bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, billNo, "买水", optional, null, openId, null, null, 121);
-			System.out.println(bcPayResult.getType());
+			
+			BCPayResult bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, billNo, "买水", optional, null, "o3kKrjmMFV4wmSSwSNircKD9EXqc", null, null, 121);
+			log.info("bcPayResult" + bcPayResult.getType());
+			System.out.println("bcPayResult:" + bcPayResult.getType());
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
-				Thread.sleep(5000);
 				Map<String, Object> map = bcPayResult.getWxJSAPIMap();
-				JSONObject jsonObject = JSONObject.fromObject(map);
-				String payArg = "<script type=\"text/javascript\" src=\"wxjsapi.js\"></script><script>callpay(" + jsonObject + ");</script>";
-				out.println(payArg);
+				
+				jsapiAppid =map.get("appId").toString();
+				timeStamp =map.get("timeStamp").toString();
+				nonceStr = map.get("nonceStr").toString();
+				jsapipackage = map.get("package").toString();
+				signType = map.get("signType").toString();
+				paySign = map.get("paySign").toString();
+				
+				
 			}
 			else {
 				//handle the error message as you wish！
@@ -83,13 +98,6 @@
 	    conn.setReadTimeout(5000);
 	    conn.setConnectTimeout(5000);
 	    conn.setRequestMethod("GET");
-	//    conn.setDoOutput(true);
-	//    conn.setDoInput(true);
-	    // 获取URLConnection对象对应的输出流
-	//    out = new PrintWriter(conn.getOutputStream());
-	//    // flush输出流的缓冲
-	//    out.flush();
-	//    // 定义BufferedReader输入流来读取URL的响应
 	    in = new BufferedReader(
 	            new InputStreamReader(conn.getInputStream()));
 	    String line;
@@ -99,3 +107,47 @@
 	    return result;
 	}
 %>
+</body>
+<script type="text/javascript">
+	callpay();
+	
+	function jsApiCall() {
+		
+		var data = {
+	            //以下参数的值由BCPayByChannel方法返回来的数据填入即可
+	            "appId": "<%=jsapiAppid%>",
+	            "timeStamp": "<%=timeStamp%>",
+	            "nonceStr": "<%=nonceStr%>",
+	            "package": "<%=jsapipackage%>",
+	            "signType": "<%=signType%>",
+	            "paySign": "<%=paySign%>"
+	        };
+		alert(JSON.stringify(data));
+	    WeixinJSBridge.invoke(
+	        'getBrandWCPayRequest',
+	        data,
+	        function(res){
+	        	alert(res.err_msg);
+                alert(JSON.stringify(res));
+	                WeixinJSBridge.log(res.err_msg);
+	        }
+	    );
+	}
+
+	function callpay() {
+		if (typeof WeixinJSBridge == "undefined"){
+		    if( document.addEventListener ){
+		        document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+		    } else if (document.attachEvent){
+		        document.attachEvent('WeixinJSBridgeReady', jsApiCall); 
+		        document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+		    }
+		} else {
+		    jsApiCall();
+		}
+	}
+	
+	
+	
+</script>
+</html>

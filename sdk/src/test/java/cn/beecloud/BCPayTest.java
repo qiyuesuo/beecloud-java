@@ -38,13 +38,13 @@ public class BCPayTest {
 	public void testRefund() {
 		
 		
-		BCPayResult result = BCPay.startBCRefund(PAY_CHANNEL.WX, "201507170000", "327c4023fc3b46fd9caceaf3cd3bb3d6", 2, null);
+		BCPayResult result = BCPay.startBCRefund(PAY_CHANNEL.WX, "201507170000", "327c4023fc3b46fd9caceaf3cd3bb3d6", 2, null, false);
 		System.out.println("test1");
 	
-		result = BCPay.startBCRefund(PAY_CHANNEL.UN,  "201507142677696345", null, 1, null);
+		result = BCPay.startBCRefund(PAY_CHANNEL.UN,  "201507142677696345", null, 1, null, false);
 		System.out.println("test2");
 	
-		result = BCPay.startBCRefund(PAY_CHANNEL.ALI, "201507101112", null, 1,  null);
+		result = BCPay.startBCRefund(PAY_CHANNEL.ALI, "201507101112", null, 1,  null, false);
 		System.out.println("test3");
 		
 	}
