@@ -82,7 +82,7 @@ public class BCPay {
 	 */
     public static BCPayResult startBCPay(PAY_CHANNEL channel, int totalFee,
                     String billNo, String title,
-                    Map<String, String> optional, String returnUrl, String openId, String showUrl, QR_PAY_MODE qrPayMode, Integer billTimeoutＳeconds) {
+                    Map<String, String> optional, String returnUrl, String openId, String showUrl, QR_PAY_MODE qrPayMode, Integer billTimeoutValue) {
     	
     	BCPayResult result;
     	result = ValidationUtil.validateBCPay(channel, billNo, title, returnUrl, openId);
@@ -114,8 +114,8 @@ public class BCPay {
         		param.put("qr_pay_mode", String.valueOf(qrPayMode.ordinal()));
         	}
         }
-        if (billTimeoutＳeconds != null) {
-        	param.put("bill_timeout", billTimeoutＳeconds);
+        if (billTimeoutValue != null) {
+        	param.put("bill_timeout", billTimeoutValue);
         }
         result = new BCPayResult();
         
