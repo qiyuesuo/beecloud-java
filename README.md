@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 
-![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v2.2.0](https://img.shields.io/badge/Version-v2.2.0-blue.svg) 
+![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v2.3.0](https://img.shields.io/badge/Version-v2.3.0-blue.svg) 
 
 ## 简介
 
@@ -19,7 +19,7 @@
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
@@ -51,7 +51,7 @@
 请商户调用第三方库将返回的code url生成二维码图片。
 该模式链接较短，生成的二维码打印到结账小票上的识别率较高。
 ```java
-bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, billNo, "买水", null, null, null, null, null);
+bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_NATIVE, 1, billNo, "买水", null, null, null, null, null, 120);
 if (bcPayResult.getType().ordinal() == 0) {
 	System.out.println(bcPayResult.getCodeUrl());
 } else {
@@ -63,7 +63,7 @@ if (bcPayResult.getType().ordinal() == 0) {
 #### <a name="wx_jsapi">微信公众号调用</a>
 正确状态调用getWxJSAPIMap()方法返回jsapi map对象。
 ```java
-bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, billNo, "买水", null, null, "openid000000001", null, null);
+bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, billNo, "买水", null, null, "openid000000001", null, null, 180);
 if (bcPayResult.getType().ordinal() == 0) {
 	System.out.println(bcPayResult.getWxJSAPIMap());
 } else {
@@ -76,7 +76,7 @@ if (bcPayResult.getType().ordinal() == 0) {
 #### <a name="un_web">银联网页调用</a>
 正确状态调用getHtml()方法，如将html输出至页面，即可开始银联网页支付。
 ```java
-bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, billNo, "买水", null, returnUrl, null, null, null);
+bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, billNo, "买水", null, unReturnUrl, null, null, null, 120);
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getHtml());
 } else {
@@ -89,7 +89,7 @@ if (bcPayResult.getType().ordinal() == 0) {
 #### <a name="ali_web">阿里网页调用</a>
 正确状态调用getHtml()方法或者getUrl()方法，getHtml()方法返回html,如将html输出至页面，即可开始支付宝网页支付。getUrl()方法返回支付宝跳转url,推荐使用html。
 ```java
-bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, billNo, "农夫山泉", null, "http://beecloud.cn", null, null, null);
+bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, billNo, "农夫山泉", null, "http://beecloud.cn", null, null, null, 120);
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getHtml());
 	out.println(bcPayResult.getUrl());
@@ -103,7 +103,7 @@ if (bcPayResult.getType().ordinal() == 0) {
 #### <a name="ali_qrcode">阿里扫码调用</a>
 正确状态调用getHtml()方法或者getUrl()方法，getHtml()方法返回html,如将html输出至页面，即可开始扫描支付。getUrl()方法返回支付宝内嵌二维码地址。需使用```<iframe>```加载此url
 ```java
-bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, billNo, "农夫山泉", null, "http://beecloud.cn", null, null, null);
+bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_QRCODE, 1, billNo, "农夫山泉", null, "http://beecloud.cn", null, null, null, 120);
 if (bcPayResult.getType().ordinal() == 0) {
     //使用html示例
 	out.println(bcPayResult.getHtml());
@@ -119,7 +119,7 @@ if (bcPayResult.getType().ordinal() == 0) {
 #### <a name="ali_wap">阿里移动网页调用</a>
 正确状态调用getHtml()方法或者getUrl()方法，getHtml()方法返回html,如将html输出至页面，即可开始支付。getUrl()方法返回支付宝跳转url,推荐使用html。
 ```java
-bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, billNo, "买水", null, null, null, null, null);
+bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WAP, 1, billNo, "买水", null, null, null, null, null, 120);
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getHtml());
 }
@@ -133,7 +133,7 @@ else {
 #### <a name="kuaiqian_web">快钱网页调用</a>
 正确状态调用getHtml()方法，getHtml()方法返回html,如将html输出至页面，即可开始快钱网页支付。
 ```java
-bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WEB, 1, billNo, "农夫山泉", null, "http://beecloud.cn", null,  null, null);
+bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WEB, 1, billNo, "农夫山泉", null, "http://beecloud.cn", null,  null, null, null);
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getHtml());
 } else {
@@ -147,7 +147,7 @@ if (bcPayResult.getType().ordinal() == 0) {
 正确状态调用getHtml()方法，getHtml()方法返回html,如将html输出至页面，即可开始快钱移动网页支付。
 ```java
 bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WAP
-, 1, billNo, "农夫山泉", null, "http://beecloud.cn", null, null, null);
+, 1, billNo, "农夫山泉", null, "http://beecloud.cn", null, null, null, null);
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getHtml());
 } else {
@@ -161,7 +161,7 @@ if (bcPayResult.getType().ordinal() == 0) {
 正确状态调用getHtml()方法，getHtml()方法返回html,如将html输出至页面，即可开始京东网页支付。
 ```java
 bcPayResult = BCPay.startBCPay(PAY_CHANNEL.JD_WEB
-, 1, billNo, "农夫山泉", null, "http://beecloud.cn", null, null, null);
+, 1, billNo, "农夫山泉", null, "http://beecloud.cn", null, null, null, null);
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getHtml());
 } else {
@@ -175,7 +175,7 @@ if (bcPayResult.getType().ordinal() == 0) {
 正确状态调用getHtml()方法，getHtml()方法返回html,如将html输出至页面，即可开始京东移动网页支付。
 ```java
 bcPayResult = BCPay.startBCPay(PAY_CHANNEL.JD_WAP
-, 1, billNo, "农夫山泉", null, "http://beecloud.cn", null, null, null);
+, 1, billNo, "农夫山泉", null, jdReturnUrl, null, null, null, null);
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getHtml());
 } else {
@@ -188,7 +188,7 @@ if (bcPayResult.getType().ordinal() == 0) {
 #### <a name="yee_web">易宝网页调用</a>
 正确状态调用getHtml()方法或者getUrl()方法，getHtml()方法返回html,如将html输出至页面，即可开始支付。getUrl()方法返回跳转url,推荐使用html。
 ```java
-bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WEB, 1, billNo, "买水", null, returnUrl, null, null, null);
+bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WEB, 1, billNo, "买水", null, yeeWebReturnUrl, null, null, null, 120);
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getHtml());
 	out.println(bcPayResult.getUrl());
@@ -203,7 +203,35 @@ else {
 #### <a name="yee_wap">易宝移动网页调用</a>
 正确状态调用getUrl()方法，getUrl()方法返回跳转url,如跳转至此url页面，即可开始支付。
 ```java
-bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WAP, 1, billNo, "买水", null, returnUrl, "1", null, null);
+bcPayResult = BCPay.startBCPay(PAY_CHANNEL.YEE_WAP, 1, billNo, "买水", null, null, null, null, null, 120);
+if (bcPayResult.getType().ordinal() == 0) {
+	out.println(bcPayResult.getUrl());
+}
+else {
+	//handle the error message as you wish！
+	out.println(bcPayResult.getErrMsg());
+	out.println(bcPayResult.getErrDetail());
+}
+```
+
+#### <a name="bd_wap">百度移动网页调用</a>
+正确状态调用getUrl()方法，getUrl()方法返回跳转url,如跳转至此url页面，即可开始支付。
+```java
+bcPayResult = BCPay.startBCPay(PAY_CHANNEL.BD_WAP, 1, billNo, "买水", null, bdReturnUrl, null, null, null, 120);
+if (bcPayResult.getType().ordinal() == 0) {
+	out.println(bcPayResult.getUrl());
+}
+else {
+	//handle the error message as you wish！
+	out.println(bcPayResult.getErrMsg());
+	out.println(bcPayResult.getErrDetail());
+}
+```
+
+#### <a name="bd_web">百度网页调用</a>
+正确状态调用getUrl()方法，getUrl()方法返回跳转url,如跳转至此url页面，即可开始支付。
+```java
+bcPayResult = BCPay.startBCPay(PAY_CHANNEL.BD_WEB, 1, billNo, "买水", null, bdReturnUrl, null, null, null, 120);
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getUrl());
 }
@@ -220,7 +248,7 @@ else {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX_NATIVE 微信公众号二维码支付<br/>WX_JSAPI 微信公众号支付<br/>ALI_WEB 支付宝网页支付<br/>ALI_QRCODE 支付宝内嵌二维码支付<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br/>UN_WEB 银联网页支付， JD_WEB 京东网页支付<br/> JD_WAP 京东移动网页支付<br/> YEE_WEB 易宝网页支付<br/> YEE_WAP 易宝移动网页支付<br/> KUAIQIAN_WEB 快钱网页支付<br/> KUAIQIAN_WAP 快钱移动网页支付<br/>（必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX_NATIVE 微信公众号二维码支付<br/>WX_JSAPI 微信公众号支付<br/>ALI_WEB 支付宝网页支付<br/>ALI_QRCODE 支付宝内嵌二维码支付<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br/>UN_WEB 银联网页支付， JD_WEB 京东网页支付<br/> JD_WAP 京东移动网页支付<br/> YEE_WEB 易宝网页支付<br/> YEE_WAP 易宝移动网页支付<br/> KUAIQIAN_WEB 快钱网页支付<br/> KUAIQIAN_WAP 快钱移动网页支付<br/>BD_WEB 百度网页支付<br>BD_WAP 百度移动网页支付（必填）
 totalFee | 订单总金额， 只能为整数，单位为分，例如 1，（必填）
 billNo | 商户订单号, 32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如(201506101035040000001),（必填）
 title | 订单标题， 32个字节内，最长支持16个汉字，（必填）
@@ -229,6 +257,7 @@ returnUrl | 同步返回页面	， 支付渠道处理完请求后,当前页面�
 openId | 微信公众号支付(WX_JSAPI)必填，（选填）
 showUrl | 商品展示地址，需以http://开头的完整路径，例如：http://www.商户网址.com/myorder，（选填）
 qrPayMode | 二维码类型，二维码类型含义MODE_BRIEF_FRONT： 订单码-简约前置模式, 对应 iframe 宽度不能小于 600px, 高度不能小于 300px<br>MODE_FRONT： 订单码-前置模式, 对应 iframe 宽度不能小于 300px, 高度不能小于 600px<br>MODE_MINI_FRONT： 订单码-迷你前置模式, 对应 iframe 宽度不能小于 75px, 高度不能小于 75px ，（选填）
+billTimeoutValue | 订单失效时间，单位秒，非零正整数，例如：120（选填）
 return   |  BCPayResult对象， 根据type决定返回内容
 
 
@@ -269,7 +298,7 @@ return | BCPayResult, 根据type决定返回内容
 调用以下接口发起退款并将得到BCPayResult对象，BCPayResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。。
 
 ```java
-BCPayResult result = BCPay.startBCRefund(PAY_CHANNEL.WX, "201507170000", billNo, 2, null);；
+BCPayResult result = BCPay.startBCRefund(PAY_CHANNEL.WX, "201507170000", billNo, 2, null，false);；
 if (bcPayResult.getType().ordinal() == 0) {
     //返回"退款成功！" 
 	out.println(bcPayResult.getSucessMsg());
@@ -289,6 +318,7 @@ refundNo | 商户退款单号	， 格式为:退款日期(8位) + 流水号(3~24 
 billNo | 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一，（必填）  
 refundFee | 退款金额，只能为整数，单位为分，例如1，（必填）  
 optional   |  附加数据 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，例如{"key1":"value1","key2":"value2",...}, （选填）
+needApproval | 标识该笔是预退款还是直接退款，true为预退款，false或者 null为直接退款，（选填）  
 return | BCPayResult, 根据type决定返回内容
 
 ### <a name="billQuery">订单查询</a>
@@ -312,7 +342,7 @@ if (bcQueryResult.getType().ordinal() == 0) {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付<br>KUAIQIAN<br>KUAIQIAN_WEB 快钱网页支付<br>KUAIQIAN_WAP 快钱移动网页支付<br>YEE<br>YEE_WEB 易宝网页支付<br>YEE_WAP 易宝移动网页支付<br>JD<br>JD_WEB 京东网页支付<br>JD_WAP 京东移动网页支付<br>PAYPAL<br>PAYPAL_SANDBOX<br>PAYPAL_LIVE,（选填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付<br>KUAIQIAN<br>KUAIQIAN_WEB 快钱网页支付<br>KUAIQIAN_WAP 快钱移动网页支付<br>YEE<br>YEE_WEB 易宝网页支付<br>YEE_WAP 易宝移动网页支付<br>JD<br>JD_WEB 京东网页支付<br>JD_WAP 京东移动网页支付<br>PAYPAL<br>PAYPAL_SANDBOX<br>PAYPAL_LIVE<br>BD<br>BD_WEB 百度网页支付<br>BD_APP 百度APP支付<br>BD_WAP 百度移动网页支付,（选填）
 billNo | 商户订单号，
 startTime | 起始时间， Date类型，（选填）  
 endTime | 结束时间， Date类型， （选填）  
@@ -339,7 +369,7 @@ if (bcQueryResult.getType().ordinal() == 0) {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付<br>KUAIQIAN<br>KUAIQIAN_WEB 快钱网页支付<br>KUAIQIAN_WAP 快钱移动网页支付<br>YEE<br>YEE_WEB 易宝网页支付<br>YEE_WAP 易宝移动网页支付<br>JD<br>JD_WEB 京东网页支付<br>JD_WAP 京东移动网页支付，（选填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付<br>KUAIQIAN<br>KUAIQIAN_WEB 快钱网页支付<br>KUAIQIAN_WAP 快钱移动网页支付<br>YEE<br>YEE_WEB 易宝网页支付<br>YEE_WAP 易宝移动网页支付<br>JD<br>JD_WEB 京东网页支付<br>JD_WAP<br>BD<br>BD_WEB 百度网页支付<br>BD_APP 百度APP支付<br>BD_WAP 京东移动网页支付，（选填）
 billNo | 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一, （选填）
 refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”	，（选填）
 startTime | 起始时间， Date类型，（选填）  
@@ -352,7 +382,7 @@ return | BCQueryResult, 根据type决定返回内容
 
 ### <a name="RefundStatusQuery">退款状态查询</a>
 调用以下接口发起退款状态查询并将得到BCQueryStatusResult对象，BCQueryStatusResult对象包含两种状态，正确状态和错误状态，正确状态的BCQueryStatusResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。调用参数中，channel参数包含以下取值：
-WX、YEE、KUAIQIAN。
+WX、YEE、KUAIQIAN、BD。
 
 正确状态调用getRefundStatus()方法返回退款状态(Success, Processing, Fail ...)。调用者可任意处理这个值。
 
@@ -370,7 +400,55 @@ if (result.getType().ordinal() == 0 ) {
 key | 说明
 ---- | -----
 refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是退款发起当日日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。，（必填）
-channel | 渠道类型， 包含WX、YEE和KUAIQIAN（必填）
+channel | 渠道类型， 包含WX、YEE、KUAIQIAN和BD（必填）
+return | BCQueryStatusResult, 根据type决定返回内容
+
+
+
+### <a name="billQueryById">支付订单查询(指定ID)</a>
+调用以下接口发起支付订单查询（指定ID）并将得到BCQueryResult对象，BCQueryResult对象包含两种状态，正确状态和错误状态，正确状态的BCQueryResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。
+
+正确状态调用getOrder()方法返回该笔订单对象。
+
+```java
+BCQueryResult result = BCPay.startQueryBillById(id);
+	if (result.getType().ordinal() == 0) {
+		pageContext.setAttribute("bill", result.getOrder());
+	}else {
+		out.println(result.getErrMsg());
+		out.println(result.getErrDetail());
+	}
+```
+代码中的各个参数含义如下：
+
+key | 说明
+---- | -----
+id | 待查询订单记录的唯一标识符，（必填）
+return | BCQueryResult, 根据type决定返回内容
+
+
+
+### <a name="refundQueryById">退款订单查询(指定ID)</a>
+调用以下接口发起支付订单查询（指定ID）并将得到BCQueryResult对象，BCQueryResult对象包含两种状态，正确状态和错误状态，正确状态的BCQueryResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。
+
+正确状态调用getRefund()方法返回该笔退款记录对象。
+
+```java
+BCQueryResult result = BCPay.startQueryRefundById(id);
+	if (result.getType().ordinal() == 0) {
+		pageContext.setAttribute("refund", result.getRefund());
+	}else {
+		out.println(result.getErrMsg());
+		out.println(result.getErrDetail());
+	}
+```
+代码中的各个参数含义如下：
+
+key | 说明
+---- | -----
+id | 待查询订单记录的唯一标识符，（必填）
+return | BCQueryResult, 根据type决定返回内容
+
 
 ## Demo
 项目文件夹demo为我们的样例项目，详细展示如何使用java sdk.
@@ -378,7 +456,7 @@ channel | 渠道类型， 包含WX、YEE和KUAIQIAN（必填）
 请参考demo中的 aliReturnUrl.jsp 
 
 •关于银联的return_url
-请参考demo中的 unFrontUrl.jsp
+请参考demo中的 unReturnUrl.jsp
 
 •关于京东的return_url
 请参考demo中的 jdReturnUrl.jsp
@@ -389,50 +467,16 @@ channel | 渠道类型， 包含WX、YEE和KUAIQIAN（必填）
 •关于易宝网银的return_url
 请参考demo中的 yeeWebReturnUrl.jsp
 
+•关于百度钱包的return_url
+请参考demo中的 bdReturnUrl.jsp
 
 •关于weekhook的接收
-请参考demo中的 notify_url.jsp  文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
+请参考demo中的 notifyUrl.jsp  文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
 
 ## 测试
 TODO
 
 ## 常见问题
-- 网页在手机上如何使用微信支付？  
-1.由于微信的限制，现在手机网页只能在微信APP内实现使用微信支付，即微信公众号支付（WX_JSAPI）  
-2.WX_JSAPI支付配置相对复杂，请参考[微信文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_1)  
-3.示例代码，调用js方法`callpay()`即可使用
-
-```js
-function onBridgeReady(){
-   WeixinJSBridge.invoke(
-       'getBrandWCPayRequest', {
-           //以下参数的值由BCPayByChannel方法返回来的数据填入即可
-           "appId" : "wx2421b1c4370ec43b",          
-           "timeStamp":" 1395712654",              
-           "nonceStr" : "e61463f8efa94090b1f366cccfbbb444",
-           "package" : "prepay_id=u802345jgfjsdfgsdg888",  
-           "signType" : "MD5",     
-           "paySign" : "70EA570631E4BB79628FBCA90534C63FF7FADD89" 
-       },
-       function(res){     
-           if(res.err_msg == "get_brand_wcpay_request:ok" ) {}     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
-       }
-   ); 
-}
-function callpay()
-{
-    if (typeof WeixinJSBridge == "undefined"){
-        if( document.addEventListener ){
-            document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
-        }else if (document.attachEvent){
-            document.attachEvent('WeixinJSBridgeReady', jsApiCall); 
-            document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
-        }
-    }else{
-        jsApiCall();
-    }
-}
-```
 - 根据app_id找不到对应的APP/keyspace或者app_sign不正确,或者timestamp不是当前UTC，可能的原因：系统时间不准确 app_id和secret填写不正确，请以此排查如下：<br>
 1.appid和appSecret填写是否一致<br>
 2.校准系统时间
