@@ -8,8 +8,6 @@ public class BCOrderBean {
 
 	private String billNo;
 	
-	private String buyerId;
-	
 	private String totalFee;
 	
 	private String title;
@@ -40,14 +38,6 @@ public class BCOrderBean {
 
 	public void setBillNo(String billNo) {
 		this.billNo = billNo;
-	}
-
-	public String getBuyerId() {
-		return buyerId;
-	}
-
-	public void setBuyerId(String buyerId) {
-		this.buyerId = buyerId;
 	}
 
 	public String getTotalFee() {

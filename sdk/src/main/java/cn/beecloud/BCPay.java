@@ -55,6 +55,8 @@ public class BCPay {
 	 *  YEE_WEB: 易宝PC网页支付
 	 *	KUAIQIAN_WAP: 快钱移动网页支付
 	 *	KUAIQIAN_WEB: 快钱PC网页支付
+	 *  BD_WEB: 百度PC网页支付
+	 *  BD_WAP: 百度移动网页支付
 	 * @param totalFee 
 	 * （必填）订单总金额， 只能为整数，单位为分，例如 1	
 	 * @param billNo 
@@ -75,6 +77,7 @@ public class BCPay {
  		MODE_FRONT： 订单码-前置模式, 对应 iframe 宽度不能小于 300px, 高度不能小于 600px
  		MODE_MINI_FRONT： 订单码-迷你前置模式, 对应 iframe 宽度不能小于 75px, 高度不能小于 75px 
 	 * @param billTimeoutValue 
+	 * （选填） 订单失效时间，单位秒，非零正整数
 	 * @return BCPayResult
 	 */
     public static BCPayResult startBCPay(PAY_CHANNEL channel, int totalFee,
@@ -184,6 +187,7 @@ public class BCPay {
 	 * 	YEE 易宝
 	 *  JD 京东
 	 *  KUAIQIAN 快钱
+	 *  BD 百度
      * @param refundNo
      * （必填）商户退款单号	， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
      * 例如：201506101035040000001	
@@ -194,10 +198,10 @@ public class BCPay {
      * @param optional
      * （选填）附加数据 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，例如{"key1":"value1","key2":"value2",...}	
      * @param needApproval
-     * （必填） 标识该笔是预退款还是直接退款
+     * （选填） 标识该笔是预退款还是直接退款
      * @return BCPayResult
      */
-    public static BCPayResult startBCRefund(PAY_CHANNEL channel, String refundNo, String billNo, int refundFee, Map optional, boolean needApproval) {
+    public static BCPayResult startBCRefund(PAY_CHANNEL channel, String refundNo, String billNo, int refundFee, Map optional, Boolean needApproval) {
     	 
     	BCPayResult result;
     	result = ValidationUtil.validateBCRefund(channel, refundNo, billNo);
@@ -216,7 +220,9 @@ public class BCPay {
     	param.put("refund_no", refundNo);
     	param.put("bill_no", billNo);
     	param.put("refund_fee", refundFee);
-    	param.put("need_approval", needApproval);
+    	if (needApproval != null) {
+    		param.put("need_approval", needApproval);
+    	}
     	if (optional != null && optional.size() > 0)
     		param.put("optional", optional);
          
@@ -283,6 +289,10 @@ public class BCPay {
 	 *  PAYPAL
 	 *  PAYPAL_SANDBOX: paypal 沙箱环境订单
 	 *  PAYPAL_LIVE: paypal 生产环境订单
+	 *  BD
+	 *  BＤ_APP 百度APP支付
+	 *  BD_WEB 百度PC网页支付
+	 *  BD_WAP 百度移动网页支付
      * @param billNo
      * （选填） 商户订单号， 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一
      * @param startTime 
@@ -450,6 +460,9 @@ public class BCPay {
 	 *  KUAIQIAN
 	 *	KUAIQIAN_WAP: 快钱移动网页支付
 	 *	KUAIQIAN_WEB: 快钱PC网页支付
+	 *  BD
+	 *	BD_WEB 百度PC网页支付
+	 *  BD_WAP 百度移动网页支付
 	 * @param billNo
      * （选填） 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一
      * @param refundNo
@@ -552,7 +565,7 @@ public class BCPay {
     	 Client client = BCAPIClient.client;
     	  
     	 StringBuilder sb = new StringBuilder();   
-         sb.append(BCUtilPrivate.getkApiQueryBillById());
+         sb.append(BCUtilPrivate.getkApiQueryRefundById());
         
          try {
         	sb.append("/" + objectId);
@@ -570,9 +583,9 @@ public class BCPay {
 
                 if (isSuccess) {
                 	result.setType(RESULT_TYPE.OK);
-                    if (ret.containsKey("pay")
-                                    && ret.get("pay") != null) {
-                        result.setOrder(generateBCOrder((Map<String, Object>)ret.get("pay")));
+                    if (ret.containsKey("refund")
+                                    && ret.get("refund") != null) {
+                        result.setRefund(generateBCRefund((Map<String, Object>)ret.get("refund")));
                     }
                 } else {
                 	result.setErrMsg(ret.get("result_msg").toString());
@@ -602,6 +615,7 @@ public class BCPay {
      *  YEE 易宝
 	 *  WX 微信
 	 *  KUAIQIAN 快钱
+	 *  BD 百度
      * @return BCQueryStatusResult
      */
     public static BCQueryStatusResult startRefundUpdate(PAY_CHANNEL channel, String refundNo) {
@@ -812,7 +826,6 @@ public class BCPay {
 	}
 
     private static BCOrderBean generateBCOrder(Map<String, Object> bill) {
-		BCOrderBean order = new BCOrderBean();
 			BCOrderBean bcOrder = new BCOrderBean();
 			bcOrder.setBillNo(bill.get("bill_no").toString());
 			bcOrder.setTotalFee(bill.get("total_fee").toString());
@@ -822,10 +835,32 @@ public class BCPay {
 			bcOrder.setSubChannel((bill.get("sub_channel").toString()));
 			bcOrder.setCreatedTime((Long)bill.get("createdat"));
 			bcOrder.setUpdateTime((Long)bill.get("updatedat"));
-			bcOrder.setChannelTradeNo(bill.get("channel_trade_no").toString());
+			if (bill.containsKey("channel_trade_no") && bill.get("channel_trade_no") != null) {
+				bcOrder.setChannelTradeNo(bill.get("channel_trade_no").toString());
+			}
 			bcOrder.setOptional(bill.get("optional").toString());
 			bcOrder.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)bill.get("createdat")));
 			bcOrder.setUpdateDateTime(BCUtilPrivate.transferDateFromLongToString((Long)bill.get("updatedat")));
-		return order;
+		return bcOrder;
 	}
+    
+    private static BCRefundBean generateBCRefund(Map<String, Object> refund) {
+    	BCRefundBean bcRefund = new BCRefundBean();
+    	bcRefund.setBillNo(refund.get("bill_no").toString());
+    	bcRefund.setChannel(refund.get("channel").toString());
+    	bcRefund.setSubChannel(refund.get("sub_channel").toString());
+    	bcRefund.setFinished((Boolean)refund.get("finish"));
+    	bcRefund.setCreatedTime((Long)refund.get("createdat"));
+    	bcRefund.setUpdatedTime((Long)refund.get("updatedat"));
+    	bcRefund.setOptional(refund.get("optional").toString());
+    	bcRefund.setRefunded((Boolean)refund.get("result"));
+    	bcRefund.setTitle(refund.get("title").toString());
+    	bcRefund.setTotalFee(refund.get("total_fee").toString());
+    	bcRefund.setRefundFee(refund.get("refund_fee").toString());
+    	bcRefund.setRefundNo(refund.get("refund_no").toString());
+    	bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("createdat")));
+    	bcRefund.setUpdateDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("updatedat")));
+    	
+    	return bcRefund;
+    }
 }

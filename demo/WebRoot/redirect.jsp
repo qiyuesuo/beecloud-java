@@ -1,7 +1,7 @@
-<%@page import="java.util.HashMap"%>
-<%@page import="java.util.Random"%>
-<%@page import="com.sun.org.apache.xalan.internal.xsltc.compiler.sym"%>
-<%@page import="cn.beecloud.BeeCloud"%>
+<%@ page import="java.util.HashMap"%>
+<%@ page import="java.util.Random"%>
+<%@ page import="com.sun.org.apache.xalan.internal.xsltc.compiler.sym"%>
+<%@ page import="cn.beecloud.BeeCloud"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="cn.beecloud.*"%>
@@ -11,22 +11,25 @@
 <%@ page import="java.util.*" %>
 <%@ page import="net.sf.json.JSONObject" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="java.io.InputStream"%>
 <%@ page import="cn.beecloud.bean.TransferData"%>
 <%@ page import="java.net.URLEncoder"%>
 <%@ page import="java.net.URLEncoder"%>
 <%@ page import="org.apache.log4j.*"%>
-	/* *
+<%@ include file="loadProperty.jsp"%>
+<%
+	/**
 	 功能：商户结算跳转至指定支付方式页面
 	 版本：3.3
 	 日期：2015-03-20
 	 说明：
 	 以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
-	 该代码仅供学习和研究支付宝接口使用，只是提供一个参考。
+	 该代码仅供学习和研究使用，只是提供一个参考。
 
 	 //***********页面功能说明***********
-	 该页面可以在本机电脑测试。
+	  该页面可以在本机电脑测试。
 	 //********************************
-	 * */
+	 */
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -39,39 +42,36 @@
 	<%
 	
 		Logger log = Logger.getLogger(this.getClass());
-		//以下代码用session获得交易信息，可由商户根据自己的项目决定实现方式
 		//return_url示例（商户根据自身系统指定）
 		String yeeWebReturnUrl = "http://localhost:8080/PC-Pay-Demo/yeeWebReturnUrl.jsp";
 		String jdReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/jdReturnUrl.jsp";
 		String kqReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/kqReturnUrl.jsp";
 		String aliReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/aliReturnUrl.jsp";
-		String unFrontUrl = "http://localhost:8080/PC-Web-Pay-Demo/unFrontUrl.jsp";
-		String sellerEmail = "admin@beecloud.cn";
+		String unReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/unReturnUrl.jsp";
+		String bdReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/bdReturnUrl.jsp";
 		
-		String wxJSAPAppId = "wx419f04c4a731303d";
+		//微信 公众号id（读取配置文件conf.properties）及微信 redirec_uri
+		Properties prop = loadProperty();
+		String wxJSAPAppId = prop.get("wxJSAPIAppId").toString();
 		String wxJSAPIRedirectUrl = "http://apitest.beecloud.cn/demo/wxJSAPIRedirectUrl.jsp";
 		String encodedWSJSAPIRedirectUrl = URLEncoder.encode(wxJSAPIRedirectUrl);
 		
-		//模拟商户的交易编号
+		//模拟商户的交易编号、标题、金额、附加数据
 		String billNo = BCUtil.generateRandomUUIDPure();
 		String subject = "测试";
 		String totalFee = "1";
-		String body = "test";
-		String showUrl = (String) session.getAttribute("showUrl");
-		
-		Map optional = new HashMap();
+		Map<String, String> optional = new HashMap<String, String>();
 		optional.put("rui", "睿");
 
 		String type = request.getParameter("paytype");
 
-		BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
 		//BCPayResult的type字段有OK和非OK两种，当type字段是OK时（对应值为0），bcPayResult包含支付所需的内容如html或者code_url或者支付成功信息,
 		//当type的字段为非OK的时候，，bcPayResult包含通用错误和具体的错误信息。商户系统可以任意显示，打印或者记录日志。
 		BCPayResult bcPayResult = new BCPayResult();
 		
 		if (type.equals("alipay")) {
 			
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, billNo, "买水", optional, aliReturnUrl, null, null, null, 121);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.ALI_WEB, 1, billNo, "买水", null, aliReturnUrl, null, null, null, 121);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -142,7 +142,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("unionpay")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, billNo, "买矿泉水", optional, unFrontUrl, null, null, null, 121);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.UN_WEB, 1, billNo, "买矿泉水", optional, unReturnUrl, null, null, null, 121);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -223,7 +223,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("kqWeb")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WEB, 1, billNo, "买矿泉水", optional, kqReturnUrl, null, null, null, null);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.KUAIQIAN_WEB, 2, billNo, "买矿泉水", optional, kqReturnUrl, null, null, null, null);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -247,8 +247,9 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("bdWeb")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.BD_WEB, 1, billNo, "买矿泉水", optional, kqReturnUrl, null, null, null, 121);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.BD_WEB, 1, billNo, "买矿泉水", optional, bdReturnUrl, null, null, null, 121);
 			if (bcPayResult.getType().ordinal() == 0) {
+				System.out.println(bcPayResult.getObjectId());
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 				response.sendRedirect(bcPayResult.getUrl());
@@ -259,7 +260,7 @@
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("bdWap")) {
-			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.BD_WAP, 1, billNo, "买矿泉水", optional, kqReturnUrl, null, null, null, 121);
+			bcPayResult = BCPay.startBCPay(PAY_CHANNEL.BD_WAP, 1, billNo, "买矿泉水", optional, bdReturnUrl, null, null, null, 121);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);

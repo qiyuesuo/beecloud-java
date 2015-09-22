@@ -23,7 +23,7 @@ public class BCPayTest {
 
 	@Before
 	public void setUp() throws Exception {
-//		BeeCloud.registerApp(TestConstant.KTestAppID, TestConstant.kTestAppSecret);
+		BeeCloud.registerApp(TestConstant.KTestAppID, TestConstant.kTestAppSecret);
 	}
 
 	@Test
@@ -77,5 +77,19 @@ public class BCPayTest {
 		
 		BCPayResult result = BCPay.startTransfer(PAY_CHANNEL.ALI, "transfertest1122transfertest2233", "13861331391", list);
 		System.out.println("test transfer!");
+	}
+	
+	@Test
+	public void testQueryBillById() {
+		BCQueryResult result = BCPay.startQueryBillById("21c295fe-0f74-4697-b403-983ec61230ab");
+		System.out.println(result.getOrder());
+		System.out.println("test query by id!" + result);
+	}
+	
+	@Test
+	public void testQueryRefundById() {
+		BCQueryResult result = BCPay.startQueryRefundById("89ef90dd-9670-4104-a4fd-117a129b9c65");
+		System.out.println(result.getRefund());
+		System.out.println("test refund by id!" + result);
 	}
 }

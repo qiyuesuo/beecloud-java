@@ -19,12 +19,24 @@ public class BCRefundBean {
 	
 	private String channel;
 	
+	private String subChannel;
+	
+	private String optional;
+	
+	private String title;
+	
 	private boolean finished;
 	
 	private boolean refunded;
 	
+	private long createdTime;
+	
+	private long updatedTime;
+	
 	private String dateTime;
-
+	
+	private String updateDateTime;
+	
 	public String getBillNo() {
 		return billNo;
 	}
@@ -87,5 +99,53 @@ public class BCRefundBean {
 
 	public void setChannel(String channel) {
 		this.channel = channel;
+	}
+
+	public String getSubChannel() {
+		return subChannel;
+	}
+
+	public void setSubChannel(String subChannel) {
+		this.subChannel = subChannel;
+	}
+
+	public long getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(long createdTime) {
+		this.createdTime = createdTime;
+	}
+
+	public long getUpdatedTime() {
+		return updatedTime;
+	}
+
+	public void setUpdatedTime(long updatedTime) {
+		this.updatedTime = updatedTime;
+	}
+
+	public String getUpdateDateTime() {
+		return updateDateTime;
+	}
+
+	public void setUpdateDateTime(String updateDateTime) {
+		this.updateDateTime = updateDateTime;
+	}
+
+	public String getOptional() {
+		return optional;
+	}
+
+	public void setOptional(String optional) {
+		this.optional = optional;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }

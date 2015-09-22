@@ -26,8 +26,6 @@
 </head>
 <body>
 <%
-
-	BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
 	String querytype = request.getParameter("querytype");
 	
 	Object queryRefund = request.getParameter("queryRefund");

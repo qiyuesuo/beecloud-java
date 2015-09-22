@@ -24,6 +24,8 @@ public class BCQueryResult {
 	
 	private BCOrderBean order;
 	
+	private BCRefundBean refund;
+	
 	//if the result is for bill query
     private List<BCOrderBean> bcOrders;
     
@@ -88,5 +90,13 @@ public class BCQueryResult {
 
 	public void setOrder(BCOrderBean order) {
 		this.order = order;
+	}
+
+	public BCRefundBean getRefund() {
+		return refund;
+	}
+
+	public void setRefund(BCRefundBean refund) {
+		this.refund = refund;
 	}
 }

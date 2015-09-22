@@ -10,6 +10,7 @@
 <%@ page import="cn.beecloud.BCEumeration.PAY_CHANNEL"%>
 <%@ page import="java.util.Map"%>
 <%@ page import="java.util.HashMap"%>
+<%@ include file="loadProperty.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -24,19 +25,15 @@
 	String subject = "测试";
 	String totalFee = "1";
 	String body = "test";
-	String showUrl = (String) session.getAttribute("showUrl");
 	
 	Map optional = new HashMap();
 	optional.put("rui", "睿");
 	
-	String type = request.getParameter("paytype");
+	Properties prop = loadProperty();
+	String wxJSAPIAppId = prop.get("wxJSAPIAppId").toString();
+	String wxJSAPISecret = prop.get("wxJSAPISecret").toString();
 	
-	BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
 	
-
-	String appid = "wx419f04c4a731303d";
-	log.info("appid:" + appid);
- 	String secret = "21e4b4593ddd200dd77c751f4b964963";
 	String code = request.getParameter("code");
 	log.info("code:" + code);
 	
@@ -49,7 +46,7 @@
 	String paySign = "";
 	
 	if (code != null) {
-		String result = sendGet("https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appid + "&secret=" + secret + "&code=" + code + "&grant_type=authorization_code");
+		String result = sendGet("https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + wxJSAPIAppId + "&secret=" + wxJSAPISecret + "&code=" + code + "&grant_type=authorization_code");
 		log.info("result:" + result);
 		JSONObject resultObject = JSONObject.fromObject(result);
 		if (resultObject.containsKey("errcode")) {
@@ -72,8 +69,6 @@
 				jsapipackage = map.get("package").toString();
 				signType = map.get("signType").toString();
 				paySign = map.get("paySign").toString();
-				
-				
 			}
 			else {
 				//handle the error message as you wish！
@@ -110,9 +105,7 @@
 </body>
 <script type="text/javascript">
 	callpay();
-	
 	function jsApiCall() {
-		
 		var data = {
 	            //以下参数的值由BCPayByChannel方法返回来的数据填入即可
 	            "appId": "<%=jsapiAppid%>",
@@ -146,8 +139,6 @@
 		    jsApiCall();
 		}
 	}
-	
-	
 	
 </script>
 </html>

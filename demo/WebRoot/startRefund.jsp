@@ -52,6 +52,7 @@
 	}
 	if (result.getType().ordinal() == 0 ) {
 		out.println(result.getObjectId());
+		System.out.println(result.getObjectId());
 		Thread.sleep(5000);
 		if (result.getUrl() != null) {
 			response.sendRedirect(result.getUrl());
