@@ -124,7 +124,8 @@ input {
 </head>
 <body>
 <%
-	BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
+BeeCloud.registerApp("36fcd172-1283-4c90-8b77-e3c54b365606", "646bc492-d824-4c63-a95c-f8bd2f8b4ff8");
+
 %>
 	<div>
 		<h2>应付总额： ¥0.01</h2>
@@ -171,6 +172,10 @@ input {
 				<li onclick="paySwitch(this)">
 					<input type="radio"  value="yeeWeb" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/yb.png" alt="YEE WEB">
+				</li>
+				<li onclick="paySwitch(this)">
+					<input type="radio"  value="yeeNoBankCard" name="paytype">
+					<img src="http://beeclouddoc.qiniudn.com/ybcard.png" alt="YEE WEB">
 				</li>
 				<li onclick="paySwitch(this)">
 					<input type="radio"  value="jdWap" name="paytype">

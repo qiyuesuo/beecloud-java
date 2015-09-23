@@ -24,6 +24,7 @@ public class BCEumeration {
 		YEE,
 		YEE_WEB,
 		YEE_WAP,
+		YEE_NOBANKCARD,
 		JD,
 		JD_WEB,
 		JD_WAP,

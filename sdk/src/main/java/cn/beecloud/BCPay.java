@@ -38,8 +38,7 @@ import net.sf.json.JSONObject;
  * @since 2015/7/11
  */
 public class BCPay {
-
-    
+	
 	/**
 	 * @param channel 
 	 * （必填）渠道类型， 根据不同场景选择不同的支付方式，包含：
@@ -82,7 +81,7 @@ public class BCPay {
 	 */
     public static BCPayResult startBCPay(PAY_CHANNEL channel, int totalFee,
                     String billNo, String title,
-                    Map<String, String> optional, String returnUrl, String openId, String showUrl, QR_PAY_MODE qrPayMode, Integer billTimeoutValue) {
+                    Map<String, String> optional, String returnUrl, String openId, String showUrl, QR_PAY_MODE qrPayMode, Integer billTimeoutValue, String cardNo, String cardPwd, String frqid) {
     	
     	BCPayResult result;
     	result = ValidationUtil.validateBCPay(channel, billNo, title, returnUrl, openId);
@@ -116,6 +115,11 @@ public class BCPay {
         }
         if (billTimeoutValue != null) {
         	param.put("bill_timeout", billTimeoutValue);
+        }
+        if (channel.equals(PAY_CHANNEL.YEE_NOBANKCARD)) {
+        	param.put("cardno", cardNo);
+        	param.put("cardpwd", cardPwd);
+        	param.put("frqid", frqid);
         }
         result = new BCPayResult();
         
@@ -159,6 +163,8 @@ public class BCPay {
 	                        result.setUrl(ret.get("url").toString());
 	                        result.setType(RESULT_TYPE.OK);
 	                    }
+                	} else if (channel.equals(PAY_CHANNEL.YEE_NOBANKCARD)) {
+                		result.setSucessMsg(ValidationUtil.PAY_SUCCESS);
                 	}
                 } else {
                 	result.setErrMsg(ret.get("result_msg").toString());
