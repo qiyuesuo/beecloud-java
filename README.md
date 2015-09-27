@@ -550,14 +550,20 @@ return | BCQueryResult, 根据type决定返回内容
 •关于银联的return_url
 请参考demo中的 unReturnUrl.jsp
 
-•关于京东的return_url
-请参考demo中的 jdReturnUrl.jsp
+•关于京东PC网页的return_url
+请参考demo中的 jdWebReturnUrl.jsp
+
+•关于京东移动网页的return_url
+请参考demo中的 jdWapReturnUrl.jsp
 
 •关于快钱的return_url
 请参考demo中的 kqReturnUrl.jsp
 
-•关于易宝网银的return_url
+•关于易宝PC网页的return_url
 请参考demo中的 yeeWebReturnUrl.jsp
+
+•关于易宝移动网页的return_url
+请参考demo中的 yeeWapReturnUrl.jsp
 
 •关于百度钱包的return_url
 请参考demo中的 bdReturnUrl.jsp
