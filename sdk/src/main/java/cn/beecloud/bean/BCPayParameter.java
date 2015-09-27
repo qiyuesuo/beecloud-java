@@ -65,7 +65,7 @@ public class BCPayParameter {
 	private String returnUrl;
 	
 	/**
-	 * 订单失效时间，单位秒，非零正整数，建议不小于30，京东(JD)、快钱(KQ)不支持该参数
+	 * 订单失效时间，单位秒，非零正整数，建议不小于30，快钱(KQ)不支持该参数
 	 * (选填)
 	 */
 	private Integer billTimeout;
