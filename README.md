@@ -543,32 +543,32 @@ return | BCQueryResult, 根据type决定返回内容
 
 
 ## Demo
-项目文件夹demo为我们的样例项目，详细展示如何使用java sdk.
-•关于支付宝的return_url
+项目文件夹demo为我们的样例项目，详细展示如何使用java sdk.  
+•关于支付宝的return_url  
 请参考demo中的 aliReturnUrl.jsp 
 
-•关于银联的return_url
+•关于银联的return_url  
 请参考demo中的 unReturnUrl.jsp
 
-•关于京东PC网页的return_url
+•关于京东PC网页的return_url  
 请参考demo中的 jdWebReturnUrl.jsp
 
-•关于京东移动网页的return_url
+•关于京东移动网页的return_url  
 请参考demo中的 jdWapReturnUrl.jsp
 
-•关于快钱的return_url
+•关于快钱的return_url  
 请参考demo中的 kqReturnUrl.jsp
 
-•关于易宝PC网页的return_url
+•关于易宝PC网页的return_url  
 请参考demo中的 yeeWebReturnUrl.jsp
 
-•关于易宝移动网页的return_url
+•关于易宝移动网页的return_url  
 请参考demo中的 yeeWapReturnUrl.jsp
 
-•关于百度钱包的return_url
+•关于百度钱包的return_url  
 请参考demo中的 bdReturnUrl.jsp
 
-•关于weekhook的接收
+•关于weekhook的接收  
 请参考demo中的 notifyUrl.jsp  文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
 
 ## 测试
