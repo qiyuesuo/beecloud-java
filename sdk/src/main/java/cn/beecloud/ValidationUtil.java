@@ -8,6 +8,10 @@ import java.util.Map;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
+import cn.beecloud.bean.BCPayParameter;
+import cn.beecloud.bean.BCQueryParameter;
+import cn.beecloud.bean.BCRefundParameter;
+import cn.beecloud.bean.BCRefundQueryParameter;
 import cn.beecloud.bean.TransferData;
 
 /**
@@ -20,20 +24,25 @@ import cn.beecloud.bean.TransferData;
 public class ValidationUtil 
 {
 	private final static String BILL_NO_FORMAT_INVALID =
-			"bill_no 是一个长度不超过32字符的数字字母字符串！";
+			"billNo 是一个长度介于8至32字符的数字字母字符串！";
 	
 	private final static String BATCH_NO_FORMAT_INVALID =
-			"batch_no 是一个长度在11到32个字符的数字字母字符串！";
+			"batchNo 是一个长度在11到32个字符的数字字母字符串！";
+	
+	private final static String PAY_PARAM_EMPTY =
+			"支付参数不能为空！";
+	private final static String REFUND_PARAM_EMPTY = 
+			"退款参数不能为空！";
 	
 	private final static String BILL_NO_EMPTY =
-			"bill_no 必填！";
+			"billNo 必填！";
 	
 	private final static String BATCH_NO_EMPTY =
-			"batch_no 必填！";
+			"batchNo 必填！";
 	
 	private final static String TRANSFER_DATA_EMPTY =
-			"transfer_data 必填！";
-	
+			"transferData 必填！";
+
 	private final static String TRANSFER_ID_EMPTY =
 			"transferId 不能为空！";
 	
@@ -50,22 +59,28 @@ public class ValidationUtil
 			"transferNote 不能为空！";
 	
 	private final static String ACCOUNT_NAME_EMPTY =
-			"account_name 必填！";
+			"accountName 必填！";
 	
 	private final static String TITLE_EMPTY =
 			"title 必填！";
 	
+	private final static String QR_PAY_MODE_EMPTY =
+			"qrPayMode 必填！";
+	
 	private final static String RETURN_URL_EMPTY = 
-			"return_url 必填！";
+			"returnUrl 必填！";
 	
 	private final static String REFUND_NO_EMPTY =
-			"refund_no 必填！";
+			"refundNo 必填！";
 	
 	private final static String CHANNEL_EMPTY =
 			"channel 必填！";
 	
+	private final static String YEE_NOBANCARD_FACTOR_EMPTY =
+			"cardNo, cardPwd, frqid 必填！";
+	
 	private final static String REFUND_NO_FORMAT_INVALID =
-			"refund_no 是格式为当前日期加3-24位数字字母（不能为000）流水号的字符串！ ";
+			"refundNo 是格式为当前日期加3-24位数字字母（不能为000）流水号的字符串！ ";
 	
 	private final static String TITLE_FORMAT_INVALID =
 			"title 是一个长度不超过32字节的字符串！";
@@ -93,6 +108,8 @@ public class ValidationUtil
 	final static String REFUND_REJECT = "退款被拒绝！ ";
 	
 	final static String REFUND_SUCCESS = "退款已经成功！ ";
+	
+	final static String PAY_SUCCESS = "支付成功！ ";
 	
 	public static BCPayResult validateResultFromBackend(Map<String, Object> ret) {
 		
@@ -137,7 +154,7 @@ public class ValidationUtil
 	public static BCPayResult validateBCRefund(PAY_CHANNEL channel,
 			String refundNo, String billNo) {
 		 if (channel != null && !channel.equals(PAY_CHANNEL.WX) && !channel.equals(PAY_CHANNEL.ALI) && !channel.equals(PAY_CHANNEL.UN) 
-				 && !channel.equals(PAY_CHANNEL.YEE) && !channel.equals(PAY_CHANNEL.JD) && !channel.equals(PAY_CHANNEL.KUAIQIAN)) {
+				 && !channel.equals(PAY_CHANNEL.YEE) && !channel.equals(PAY_CHANNEL.JD) && !channel.equals(PAY_CHANNEL.KUAIQIAN) && !channel.equals(PAY_CHANNEL.BD)) {
 			 return new BCPayResult(CHANNEL_INVALID_FOR_REFUND, RESULT_TYPE.VALIDATION_ERROR);
 		 } else if (StrUtil.empty(refundNo)) {
 			return new BCPayResult(REFUND_NO_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
@@ -223,5 +240,78 @@ public class ValidationUtil
 		}
 		return new BCPayResult(RESULT_TYPE.OK);
 	}
+
+	public static BCPayResult validateBCPay(BCPayParameter para) {
 		
+		if (para == null) {
+			return new BCPayResult(PAY_PARAM_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
+		}
+		if (!para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
+			return new BCPayResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+		}  else if (StrUtil.empty(para.getReturnUrl()) && 
+				(para.getChannel().equals(PAY_CHANNEL.ALI_WEB) || 
+						para.getChannel().equals(PAY_CHANNEL.ALI_QRCODE) || 
+						para.getChannel().equals(PAY_CHANNEL.UN_WEB) ||
+						para.getChannel().equals(PAY_CHANNEL.JD_WEB) ||
+						para.getChannel().equals(PAY_CHANNEL.JD_WAP))) {
+			return new BCPayResult(RETURN_URL_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (para.getChannel().equals(PAY_CHANNEL.WX_JSAPI) && StrUtil.empty(para.getOpenId())){
+			return new BCPayResult(OPENID_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (para.getChannel().equals(PAY_CHANNEL.ALI_QRCODE) && StrUtil.empty(para.getQrPayMode())){
+			return new BCPayResult(QR_PAY_MODE_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (para.getChannel().equals(PAY_CHANNEL.YEE_NOBANKCARD) && (para.getCardNo() == null ||
+				para.getCardPwd() == null || para.getFrqid() == null)) {
+			return new BCPayResult(YEE_NOBANCARD_FACTOR_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
+		} else
+			try {
+				if (para.getTitle().getBytes("GBK").length > 32) {
+					return new BCPayResult(TITLE_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+				}
+			} catch (UnsupportedEncodingException e) {
+				if (para.getTitle().length() > 16) {
+					return new BCPayResult(TITLE_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+				}
+			}
+		return new BCPayResult(RESULT_TYPE.OK);	
+	}
+
+	public static BCPayResult validateBCRefund(BCRefundParameter para) {
+		if (para == null) {
+			return new BCPayResult(REFUND_PARAM_EMPTY, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (para.getChannel() != null && !para.getChannel().equals(PAY_CHANNEL.WX) && !para.getChannel().equals(PAY_CHANNEL.ALI) && !para.getChannel().equals(PAY_CHANNEL.UN) 
+				 && !para.getChannel().equals(PAY_CHANNEL.YEE) && !para.getChannel().equals(PAY_CHANNEL.JD) && !para.getChannel().equals(PAY_CHANNEL.KUAIQIAN) && !para.getChannel().equals(PAY_CHANNEL.BD)) {
+			 return new BCPayResult(CHANNEL_INVALID_FOR_REFUND, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (!para.getRefundNo().startsWith(new SimpleDateFormat("yyyyMMdd").format(new Date()))){
+			return new BCPayResult(REFUND_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (!para.getRefundNo().substring(8, para.getRefundNo().length()).matches("[0-9A-Za-z]{3,24}") || 
+				para.getRefundNo().substring(8, para.getRefundNo().length()).matches("000") ){
+			return new BCPayResult(REFUND_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (!para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
+			return new BCPayResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+		} 
+		return new BCPayResult(RESULT_TYPE.OK);	
+	}
+
+	public static BCQueryResult validateQueryBill(BCQueryParameter para) {
+		if (!StrUtil.empty(para.getBillNo()) && !para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
+			return new BCQueryResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+		 } else if (para.getLimit() != null && para.getLimit() > 50) {
+			return new BCQueryResult(LIMIT_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+		 }
+		 
+		 return new BCQueryResult(RESULT_TYPE.OK);
+	}
+
+	public static BCQueryResult validateQueryRefund(BCRefundQueryParameter para) {
+		if (!StrUtil.empty(para.getBillNo()) && !para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
+			return new BCQueryResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (!StrUtil.empty(para.getRefundNo()) && (!para.getRefundNo().substring(8, para.getRefundNo().length()).matches("[0-9A-Za-z]{3,24}") || 
+				para.getRefundNo().substring(8, para.getRefundNo().length()).matches("000")) ) {
+			return new BCQueryResult(REFUND_NO_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+		} else if (para.getLimit() != null && para.getLimit() > 50) {
+			return new BCQueryResult(LIMIT_FORMAT_INVALID, RESULT_TYPE.VALIDATION_ERROR);
+		}
+		
+		return new BCQueryResult(RESULT_TYPE.OK);
+	}
 }

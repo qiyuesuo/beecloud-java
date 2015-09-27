@@ -30,6 +30,8 @@ public class BCPayResult {
 	
 	private String aliQrCode;
 	
+	private String objectId;
+	
 	private Map<String, Object> wxJSAPIMap;
 
 	public RESULT_TYPE getType() {
@@ -117,5 +119,13 @@ public class BCPayResult {
 
 	public void setAliQrCode(String aliQrCode) {
 		this.aliQrCode = aliQrCode;
+	}
+
+	public String getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(String objectId) {
+		this.objectId = objectId;
 	}
 }

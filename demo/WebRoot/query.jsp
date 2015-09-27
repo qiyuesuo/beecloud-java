@@ -1,3 +1,4 @@
+<%@page import="cn.beecloud.bean.*"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="cn.beecloud.BCEumeration.PAY_CHANNEL"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -26,8 +27,6 @@
 </head>
 <body>
 <%
-
-	BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c");
 	String querytype = request.getParameter("querytype");
 	
 	Object queryRefund = request.getParameter("queryRefund");
@@ -36,7 +35,11 @@
 	
 	if(queryRefund != null) {
 		if (querytype.equals("aliQuery")) {
-			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.ALI, null, null, null, null, null, 25);
+			
+			BCRefundQueryParameter param = new BCRefundQueryParameter();
+			param.setChannel(PAY_CHANNEL.ALI);
+			
+			bcQueryResult = BCPay.startQueryRefund(param);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
@@ -45,7 +48,11 @@
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("wechatQuery")) {
-			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.WX, null, null, null, null, null, null);
+			
+			BCRefundQueryParameter param = new BCRefundQueryParameter();
+			param.setChannel(PAY_CHANNEL.WX);
+			
+			bcQueryResult = BCPay.startQueryRefund(param);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
@@ -55,7 +62,11 @@
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("unionQuery")) {
-			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.UN, null, null, null, null, null, null);
+			
+			BCRefundQueryParameter param = new BCRefundQueryParameter();
+			param.setChannel(PAY_CHANNEL.UN);
+			
+			bcQueryResult = BCPay.startQueryRefund(param);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
@@ -64,10 +75,11 @@
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("yeeQuery")) {
-			Date date = new Date();
-			Calendar c = Calendar.getInstance();  
-			c.add(Calendar.MINUTE, -120);
-			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.YEE, null, null, null, date, null, 50);
+			
+			BCRefundQueryParameter param = new BCRefundQueryParameter();
+			param.setChannel(PAY_CHANNEL.YEE);
+			
+			bcQueryResult = BCPay.startQueryRefund(param);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
@@ -76,11 +88,32 @@
 				out.println(bcQueryResult.getErrMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
-		} else if (querytype.equals("jdQuery")) {
+		} else if (querytype.equals("yeeWapQuery")) {
+			
+			BCRefundQueryParameter param = new BCRefundQueryParameter();
+			param.setChannel(PAY_CHANNEL.YEE_WAP);
+			
+			BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0");
+			bcQueryResult = BCPay.startQueryRefund(param);
+			BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
+				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
+				pageContext.setAttribute("refundUpdate", true);
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			}
+		}else if (querytype.equals("jdQuery")) {
 			Date date = new Date();
 			Calendar c = Calendar.getInstance();  
 			c.add(Calendar.MINUTE, -120);
-			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.JD, null, null, null, date, null, 50);
+			
+			BCRefundQueryParameter param = new BCRefundQueryParameter();
+			param.setChannel(PAY_CHANNEL.JD);
+			//param.setStartTime(c.getTime());
+			bcQueryResult = BCPay.startQueryRefund(param);
+			
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
@@ -89,10 +122,9 @@
 				out.println(bcQueryResult.getErrDetail());
 			} 
 		} else if (querytype.equals("kqQuery")) {
-			Date date = new Date();
-			Calendar c = Calendar.getInstance();  
-			c.add(Calendar.MINUTE, -120);
-			bcQueryResult = BCPay.startQueryRefund(PAY_CHANNEL.KUAIQIAN, null, null, null, date, null, 50);
+			BCRefundQueryParameter param = new BCRefundQueryParameter();
+			param.setChannel(PAY_CHANNEL.KUAIQIAN);
+			bcQueryResult = BCPay.startQueryRefund(param);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
@@ -101,11 +133,23 @@
 				out.println(bcQueryResult.getErrMsg());
 				out.println(bcQueryResult.getErrDetail());
 			} 
-		}else if (querytype.equals("noChannelQuery")) {
-			Date date = new Date();
-			Calendar c = Calendar.getInstance();  
-			c.add(Calendar.MINUTE, -120);
-			bcQueryResult = BCPay.startQueryRefund(null, null, null, null, date, null, 50);
+		} else if (querytype.equals("bdQuery")) {
+			BCRefundQueryParameter param = new BCRefundQueryParameter();
+			param.setChannel(PAY_CHANNEL.BD);
+			bcQueryResult = BCPay.startQueryRefund(param);
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
+				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
+				pageContext.setAttribute("refundUpdate", true);
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			} 
+		} else if (querytype.equals("noChannelQuery")) {
+			
+			BCRefundQueryParameter param = new BCRefundQueryParameter();
+			param.setLimit(50);
+			bcQueryResult = BCPay.startQueryRefund(param);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
@@ -117,7 +161,10 @@
 		} 
 	}else {
 		if (querytype.equals("aliQuery")) {
-			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.ALI, null, null, null, null, null);
+			BCQueryParameter param = new BCQueryParameter();
+			param.setChannel(PAY_CHANNEL.ALI);
+			
+			bcQueryResult = BCPay.startQueryBill(param);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
@@ -127,7 +174,9 @@
 			}
 		
 		} else if (querytype.equals("wechatQuery")) {
-			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.WX, null, null, null, null, null);
+			BCQueryParameter param = new BCQueryParameter();
+			param.setChannel(PAY_CHANNEL.WX);
+			bcQueryResult = BCPay.startQueryBill(param);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
@@ -136,7 +185,9 @@
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("unionQuery")) {
-			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.UN, null, null, null, null, 50);
+			BCQueryParameter param = new BCQueryParameter();
+			param.setChannel(PAY_CHANNEL.UN);
+			bcQueryResult = BCPay.startQueryBill(param);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
@@ -145,7 +196,23 @@
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("yeeQuery")) {
-			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.YEE, null, null, null, null, 50);
+			BCQueryParameter param = new BCQueryParameter();
+			param.setChannel(PAY_CHANNEL.YEE);
+			bcQueryResult = BCPay.startQueryBill(param);
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
+				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			}
+		} else if (querytype.equals("yeeWapQuery")) {
+			BCQueryParameter param = new BCQueryParameter();
+			param.setChannel(PAY_CHANNEL.YEE_WAP);
+			
+			BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0");
+			bcQueryResult = BCPay.startQueryBill(param);
+			BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
@@ -154,7 +221,10 @@
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("jdQuery")) {
-			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.JD, null, null, null, null, 50);
+			BCQueryParameter param = new BCQueryParameter();
+			param.setChannel(PAY_CHANNEL.JD);
+			
+			bcQueryResult = BCPay.startQueryBill(param);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
@@ -163,7 +233,10 @@
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("kqQuery")) {
-			bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.KUAIQIAN, null, null, null, null, 50);
+			BCQueryParameter param = new BCQueryParameter();
+			param.setChannel(PAY_CHANNEL.KUAIQIAN);
+			
+			bcQueryResult = BCPay.startQueryBill(param);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
@@ -171,12 +244,23 @@
 				out.println(bcQueryResult.getErrMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
-		} else if (querytype.equals("noChannelQuery")) {
-			Date date = new Date();
-			Calendar c = Calendar.getInstance();  
-			c.add(Calendar.MINUTE, -60);
-			bcQueryResult = BCPay.startQueryBill(null, null, null, null, null, 50);
-			//bcQueryResult = BCPay.startQueryBill(PAY_CHANNEL.UN, null, c.getTime(), date, null, 50);
+		} else if (querytype.equals("bdQuery")) {
+			BCQueryParameter param = new BCQueryParameter();
+			param.setChannel(PAY_CHANNEL.BD);
+			
+			bcQueryResult = BCPay.startQueryBill(param);
+			if (bcQueryResult.getType().ordinal() == 0) {
+				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
+				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
+			} else {
+				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getErrDetail());
+			}
+		}else if (querytype.equals("noChannelQuery")) {
+			BCQueryParameter param = new BCQueryParameter();
+			param.setLimit(50);
+			
+			bcQueryResult = BCPay.startQueryBill(param);
 			if (bcQueryResult.getType().ordinal() == 0) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
@@ -211,7 +295,7 @@
 	<table border="3" class="table"><tr><th>订单号</th><th>退款单号</th><th>订单金额</th><th>退款金额</th><th>渠道</th><th>是否结束</th><th>是否退款</th><th>退款创建时间</th><c:if test="${isWeChat != null}"><th>退款状态查询</th></c:if></tr>
 		<c:forEach var="refund" items="${refundList}" varStatus="index"> 
 			<tr align="center" ><td>${refund.billNo}</td><td>${refund.refundNo}</td><td>${refund.totalFee}</td><td>${refund.refundFee}</td><td>${refund.channel}</td><td>${refund.finished}</td><td>${refund.refunded}</td><td>${refund.dateTime}</td>
-			<c:if test="${fn:containsIgnoreCase(refund.channel,'WX') || fn:containsIgnoreCase(refund.channel,'YEE') || fn:containsIgnoreCase(refund.channel,'KUAIQIAN')}">
+			<c:if test="${fn:containsIgnoreCase(refund.channel,'WX') || fn:containsIgnoreCase(refund.channel,'YEE') || fn:containsIgnoreCase(refund.channel,'BD') || fn:containsIgnoreCase(refund.channel,'KUAIQIAN')}">
 			<td>
 			<input class="button" type="button" onclick="queryStatus('${refund.channel}','${refund.refundNo}')" value="查询"/>
 			</td>

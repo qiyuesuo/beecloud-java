@@ -24,12 +24,19 @@ public class BCEumeration {
 		YEE,
 		YEE_WEB,
 		YEE_WAP,
+		YEE_NOBANKCARD,
 		JD,
 		JD_WEB,
 		JD_WAP,
 		KUAIQIAN,
 		KUAIQIAN_WAP,
-		KUAIQIAN_WEB
+		KUAIQIAN_WEB,
+		BD,
+		BD_WEB,
+		BD_WAP,
+		PAYPAL,
+		PAYPAL_SANDBOX,
+		PAYPAL_LIVE
 	}
 
 	public enum QR_PAY_MODE {

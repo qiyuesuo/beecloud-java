@@ -15,10 +15,12 @@
 		String payResult=(String)request.getParameter("payResult").trim();
 		
 		if(payResult.equals("10")) {
-			out.println("快钱支付成功，商户应自行实现成功逻辑！");
+			out.println("<h3>快钱支付成功，商户应自行实现成功逻辑！</h3>");
 			out.println("order no:" + orderId);
 			//handle othre return parameter as you wish
 			return;
+		} else {
+			out.println("<h3>快钱支付未成功，商户应自行实现失败逻辑！</h3>");
 		}
 	%>
 </body>
