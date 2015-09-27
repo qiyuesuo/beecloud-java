@@ -64,7 +64,7 @@
 %>
 
 <%
-	BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0");
+	BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c");
 	StringBuffer json = new StringBuffer();
 	String line = null;
 	
@@ -86,10 +86,8 @@
 	boolean status = verifySign(sign, timestamp);
 	
 	if (status) {//验证成功
-
 		out.println("success"); //请不要修改或删除
 		//进行业务处理
-
 	} else {//验证失败
 		out.println("fail");
 	}
