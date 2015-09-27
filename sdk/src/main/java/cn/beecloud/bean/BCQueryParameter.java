@@ -11,8 +11,27 @@ import cn.beecloud.BCEumeration.PAY_CHANNEL;
  */
 public class BCQueryParameter {
 	
+	private PAY_CHANNEL channel;
+	
+	private String billNo;
+	
+	private Date startTime;
+	
+	private Date endTime;
+	
+	private Integer skip;
+	
+	private Integer limit;
+	
 	/**
-     * 渠道类型， 根据不同场景选择不同的支付方式，包含：
+	 * 访问字段 {@link #channel}
+	 */
+	public PAY_CHANNEL getChannel() {
+		return channel;
+	}
+	
+	/**
+     * @param channel 渠道类型， 根据不同场景选择不同的支付方式，包含：
      * {@link PAY_CHANNEL#WX}
      * {@link PAY_CHANNEL#WX_APP}: 微信手机APP支付
 	 * {@link PAY_CHANNEL#WX_JSAPI}: 微信公众号二维码支付
@@ -30,6 +49,7 @@ public class BCQueryParameter {
 	 * {@link PAY_CHANNEL#YEE}
 	 * {@link PAY_CHANNEL#YEE_WAP}: 易宝移动网页支付
 	 * {@link PAY_CHANNEL#YEE_WEB}: 易宝PC网页支付
+	 * {@link PAY_CHANNEL#YEE_NOBANKCARD}: 易宝点卡支付
 	 * {@link PAY_CHANNEL#KUAIQIAN}
 	 * {@link PAY_CHANNEL#KUAIQIAN_WAP}: 快钱移动网页支付
 	 * {@link PAY_CHANNEL#KUAIQIAN_WEB}: 快钱PC网页支付
@@ -41,117 +61,80 @@ public class BCQueryParameter {
 	 * {@link PAY_CHANNEL#BD_WEB} 百度PC网页支付
 	 * {@link PAY_CHANNEL#BD_WAP} 百度移动网页支付
 	 **/
-	private PAY_CHANNEL channel;
-	
-	/**
-	 * 商户订单号， 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一
-	 * (选填)
-	 */
-	private String billNo;
-	
-	/**
-	 * 起始时间， Date类型
-	 * (选填)
-	 */
-	private Date startTime;
-	
-	/**
-	 * 结束时间， Date类型
-	 * (选填)
-	 */
-	private Date endTime;
-	
-	/**
-	 * 查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	
-	 * (选填)
-	 */
-	private Integer skip;
-	
-	/**
-	 * 查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据
-	 * (选填)	
-	 */
-	private Integer limit;
-	
-	/**
-	 * Access field {@link #channel}
-	 */
-	public PAY_CHANNEL getChannel() {
-		return channel;
-	}
-	
-	/**
-	 * Set field {@link #channel}
-	 */
 	public void setChannel(PAY_CHANNEL channel) {
 		this.channel = channel;
 	}
 	
 	/**
-	 * Access field {@link #billNo}
+	 * 访问字段 {@link #billNo}
 	 */
 	public String getBillNo() {
 		return billNo;
 	}
 	
 	/**
-	 * Set field {@link #billNo}
+	 * @param billNo 商户订单号， 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一
+	 * (选填)
 	 */
 	public void setBillNo(String billNo) {
 		this.billNo = billNo;
 	}
 	
 	/**
-	 * Access field {@link #startTime}
+	 * 访问字段 {@link #startTime}
 	 */
 	public Date getStartTime() {
 		return startTime;
 	}
 	
 	/**
-	 * Set field {@link #startTime}
+	 * @param startTime 起始时间， Date类型
+	 * (选填)
 	 */
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
 	
 	/**
-	 * Access field {@link #endTime}
+	 * 访问字段 {@link #endTime}
 	 */
 	public Date getEndTime() {
 		return endTime;
 	}
 	
 	/**
-	 * Set field {@link #endTime}
+	 * @param endTime 结束时间， Date类型
+	 * (选填)
 	 */
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
 	
 	/**
-	 * Access field {@link #skip}
+	 * 访问字段 {@link #skip}
 	 */
 	public Integer getSkip() {
 		return skip;
 	}
 	
 	/**
-	 * Set field {@link #skip}
+	 * @param skip 查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	
+	 * (选填)
 	 */
 	public void setSkip(Integer skip) {
 		this.skip = skip;
 	}
 	
 	/**
-	 * Access field {@link #limit}
+	 * 访问字段 {@link #limit}
 	 */
 	public Integer getLimit() {
 		return limit;
 	}
 	
 	/**
-	 * Set field {@link #limit}
+	 * @param limit 查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据
+	 * (选填)	
 	 */
 	public void setLimit(Integer limit) {
 		this.limit = limit;
