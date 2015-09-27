@@ -7,6 +7,7 @@
 <%@page import="net.sf.json.JSONObject"%>
 <%@page import="org.apache.log4j.*" %>
 <%@ page import="cn.beecloud.*"%>
+<%@ page import="cn.beecloud.bean.*"%>
 <%@ page import="cn.beecloud.BCEumeration.PAY_CHANNEL"%>
 <%@ page import="java.util.Map"%>
 <%@ page import="java.util.HashMap"%>
@@ -22,7 +23,7 @@
 	
 	Logger log = Logger.getLogger(this.getClass());
 	String billNo = BCUtil.generateRandomUUIDPure();
-	String subject = "测试";
+	String title = "demo测试";
 	String totalFee = "1";
 	String body = "test";
 	
@@ -55,10 +56,11 @@
 			String openId = resultObject.get("openid").toString();
 			log.info("openid:" + openId);
 			
+			BCPayParameter param = new BCPayParameter(PAY_CHANNEL.WX_JSAPI, 1, billNo, title);
+			param.setOpenId(openId);
+			param.setBillTimeout(120);
 			
-			BCPayResult bcPayResult = BCPay.startBCPay(PAY_CHANNEL.WX_JSAPI, 1, billNo, "买水", optional, null, "o3kKrjmMFV4wmSSwSNircKD9EXqc", null, null, 121);
-			log.info("bcPayResult" + bcPayResult.getType());
-			System.out.println("bcPayResult:" + bcPayResult.getType());
+			BCPayResult bcPayResult = BCPay.startBCPay(param);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
 				Map<String, Object> map = bcPayResult.getWxJSAPIMap();

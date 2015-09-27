@@ -124,7 +124,7 @@ input {
 </head>
 <body>
 <%
-BeeCloud.registerApp("36fcd172-1283-4c90-8b77-e3c54b365606", "646bc492-d824-4c63-a95c-f8bd2f8b4ff8");
+BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
 
 %>
 	<div>

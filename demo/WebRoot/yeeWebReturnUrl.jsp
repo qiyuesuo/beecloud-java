@@ -12,7 +12,6 @@
 	}
 %>
 <%
-
 	String p1_MerId				= formatString(request.getParameter("p1_MerId"));
 	String r0_Cmd               = formatString(request.getParameter("r0_Cmd"));
 	String r1_Code              = formatString(request.getParameter("r1_Code"));
@@ -34,7 +33,7 @@
 	String hmac		            = formatString(request.getParameter("hmac"));
 
 	if(r9_BType.equals("1")) {
-		out.println("易宝支付成功，商户应自行实现成功逻辑！");
+		out.println("<h3>易宝PC网页支付成功，商户应自行实现成功逻辑！</h3>");
 		out.println("order no:" + r6_Order);
 		//handle othre return parameter as you wish
 		return;
