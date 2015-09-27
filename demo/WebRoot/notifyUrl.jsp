@@ -8,14 +8,14 @@
 <%@page import="org.apache.commons.codec.digest.DigestUtils" %>
 <%@ page import="java.util.*"%>
 <%@ page import="cn.beecloud.*"%>
+<%@ page import="org.apache.log4j.*"%>
 <%
 	/* *
 	 功能：BeeCloud服务器异步通知页面
-	 版本：3.3
 	 日期：2015-03-20
 	 说明：
 	 以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
-	 该代码仅供学习和研究支付宝接口使用，只是提供一个参考。
+	 该代码仅供学习和研究使用，只是提供一个参考。
 
 	 //***********页面功能说明***********
 	 创建该页面文件时，请留心该页面文件中无任何HTML代码及空格。
@@ -27,12 +27,14 @@
 
 
 <%!
-
+	Logger log = Logger.getLogger(this.getClass());
 	boolean verify(String sign, String text, String key, String input_charset) {
 	    text = text + key;
 	    String mysign = DigestUtils.md5Hex(getContentBytes(text, input_charset));
+	    log.info("mysign:" + mysign);
 	    
 	    long timeDifference = System.currentTimeMillis() - Long.valueOf(key);
+	    log.info("timeDifference:" +  timeDifference);
 	    if (mysign.equals(sign) && timeDifference <= 300000) {
 	        return true;
 	    } else {
@@ -41,6 +43,8 @@
 	}
 	
 	boolean verifySign(String sign, String timestamp) {
+		log.info("sign:"+ sign);
+		log.info("timestamp:" +timestamp);
 		return verify(sign, BCCache.getAppID() + BCCache.getAppSecret(),
 	            timestamp, "UTF-8");
 	}
@@ -60,7 +64,7 @@
 %>
 
 <%
-	BeeCloud.registerApp("0950c062-5e41-44e3-8f52-f89d8cf2b6eb", "a5571c5a-591e-4fb9-bd92-0283782af00d");
+	BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0");
 	StringBuffer json = new StringBuffer();
 	String line = null;
 	
@@ -81,13 +85,10 @@
 
 	boolean status = verifySign(sign, timestamp);
 	
-	if (!jsonObj.containsKey("messageDetail")) {
-		out.println("error: messageDetailNull"); 
-	}
-
 	if (status) {//验证成功
 
 		out.println("success"); //请不要修改或删除
+		//进行业务处理
 
 	} else {//验证失败
 		out.println("fail");
