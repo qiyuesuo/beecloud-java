@@ -138,6 +138,7 @@
 			
 			bcPayResult = BCPay.startBCPay(param);
 			if (bcPayResult.getType().ordinal() == 0) {
+				System.out.println(bcPayResult.getObjectId());
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 			}
@@ -159,6 +160,7 @@
 			bcPayResult = BCPay.startBCPay(param);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
+				System.out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 				out.println(bcPayResult.getHtml());
 			}
@@ -196,9 +198,9 @@
 			BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
+				Thread.sleep(5000);
 				System.out.println(bcPayResult.getObjectId());
 				log.info("yee wap object id:" + bcPayResult.getObjectId());
-				Thread.sleep(5000);
 				response.sendRedirect(bcPayResult.getUrl());
 			}
 			else {
@@ -250,6 +252,7 @@
 			bcPayResult = BCPay.startBCPay(param);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
+				System.out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 				out.println(bcPayResult.getHtml());
 			}
@@ -266,6 +269,7 @@
 			bcPayResult = BCPay.startBCPay(param);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
+				System.out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 				out.println(bcPayResult.getHtml());
 			}
@@ -282,6 +286,7 @@
 			bcPayResult = BCPay.startBCPay(param);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
+				System.out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 				out.println(bcPayResult.getHtml());
 			}
@@ -298,6 +303,7 @@
 			bcPayResult = BCPay.startBCPay(param);
 			if (bcPayResult.getType().ordinal() == 0) {
 				out.println(bcPayResult.getObjectId());
+				System.out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 				out.println(bcPayResult.getHtml());
 			}
@@ -332,6 +338,7 @@
 			
 			bcPayResult = BCPay.startBCPay(param);
 			if (bcPayResult.getType().ordinal() == 0) {
+				System.out.println(bcPayResult.getObjectId());
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 				response.sendRedirect(bcPayResult.getUrl());
