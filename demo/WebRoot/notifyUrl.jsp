@@ -12,11 +12,6 @@
 <%
 	/* *
 	 功能：BeeCloud服务器异步通知页面
-	 日期：2015-03-20
-	 说明：
-	 以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
-	 该代码仅供学习和研究使用，只是提供一个参考。
-
 	 //***********页面功能说明***********
 	 创建该页面文件时，请留心该页面文件中无任何HTML代码及空格。
 	 该页面不能在本机电脑测试，请到服务器上做测试。请确保外部可以访问该页面。
@@ -24,7 +19,6 @@
 	 //********************************
 	 * */
 %>
-
 
 <%!
 	Logger log = Logger.getLogger(this.getClass());
@@ -48,8 +42,6 @@
 		return verify(sign, BCCache.getAppID() + BCCache.getAppSecret(),
 	            timestamp, "UTF-8");
 	}
-
-	
 	
 	byte[] getContentBytes(String content, String charset) {
         if (charset == null || "".equals(charset)) {
@@ -80,15 +72,22 @@
 	JSONObject jsonObj = JSONObject.fromObject(json.toString());
 
 	String sign = jsonObj.getString("sign");
-
 	String timestamp = jsonObj.getString("timestamp");
 
 	boolean status = verifySign(sign, timestamp);
 	
-	if (status) {//验证成功
+	if (status) { //验证成功
 		out.println("success"); //请不要修改或删除
-		//进行业务处理
-	} else {//验证失败
+		
+		// 此处需要验证购买的产品与订单金额是否匹配:
+		// 验证购买的产品与订单金额是否匹配的目的在于防止黑客反编译了iOS或者Android app的代码，
+		// 将本来比如100元的订单金额改成了1分钱，开发者应该识别这种情况，避免误以为用户已经足额支付。
+		// Webhook传入的消息里面应该以某种形式包含此次购买的商品信息，比如title或者optional里面的某个参数说明此次购买的产品是一部iPhone手机，
+		// 开发者需要在客户服务端去查询自己内部的数据库看看iPhone的金额是否与该Webhook的订单金额一致，仅有一致的情况下，才继续走正常的业务逻辑。
+		// 如果发现不一致的情况，排除程序bug外，需要去查明原因，防止不法分子对你的app进行二次打包，对你的客户的利益构成潜在威胁。
+		// 如果发现这样的情况，请及时与我们联系，我们会与客户一起与这些不法分子做斗争。而且即使有这样极端的情况发生，
+		// 只要按照前述要求做了购买的产品与订单金额的匹配性验证，在你的后端服务器不被入侵的前提下，你就不会有任何经济损失。
+	} else { //验证失败
 		out.println("fail");
 	}
 %>
