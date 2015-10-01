@@ -151,6 +151,17 @@
 			String redirectUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + wxJSAPAppId+ "&redirect_uri=" + encodedWSJSAPIRedirectUrl + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
 			log.info("wx jsapi redirct url:" + redirectUrl);
 			response.sendRedirect(redirectUrl);
+			BCPayParameter param = new BCPayParameter(PAY_CHANNEL.WX_JSAPI, 1, billNo, title);
+ 			param.setOpenId("123456zxcvbnm");
+
+ 			bcPayResult = BCPay.startBCPay(param);
+ 			if (bcPayResult.getType().ordinal() == 0) {
+ 				System.out.println(bcPayResult.getWxJSAPIMap());
+ 			} else {
+ 				//handle the error message as you wish！
+ 				out.println(bcPayResult.getErrMsg());
+ 				out.println(bcPayResult.getErrDetail());
+ 			}
 		} else if (type.equals("unionpay")) {
 			
 			BCPayParameter param = new BCPayParameter(PAY_CHANNEL.UN_WEB, 1, billNo, title);
