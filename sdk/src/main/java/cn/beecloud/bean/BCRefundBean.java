@@ -1,8 +1,5 @@
 package cn.beecloud.bean;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * A class which is used to encapsulate the refund returned by refund query.
  * @author Ray

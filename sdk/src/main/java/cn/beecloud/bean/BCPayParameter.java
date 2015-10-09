@@ -1,7 +1,6 @@
 package cn.beecloud.bean;
 import java.util.Map;
 
-import cn.beecloud.BCEumeration;
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.QR_PAY_MODE;
 
