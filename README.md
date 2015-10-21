@@ -479,7 +479,7 @@ WX、YEE、KUAIQIAN、BD。
 正确状态调用getRefundStatus()方法返回退款状态(Success, Processing, Fail ...)。调用者可任意处理这个值。
 
 ```java
-BCQueryStatusResult result = BCPay.startRefundStatusQuery(refund_no, "YEE");
+BCQueryStatusResult result = BCPay.startRefundUpdate(PAY_CHANNEL.YEE, refund_no);
 if (result.getType().ordinal() == 0 ) {
 	out.println(result.getRefundStatus());
 } else {
