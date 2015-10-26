@@ -831,47 +831,104 @@ public class BCPay {
      * @param bills
      * @return list of BCOrderBean
      */
-    private static List<BCOrderBean> generateBCOrderList(List<Map<String, Object>> bills) {
-			
+	private static List<BCOrderBean> generateBCOrderList(List<Map<String, Object>> bills) {
+		
 		List<BCOrderBean> bcOrderList = new ArrayList<BCOrderBean>();
-		for (Map bill : bills){
+		for (Map<String, Object> bill : bills){
 			BCOrderBean bcOrder = new BCOrderBean();
-			bcOrder.setBillNo(bill.get("bill_no").toString());
-			bcOrder.setTotalFee(bill.get("total_fee").toString());
-			bcOrder.setTitle(bill.get("title").toString());
-			bcOrder.setChannel(bill.get("channel").toString());
-			bcOrder.setSpayResult(((Boolean)bill.get("spay_result")));
-			bcOrder.setCreatedTime((Long)bill.get("created_time"));
-			bcOrder.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)bill.get("created_time")));
+			generateBCOrderBean(bill, bcOrder);
 			bcOrderList.add(bcOrder);
 		}
 		return bcOrderList;
 	}
     
+	/**
+     * The method is used to generate an order object.
+     * @param bill
+     * @return an object of BCOrderBean
+     */
+	private static BCOrderBean generateBCOrder(Map<String, Object> bill) {
+		BCOrderBean bcOrder = new BCOrderBean();
+		generateBCOrderBean(bill, bcOrder);
+		return bcOrder;
+	}
+	
     /**
      * The method is used to generate Refund list by query.
-     * @param refundList
-     * @return list of refund
+     * @param refundList the list of refund taken in
+     * @return list of BCRefundBean object
      */
     private static List<BCRefundBean> generateBCRefundList(List<Map<String, Object>> refundList) {
     	
     	List<BCRefundBean> bcRefundList = new ArrayList<BCRefundBean>();
-		for (Map refund : refundList){
+		for (Map<String, Object> refund : refundList){
 			BCRefundBean bcRefund = new BCRefundBean();
-			bcRefund.setBillNo(refund.get("bill_no").toString());
-			bcRefund.setRefundNo(refund.get("refund_no").toString());
-			bcRefund.setTotalFee(refund.get("total_fee").toString());
-			bcRefund.setRefundFee(refund.get("refund_fee").toString());
-			bcRefund.setChannel(refund.get("channel").toString());
-			bcRefund.setFinished((Boolean)refund.get("finish"));
-			bcRefund.setRefunded((Boolean)refund.get("result"));
-			bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("created_time")));
-			bcRefundList.add(bcRefund);
+			generateBCRefundBean(refund, bcRefund);
+	    	bcRefundList.add(bcRefund);
 		}
 		return bcRefundList;
     }
     
     /**
+     * The method is used to generate a refund object.
+     * @param refund the refund map taken in
+     * @return list of BCRefundBean object
+     */
+    private static BCRefundBean generateBCRefund(Map<String, Object> refund) {
+    	BCRefundBean bcRefund = new BCRefundBean();
+    	generateBCRefundBean(refund, bcRefund);
+    	return bcRefund;
+    }
+    
+    /**
+     * Generate order bean from order map
+     * @param bill the map taken in
+     */
+    private static void generateBCOrderBean(Map<String, Object> bill,
+			BCOrderBean bcOrder) {
+		bcOrder.setBillNo(bill.get("bill_no").toString());
+		bcOrder.setTotalFee(bill.get("total_fee").toString());
+		bcOrder.setTitle(bill.get("title").toString());
+		bcOrder.setChannel(bill.get("channel").toString());
+		bcOrder.setSpayResult(((Boolean)bill.get("spay_result")));
+		bcOrder.setSubChannel((bill.get("sub_channel").toString()));
+		bcOrder.setCreatedTime((Long)bill.get("create_time"));
+		if (bill.containsKey("trade_no") && bill.get("trade_no") != null) {
+			bcOrder.setChannelTradeNo(bill.get("trade_no").toString());
+		}
+		bcOrder.setOptional(bill.get("optional").toString());
+		bcOrder.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)bill.get("create_time")));
+		if (bill.containsKey("message_detail")) {
+			bcOrder.setMessageDetail(bill.get("message_detail").toString());
+		}
+		bcOrder.setRefundResult((Boolean)bill.get("refund_result"));
+		bcOrder.setRevertResult((Boolean)bill.get("revert_result"));
+	}
+    
+    /**
+     * Generate refund bean from refund map
+     * @param refund the map taken in
+     */
+	private static void generateBCRefundBean(Map<String, Object> refund,
+			BCRefundBean bcRefund) {
+		bcRefund.setBillNo(refund.get("bill_no").toString());
+		bcRefund.setChannel(refund.get("channel").toString());
+		bcRefund.setSubChannel(refund.get("sub_channel").toString());
+		bcRefund.setFinished((Boolean)refund.get("finish"));
+		bcRefund.setCreatedTime((Long)refund.get("create_time"));
+		bcRefund.setOptional(refund.get("optional").toString());
+		bcRefund.setRefunded((Boolean)refund.get("result"));
+		bcRefund.setTitle(refund.get("title").toString());
+		bcRefund.setTotalFee(refund.get("total_fee").toString());
+		bcRefund.setRefundFee(refund.get("refund_fee").toString());
+		bcRefund.setRefundNo(refund.get("refund_no").toString());
+		bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("create_time")));
+		if (refund.containsKey("message_detail")) {
+			bcRefund.setMessageDetail(refund.get("message_detail").toString());
+		}
+	}
+	
+	/**
      * Generate a map for JSAPI payment to receive.
      * @param ret
      * @return
@@ -888,43 +945,4 @@ public class BCPay {
 		
 		return map;
 	}
-
-    private static BCOrderBean generateBCOrder(Map<String, Object> bill) {
-			BCOrderBean bcOrder = new BCOrderBean();
-			bcOrder.setBillNo(bill.get("bill_no").toString());
-			bcOrder.setTotalFee(bill.get("total_fee").toString());
-			bcOrder.setTitle(bill.get("title").toString());
-			bcOrder.setChannel(bill.get("channel").toString());
-			bcOrder.setSpayResult(((Boolean)bill.get("spay_result")));
-			bcOrder.setSubChannel((bill.get("sub_channel").toString()));
-			bcOrder.setCreatedTime((Long)bill.get("createdat"));
-			bcOrder.setUpdateTime((Long)bill.get("updatedat"));
-			if (bill.containsKey("channel_trade_no") && bill.get("channel_trade_no") != null) {
-				bcOrder.setChannelTradeNo(bill.get("channel_trade_no").toString());
-			}
-			bcOrder.setOptional(bill.get("optional").toString());
-			bcOrder.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)bill.get("createdat")));
-			bcOrder.setUpdateDateTime(BCUtilPrivate.transferDateFromLongToString((Long)bill.get("updatedat")));
-		return bcOrder;
-	}
-    
-    private static BCRefundBean generateBCRefund(Map<String, Object> refund) {
-    	BCRefundBean bcRefund = new BCRefundBean();
-    	bcRefund.setBillNo(refund.get("bill_no").toString());
-    	bcRefund.setChannel(refund.get("channel").toString());
-    	bcRefund.setSubChannel(refund.get("sub_channel").toString());
-    	bcRefund.setFinished((Boolean)refund.get("finish"));
-    	bcRefund.setCreatedTime((Long)refund.get("createdat"));
-    	bcRefund.setUpdatedTime((Long)refund.get("updatedat"));
-    	bcRefund.setOptional(refund.get("optional").toString());
-    	bcRefund.setRefunded((Boolean)refund.get("result"));
-    	bcRefund.setTitle(refund.get("title").toString());
-    	bcRefund.setTotalFee(refund.get("total_fee").toString());
-    	bcRefund.setRefundFee(refund.get("refund_fee").toString());
-    	bcRefund.setRefundNo(refund.get("refund_no").toString());
-    	bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("createdat")));
-    	bcRefund.setUpdateDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("updatedat")));
-    	
-    	return bcRefund;
-    }
 }

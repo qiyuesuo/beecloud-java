@@ -34,6 +34,8 @@ public class BCRefundBean {
 	
 	private String updateDateTime;
 	
+	private String messageDetail = "不显示";
+	
 	public String getBillNo() {
 		return billNo;
 	}
@@ -144,5 +146,13 @@ public class BCRefundBean {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getMessageDetail() {
+		return messageDetail;
+	}
+
+	public void setMessageDetail(String messageDetail) {
+		this.messageDetail = messageDetail;
 	}
 }

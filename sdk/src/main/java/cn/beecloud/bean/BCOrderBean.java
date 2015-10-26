@@ -31,6 +31,12 @@ public class BCOrderBean {
 	private String dateTime;
 	
 	private String updateDateTime;
+	
+	private String messageDetail = "不显示";
+	
+	private boolean refundResult;
+	
+	private boolean revertResult;
 
 	public String getBillNo() {
 		return billNo;
@@ -134,5 +140,29 @@ public class BCOrderBean {
 
 	public void setOptional(String optional) {
 		this.optional = optional;
+	}
+
+	public String getMessageDetail() {
+		return messageDetail;
+	}
+
+	public void setMessageDetail(String messageDetail) {
+		this.messageDetail = messageDetail;
+	}
+
+	public boolean isRefundResult() {
+		return refundResult;
+	}
+
+	public void setRefundResult(boolean refundResult) {
+		this.refundResult = refundResult;
+	}
+
+	public boolean isRevertResult() {
+		return revertResult;
+	}
+
+	public void setRevertResult(boolean revertResult) {
+		this.revertResult = revertResult;
 	}
 }
