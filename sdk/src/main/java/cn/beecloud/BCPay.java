@@ -802,6 +802,30 @@ public class BCPay {
         }
 	}
     
+	/**
+     * Build Query Count parameters
+     * @param param to be built
+     * @param para used for building 
+     */
+	private static void buildQueryCountParam(Map<String, Object> param,
+			BCQueryParameter para) {
+    	param.put("app_id", BCCache.getAppID());
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
+        if (para.getChannel() != null) {
+    		param.put("channel", para.getChannel().toString());
+    	}
+        if (para.getBillNo() != null) {
+        	param.put("bill_no", para.getBillNo());
+        }
+        if (para.getStartTime() != null) {
+        	param.put("start_time", para.getStartTime().getTime());
+        }
+        if (para.getEndTime() != null) {
+       	 param.put("end_time", para.getEndTime().getTime());
+        }
+	}
+	
     /**
      * The method is used to generate Order list by query.
      * @param bills
