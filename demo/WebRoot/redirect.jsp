@@ -75,7 +75,7 @@
 
 		//BCPayResult的type字段有OK和非OK两种，当type字段是OK时（对应值为0），bcPayResult包含支付所需的内容如html或者code_url或者支付成功信息,
 		//当type的字段为非OK的时候，，bcPayResult包含通用错误和具体的错误信息。商户系统可以任意显示，打印或者记录日志。
-		BCPayResult bcPayResult = new BCPayResult();
+		BCPayResult bcPayResult = null;
 		
 		if (type.equals("alipay")) {
 			
@@ -85,14 +85,14 @@
 			param.setOptional(optional);
 			
 			bcPayResult = BCPay.startBCPay(param);
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 				out.println(bcPayResult.getHtml());
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("alipayQr")) {
@@ -103,14 +103,14 @@
 			param.setBillTimeout(120);
 			
             bcPayResult = BCPay.startBCPay(param);
-            if (bcPayResult.getType().ordinal() == 0) {
+            if (bcPayResult.getResultCode().equals("0")) {
             	out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 				out.println(bcPayResult.getHtml());
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
             
@@ -120,14 +120,14 @@
 			param.setBillTimeout(120);
             
 			bcPayResult = BCPay.startBCPay(param);
-            if (bcPayResult.getType().ordinal() == 0) {
+            if (bcPayResult.getResultCode().equals("0")) {
             	out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 				out.println(bcPayResult.getHtml());
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
             
@@ -137,14 +137,14 @@
 			param.setBillTimeout(120);
 			
 			bcPayResult = BCPay.startBCPay(param);
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				System.out.println(bcPayResult.getObjectId());
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("wechatJSAPI")) {
@@ -155,11 +155,11 @@
  			param.setOpenId("123456zxcvbnm");
 
  			bcPayResult = BCPay.startBCPay(param);
- 			if (bcPayResult.getType().ordinal() == 0) {
+ 			if (bcPayResult.getResultCode().equals("0")) {
  				System.out.println(bcPayResult.getWxJSAPIMap());
  			} else {
  				//handle the error message as you wish！
- 				out.println(bcPayResult.getErrMsg());
+ 				out.println(bcPayResult.getResultMsg());
  				out.println(bcPayResult.getErrDetail());
  			}
 		} else if (type.equals("unionpay")) {
@@ -169,7 +169,7 @@
 			param.setBillTimeout(180);
 			
 			bcPayResult = BCPay.startBCPay(param);
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				out.println(bcPayResult.getObjectId());
 				System.out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -177,7 +177,7 @@
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("alitransfer")) {
@@ -189,14 +189,14 @@
 			
 			
 			bcPayResult = BCPay.startTransfer(PAY_CHANNEL.ALI, billNo, "苏州比可网络科技有限公司", list);
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 				response.sendRedirect(bcPayResult.getUrl());
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("yeeWap")) {
@@ -207,7 +207,7 @@
 			BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0");
 			bcPayResult = BCPay.startBCPay(param);
 			BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 				System.out.println(bcPayResult.getObjectId());
@@ -216,7 +216,7 @@
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("yeeWeb")) {
@@ -226,7 +226,7 @@
 			param.setBillTimeout(180);
 			
 			bcPayResult = BCPay.startBCPay(param);
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				out.println(bcPayResult.getObjectId());
 				log.info("yee web object id:" + bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -234,7 +234,7 @@
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("yeeNoBankCard")) {
@@ -245,14 +245,14 @@
 			param.setFrqid(frqid);
 			
 			bcPayResult = BCPay.startBCPay(param);
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
 				out.println(bcPayResult.getSucessMsg());
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		}else if (type.equals("jdWap")) {
@@ -261,7 +261,7 @@
 			param.setReturnUrl(jdWapReturnUrl);
 			
 			bcPayResult = BCPay.startBCPay(param);
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				out.println(bcPayResult.getObjectId());
 				System.out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -269,7 +269,7 @@
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("jdWeb")) {
@@ -278,7 +278,7 @@
 			param.setReturnUrl(jdWebReturnUrl);
 			
 			bcPayResult = BCPay.startBCPay(param);
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				out.println(bcPayResult.getObjectId());
 				System.out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -286,7 +286,7 @@
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("kqWeb")) {
@@ -295,7 +295,7 @@
 			param.setBillTimeout(120);
 			
 			bcPayResult = BCPay.startBCPay(param);
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				out.println(bcPayResult.getObjectId());
 				System.out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -303,7 +303,7 @@
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("kqWap")) {
@@ -312,7 +312,7 @@
 			param.setBillTimeout(120);
 			
 			bcPayResult = BCPay.startBCPay(param);
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				out.println(bcPayResult.getObjectId());
 				System.out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -320,7 +320,7 @@
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("bdWeb")) {
@@ -330,7 +330,7 @@
 			param.setBillTimeout(180);
 			
 			bcPayResult = BCPay.startBCPay(param);
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				System.out.println(bcPayResult.getObjectId());
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -338,7 +338,7 @@
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		} else if (type.equals("bdWap")) {
@@ -348,7 +348,7 @@
 			param.setBillTimeout(180);
 			
 			bcPayResult = BCPay.startBCPay(param);
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				System.out.println(bcPayResult.getObjectId());
 				out.println(bcPayResult.getObjectId());
 				Thread.sleep(5000);
@@ -356,7 +356,7 @@
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		}
@@ -367,7 +367,7 @@
 <script src="./qrcode.js"></script>
 <script type="text/javascript">
     var type = '<%=type%>';
-    var isCodeUrl = <%=bcPayResult.getType().ordinal()%>;
+    var isCodeUrl = <%=bcPayResult.getResultCode()%>;
     var codeUrl;
     if (type == 'wechatQr') {
     	codeUrl = '<%=bcPayResult.getCodeUrl()%>';
@@ -385,7 +385,7 @@
                 element.appendChild(wording);
                 element.appendChild(code);
             }
-    if ((type == 'wechatQr' || type == "aliOfflineQr") && isCodeUrl == 0) {
+    if ((type == 'wechatQr' || type == "aliOfflineQr") && isCodeUrl == '0') {
         makeqrcode();
     }
     

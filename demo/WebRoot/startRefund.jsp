@@ -54,7 +54,7 @@
 	if(channelObject.toString().equals("YEE_WAP")) {
 		BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
 	}
-	if (result.getType().ordinal() == 0 ) {
+	if (result.getResultCode().equals("0") ) {
 		out.println(result.getObjectId());
 		System.out.println(result.getObjectId());
 		Thread.sleep(5000);
@@ -64,7 +64,7 @@
 			out.println(result.getSucessMsg());
 		}
 	} else {
-		out.println(result.getErrMsg());
+		out.println(result.getResultMsg());
 		out.println(result.getErrDetail());
 	}
 %>

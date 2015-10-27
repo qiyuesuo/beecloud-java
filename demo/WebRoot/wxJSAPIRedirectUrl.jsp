@@ -61,7 +61,7 @@
 			param.setBillTimeout(120);
 			
 			BCPayResult bcPayResult = BCPay.startBCPay(param);
-			if (bcPayResult.getType().ordinal() == 0) {
+			if (bcPayResult.getResultCode().equals("0")) {
 				out.println(bcPayResult.getObjectId());
 				Map<String, Object> map = bcPayResult.getWxJSAPIMap();
 				
@@ -74,7 +74,7 @@
 			}
 			else {
 				//handle the error message as you wish！
-				out.println(bcPayResult.getErrMsg());
+				out.println(bcPayResult.getResultMsg());
 				out.println(bcPayResult.getErrDetail());
 			}
 		}

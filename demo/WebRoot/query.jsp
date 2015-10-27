@@ -49,20 +49,20 @@
 			param.setNeedDetail(true);
 			
 			bcQueryResult = BCPay.startQueryRefundCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryRefund(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 				System.out.println("refundList:" + bcQueryResult.getBcRefundList().size());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("wechatQuery")) {
@@ -71,20 +71,20 @@
 			param.setChannel(PAY_CHANNEL.WX);
 			
 			bcQueryResult = BCPay.startQueryRefundCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryRefund(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 				pageContext.setAttribute("refundUpdate", true);
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("unionQuery")) {
@@ -93,19 +93,19 @@
 			param.setChannel(PAY_CHANNEL.UN);
 			
 			bcQueryResult = BCPay.startQueryRefundCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryRefund(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("yeeQuery")) {
@@ -114,20 +114,20 @@
 			param.setChannel(PAY_CHANNEL.YEE);
 			
 			bcQueryResult = BCPay.startQueryRefundCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryRefund(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 				pageContext.setAttribute("refundUpdate", true);
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("yeeWapQuery")) {
@@ -136,22 +136,22 @@
 			param.setChannel(PAY_CHANNEL.YEE_WAP);
 			//param.setNeedDetail(true);
 			bcQueryResult = BCPay.startQueryRefundCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0");
 			bcQueryResult = BCPay.startQueryRefund(param);
 			BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 				pageContext.setAttribute("isYeeWap", "1");
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		}else if (querytype.equals("jdQuery")) {
@@ -163,21 +163,21 @@
 			param.setChannel(PAY_CHANNEL.JD);
 			
 			bcQueryResult = BCPay.startQueryRefundCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			//param.setStartTime(c.getTime());
 			bcQueryResult = BCPay.startQueryRefund(param);
 			
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			} 
 		} else if (querytype.equals("kqQuery")) {
@@ -185,20 +185,20 @@
 			param.setChannel(PAY_CHANNEL.KUAIQIAN);
 			
 			bcQueryResult = BCPay.startQueryRefundCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryRefund(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 				pageContext.setAttribute("refundUpdate", true);
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			} 
 		} else if (querytype.equals("bdQuery")) {
@@ -206,20 +206,20 @@
 			param.setChannel(PAY_CHANNEL.BD);
 			
 			bcQueryResult = BCPay.startQueryRefundCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryRefund(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 				pageContext.setAttribute("refundUpdate", true);
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			} 
 		} else if (querytype.equals("noChannelQuery")) {
@@ -228,20 +228,20 @@
 			param.setLimit(50);
 			
 			bcQueryResult = BCPay.startQueryRefundCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryRefund(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
 				pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 				pageContext.setAttribute("nochannel", true);
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} 
@@ -252,20 +252,20 @@
 			param.setNeedDetail(true);
 			
 			bcQueryResult = BCPay.startQueryBillCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryBill(param);
 			System.out.println(bcQueryResult.getTotalCount());
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		
@@ -274,19 +274,19 @@
 			param.setChannel(PAY_CHANNEL.WX);
 			
 			bcQueryResult = BCPay.startQueryBillCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryBill(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("unionQuery")) {
@@ -294,19 +294,19 @@
 			param.setChannel(PAY_CHANNEL.UN);
 			
 			bcQueryResult = BCPay.startQueryBillCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryBill(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("yeeQuery")) {
@@ -314,19 +314,19 @@
 			param.setChannel(PAY_CHANNEL.YEE);
 			
 			bcQueryResult = BCPay.startQueryBillCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryBill(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("yeeWapQuery")) {
@@ -335,22 +335,22 @@
 			param.setNeedDetail(true);
 			
 			bcQueryResult = BCPay.startQueryBillCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0");
 			bcQueryResult = BCPay.startQueryBill(param);
 			BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
 				pageContext.setAttribute("isYeeWap", "1");
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("jdQuery")) {
@@ -358,19 +358,19 @@
 			param.setChannel(PAY_CHANNEL.JD);
 			
 			bcQueryResult = BCPay.startQueryBillCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryBill(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("kqQuery")) {
@@ -378,19 +378,19 @@
 			param.setChannel(PAY_CHANNEL.KUAIQIAN);
 			
 			bcQueryResult = BCPay.startQueryBillCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryBill(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		} else if (querytype.equals("bdQuery")) {
@@ -398,19 +398,19 @@
 			param.setChannel(PAY_CHANNEL.BD);
 			
 			bcQueryResult = BCPay.startQueryBillCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryBill(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		}else if (querytype.equals("noChannelQuery")) {
@@ -418,21 +418,21 @@
 			param.setLimit(50);
 			
 			bcQueryResult = BCPay.startQueryBillCount(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("count", bcQueryResult.getTotalCount());
 			}else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 			
 			bcQueryResult = BCPay.startQueryBill(param);
-			if (bcQueryResult.getType().ordinal() == 0) {
+			if (bcQueryResult.getResultCode().equals("0")) {
 				pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 				pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
 				pageContext.setAttribute("nochannel", true);
 				pageContext.setAttribute("channel", null);
 			} else {
-				out.println(bcQueryResult.getErrMsg());
+				out.println(bcQueryResult.getResultMsg());
 				out.println(bcQueryResult.getErrDetail());
 			}
 		}

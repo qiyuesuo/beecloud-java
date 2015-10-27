@@ -35,18 +35,18 @@
 	*/
 	if (queryRefund != null) {
 		BCQueryResult result = BCPay.startQueryRefundById(id);
-		if (result.getType().ordinal() == 0) {
+		if (result.getResultCode().equals("0")) {
 			pageContext.setAttribute("refund", result.getRefund());
 		}else {
-			out.println(result.getErrMsg());
+			out.println(result.getResultMsg());
 			out.println(result.getErrDetail());
 		}
 	} else {
 		BCQueryResult result = BCPay.startQueryBillById(id);
-		if (result.getType().ordinal() == 0) {
+		if (result.getResultCode().equals("0")) {
 			pageContext.setAttribute("bill", result.getOrder());
 		}else {
-			out.println(result.getErrMsg());
+			out.println(result.getResultMsg());
 			out.println(result.getErrDetail());
 		}
 	}

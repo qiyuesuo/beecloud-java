@@ -244,14 +244,14 @@ public class BCPayMultiApp {
      * @param objectId the id to query by.
      * @return BCQueryResult
      */
-    public static BCQueryResult startQueryBillById(String objectId) {
+    public BCQueryResult startQueryBillById(String objectId) {
     	
     	 BCQueryResult result;
     	
 		 Map<String, Object> param = new HashMap<String, Object>();
-	     param.put("app_id", BCCache.getAppID());
+	     param.put("app_id", this.appId);
 	     param.put("timestamp", System.currentTimeMillis());
-	     param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
+	     param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
          
          result = new BCQueryResult();
     	
@@ -293,6 +293,64 @@ public class BCPayMultiApp {
          	result.setErrDetail(e.getMessage());
         }
     	
+    	return result;
+    }
+    
+    /**
+     * @param para {@link BCQueryParameter}订单总数查询参数
+     * @return 订单总数查询返回的结果
+     */
+    public BCQueryResult startQueryBillCount(BCQueryParameter para) {
+    	
+    	BCQueryResult result;
+    	
+    	result = ValidationUtil.validateQueryBill(para);
+    	
+    	if (!result.getResultCode().equals("0")) {
+    		return result;
+    	}
+    	 
+    	Map<String, Object> param = new HashMap<String, Object>();
+        buildQueryCountParam(param, para);
+         
+        result = new BCQueryResult();
+    	
+    	Client client = BCAPIClient.client;
+    	  
+    	StringBuilder sb = new StringBuilder();   
+        sb.append(BCUtilPrivate.getkApiQueryBillCount());
+        
+        try {
+            sb.append(URLEncoder.encode(
+                            JSONObject.fromObject(param).toString(), "UTF-8"));
+
+            WebTarget target = client.target(sb.toString());
+            Response response = target.request().get();
+            if (response.getStatus() == 200) {
+                Map<String, Object> ret = response.readEntity(Map.class);
+
+                result.setResultCode(ret.get("result_code").toString());
+                result.setResultMsg(ret.get("result_msg").toString());
+                result.setErrDetail(ret.get("err_detail").toString());
+
+                boolean isSuccess = (result.getResultCode().equals("0"));
+
+                if (isSuccess) {
+                    if (ret.containsKey("count")
+                                    && !StrUtil.empty(ret.get("count"))) {
+                    	result.setTotalCount((Integer)ret.get("count"));
+                    }
+                } 
+            } else {
+            	result.setResultCode("0");
+            	result.setResultMsg("Not correct response!");
+            	result.setErrDetail("Not correct response!");
+            }
+        } catch (Exception e) {
+        	result.setResultCode("-1");
+         	result.setResultMsg("Network error!");
+         	result.setErrDetail(e.getMessage());
+        }
     	return result;
     }
     
@@ -357,7 +415,126 @@ public class BCPayMultiApp {
      	
      	return result;
     }
+    
+    /**
+     * Bill Query by Id.
+     * @param objectId the id to query by.
+     * @return BCQueryResult
+     */
+    public BCQueryResult startQueryRefundById(String objectId) {
+    	
+    	 BCQueryResult result;
+    	
+		 Map<String, Object> param = new HashMap<String, Object>();
+	     param.put("app_id", this.appId);
+	     param.put("timestamp", System.currentTimeMillis());
+	     param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
+         
+         result = new BCQueryResult();
+    	
+    	 Client client = BCAPIClient.client;
+    	  
+    	 StringBuilder sb = new StringBuilder();   
+         sb.append(BCUtilPrivate.getkApiQueryRefundById());
+        
+         try {
+        	sb.append("/" + objectId);
+        	sb.append("?para=");
+            sb.append(URLEncoder.encode(
+                            JSONObject.fromObject(param).toString(), "UTF-8"));
 
+            WebTarget target = client.target(sb.toString());
+            Response response = target.request().get();
+            if (response.getStatus() == 200) {
+                Map<String, Object> ret = response.readEntity(Map.class);
+
+                result.setResultCode(ret.get("result_code").toString());
+                result.setResultMsg(ret.get("result_msg").toString());
+                result.setErrDetail(ret.get("err_detail").toString());
+
+                boolean isSuccess = (result.getResultCode().equals("0"));
+
+                if (isSuccess) {
+                    if (ret.containsKey("refund")
+                                    && ret.get("refund") != null) {
+                        result.setRefund(generateBCRefund((Map<String, Object>)ret.get("refund")));
+                    }
+                }
+            } else {
+            	result.setResultCode("0");
+             	result.setResultMsg("Not correct response!");
+             	result.setErrDetail("Not correct response!");
+            }
+        } catch (Exception e) {
+        	result.setResultCode("-1");
+          	result.setResultMsg("Network error!");
+          	result.setErrDetail(e.getMessage());
+        }
+    	
+    	return result;
+    }
+    
+    /**
+     * @param para {@link BCRefundQueryParameter}退款总数查询参数
+     * @return 退款总数查询返回的结果
+     */
+    public BCQueryResult startQueryRefundCount(BCRefundQueryParameter para) {
+    	
+    	BCQueryResult result;
+    	
+    	result = ValidationUtil.validateQueryRefund(para);
+    	
+    	if (!result.getResultCode().equals("0")) {
+    		return result;
+    	}
+    	 
+    	Map<String, Object> param = new HashMap<String, Object>();
+        buildQueryCountParam(param, para);
+        if (para.getRefundNo() != null) {
+        	param.put("refund_no", para.getRefundNo());
+        }
+         
+        result = new BCQueryResult();
+    	
+    	Client client = BCAPIClient.client;
+    	  
+    	StringBuilder sb = new StringBuilder();   
+        sb.append(BCUtilPrivate.getkApiQueryRefundCount());
+        
+        try {
+            sb.append(URLEncoder.encode(
+                            JSONObject.fromObject(param).toString(), "UTF-8"));
+
+            WebTarget target = client.target(sb.toString());
+            Response response = target.request().get();
+            if (response.getStatus() == 200) {
+                Map<String, Object> ret = response.readEntity(Map.class);
+
+                result.setResultCode(ret.get("result_code").toString());
+                result.setResultMsg(ret.get("result_msg").toString());
+                result.setErrDetail(ret.get("err_detail").toString());
+
+                boolean isSuccess = (result.getResultCode().equals("0"));
+
+                if (isSuccess) {
+                    if (ret.containsKey("count")
+                                    && !StrUtil.empty(ret.get("count"))) {
+                    	result.setTotalCount((Integer)ret.get("count"));
+                    }
+                } 
+            } else {
+            	result.setResultCode("0");
+             	result.setResultMsg("Not correct response!");
+             	result.setErrDetail("Not correct response!");
+            }
+        } catch (Exception e) {
+        	result.setResultCode("-1");
+          	result.setResultMsg("Network error!");
+          	result.setErrDetail(e.getMessage());
+        }
+    	return result;
+    }
+    
     /**
      * @param refundNo
      * （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。	
@@ -506,27 +683,56 @@ public class BCPayMultiApp {
 
     /**
      * The method is used to generate Order list by query.
-     *
      * @param bills
      * @return list of BCOrderBean
      */
-    private List<BCOrderBean> generateBCOrderList(List<Map<String, Object>> bills) {
-
-        List<BCOrderBean> bcOrderList = new ArrayList<BCOrderBean>();
-        for (Map bill : bills) {
-            BCOrderBean bcOrder = new BCOrderBean();
-            bcOrder.setBillNo(bill.get("bill_no").toString());
-            bcOrder.setTotalFee(bill.get("total_fee").toString());
-            bcOrder.setTitle(bill.get("title").toString());
-            bcOrder.setChannel(bill.get("channel").toString());
-            bcOrder.setSpayResult(((Boolean) bill.get("spay_result")));
-            bcOrder.setCreatedTime((Long) bill.get("created_time"));
-            bcOrder.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long) bill.get("created_time")));
-            bcOrderList.add(bcOrder);
-        }
-        return bcOrderList;
-    }
-
+	private List<BCOrderBean> generateBCOrderList(List<Map<String, Object>> bills) {
+		
+		List<BCOrderBean> bcOrderList = new ArrayList<BCOrderBean>();
+		for (Map<String, Object> bill : bills){
+			BCOrderBean bcOrder = new BCOrderBean();
+			generateBCOrderBean(bill, bcOrder);
+			bcOrderList.add(bcOrder);
+		}
+		return bcOrderList;
+	}
+    
+    /**
+     * The method is used to generate an order object.
+     * @param bill
+     * @return an object of BCOrderBean
+     */
+	private  BCOrderBean generateBCOrder(Map<String, Object> bill) {
+		BCOrderBean bcOrder = new BCOrderBean();
+		generateBCOrderBean(bill, bcOrder);
+		return bcOrder;
+	}
+    
+	/**
+     * Generate order bean from order map
+     * @param bill the map taken in
+     */
+    private void generateBCOrderBean(Map<String, Object> bill,
+			BCOrderBean bcOrder) {
+		bcOrder.setBillNo(bill.get("bill_no").toString());
+		bcOrder.setTotalFee(bill.get("total_fee").toString());
+		bcOrder.setTitle(bill.get("title").toString());
+		bcOrder.setChannel(bill.get("channel").toString());
+		bcOrder.setSpayResult(((Boolean)bill.get("spay_result")));
+		bcOrder.setSubChannel((bill.get("sub_channel").toString()));
+		bcOrder.setCreatedTime((Long)bill.get("create_time"));
+		if (bill.containsKey("trade_no") && bill.get("trade_no") != null) {
+			bcOrder.setChannelTradeNo(bill.get("trade_no").toString());
+		}
+		bcOrder.setOptional(bill.get("optional").toString());
+		bcOrder.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)bill.get("create_time")));
+		if (bill.containsKey("message_detail")) {
+			bcOrder.setMessageDetail(bill.get("message_detail").toString());
+		}
+		bcOrder.setRefundResult((Boolean)bill.get("refund_result"));
+		bcOrder.setRevertResult((Boolean)bill.get("revert_result"));
+	}
+	
     /**
      * The method is used to generate Refund list by query.
      *
@@ -550,14 +756,48 @@ public class BCPayMultiApp {
         }
         return bcRefundList;
     }
-
+    
+    /**
+     * The method is used to generate a refund object.
+     * @param refund the refund map taken in
+     * @return list of BCRefundBean object
+     */
+    private BCRefundBean generateBCRefund(Map<String, Object> refund) {
+    	BCRefundBean bcRefund = new BCRefundBean();
+    	generateBCRefundBean(refund, bcRefund);
+    	return bcRefund;
+    }
+    
+    /**
+     * Generate refund bean from refund map
+     * @param refund the map taken in
+     */
+	private void generateBCRefundBean(Map<String, Object> refund,
+			BCRefundBean bcRefund) {
+		bcRefund.setBillNo(refund.get("bill_no").toString());
+		bcRefund.setChannel(refund.get("channel").toString());
+		bcRefund.setSubChannel(refund.get("sub_channel").toString());
+		bcRefund.setFinished((Boolean)refund.get("finish"));
+		bcRefund.setCreatedTime((Long)refund.get("create_time"));
+		bcRefund.setOptional(refund.get("optional").toString());
+		bcRefund.setRefunded((Boolean)refund.get("result"));
+		bcRefund.setTitle(refund.get("title").toString());
+		bcRefund.setTotalFee(refund.get("total_fee").toString());
+		bcRefund.setRefundFee(refund.get("refund_fee").toString());
+		bcRefund.setRefundNo(refund.get("refund_no").toString());
+		bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("create_time")));
+		if (refund.containsKey("message_detail")) {
+			bcRefund.setMessageDetail(refund.get("message_detail").toString());
+		}
+	}
+    
     /**
      * Generate a map for JSAPI payment to receive.
      *
      * @param ret
      * @return
      */
-    private static Map<String, Object> generateWXJSAPIMap(
+    private Map<String, Object> generateWXJSAPIMap(
             Map<String, Object> ret) {
         HashMap map = new HashMap<String, Object>();
         map.put("appId", ret.get("app_id"));
@@ -671,6 +911,30 @@ public class BCPayMultiApp {
         }
         if (para.getNeedDetail() != null && para.getNeedDetail()) {
         	param.put("need_detail", para.getNeedDetail());
+        }
+	}
+	
+	/**
+     * Build Query Count parameters
+     * @param param to be built
+     * @param para used for building 
+     */
+	private void buildQueryCountParam(Map<String, Object> param,
+			BCQueryParameter para) {
+    	param.put("app_id", this.appId);
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
+        if (para.getChannel() != null) {
+    		param.put("channel", para.getChannel().toString());
+    	}
+        if (para.getBillNo() != null) {
+        	param.put("bill_no", para.getBillNo());
+        }
+        if (para.getStartTime() != null) {
+        	param.put("start_time", para.getStartTime().getTime());
+        }
+        if (para.getEndTime() != null) {
+       	 param.put("end_time", para.getEndTime().getTime());
         }
 	}
 }
