@@ -1,6 +1,5 @@
 <%@ page import="java.util.HashMap"%>
 <%@ page import="java.util.Random"%>
-<%@ page import="com.sun.org.apache.xalan.internal.xsltc.compiler.sym"%>
 <%@ page import="cn.beecloud.BeeCloud"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>

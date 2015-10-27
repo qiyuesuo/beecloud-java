@@ -2,6 +2,8 @@ package cn.beecloud;
 
 
 
+import static junit.framework.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,12 +15,14 @@ import org.junit.Test;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.QR_PAY_MODE;
-import cn.beecloud.bean.*;;
+import cn.beecloud.BCEumeration.RESULT_TYPE;
+import cn.beecloud.bean.*;
 
 public class BCPayTest {
 	
 	private String billNo;
 	private String subject;
+	private String refundNo;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -29,19 +33,27 @@ public class BCPayTest {
 		BeeCloud.registerApp(TestConstant.KTestAppID, TestConstant.kTestAppSecret);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
-	public void testPay() {  
+	public void testAliWebPay() {  
 		billNo = BCUtil.generateRandomUUIDPure();
 		subject = "ALI_WEB unit test";
 		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.ALI_WEB, 1, billNo, subject);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("aliWebUnitTest", "aliWebUnitTest");
-		param.setReturnUrl("http://localhost:8080/PC-Web-Pay-Demo/aliReturnUrl.jsp");
+		param.setReturnUrl(TestConstant.aliReturnUrl);
 		param.setOptional(map);
+		param.setBillTimeout(TestConstant.billTimeOut);
 		
-		BCPayResult result = BCPay.startBCPay(param);
-		System.out.println("test");
+		testPay(param, PAY_CHANNEL.ALI_WEB);
+		
+		BCRefundParameter param1 = new BCRefundParameter(billNo,  );
+		
+		
+		
 	}
+
+	
 	
 	@Test
 	public void testRefund() {
@@ -102,4 +114,81 @@ public class BCPayTest {
 		System.out.println(result.getRefund());
 		System.out.println("test refund by id!" + result);
 	}
+	
+	@SuppressWarnings("deprecation")
+	private void testPay(BCPayParameter param, PAY_CHANNEL channel) {
+		BCPayResult result = BCPay.startBCPay(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
+		
+		param.setChannel(null);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		param.setChannel(channel);
+		
+		
+		param.setTotalFee(null);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		param.setTotalFee(1);
+		
+		param.setBillNo(null);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		param.setBillNo(billNo);
+		
+		param.setTitle(null);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		param.setTitle(subject);
+		
+		param.setBillNo(billNo.substring(0, 7));
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		param.setBillNo(billNo);
+		
+		param.setBillNo(billNo + "A");
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		param.setBillNo(billNo);
+		
+		if(param.getBillTimeout() != null) {
+			param.setBillTimeout(0);
+			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+			param.setBillTimeout(TestConstant.billTimeOut);
+		}
+		
+		if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE) || channel.equals(PAY_CHANNEL.UN_WEB)
+				|| channel.equals(PAY_CHANNEL.JD_WAP) || channel.equals(PAY_CHANNEL.JD_WEB)) {
+			String returnUrl = param.getReturnUrl();
+			param.setReturnUrl(null);
+			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+			param.setReturnUrl(returnUrl);
+		}
+		
+		if (channel.equals(PAY_CHANNEL.WX_JSAPI)) {
+			String openId = param.getOpenId();
+			param.setOpenId(null);
+			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+			param.setOpenId(openId);
+		}
+		
+		if (channel.equals(PAY_CHANNEL.ALI_QRCODE)) {
+			QR_PAY_MODE qrPayMode = param.getQrPayMode();
+			param.setQrPayMode(null);
+			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+			param.setQrPayMode(qrPayMode);
+		}
+		
+		if (channel.equals(PAY_CHANNEL.YEE_NOBANKCARD)) {
+			String cardNo = param.getCardNo();
+			param.setCardNo(null);
+			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+			param.setCardNo(cardNo);
+			
+			String cardpwd = param.getCardPwd();
+			param.setCardPwd(null);
+			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+			param.setCardPwd(cardpwd);
+			
+			String frqid = param.getFrqid();
+			param.setFrqid(null);
+			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+			param.setFrqid(frqid);
+		}
+	}
+	
 }
