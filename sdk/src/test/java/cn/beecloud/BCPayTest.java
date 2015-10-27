@@ -16,7 +16,10 @@ import cn.beecloud.BCEumeration.QR_PAY_MODE;
 import cn.beecloud.bean.*;;
 
 public class BCPayTest {
-
+	
+	private String billNo;
+	private String subject;
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}  
@@ -28,11 +31,12 @@ public class BCPayTest {
 
 	@Test
 	public void testPay() {  
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.WX_JSAPI, 1, "201508130100010000005647", "气费");
-		Map map = new HashMap();
-		map.put("opchannel", "10010");
-		param.setReturnUrl("http://118.186.253.55:8889/V04/99bill.html");
-		param.setQrPayMode(QR_PAY_MODE.MODE_FRONT);
+		billNo = BCUtil.generateRandomUUIDPure();
+		subject = "ALI_WEB unit test";
+		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.ALI_WEB, 1, billNo, subject);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("aliWebUnitTest", "aliWebUnitTest");
+		param.setReturnUrl("http://localhost:8080/PC-Web-Pay-Demo/aliReturnUrl.jsp");
 		param.setOptional(map);
 		
 		BCPayResult result = BCPay.startBCPay(param);

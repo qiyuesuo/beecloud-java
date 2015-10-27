@@ -24,10 +24,6 @@
 		window.location.href="startRefund.jsp?bill_no=" + bill_no + "&total_fee=" + total_fee + "&channel=" + channel + "&prefund=" + prefund + "&isYeeWap=" + isYeeWap;
 	
 	}
-	
-	function webhookTest(transactionId, channel, type) {
-		window.location.href="webhookTest.jsp?transactionId=" + transactionId + "&channel=" + channel + "&type=" + type;
-	}
 </script>
 </head>
 <body>

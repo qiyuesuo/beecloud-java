@@ -1,10 +1,25 @@
 package cn.beecloud;
 
 public class BCEumeration {
+	
 	public enum RESULT_TYPE {
 		OK,
-	    VALIDATION_ERROR,
-	    RUNTIME_ERROR
+        APP_INVALID,
+        PAY_FACTOR_NOT_SET,
+        CHANNEL_INVALID,
+        MISS_PARAM,
+        PARAM_INVALID,
+        CERT_FILE_ERROR,
+        CHANNEL_ERROR,
+        NO_SUCH_BILL,
+        DUPLICATED_PREFUND_RECORD,
+        BILL_UNSUCCESS,
+        REFUND_EXCEED_TIME,
+        ALREADY_REFUNDING,
+        REFUND_AMOUNT_TOO_LARGE,
+        NO_SUCH_REFUND,
+        RECORD_DUPLICATE,
+        RUNTIME_ERORR
 	}
 
 	public enum PAY_CHANNEL {

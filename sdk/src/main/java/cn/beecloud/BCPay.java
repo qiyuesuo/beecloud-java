@@ -51,14 +51,13 @@ public class BCPay {
     	BCPayResult result;
     	result = ValidationUtil.validateBCPay(para);
     	
-    	if (result.getType().ordinal()!=0) {
+    	if (!result.getResultCode().equals("0")) {
     		return result;
     	}
     	
         Map<String, Object> param = new HashMap<String, Object>();
         
         buildPayParam(param, para);
-        result = new BCPayResult();
         
         PAY_CHANNEL channel = para.getChannel();
         Client client = BCAPIClient.client;
@@ -67,58 +66,50 @@ public class BCPay {
             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
             if (response.getStatus() == 200) {
                 Map<String, Object> ret = response.readEntity(Map.class);
+                result.setResultCode(ret.get("result_code").toString());
+                result.setResultMsg(ret.get("result_msg").toString());
+                result.setErrDetail(ret.get("err_detail").toString());
 
-                boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                                .toStr(ret.get("result_code")).equals("0"));
+                boolean isSuccess = (result.getResultCode().equals("0"));
                 if (isSuccess) {
                 	result.setObjectId(ret.get("id").toString());
                 	if (channel.equals(PAY_CHANNEL.WX_NATIVE)){
 	                    if (ret.containsKey("code_url") && null != ret.get("code_url")) {
 	                        result.setCodeUrl(ret.get("code_url").toString());
-	                        result.setType(RESULT_TYPE.OK);
 	                    } 
                 	} else if (channel.equals(PAY_CHANNEL.WX_JSAPI)) {
-                    	result.setType(RESULT_TYPE.OK);
                     	result.setWxJSAPIMap(generateWXJSAPIMap(ret));
                     } else if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE) || channel.equals(PAY_CHANNEL.ALI_WAP)) {
                 		if (ret.containsKey("html") && null != ret.get("html") && 
                 				ret.containsKey("url") && null != ret.get("url")) {
 	                        result.setHtml(ret.get("html").toString());
 	                        result.setUrl(ret.get("url").toString());
-	                        result.setType(RESULT_TYPE.OK);
 	                    }
                 	} else if (channel.equals(PAY_CHANNEL.UN_WEB) || channel.equals(PAY_CHANNEL.JD_WAP)
                 			|| channel.equals(PAY_CHANNEL.JD_WEB) || channel.equals(PAY_CHANNEL.KUAIQIAN_WAP) 
                 			|| channel.equals(PAY_CHANNEL.KUAIQIAN_WEB)) {
                 		if (ret.containsKey("html") && null != ret.get("html")) {
 	                        result.setHtml(ret.get("html").toString());
-	                        result.setType(RESULT_TYPE.OK);
 	                    }
                 	} else if (channel.equals(PAY_CHANNEL.YEE_WAP) || channel.equals(PAY_CHANNEL.YEE_WEB) || 
                 			channel.equals(PAY_CHANNEL.BD_WEB) || 
                 			channel.equals(PAY_CHANNEL.BD_WAP) ) {
                 		if (ret.containsKey("url") && null != ret.get("url")) {
 	                        result.setUrl(ret.get("url").toString());
-	                        result.setType(RESULT_TYPE.OK);
 	                    }
                 	} else if (channel.equals(PAY_CHANNEL.YEE_NOBANKCARD)) {
                 		result.setSucessMsg(ValidationUtil.PAY_SUCCESS);
-                		result.setType(RESULT_TYPE.OK);
                 	}
-                } else {
-                	result.setErrMsg(ret.get("result_msg").toString());
-                	result.setErrDetail(ret.get("err_detail").toString());
-                	result.setType(RESULT_TYPE.RUNTIME_ERROR);
-                }
+                } 
             } else {
-            	result.setErrMsg("Not correct response!");
+            	result.setResultCode("0");
+            	result.setResultMsg("Not correct response!");
             	result.setErrDetail("Not correct response!");
-            	result.setType(RESULT_TYPE.RUNTIME_ERROR);
             }
         } catch (Exception e) {
-        	result.setErrMsg("Network error!");
+        	result.setResultCode("-1");
+        	result.setResultMsg("Network error!");
         	result.setErrDetail(e.getMessage());
-        	result.setType(RESULT_TYPE.RUNTIME_ERROR);
         }
         return result;
     }
@@ -133,7 +124,7 @@ public class BCPay {
     	BCPayResult result;
     	result = ValidationUtil.validateBCRefund(para);
     	
-    	if (result.getType().ordinal()!=0) {
+    	if (!result.getResultCode().equals("0")) {
     		return result;
     	}
     	
@@ -141,8 +132,6 @@ public class BCPay {
     	
     	buildRefundParam(para, param);
          
-     	result = new BCPayResult();
-     
      	Client client = BCAPIClient.client;
 
      	WebTarget target = client.target(BCUtilPrivate.getkApiRefund());
@@ -150,29 +139,28 @@ public class BCPay {
              Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
              if (response.getStatus() == 200) {
                  Map<String, Object> ret = response.readEntity(Map.class);
+                 result.setResultCode(ret.get("result_code").toString());
+                 result.setResultMsg(ret.get("result_msg").toString());
+                 result.setErrDetail(ret.get("err_detail").toString());
 
-                 boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                                 .toStr(ret.get("result_code")).equals("0"));
+                 boolean isSuccess = (result.getResultCode().equals("0"));
 
                  if (isSuccess) {
                 	 result.setObjectId(ret.get("id").toString());
              		if (ret.containsKey("url")) {
             			result.setUrl(ret.get("url").toString());
             		} 
-             		result.setType(RESULT_TYPE.OK);
         			result.setSucessMsg(ValidationUtil.REFUND_SUCCESS);
-                 } else {
-                	result.setErrMsg(ret.get("result_msg").toString());
-                 	result.setErrDetail(ret.get("err_detail").toString());
-                 	result.setType(RESULT_TYPE.RUNTIME_ERROR);
                  }
              } else {
-             	result.setErrMsg("Not correct response!");
-             	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+            	result.setResultCode("0");
+             	result.setResultMsg("Not correct response!");
+             	result.setErrDetail("Not correct response!");
              }
          } catch (Exception e) {
-         	result.setErrMsg("Network error!");
-         	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+        	result.setResultCode("-1");
+         	result.setResultMsg("Network error!");
+         	result.setErrDetail(e.getMessage());
          }
          return result;
     }
@@ -188,7 +176,7 @@ public class BCPay {
     	
     	result = ValidationUtil.validateQueryBill(para);
     	
-    	if (result.getType().ordinal() != 0) {
+    	if (!result.getResultCode().equals("0")) {
     		return result;
     	}
     	 
@@ -210,30 +198,28 @@ public class BCPay {
             Response response = target.request().get();
             if (response.getStatus() == 200) {
                 Map<String, Object> ret = response.readEntity(Map.class);
+                
+                result.setResultCode(ret.get("result_code").toString());
+                result.setResultMsg(ret.get("result_msg").toString());
+                result.setErrDetail(ret.get("err_detail").toString());
 
-                boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                                .toStr(ret.get("result_code")).equals("0"));
+                boolean isSuccess = (result.getResultCode().equals("0"));
 
                 if (isSuccess) {
-                	result.setType(RESULT_TYPE.OK);
                     if (ret.containsKey("bills")
                                     && !StrUtil.empty(ret.get("bills"))) {
                         result.setBcOrders(generateBCOrderList((List<Map<String, Object>>)ret.get("bills")));
                     }
-                } else {
-                	result.setErrMsg(ret.get("result_msg").toString());
-                	result.setErrDetail(ret.get("err_detail").toString());
-                	result.setType(RESULT_TYPE.RUNTIME_ERROR);
                 }
             } else {
-            	result.setErrMsg("Not correct response!");
+            	result.setResultCode("0");
+            	result.setResultMsg("Not correct response!");
             	result.setErrDetail("Not correct response!");
-            	result.setType(RESULT_TYPE.RUNTIME_ERROR);
             }
         } catch (Exception e) {
-        	result.setErrMsg("Network error!");
-        	result.setErrDetail(e.getMessage());
-        	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+        	result.setResultCode("-1");
+         	result.setResultMsg("Network error!");
+         	result.setErrDetail(e.getMessage());
         }
     	return result;
     }
@@ -270,29 +256,26 @@ public class BCPay {
             if (response.getStatus() == 200) {
                 Map<String, Object> ret = response.readEntity(Map.class);
 
-                boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                                .toStr(ret.get("result_code")).equals("0"));
+                result.setResultCode(ret.get("result_code").toString());
+                result.setResultMsg(ret.get("result_msg").toString());
+                result.setErrDetail(ret.get("err_detail").toString());
 
+                boolean isSuccess = (result.getResultCode().equals("0"));
                 if (isSuccess) {
-                	result.setType(RESULT_TYPE.OK);
                     if (ret.containsKey("pay")
                                     && ret.get("pay") != null) {
                         result.setOrder(generateBCOrder((Map<String, Object>)ret.get("pay")));
                     }
-                } else {
-                	result.setErrMsg(ret.get("result_msg").toString());
-                	result.setErrDetail(ret.get("err_detail").toString());
-                	result.setType(RESULT_TYPE.RUNTIME_ERROR);
                 }
             } else {
-            	result.setErrMsg("Not correct response!");
+            	result.setResultCode("0");
+            	result.setResultMsg("Not correct response!");
             	result.setErrDetail("Not correct response!");
-            	result.setType(RESULT_TYPE.RUNTIME_ERROR);
             }
         } catch (Exception e) {
-        	result.setErrMsg("Network error!");
-        	result.setErrDetail(e.getMessage());
-        	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+        	result.setResultCode("-1");
+         	result.setResultMsg("Network error!");
+         	result.setErrDetail(e.getMessage());
         }
     	
     	return result;
@@ -308,7 +291,7 @@ public class BCPay {
     	
     	result = ValidationUtil.validateQueryBill(para);
     	
-    	if (result.getType().ordinal() != 0) {
+    	if (!result.getResultCode().equals("0")) {
     		return result;
     	}
     	 
@@ -331,29 +314,27 @@ public class BCPay {
             if (response.getStatus() == 200) {
                 Map<String, Object> ret = response.readEntity(Map.class);
 
-                boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                                .toStr(ret.get("result_code")).equals("0"));
+                result.setResultCode(ret.get("result_code").toString());
+                result.setResultMsg(ret.get("result_msg").toString());
+                result.setErrDetail(ret.get("err_detail").toString());
+
+                boolean isSuccess = (result.getResultCode().equals("0"));
 
                 if (isSuccess) {
-                	result.setType(RESULT_TYPE.OK);
                     if (ret.containsKey("count")
                                     && !StrUtil.empty(ret.get("count"))) {
                     	result.setTotalCount((Integer)ret.get("count"));
                     }
-                } else {
-                	result.setErrMsg(ret.get("result_msg").toString());
-                	result.setErrDetail(ret.get("err_detail").toString());
-                	result.setType(RESULT_TYPE.RUNTIME_ERROR);
-                }
+                } 
             } else {
-            	result.setErrMsg("Not correct response!");
+            	result.setResultCode("0");
+            	result.setResultMsg("Not correct response!");
             	result.setErrDetail("Not correct response!");
-            	result.setType(RESULT_TYPE.RUNTIME_ERROR);
             }
         } catch (Exception e) {
-        	result.setErrMsg("Network error!");
-        	result.setErrDetail(e.getMessage());
-        	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+        	result.setResultCode("-1");
+         	result.setResultMsg("Network error!");
+         	result.setErrDetail(e.getMessage());
         }
     	return result;
     }
@@ -366,9 +347,9 @@ public class BCPay {
     	
     	BCQueryResult result;
     	result = ValidationUtil.validateQueryRefund(para);
-		if (result.getType().ordinal() != 0) {
-			return result;
-		}
+    	if (!result.getResultCode().equals("0")) {
+    		return result;
+    	}
 		
 		result = new BCQueryResult();
 		
@@ -395,29 +376,26 @@ public class BCPay {
              if (response.getStatus() == 200) {
                  Map<String, Object> ret = response.readEntity(Map.class);
 
-                 boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                                 .toStr(ret.get("result_code")).equals("0"));
+                 result.setResultCode(ret.get("result_code").toString());
+                 result.setResultMsg(ret.get("result_msg").toString());
+                 result.setErrDetail(ret.get("err_detail").toString());
 
+                 boolean isSuccess = (result.getResultCode().equals("0"));
                  if (isSuccess) {
-                 	result.setType(RESULT_TYPE.OK);
                      if (ret.containsKey("refunds")
                                      && ret.get("refunds") != null) {
                          result.setBcRefundList(generateBCRefundList((List<Map<String, Object>>)ret.get("refunds")));
                      }
-                 } else {
-                 	result.setErrMsg(ret.get("result_msg").toString());
-                 	result.setErrDetail(ret.get("err_detail").toString());
-                 	result.setType(RESULT_TYPE.RUNTIME_ERROR);
                  }
              } else {
-             	result.setErrMsg("Not correct response!");
+            	result.setResultCode("0");
+             	result.setResultMsg("Not correct response!");
              	result.setErrDetail("Not correct response!");
-             	result.setType(RESULT_TYPE.RUNTIME_ERROR);
              }
          } catch (Exception e) {
-         	result.setErrMsg("Network error!");
-         	result.setErrDetail(e.getMessage());
-         	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+        	result.setResultCode("-1");
+          	result.setResultMsg("Network error!");
+          	result.setErrDetail(e.getMessage());
          }
      	
      	return result;
@@ -455,29 +433,27 @@ public class BCPay {
             if (response.getStatus() == 200) {
                 Map<String, Object> ret = response.readEntity(Map.class);
 
-                boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                                .toStr(ret.get("result_code")).equals("0"));
+                result.setResultCode(ret.get("result_code").toString());
+                result.setResultMsg(ret.get("result_msg").toString());
+                result.setErrDetail(ret.get("err_detail").toString());
+
+                boolean isSuccess = (result.getResultCode().equals("0"));
 
                 if (isSuccess) {
-                	result.setType(RESULT_TYPE.OK);
                     if (ret.containsKey("refund")
                                     && ret.get("refund") != null) {
                         result.setRefund(generateBCRefund((Map<String, Object>)ret.get("refund")));
                     }
-                } else {
-                	result.setErrMsg(ret.get("result_msg").toString());
-                	result.setErrDetail(ret.get("err_detail").toString());
-                	result.setType(RESULT_TYPE.RUNTIME_ERROR);
                 }
             } else {
-            	result.setErrMsg("Not correct response!");
-            	result.setErrDetail("Not correct response!");
-            	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+            	result.setResultCode("0");
+             	result.setResultMsg("Not correct response!");
+             	result.setErrDetail("Not correct response!");
             }
         } catch (Exception e) {
-        	result.setErrMsg("Network error!");
-        	result.setErrDetail(e.getMessage());
-        	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+        	result.setResultCode("-1");
+          	result.setResultMsg("Network error!");
+          	result.setErrDetail(e.getMessage());
         }
     	
     	return result;
@@ -493,7 +469,7 @@ public class BCPay {
     	
     	result = ValidationUtil.validateQueryRefund(para);
     	
-    	if (result.getType().ordinal() != 0) {
+    	if (!result.getResultCode().equals("0")) {
     		return result;
     	}
     	 
@@ -519,29 +495,27 @@ public class BCPay {
             if (response.getStatus() == 200) {
                 Map<String, Object> ret = response.readEntity(Map.class);
 
-                boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                                .toStr(ret.get("result_code")).equals("0"));
+                result.setResultCode(ret.get("result_code").toString());
+                result.setResultMsg(ret.get("result_msg").toString());
+                result.setErrDetail(ret.get("err_detail").toString());
+
+                boolean isSuccess = (result.getResultCode().equals("0"));
 
                 if (isSuccess) {
-                	result.setType(RESULT_TYPE.OK);
                     if (ret.containsKey("count")
                                     && !StrUtil.empty(ret.get("count"))) {
                     	result.setTotalCount((Integer)ret.get("count"));
                     }
-                } else {
-                	result.setErrMsg(ret.get("result_msg").toString());
-                	result.setErrDetail(ret.get("err_detail").toString());
-                	result.setType(RESULT_TYPE.RUNTIME_ERROR);
-                }
+                } 
             } else {
-            	result.setErrMsg("Not correct response!");
-            	result.setErrDetail("Not correct response!");
-            	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+            	result.setResultCode("0");
+             	result.setResultMsg("Not correct response!");
+             	result.setErrDetail("Not correct response!");
             }
         } catch (Exception e) {
-        	result.setErrMsg("Network error!");
-        	result.setErrDetail(e.getMessage());
-        	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+        	result.setResultCode("-1");
+          	result.setResultMsg("Network error!");
+          	result.setErrDetail(e.getMessage());
         }
     	return result;
     }
@@ -562,7 +536,7 @@ public class BCPay {
     	BCQueryStatusResult result;
     	result = ValidationUtil.validateQueryRefundStatus(refundNo);
     	
-		if (result.getType().ordinal() != 0) {
+		if (!result.getResultCode().equals("0")) {
 			return result;
 		}
     	
@@ -573,7 +547,6 @@ public class BCPay {
         param.put("channel", channel.toString());
         param.put("refund_no", refundNo);
         
-        result = new BCQueryStatusResult();
         StringBuilder sb = new StringBuilder();   
         sb.append(BCUtilPrivate.getkApiRefundUpdate());
         
@@ -588,26 +561,24 @@ public class BCPay {
             if (response.getStatus() == 200) {
                 Map<String, Object> ret = response.readEntity(Map.class);
 
-                boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                                .toStr(ret.get("result_code")).equals("0"));
+                result.setResultCode(ret.get("result_code").toString());
+                result.setResultMsg(ret.get("result_msg").toString());
+                result.setErrDetail(ret.get("err_detail").toString());
+
+                boolean isSuccess = (result.getResultCode().equals("0"));
 
                 if (isSuccess) {
                 	result.setRefundStatus(ret.get("refund_status").toString());
-                    result.setType(RESULT_TYPE.OK);
-                } else {
-                	result.setErrMsg(ret.get("result_msg").toString());
-                	result.setErrDetail(ret.get("err_detail").toString());
-                	result.setType(RESULT_TYPE.RUNTIME_ERROR);
-                }
+                } 
             } else {
-            	result.setErrMsg("Not correct response!");
-            	result.setErrDetail("Not correct response!");
-            	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+            	result.setResultCode("0");
+             	result.setResultMsg("Not correct response!");
+             	result.setErrDetail("Not correct response!");
             }
         } catch (Exception e) {
-        	result.setErrMsg("Network error!");
-        	result.setErrDetail(e.getMessage());
-        	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+        	result.setResultCode("-1");
+          	result.setResultMsg("Network error!");
+          	result.setErrDetail(e.getMessage());
         }
         return result;
     	
@@ -628,7 +599,7 @@ public class BCPay {
     	BCPayResult result;
     	result = ValidationUtil.validateBCTransfer(channel, batchNo, accountName, transferData);
     	
-    	if (result.getType().ordinal()!=0) {
+    	if (!result.getResultCode().equals("0")) {
     		return result;
     	}
     	
@@ -651,8 +622,6 @@ public class BCPay {
     	}
     	param.put("transfer_data", transferList);
          
-     	result = new BCPayResult();
-     
      	Client client = BCAPIClient.client;
 
      	WebTarget target = client.target(BCUtilPrivate.getkApiTransfer());
@@ -661,25 +630,23 @@ public class BCPay {
              if (response.getStatus() == 200) {
                  Map<String, Object> ret = response.readEntity(Map.class);
 
-                 boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                                 .toStr(ret.get("result_code")).equals("0"));
+                 result.setResultCode(ret.get("result_code").toString());
+                 result.setResultMsg(ret.get("result_msg").toString());
+                 result.setErrDetail(ret.get("err_detail").toString());
 
+                 boolean isSuccess = (result.getResultCode().equals("0"));
                  if (isSuccess) {
         			result.setUrl(ret.get("url").toString());
-        			result.setType(RESULT_TYPE.OK);
-          
-                 } else {
-                	result.setErrMsg(ret.get("result_msg").toString());
-                 	result.setErrDetail(ret.get("err_detail").toString());
-                 	result.setType(RESULT_TYPE.RUNTIME_ERROR);
                  }
              } else {
-             	result.setErrMsg("Not correct response!");
-             	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+            	result.setResultCode("0");
+              	result.setResultMsg("Not correct response!");
+              	result.setErrDetail("Not correct response!");
              }
          } catch (Exception e) {
-         	result.setErrMsg("Network error!");
-         	result.setType(RESULT_TYPE.RUNTIME_ERROR);
+        	result.setResultCode("-1");
+           	result.setResultMsg("Network error!");
+           	result.setErrDetail(e.getMessage());
          }
          return result;
     }
@@ -798,7 +765,10 @@ public class BCPay {
         	param.put("start_time", para.getStartTime().getTime());
         }
         if (para.getEndTime() != null) {
-       	 param.put("end_time", para.getEndTime().getTime());
+       	 	param.put("end_time", para.getEndTime().getTime());
+        }
+        if (para.getNeedDetail() != null && para.getNeedDetail()) {
+        	param.put("need_detail", para.getNeedDetail());
         }
 	}
     

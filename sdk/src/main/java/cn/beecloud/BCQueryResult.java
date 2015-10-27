@@ -16,11 +16,11 @@ import cn.beecloud.bean.BCRefundBean;
  */
 public class BCQueryResult {
 	
-	private String errMsg;
+	private String resultCode;
+	
+	private String resultMsg;
 	
 	private String errDetail;
-	
-	private RESULT_TYPE type;
 	
 	private BCOrderBean order;
 	
@@ -35,31 +35,33 @@ public class BCQueryResult {
     private List<BCRefundBean> bcRefundList;
     
 	public BCQueryResult(RESULT_TYPE type) {
-		this.type = type;
+		this.resultCode = StrUtil.toStr(type.ordinal());
+		this.resultMsg = type.toString();
 	}
 
-	public BCQueryResult(String errMsg, RESULT_TYPE type) {
-		this.errMsg = errMsg;
-		this.type = type;
+	public BCQueryResult(String errDetail, RESULT_TYPE type) {
+		this.errDetail = errDetail;
+		this.resultCode = StrUtil.toStr(type.ordinal());
+		this.resultMsg = type.toString();
 	}
 
 	public BCQueryResult() {
 	}
 
-	public String getErrMsg() {
-		return errMsg;
+	public String getResultCode() {
+		return resultCode;
 	}
 
-	public void setErrMsg(String errMsg) {
-		this.errMsg = errMsg;
+	public void setResultCode(String resultCode) {
+		this.resultCode = resultCode;
 	}
 
-	public RESULT_TYPE getType() {
-		return type;
+	public String getResultMsg() {
+		return resultMsg;
 	}
 
-	public void setType(RESULT_TYPE type) {
-		this.type = type;
+	public void setResultMsg(String resultMsg) {
+		this.resultMsg = resultMsg;
 	}
 
 	public List<BCOrderBean> getBcOrders() {

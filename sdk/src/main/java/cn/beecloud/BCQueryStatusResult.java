@@ -11,32 +11,40 @@ import cn.beecloud.BCEumeration.RESULT_TYPE;
  */
 public class BCQueryStatusResult {
 	
-	private String errMsg;
+	private String resultCode;
 	
-	private String errDetail;
+	private String resultMsg;
 	
-	private RESULT_TYPE type;
+	private String errDetail = "";
 	
 	private String refundStatus;
-
+	
 	public BCQueryStatusResult(RESULT_TYPE type) {
-		this.type = type;
+		this.resultCode = StrUtil.toStr(type.ordinal());
+		this.resultMsg = type.toString();
 	}
 
-	public BCQueryStatusResult(String errMsg, RESULT_TYPE type) {
-		this.errMsg = errMsg;
-		this.type = type;
+	public BCQueryStatusResult(String errDetail, RESULT_TYPE type) {
+		this.errDetail = errDetail;
+		this.resultCode = StrUtil.toStr(type.ordinal());
+		this.resultMsg = type.toString();
+		
 	}
 
-	public BCQueryStatusResult() {
+	public String getResultCode() {
+		return resultCode;
 	}
 
-	public String getErrMsg() {
-		return errMsg;
+	public void setResultCode(String resultCode) {
+		this.resultCode = resultCode;
 	}
 
-	public void setErrMsg(String errMsg) {
-		this.errMsg = errMsg;
+	public String getResultMsg() {
+		return resultMsg;
+	}
+
+	public void setResultMsg(String resultMsg) {
+		this.resultMsg = resultMsg;
 	}
 
 	public String getErrDetail() {
@@ -45,14 +53,6 @@ public class BCQueryStatusResult {
 
 	public void setErrDetail(String errDetail) {
 		this.errDetail = errDetail;
-	}
-
-	public RESULT_TYPE getType() {
-		return type;
-	}
-
-	public void setType(RESULT_TYPE type) {
-		this.type = type;
 	}
 
 	public String getRefundStatus() {

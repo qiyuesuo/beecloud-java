@@ -12,6 +12,8 @@ class BCUtilPrivate {
 
     static final String kApiVersion = "1";
     
+    static final String kApiVersion2 = "2";
+    
     static String getAppSignature(String timeStamp) {
         String str = BCCache.getAppID() + timeStamp + BCCache.getAppSecret() ;
         return getMessageDigest(str);
@@ -55,19 +57,19 @@ class BCUtilPrivate {
 	}
 
 	static String getkApiQueryBill() {
-		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/bills?para=";
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/bills?para=";
 	}
 	
 	static String getkApiQueryBillById() {
-		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/bill";
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/bill";
 	}
 
 	static String getkApiQueryRefund() {
-		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/refunds?para=";
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/refunds?para=";
 	}
 	
 	static String getkApiQueryRefundById() {
-		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/refund";
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/refund";
 	}
 	
 	static String getkApiRefundUpdate() {
@@ -79,11 +81,11 @@ class BCUtilPrivate {
 	}
 	
 	static String getkApiQueryBillCount() {
-		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/bills/count?para=";
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/bills/count?para=";
 	}
 	
 	static String getkApiQueryRefundCount() {
-		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/refunds/count?para=";
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/refunds/count?para=";
 	}
 	
 	static String transferDateFromLongToString(long millisecond) {

@@ -16,11 +16,11 @@ public class BCPayResult {
 	
 	private String sucessMsg;
 	
-	private String errMsg;
+	private String resultCode;
 	
-	private String errDetail;
+	private String resultMsg;
 	
-	private RESULT_TYPE type;
+	private String errDetail = "";
 	
 	private String codeUrl;
 	
@@ -34,27 +34,24 @@ public class BCPayResult {
 	
 	private Map<String, Object> wxJSAPIMap;
 
-	public RESULT_TYPE getType() {
-		return type;
-	}
-
-	public void setType(RESULT_TYPE type) {
-		this.type = type;
-	}
-	
-	public BCPayResult()
-	{
-		
-	}
-	
 	public BCPayResult(RESULT_TYPE type)
 	{
-		this.type = type;
+		this.resultCode = StrUtil.toStr(type.ordinal());
+		this.resultMsg = type.toString();
 	}
 	
-	public BCPayResult(String errMsg, RESULT_TYPE type) {
-		this.errMsg = errMsg;
-		this.type = type;
+	public BCPayResult(String errDetail, RESULT_TYPE type) {
+		this.errDetail = errDetail;
+		this.resultCode = StrUtil.toStr(type.ordinal());
+		this.resultMsg = type.toString();
+	}
+	
+	public String getResultCode() {
+		return resultCode;
+	}
+
+	public void setResultCode(String resultCode) {
+		this.resultCode = resultCode;
 	}
 
 	public String getCodeUrl() {
@@ -81,12 +78,12 @@ public class BCPayResult {
 		this.url = url;
 	}
 
-	public String getErrMsg() {
-		return errMsg;
+	public String getResultMsg() {
+		return resultMsg;
 	}
 
-	public void setErrMsg(String errMsg) {
-		this.errMsg = errMsg;
+	public void setResultMsg(String resultMsg) {
+		this.resultMsg = resultMsg;
 	}
 
 	public String getSucessMsg() {
