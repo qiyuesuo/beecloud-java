@@ -20,11 +20,12 @@ import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
-import junit.framework.Assert;
-
+import org.easymock.EasyMock;
+import org.easymock.IMocksControl;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -40,7 +41,8 @@ public class BCPayTest {
 	private String billNo;
 	private String subject;
 	private String refundNo;
-	private Map<String, Object> optional = new HashMap<String, Object>();
+	private Map<String, Object> payOptional = new HashMap<String, Object>();
+	private Map<String, Object> refundOptional = new HashMap<String, Object>();
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -79,18 +81,15 @@ public class BCPayTest {
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "ALI_WEB unit test";
 		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.ALI_WEB, 1, billNo, subject);
-		optional.put("aliWebPay", "aliWebPay");
+		payOptional.put("aliWebPay", "aliWebPay");
 		param.setReturnUrl(TestConstant.aliReturnUrl);
-		param.setOptional(optional);
+		param.setOptional(payOptional);
 		param.setBillTimeout(TestConstant.billTimeOut);
 		
 		testPay(param, PAY_CHANNEL.ALI_WEB);
 		
-		//MockNotify.pay(client, billNo, PAY_CHANNEL.ALI_WEB.toString());
-		
 		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
-		optional.clear();
-		optional.put("aliWebRefund", "aliWebRefund");
+		refundOptional.put("aliWebRefund", "aliWebRefund");
 		refundParam.setChannel(PAY_CHANNEL.ALI);
 		
 		testRefund(refundParam, PAY_CHANNEL.ALI);
@@ -125,8 +124,6 @@ public class BCPayTest {
 		param.setBillTimeout(TestConstant.billTimeOut);
 		
 		testPay(param, PAY_CHANNEL.WX_NATIVE);
-		
-		MockNotify.pay(client, billNo, PAY_CHANNEL.WX_NATIVE.toString());
 		
 		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
 		optional.clear();
@@ -275,11 +272,9 @@ public class BCPayTest {
 	@SuppressWarnings("deprecation")
 	private void testRefund(BCRefundParameter refundParam, PAY_CHANNEL ali) {
 		System.out.println("refundNo:" + refundNo);
-		BCPayResult result = BCPay.startBCRefund(refundParam);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
-		
+
 		refundParam.setBillNo(null);
-		result = BCPay.startBCRefund(refundParam);
+		BCPayResult result = BCPay.startBCRefund(refundParam);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		refundParam.setBillNo(billNo);
 		
@@ -316,6 +311,9 @@ public class BCPayTest {
 		result = BCPay.startBCRefund(refundParam);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		refundParam.setRefundNo(refundNo);
+		
+		result = ValidationUtil.validateBCRefund(refundParam);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -345,5 +343,11 @@ public class BCPayTest {
 		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders().size()<=10);
 		param.setStartTime(null);
 	}
+	
+	public static BCRefundParameter refundParamEqualsReport(BCRefundParameter param) {
+	  EasyMock.reportMatcher(new RefundParamEquals());
+	  return param;
+	}
+	
 	
 }
