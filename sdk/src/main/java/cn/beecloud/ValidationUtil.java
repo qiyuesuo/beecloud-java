@@ -64,6 +64,12 @@ public class ValidationUtil
 	private final static String TITLE_EMPTY =
 			"title 必填！";
 	
+	private final static String TOTAL_FEE_EMPTY =
+			"totalFee 必填！";
+	
+	private final static String REFUND_FEE_EMPTY =
+			"refundFee 必填！";
+	
 	private final static String QR_PAY_MODE_EMPTY =
 			"qrPayMode 必填！";
 	
@@ -236,7 +242,15 @@ public class ValidationUtil
 		if (para == null) {
 			return new BCPayResult(PAY_PARAM_EMPTY, RESULT_TYPE.PARAM_INVALID);
 		}
-		if (!para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
+		if (para.getChannel() == null) {
+			return new BCPayResult(CHANNEL_EMPTY, RESULT_TYPE.PARAM_INVALID);
+		}  else if (StrUtil.empty(para.getBillNo())) {
+			return new BCPayResult(BILL_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
+		}  else if (StrUtil.empty(para.getTitle())) {
+			return new BCPayResult(TITLE_EMPTY, RESULT_TYPE.PARAM_INVALID);
+		}  else if (StrUtil.empty(para.getTotalFee())) {
+			return new BCPayResult(TOTAL_FEE_EMPTY, RESULT_TYPE.PARAM_INVALID);
+		}  else if (para.getBillNo() != null && !para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
 			return new BCPayResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
 		}  else if (StrUtil.empty(para.getReturnUrl()) && 
 				(para.getChannel().equals(PAY_CHANNEL.ALI_WEB) || 
@@ -268,6 +282,12 @@ public class ValidationUtil
 	public static BCPayResult validateBCRefund(BCRefundParameter para) {
 		if (para == null) {
 			return new BCPayResult(REFUND_PARAM_EMPTY, RESULT_TYPE.PARAM_INVALID);
+		} else if (StrUtil.empty(para.getBillNo())) {
+			return new BCPayResult(BILL_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
+		} else if (StrUtil.empty(para.getRefundFee())) {
+			return new BCPayResult(REFUND_FEE_EMPTY, RESULT_TYPE.PARAM_INVALID);
+		} else if (StrUtil.empty(para.getRefundNo())) {
+			return new BCPayResult(REFUND_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
 		} else if (para.getChannel() != null && !para.getChannel().equals(PAY_CHANNEL.WX) && !para.getChannel().equals(PAY_CHANNEL.ALI) && !para.getChannel().equals(PAY_CHANNEL.UN) 
 				 && !para.getChannel().equals(PAY_CHANNEL.YEE) && !para.getChannel().equals(PAY_CHANNEL.JD) && !para.getChannel().equals(PAY_CHANNEL.KUAIQIAN) && !para.getChannel().equals(PAY_CHANNEL.BD)) {
 			 return new BCPayResult(CHANNEL_INVALID_FOR_REFUND, RESULT_TYPE.PARAM_INVALID);

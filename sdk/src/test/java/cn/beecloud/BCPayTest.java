@@ -4,11 +4,27 @@ package cn.beecloud;
 
 import static junit.framework.Assert.assertEquals;
 
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+
+import junit.framework.Assert;
+
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,59 +36,105 @@ import cn.beecloud.bean.*;
 
 public class BCPayTest {
 	
+	protected Client client;
 	private String billNo;
 	private String subject;
 	private String refundNo;
+	private Map<String, Object> optional = new HashMap<String, Object>();
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		
 	}  
 
 	@Before
 	public void setUp() throws Exception {
 		BeeCloud.registerApp(TestConstant.KTestAppID, TestConstant.kTestAppSecret);
+		TrustManager tm = new X509TrustManager() {
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            }
+
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            }
+
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+        };
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, new TrustManager[]{tm}, null);
+        ClientConfig configuration = new ClientConfig();
+        configuration = configuration.property(ClientProperties.CONNECT_TIMEOUT, TestConstant.READ_TIMEOUT);
+        configuration = configuration.property(ClientProperties.READ_TIMEOUT, TestConstant.READ_TIMEOUT);
+        client = ClientBuilder.newBuilder().sslContext(sslContext).withConfig(configuration).build();
+        client.register(JacksonFeature.class);
+        TestConstant.TEST_SERVER_URL_V1 = TestUtil.randomServerUrl();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testAliWebPay() {  
 		billNo = BCUtil.generateRandomUUIDPure();
+		System.out.println("billNO:" + billNo);
+		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "ALI_WEB unit test";
 		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.ALI_WEB, 1, billNo, subject);
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("aliWebUnitTest", "aliWebUnitTest");
+		optional.put("aliWebPay", "aliWebPay");
 		param.setReturnUrl(TestConstant.aliReturnUrl);
-		param.setOptional(map);
+		param.setOptional(optional);
 		param.setBillTimeout(TestConstant.billTimeOut);
 		
 		testPay(param, PAY_CHANNEL.ALI_WEB);
 		
-		BCRefundParameter param1 = new BCRefundParameter(billNo,  );
+		//MockNotify.pay(client, billNo, PAY_CHANNEL.ALI_WEB.toString());
 		
+		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
+		optional.clear();
+		optional.put("aliWebRefund", "aliWebRefund");
+		refundParam.setChannel(PAY_CHANNEL.ALI);
 		
+		testRefund(refundParam, PAY_CHANNEL.ALI);
 		
-	}
-
-	
-	
-	@Test
-	public void testRefund() {
-		
-		BCRefundParameter param = new BCRefundParameter("1516e2ce5b8f4d599dcb13fd2d9b0eaa", "201509240000", 1);
-		param.setChannel(PAY_CHANNEL.ALI);
-		
-		BCPayResult result = BCPay.startBCRefund(param);
-		System.out.println("test1");
-	
+		testQueryBill();
 	}
 	
 	@Test
-	public void testQueryBill() {
-		BCQueryParameter param = new BCQueryParameter();
-		param.setChannel(PAY_CHANNEL.PAYPAL);
+	public void testAliQrcodePay() {  
+		billNo = BCUtil.generateRandomUUIDPure();
+		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
+		subject = "ALI_QRCODE unit test";
+		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.ALI_QRCODE, 1, billNo, subject);
+		optional.put("aliQrCodePay", "aliQrCodePay");
+		param.setReturnUrl(TestConstant.aliReturnUrl);
+		param.setOptional(optional);
+		param.setBillTimeout(TestConstant.billTimeOut);
 		
-		BCQueryResult bcQueryResult = BCPay.startQueryBill(param);
-		System.out.println("test1");
+		testPay(param, PAY_CHANNEL.ALI_QRCODE);
+	}
+	
+	@Test
+	public void testWXNative() {
+		
+		billNo = BCUtil.generateRandomUUIDPure();
+		System.out.println("billNO:" + billNo);
+		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
+		subject = "WX_NATIVE unit test";
+		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.WX_NATIVE, 1, billNo, subject);
+		optional.put("wxNativePay", "wxNativePay");
+		param.setOptional(optional);
+		param.setBillTimeout(TestConstant.billTimeOut);
+		
+		testPay(param, PAY_CHANNEL.WX_NATIVE);
+		
+		MockNotify.pay(client, billNo, PAY_CHANNEL.WX_NATIVE.toString());
+		
+		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
+		optional.clear();
+		optional.put("wxNativeRefund", "wxNativeRefund");
+		refundParam.setChannel(PAY_CHANNEL.WX);
+		
+		testRefund(refundParam, PAY_CHANNEL.WX);
+	
 	}
 	
 	@Test
@@ -121,32 +183,45 @@ public class BCPayTest {
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
 		
 		param.setChannel(null);
+		result = BCPay.startBCPay(param);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		param.setChannel(channel);
 		
 		
 		param.setTotalFee(null);
+		result = BCPay.startBCPay(param);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		param.setTotalFee(1);
 		
 		param.setBillNo(null);
+		result = BCPay.startBCPay(param);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		param.setBillNo(billNo);
 		
 		param.setTitle(null);
+		result = BCPay.startBCPay(param);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		param.setTitle(subject);
 		
+		param.setBillNo(TestConstant.BILL_NO_WITH_SPECIAL_CHARACTER);
+		result = BCPay.startBCPay(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		param.setBillNo(billNo);
+		
 		param.setBillNo(billNo.substring(0, 7));
+		System.out.println("xiaoyu 8:" + param.getBillNo());
+		result = BCPay.startBCPay(param);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		param.setBillNo(billNo);
 		
 		param.setBillNo(billNo + "A");
+		result = BCPay.startBCPay(param);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		param.setBillNo(billNo);
 		
 		if(param.getBillTimeout() != null) {
 			param.setBillTimeout(0);
+			result = BCPay.startBCPay(param);
 			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 			param.setBillTimeout(TestConstant.billTimeOut);
 		}
@@ -155,6 +230,7 @@ public class BCPayTest {
 				|| channel.equals(PAY_CHANNEL.JD_WAP) || channel.equals(PAY_CHANNEL.JD_WEB)) {
 			String returnUrl = param.getReturnUrl();
 			param.setReturnUrl(null);
+			result = BCPay.startBCPay(param);
 			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 			param.setReturnUrl(returnUrl);
 		}
@@ -162,6 +238,7 @@ public class BCPayTest {
 		if (channel.equals(PAY_CHANNEL.WX_JSAPI)) {
 			String openId = param.getOpenId();
 			param.setOpenId(null);
+			result = BCPay.startBCPay(param);
 			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 			param.setOpenId(openId);
 		}
@@ -169,6 +246,7 @@ public class BCPayTest {
 		if (channel.equals(PAY_CHANNEL.ALI_QRCODE)) {
 			QR_PAY_MODE qrPayMode = param.getQrPayMode();
 			param.setQrPayMode(null);
+			result = BCPay.startBCPay(param);
 			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 			param.setQrPayMode(qrPayMode);
 		}
@@ -176,19 +254,96 @@ public class BCPayTest {
 		if (channel.equals(PAY_CHANNEL.YEE_NOBANKCARD)) {
 			String cardNo = param.getCardNo();
 			param.setCardNo(null);
+			result = BCPay.startBCPay(param);
 			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 			param.setCardNo(cardNo);
 			
 			String cardpwd = param.getCardPwd();
 			param.setCardPwd(null);
+			result = BCPay.startBCPay(param);
 			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 			param.setCardPwd(cardpwd);
 			
 			String frqid = param.getFrqid();
 			param.setFrqid(null);
+			result = BCPay.startBCPay(param);
 			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 			param.setFrqid(frqid);
 		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void testRefund(BCRefundParameter refundParam, PAY_CHANNEL ali) {
+		System.out.println("refundNo:" + refundNo);
+		BCPayResult result = BCPay.startBCRefund(refundParam);
+//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
+		
+		refundParam.setBillNo(null);
+		result = BCPay.startBCRefund(refundParam);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		refundParam.setBillNo(billNo);
+		
+		refundParam.setRefundFee(null);
+		result = BCPay.startBCRefund(refundParam);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		refundParam.setRefundFee(1);
+		
+		refundParam.setRefundNo(null);
+		result = BCPay.startBCRefund(refundParam);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		refundParam.setRefundNo(refundNo);
+		
+		refundParam.setBillNo(billNo.substring(0, 7));
+		result = BCPay.startBCRefund(refundParam);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		refundParam.setBillNo(billNo);
+		
+		refundParam.setBillNo(billNo + "A");
+		result = BCPay.startBCRefund(refundParam);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		refundParam.setBillNo(billNo);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_WEEK, -1);
+		String date = new SimpleDateFormat("yyyyMMdd").format(cal.getTime());
+		refundParam.setRefundNo(date + BCUtil.generateNumberWith3to24digitals());
+		result = BCPay.startBCRefund(refundParam);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		refundParam.setRefundNo(refundNo);
+		
+		date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+		refundParam.setRefundNo(date + "000");
+		result = BCPay.startBCRefund(refundParam);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		refundParam.setRefundNo(refundNo);
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void testQueryBill() {
+		BCQueryParameter param = new BCQueryParameter();
+		BCQueryResult result = BCPay.startQueryBill(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders().size()<=10);
+		
+		param.setChannel(PAY_CHANNEL.ALI);
+		result = BCPay.startQueryBill(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders().size()<=10);
+		param.setChannel(null);
+		
+		param.setBillNo(billNo);
+		result = BCPay.startQueryBill(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders().size()<=10);
+		param.setBillNo(null);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, +1);
+		param.setStartTime(cal.getTime());
+		result = BCPay.startQueryBill(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders().size()<=10);
+		param.setStartTime(null);
 	}
 	
 }
