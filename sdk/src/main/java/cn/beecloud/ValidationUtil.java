@@ -70,6 +70,9 @@ public class ValidationUtil
 	private final static String REFUND_FEE_EMPTY =
 			"refundFee 必填！";
 	
+	private final static String REFUND_FEE_INVALID =
+			"refundFee 必须大于零！";
+	
 	private final static String QR_PAY_MODE_EMPTY =
 			"qrPayMode 必填！";
 	
@@ -286,6 +289,8 @@ public class ValidationUtil
 			return new BCPayResult(BILL_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
 		} else if (StrUtil.empty(para.getRefundFee())) {
 			return new BCPayResult(REFUND_FEE_EMPTY, RESULT_TYPE.PARAM_INVALID);
+		} else if (para.getRefundFee() <=0) {
+			return new BCPayResult(REFUND_FEE_INVALID, RESULT_TYPE.PARAM_INVALID);
 		} else if (StrUtil.empty(para.getRefundNo())) {
 			return new BCPayResult(REFUND_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
 		} else if (para.getChannel() != null && !para.getChannel().equals(PAY_CHANNEL.WX) && !para.getChannel().equals(PAY_CHANNEL.ALI) && !para.getChannel().equals(PAY_CHANNEL.UN) 

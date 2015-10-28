@@ -21,11 +21,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.easymock.EasyMock;
-import org.easymock.IMocksControl;
-
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
-import cn.beecloud.BCEumeration.RESULT_TYPE;
 import cn.beecloud.bean.BCOrderBean;
 import cn.beecloud.bean.BCPayParameter;
 import cn.beecloud.bean.BCQueryParameter;
@@ -34,7 +30,6 @@ import cn.beecloud.bean.BCRefundParameter;
 import cn.beecloud.bean.BCRefundQueryParameter;
 import cn.beecloud.bean.TransferData;
 import net.sf.json.JSONObject;
-import javax.ws.rs.client.Invocation.Builder;
 
 /**
  * This is the core class of BC payment for external invocation consist of start payment, start refund, start query bill

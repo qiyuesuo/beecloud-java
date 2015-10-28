@@ -9,22 +9,15 @@ public class TestConstant {
     public static String kTestAppSecret = "c37d661d-7e61-49ea-96a5-68c34e83db3b";
     public static String kTestTable = "java_sdk_test";
     public static String outRefundNo = "2015062611111";
-    public static String TEST_SERVER_URL_V1 = "http://apihz.beecloud.cn:8080/1/";
-    public static String TEST_APP_ALI_ID = "2088711322600312";
-    public static String TEST_APP_ALI_KEY = "xvy48u7n0zvwzm1zcthk6tbjcps5sghb";
-    public static String ALI_PAY_NOTIFY = "pay/callback/Ali";
-    public static String[] TEST_SERVER_URL_ARRAY = {"http://123.57.71.81:8080/1/", "http://115.28.40.236:8080/1/",
-        "http://123.57.71.81:8080/1/","http://121.41.120.98:8080/1/"};
-    public static int READ_TIMEOUT = 10000;
     public static String BILL_NO_WITH_SPECIAL_CHARACTER = "billno123!@#";
-    public static String TEST_APP_WXMP_ID = "wxf1aa465362b4c8f1";
-    public static String TEST_MECH_ID = "1240421502";
-    
-    
 	public static String subject = "water";
 	public static String totalFee = "1";
 	public static String body = "test";
 	public static String ASSERT_MESSAGE = "不一致";
+	public static String TITLE_WITH_CHARACTER＿GREATER_THAN_32 = "超过16个中文字符的标题是不被接受的";
+	public static String REFUN_NO_SERIAL_NUMBER_GREATER_THAN_24 = "1234567890123456789012345";
+	public static String REFUN_NO_SERIAL_NUMBER_LESSER_THAN_3 = "01";
+	
 	
 	public static String yeeWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/yeeWebReturnUrl.jsp";
 	public static String yeeWapReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/yeeWapReturnUrl.jsp";

@@ -20,8 +20,6 @@ import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
-import org.easymock.EasyMock;
-import org.easymock.IMocksControl;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -52,26 +50,6 @@ public class BCPayTest {
 	@Before
 	public void setUp() throws Exception {
 		BeeCloud.registerApp(TestConstant.KTestAppID, TestConstant.kTestAppSecret);
-		TrustManager tm = new X509TrustManager() {
-            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-            }
-
-            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-            }
-
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-        };
-
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null, new TrustManager[]{tm}, null);
-        ClientConfig configuration = new ClientConfig();
-        configuration = configuration.property(ClientProperties.CONNECT_TIMEOUT, TestConstant.READ_TIMEOUT);
-        configuration = configuration.property(ClientProperties.READ_TIMEOUT, TestConstant.READ_TIMEOUT);
-        client = ClientBuilder.newBuilder().sslContext(sslContext).withConfig(configuration).build();
-        client.register(JacksonFeature.class);
-        TestConstant.TEST_SERVER_URL_V1 = TestUtil.randomServerUrl();
 	}
 
 	@Test
@@ -103,10 +81,11 @@ public class BCPayTest {
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "ALI_QRCODE unit test";
 		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.ALI_QRCODE, 1, billNo, subject);
-		optional.put("aliQrCodePay", "aliQrCodePay");
+		payOptional.put("aliQrCodePay", "aliQrCodePay");
 		param.setReturnUrl(TestConstant.aliReturnUrl);
-		param.setOptional(optional);
+		param.setOptional(payOptional);
 		param.setBillTimeout(TestConstant.billTimeOut);
+		param.setQrPayMode(QR_PAY_MODE.MODE_BRIEF_FRONT);
 		
 		testPay(param, PAY_CHANNEL.ALI_QRCODE);
 	}
@@ -119,15 +98,15 @@ public class BCPayTest {
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "WX_NATIVE unit test";
 		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.WX_NATIVE, 1, billNo, subject);
-		optional.put("wxNativePay", "wxNativePay");
-		param.setOptional(optional);
+		payOptional.put("wxNativePay", "wxNativePay");
+		param.setOptional(payOptional);
 		param.setBillTimeout(TestConstant.billTimeOut);
 		
 		testPay(param, PAY_CHANNEL.WX_NATIVE);
 		
 		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
-		optional.clear();
-		optional.put("wxNativeRefund", "wxNativeRefund");
+		refundOptional.clear();
+		refundOptional.put("wxNativeRefund", "wxNativeRefund");
 		refundParam.setChannel(PAY_CHANNEL.WX);
 		
 		testRefund(refundParam, PAY_CHANNEL.WX);
@@ -176,11 +155,9 @@ public class BCPayTest {
 	
 	@SuppressWarnings("deprecation")
 	private void testPay(BCPayParameter param, PAY_CHANNEL channel) {
-		BCPayResult result = BCPay.startBCPay(param);
-		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
 		
 		param.setChannel(null);
-		result = BCPay.startBCPay(param);
+		BCPayResult result = BCPay.startBCPay(param);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		param.setChannel(channel);
 		
@@ -196,6 +173,11 @@ public class BCPayTest {
 		param.setBillNo(billNo);
 		
 		param.setTitle(null);
+		result = BCPay.startBCPay(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		param.setTitle(subject);
+		
+		param.setTitle(TestConstant.TITLE_WITH_CHARACTER＿GREATER_THAN_32);
 		result = BCPay.startBCPay(param);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		param.setTitle(subject);
@@ -267,6 +249,8 @@ public class BCPayTest {
 			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 			param.setFrqid(frqid);
 		}
+		result = BCPay.startBCPay(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -279,6 +263,11 @@ public class BCPayTest {
 		refundParam.setBillNo(billNo);
 		
 		refundParam.setRefundFee(null);
+		result = BCPay.startBCRefund(refundParam);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		refundParam.setRefundFee(1);
+		
+		refundParam.setRefundFee(0);
 		result = BCPay.startBCRefund(refundParam);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		refundParam.setRefundFee(1);
@@ -308,6 +297,21 @@ public class BCPayTest {
 		
 		date = new SimpleDateFormat("yyyyMMdd").format(new Date());
 		refundParam.setRefundNo(date + "000");
+		result = BCPay.startBCRefund(refundParam);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		refundParam.setRefundNo(refundNo);
+		
+		refundParam.setRefundNo(date + TestConstant.REFUN_NO_SERIAL_NUMBER_LESSER_THAN_3);
+		result = BCPay.startBCRefund(refundParam);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		refundParam.setRefundNo(refundNo);
+		
+		refundParam.setRefundNo(date + TestConstant.REFUN_NO_SERIAL_NUMBER_GREATER_THAN_24);
+		result = BCPay.startBCRefund(refundParam);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		refundParam.setRefundNo(refundNo);
+		
+		refundParam.setRefundNo(date + TestConstant.REFUN_NO_SERIAL_NUMBER_GREATER_THAN_24);
 		result = BCPay.startBCRefund(refundParam);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		refundParam.setRefundNo(refundNo);
@@ -343,11 +347,4 @@ public class BCPayTest {
 		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders().size()<=10);
 		param.setStartTime(null);
 	}
-	
-	public static BCRefundParameter refundParamEqualsReport(BCRefundParameter param) {
-	  EasyMock.reportMatcher(new RefundParamEquals());
-	  return param;
-	}
-	
-	
 }
