@@ -39,6 +39,7 @@ public class BCPayTest {
 	private String billNo;
 	private String subject;
 	private String refundNo;
+	private String batchNo;
 	private Map<String, Object> payOptional = new HashMap<String, Object>();
 	private Map<String, Object> refundOptional = new HashMap<String, Object>();
 	
@@ -53,7 +54,7 @@ public class BCPayTest {
 	}
 
 	@Test
-	public void testAliWebPay() {  
+	public void testAliWeb() {  
 		billNo = BCUtil.generateRandomUUIDPure();
 		System.out.println("billNO:" + billNo);
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
@@ -76,7 +77,7 @@ public class BCPayTest {
 	}
 	
 	@Test
-	public void testAliQrcodePay() {  
+	public void testAliQrcode() {  
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "ALI_QRCODE unit test";
@@ -88,6 +89,34 @@ public class BCPayTest {
 		param.setQrPayMode(QR_PAY_MODE.MODE_BRIEF_FRONT);
 		
 		testPay(param, PAY_CHANNEL.ALI_QRCODE);
+	}
+	
+	@Test
+	public void testAliWap() {  
+		billNo = BCUtil.generateRandomUUIDPure();
+		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
+		subject = "ALI_WAP unit test";
+		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.ALI_WAP, 1, billNo, subject);
+		payOptional.put("aliWapPay", "aliWapPay");
+		param.setReturnUrl(TestConstant.aliReturnUrl);
+		param.setOptional(payOptional);
+		param.setBillTimeout(TestConstant.billTimeOut);
+		
+		testPay(param, PAY_CHANNEL.ALI_WAP);
+	}
+	
+	@Test
+	public void testAliTransfer() {  
+		billNo = BCUtil.generateRandomUUIDPure().substring(2);
+		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
+		subject = "ALI_WAP unit test";
+		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.ALI_WAP, 1, billNo, subject);
+		payOptional.put("aliWapPay", "aliWapPay");
+		param.setReturnUrl(TestConstant.aliReturnUrl);
+		param.setOptional(payOptional);
+		param.setBillTimeout(TestConstant.billTimeOut);
+		
+		testPay(param, PAY_CHANNEL.ALI_WAP);
 	}
 	
 	@Test
