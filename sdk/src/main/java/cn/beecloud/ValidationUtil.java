@@ -31,8 +31,12 @@ public class ValidationUtil
 	
 	private final static String PAY_PARAM_EMPTY =
 			"支付参数不能为空！";
+	
 	private final static String REFUND_PARAM_EMPTY = 
 			"退款参数不能为空！";
+	
+	private final static String QUERY_PARAM_EMPTY = 
+			"查询参数不能为空！";
 	
 	private final static String BILL_NO_EMPTY =
 			"billNo 必填！";
@@ -54,6 +58,9 @@ public class ValidationUtil
 	
 	private final static String TRANSFER_FEE_EMPTY =
 			"transferFee 不能为空！";
+	
+	private final static String TRANSFER_FEE_INVALID = 
+			"transferFee 必须大于0！";
 	
 	private final static String TRANSFER_NOTE_EMPTY =
 			"transferNote 不能为空！";
@@ -229,6 +236,8 @@ public class ValidationUtil
 				return new BCPayResult(RECEIVER_NAME_EMPTY, RESULT_TYPE.PARAM_INVALID); 
 			} else if (StrUtil.empty(data.getTransferFee())) {
 				return new BCPayResult(TRANSFER_FEE_EMPTY, RESULT_TYPE.PARAM_INVALID); 
+			} else if (data.getTransferFee() <= 0) {
+				return new BCPayResult(TRANSFER_FEE_INVALID, RESULT_TYPE.PARAM_INVALID); 
 			} else if (StrUtil.empty(data.getTransferNote())) {
 				return new BCPayResult(TRANSFER_NOTE_EMPTY, RESULT_TYPE.PARAM_INVALID); 
 			}
@@ -308,11 +317,13 @@ public class ValidationUtil
 	}
 
 	public static BCQueryResult validateQueryBill(BCQueryParameter para) {
-		if (!StrUtil.empty(para.getBillNo()) && !para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
+		if (para == null) {
+			return new BCQueryResult(QUERY_PARAM_EMPTY, RESULT_TYPE.PARAM_INVALID);
+		} else if (!StrUtil.empty(para.getBillNo()) && !para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
 			return new BCQueryResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
-		 } else if (para.getLimit() != null && para.getLimit() > 50) {
+		} else if (para.getLimit() != null && para.getLimit() > 50) {
 			return new BCQueryResult(LIMIT_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
-		 }
+		}
 		 
 		 return new BCQueryResult(RESULT_TYPE.OK);
 	}

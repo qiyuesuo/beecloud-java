@@ -17,6 +17,15 @@ public class TestConstant {
 	public static String TITLE_WITH_CHARACTER＿GREATER_THAN_32 = "超过16个中文字符的标题是不被接受的";
 	public static String REFUN_NO_SERIAL_NUMBER_GREATER_THAN_24 = "1234567890123456789012345";
 	public static String REFUN_NO_SERIAL_NUMBER_LESSER_THAN_3 = "01";
+	public static String ALI_TRANSFER_ACCOUNT_NAME = "苏州比可网络科技有限公司";
+	public static String ALI_TRANSFER_BATCH_NO_WITH_SPECIAL_CHARACTER = "batchNo流水号001";
+	public static String ALI_TRANSFER_RECEIVER_ACCOUNT_1 = "13584809649";
+	public static String ALI_TRANSFER_RECEIVER_ACCOUNT_2 = "13584804872";
+	public static String ALI_TRANSFER_RECEIVER_NAME_1 = "袁某某";
+	public static String ALI_TRANSFER_RECEIVER_NAME_2 = "张某某";
+	public static String TRANSFER_NOTE = "下发";
+	public static String INVALID_TRANSFER_ID = "包含中文aaabbccdd";
+	
 	
 	
 	public static String yeeWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/yeeWebReturnUrl.jsp";
