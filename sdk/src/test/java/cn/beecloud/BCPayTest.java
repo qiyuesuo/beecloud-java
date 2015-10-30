@@ -1,11 +1,7 @@
 package cn.beecloud;
 
-
-
 import static junit.framework.Assert.assertEquals;
 
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,15 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -75,6 +63,8 @@ public class BCPayTest {
 		testRefund(refundParam, PAY_CHANNEL.ALI);
 		
 		testQueryBill(PAY_CHANNEL.ALI);
+		
+		testQueryRefund(PAY_CHANNEL.ALI);
 	}
 	
 	@Test
@@ -435,7 +425,6 @@ public class BCPayTest {
 		list.add(data1);
 		list.add(data2);
 		
-		
 		BCPayResult result = BCPay.startTransfer(PAY_CHANNEL.ALI, "transfertest1122transfertest2233", "13861331391", list);
 		System.out.println("test transfer!");
 	}
@@ -608,17 +597,17 @@ public class BCPayTest {
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		refundParam.setRefundNo(refundNo);
 		
-		refundParam.setRefundNo(date + TestConstant.REFUN_NO_SERIAL_NUMBER_LESSER_THAN_3);
+		refundParam.setRefundNo(date + TestConstant.REFUND_NO_SERIAL_NUMBER_LESSER_THAN_3);
 		result = BCPay.startBCRefund(refundParam);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		refundParam.setRefundNo(refundNo);
 		
-		refundParam.setRefundNo(date + TestConstant.REFUN_NO_SERIAL_NUMBER_GREATER_THAN_24);
+		refundParam.setRefundNo(date + TestConstant.REFUND_NO_SERIAL_NUMBER_GREATER_THAN_24);
 		result = BCPay.startBCRefund(refundParam);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		refundParam.setRefundNo(refundNo);
 		
-		refundParam.setRefundNo(date + TestConstant.REFUN_NO_SERIAL_NUMBER_GREATER_THAN_24);
+		refundParam.setRefundNo(date + TestConstant.REFUND_NO_SERIAL_NUMBER_WITH_SPECIAL_CHARACTER);
 		result = BCPay.startBCRefund(refundParam);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 		refundParam.setRefundNo(refundNo);
@@ -652,12 +641,184 @@ public class BCPayTest {
 		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders().size()<=10);
 		param.setBillNo(null);
 		
+		param.setBillNo(TestConstant.BILL_NO_WITH_SPECIAL_CHARACTER);
+		result = BCPay.startQueryBill(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders() == null);
+		param.setBillNo(null);
+		
+		param.setBillNo(billNo.substring(0, 7));
+		result = BCPay.startQueryBill(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders() == null);
+		param.setBillNo(null);
+		
+		param.setBillNo(billNo + "A");
+		result = BCPay.startQueryBill(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders() == null);
+		param.setBillNo(null);
+		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, +1);
 		param.setStartTime(cal.getTime());
 		result = BCPay.startQueryBill(param);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
 		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders().size()<=10);
+		
+		cal.add(Calendar.MONTH, -1);
+		param.setEndTime(cal.getTime());
+		result = BCPay.startQueryBill(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders() == null);
+		
 		param.setStartTime(null);
+		param.setEndTime(null);
+		
+		param.setSkip(2);
+		result = BCPay.startQueryBill(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders().size()<=10);
+		
+		param.setSkip(-1);
+		result = BCPay.startQueryBill(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders() == null);
+		
+		param.setSkip(0);
+		result = BCPay.startQueryBill(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.OK.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders().size() <=10 );
+		param.setSkip(null);
+		
+		param.setLimit(8);
+		result = BCPay.startQueryBill(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders() == null );
+		param.setLimit(null);
+	
+		param.setLimit(52);
+		result = BCPay.startQueryBill(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcOrders() == null );
+		param.setLimit(null);
 	}
+	
+	@SuppressWarnings("deprecation")
+	private void testQueryRefund(PAY_CHANNEL channel) {
+		BCRefundQueryParameter param = new BCRefundQueryParameter();
+		BCQueryResult result = BCPay.startQueryRefund(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList().size()<=10);
+		
+		result = BCPay.startQueryRefund(null);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		
+		param.setChannel(channel);
+		result = BCPay.startQueryRefund(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList().size()<=10);
+		param.setChannel(null);
+		
+		param.setBillNo(billNo);
+		result = BCPay.startQueryRefund(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList().size()<=10);
+		param.setBillNo(null);
+		
+		param.setBillNo(TestConstant.BILL_NO_WITH_SPECIAL_CHARACTER);
+		result = BCPay.startQueryRefund(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList() == null);
+		param.setBillNo(null);
+		
+		param.setBillNo(billNo.substring(0, 7));
+		result = BCPay.startQueryRefund(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList() == null);
+		param.setBillNo(null);
+		
+		param.setBillNo(billNo + "A");
+		result = BCPay.startQueryRefund(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList() == null);
+		param.setBillNo(null);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, +1);
+		param.setStartTime(cal.getTime());
+		result = BCPay.startQueryRefund(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList().size()<=10);
+		
+		cal.add(Calendar.MONTH, -1);
+		param.setEndTime(cal.getTime());
+		result = BCPay.startQueryRefund(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList() == null);
+		
+		param.setStartTime(null);
+		param.setEndTime(null);
+		
+		param.setSkip(2);
+		result = BCPay.startQueryRefund(param);
+		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList().size()<=10);
+		
+		param.setSkip(-1);
+		result = BCPay.startQueryRefund(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList() == null);
+		
+		param.setSkip(0);
+		result = BCPay.startQueryRefund(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.OK.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList().size() <=10 );
+		param.setSkip(null);
+		
+		param.setLimit(8);
+		result = BCPay.startQueryRefund(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList() == null );
+		param.setLimit(null);
+	
+		param.setLimit(52);
+		result = BCPay.startQueryRefund(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList() == null );
+		param.setLimit(null);
+		
+		param.setRefundNo(refundNo);
+		result = BCPay.startQueryRefund(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.OK.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList().size() <=10 );
+		param.setLimit(null);
+		
+		param.setRefundNo(refundNo.substring(0, 8) + "000");
+		result = BCPay.startQueryRefund(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList() == null );
+		param.setLimit(null);
+	
+		param.setRefundNo(refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_LESSER_THAN_3);
+		result = BCPay.startQueryRefund(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList() == null );
+		param.setLimit(null);
+		
+		param.setRefundNo(refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_GREATER_THAN_24);
+		result = BCPay.startQueryRefund(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList() == null );
+		param.setLimit(null);
+		
+		param.setRefundNo(refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_WITH_SPECIAL_CHARACTER);
+		result = BCPay.startQueryRefund(param);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getBcRefundList() == null );
+		param.setLimit(null);
+		
+	}
+	
+	
 }

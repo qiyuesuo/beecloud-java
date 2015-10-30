@@ -329,7 +329,10 @@ public class ValidationUtil
 	}
 
 	public static BCQueryResult validateQueryRefund(BCRefundQueryParameter para) {
-		if (!StrUtil.empty(para.getBillNo()) && !para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
+		
+		if (para == null) {
+			return new BCQueryResult(QUERY_PARAM_EMPTY, RESULT_TYPE.PARAM_INVALID);
+		} else if (!StrUtil.empty(para.getBillNo()) && !para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
 			return new BCQueryResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
 		} else if (!StrUtil.empty(para.getRefundNo()) && (!para.getRefundNo().substring(8, para.getRefundNo().length()).matches("[0-9A-Za-z]{3,24}") || 
 				para.getRefundNo().substring(8, para.getRefundNo().length()).matches("000")) ) {
