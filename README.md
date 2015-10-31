@@ -111,7 +111,7 @@ param.setOptional(optional);
 bcPayResult = BCPay.startBCPay(param);
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getHtml());
-	out.println(bcPayResult.getUrl());
+	response.sendRedirect(bcPayResult.getUrl());
 } else {
 	//handle the error message as you wish！
 	out.println(bcPayResult.getErrMsg());
@@ -227,7 +227,7 @@ param.setBillTimeout(180);
 bcPayResult = BCPay.startBCPay(param);
 if (bcPayResult.getType().ordinal() == 0) {
 	out.println(bcPayResult.getHtml());
-	out.println(bcPayResult.getUrl());
+	response.sendRedirect(bcPayResult.getUrl());
 }
 else {
 	//handle the error message as you wish！
@@ -244,7 +244,7 @@ param.setBillTimeout(180);
 
 bcPayResult = BCPay.startBCPay(param);
 if (bcPayResult.getType().ordinal() == 0) {
-	out.println(bcPayResult.getUrl());
+	response.sendRedirect(bcPayResult.getUrl());
 }
 else {
 	//handle the error message as you wish！
@@ -283,7 +283,7 @@ param.setBillTimeout(180);
 
 bcPayResult = BCPay.startBCPay(param);
 if (bcPayResult.getType().ordinal() == 0) {
-	out.println(bcPayResult.getUrl());
+	response.sendRedirect(bcPayResult.getUrl());
 }
 else {
 	//handle the error message as you wish！
@@ -301,7 +301,7 @@ param.setBillTimeout(180);
 
 bcPayResult = BCPay.startBCPay(param);
 if (bcPayResult.getType().ordinal() == 0) {
-	out.println(bcPayResult.getUrl());
+	response.sendRedirect(bcPayResult.getUrl());
 }
 else {
 	//handle the error message as you wish！
