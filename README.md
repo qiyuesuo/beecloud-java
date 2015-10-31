@@ -584,6 +584,11 @@ TODO
 1.appid和appSecret填写是否一致<br>
 2.校准系统时间
 - 支付宝吊起支付返回调试错误，请回到请求来源地，重新发起请求。错误代码ILLEGAL_PARTNER，可能的原因：使用了测试账号test@beecloud.cn的支付宝支付参数。请使用自己申请的支付账号。
+- SDK jar包导入项目时找不到依赖包或者报NoSuchMethodException异常等问题，可能的原因:相同jar包依赖不同导致的冲突，相同jar包版本不同导致的冲突，解决方法如下：<br>
+1.使用Maven配置依赖引入sdk, 删掉导致冲突的SDK的依赖包。<br>
+2.若不使用Maven配置依赖，分开导入无依赖的sdk包和sdk依赖的包(可从[Release](https://github.com/beecloud/beecloud-java)部分下载)，删除导致冲突的sdk依赖包。<br>
+3.手动加入错误提示找不到的依赖包。
+
 
 
 
