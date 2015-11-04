@@ -245,7 +245,7 @@ public class BCPay {
          sb.append(BCUtilPrivate.getkApiQueryBillById());
         
          try {
-        	sb.append("/" + objectId);
+        	sb.append("/" + URLEncoder.encode(objectId, "UTF-8"));
         	sb.append("?para=");
             sb.append(URLEncoder.encode(
                             JSONObject.fromObject(param).toString(), "UTF-8"));
@@ -422,7 +422,7 @@ public class BCPay {
          sb.append(BCUtilPrivate.getkApiQueryRefundById());
         
          try {
-        	sb.append("/" + objectId);
+        	sb.append("/" + URLEncoder.encode(objectId, "UTF-8"));
         	sb.append("?para=");
             sb.append(URLEncoder.encode(
                             JSONObject.fromObject(param).toString(), "UTF-8"));

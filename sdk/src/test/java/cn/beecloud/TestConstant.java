@@ -26,6 +26,9 @@ public class TestConstant {
 	public static String ALI_TRANSFER_RECEIVER_NAME_2 = "张某某";
 	public static String TRANSFER_NOTE = "下发";
 	public static String INVALID_TRANSFER_ID = "包含中文aaabbccdd";
+	public static String INVALID_OBJECT_ID = "aaabbbccc!!!@@@###";
+	public static String VALID_REFUND_OBJECT_ID = "9ed1cec8-6f94-4666-b680-fbe0265d0867";
+	public static String NOT_EXIST_BILL_NO = "aaabbbcccdddeee111222333";
 	
 	
 	
