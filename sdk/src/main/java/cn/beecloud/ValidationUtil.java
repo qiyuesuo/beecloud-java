@@ -202,9 +202,11 @@ public class ValidationUtil
 		return new BCQueryResult(RESULT_TYPE.OK);
 	}
 
-	public static BCQueryStatusResult validateQueryRefundStatus(
+	public static BCQueryStatusResult validateQueryRefundStatus(PAY_CHANNEL channel,
 			String refundNo) {
-		if (StrUtil.empty(refundNo)) {
+		if (channel == null) {
+			return new BCQueryStatusResult(CHANNEL_EMPTY, RESULT_TYPE.PARAM_INVALID);
+		} else if (StrUtil.empty(refundNo)) {
 			return new BCQueryStatusResult(REFUND_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
 		}
 		return new BCQueryStatusResult(RESULT_TYPE.OK);

@@ -20,6 +20,7 @@ import org.junit.Test;
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.QR_PAY_MODE;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
+import cn.beecloud.TestConstant.CHANNEL_TYPE;
 import cn.beecloud.bean.*;
 
 public class BCPayTest {
@@ -64,16 +65,12 @@ public class BCPayTest {
 		refundParam.setChannel(PAY_CHANNEL.ALI);
 		
 		testRefund(refundParam, PAY_CHANNEL.ALI);
-		
+		testRefundUpdate(PAY_CHANNEL.ALI);
 		testQueryRefundById();
-		
-		testQueryBill(PAY_CHANNEL.ALI);
-		
-		testQueryBillCount(PAY_CHANNEL.ALI);
-		
-		testQueryRefund(PAY_CHANNEL.ALI);
-		
-		testQueryBillCount(PAY_CHANNEL.ALI);
+		testQueryBill(PAY_CHANNEL.ALI_WEB);
+		testQueryBillCount(PAY_CHANNEL.ALI_WEB);
+		testQueryRefund(PAY_CHANNEL.ALI_WEB);
+		testQueryBillCount(PAY_CHANNEL.ALI_WEB);
 	}
 	
 	@Test
@@ -89,6 +86,12 @@ public class BCPayTest {
 		param.setQrPayMode(QR_PAY_MODE.MODE_BRIEF_FRONT);
 		
 		testPay(param, PAY_CHANNEL.ALI_QRCODE);
+		testQueryBillById(param);
+		testQueryRefundById();
+		testQueryBill(PAY_CHANNEL.ALI_QRCODE);
+		testQueryBillCount(PAY_CHANNEL.ALI_QRCODE);
+		testQueryRefund(PAY_CHANNEL.ALI_QRCODE);
+		testQueryBillCount(PAY_CHANNEL.ALI_QRCODE);
 	}
 	
 	@Test
@@ -102,6 +105,12 @@ public class BCPayTest {
 		param.setBillTimeout(TestConstant.billTimeOut);
 		
 		testPay(param, PAY_CHANNEL.ALI_WAP);
+		testQueryBillById(param);
+		testQueryRefundById();
+		testQueryBill(PAY_CHANNEL.ALI_WAP);
+		testQueryBillCount(PAY_CHANNEL.ALI_WAP);
+		testQueryRefund(PAY_CHANNEL.ALI_WAP);
+		testQueryBillCount(PAY_CHANNEL.ALI_WAP);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -203,7 +212,6 @@ public class BCPayTest {
 	
 	@Test
 	public void testWXNative() {
-		
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "WX_NATIVE unit test";
@@ -211,14 +219,17 @@ public class BCPayTest {
 		payOptional.put("wxNativePay", "wxNativePay");
 		param.setOptional(payOptional);
 		param.setBillTimeout(TestConstant.billTimeOut);
-		
 		testPay(param, PAY_CHANNEL.WX_NATIVE);
-		
 		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
 		refundOptional.put("wxNativeRefund", "wxNativeRefund");
 		refundParam.setChannel(PAY_CHANNEL.WX);
-		
 		testRefund(refundParam, PAY_CHANNEL.WX);
+		testRefundUpdate(PAY_CHANNEL.WX);
+		testQueryRefundById();
+		testQueryBill(PAY_CHANNEL.WX_NATIVE);
+		testQueryBillCount(PAY_CHANNEL.WX_NATIVE);
+		testQueryRefund(PAY_CHANNEL.WX_NATIVE);
+		testQueryBillCount(PAY_CHANNEL.WX_NATIVE);
 	}
 	
 	@Test
@@ -250,6 +261,7 @@ public class BCPayTest {
 		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.UN_WEB, 1, billNo, subject);
 		payOptional.put("unWebPay", "unWebPay");
 		param.setOptional(payOptional);
+		param.setReturnUrl(TestConstant.unReturnUrl);
 		param.setBillTimeout(TestConstant.billTimeOut);
 		
 		testPay(param, PAY_CHANNEL.UN_WEB);
@@ -259,6 +271,12 @@ public class BCPayTest {
 		refundParam.setChannel(PAY_CHANNEL.UN);
 		
 		testRefund(refundParam, PAY_CHANNEL.UN);
+		testRefundUpdate(PAY_CHANNEL.UN);
+		testQueryRefundById();
+		testQueryBill(PAY_CHANNEL.UN_WEB);
+		testQueryBillCount(PAY_CHANNEL.UN_WEB);
+		testQueryRefund(PAY_CHANNEL.UN_WEB);
+		testQueryBillCount(PAY_CHANNEL.UN_WEB);
 	}
 	
 	@Test
@@ -549,8 +567,6 @@ public class BCPayTest {
 			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
 			param.setFrqid(frqid);
 		}
-		result = BCPay.startBCPay(param);
-		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -623,6 +639,7 @@ public class BCPayTest {
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
 		
 		result = BCPay.startBCRefund(refundParam);
+		System.out.println(result.getErrDetail());
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.NO_SUCH_BILL.name(), result.getResultMsg());
 	}
 	
@@ -990,5 +1007,40 @@ public class BCPayTest {
 		result = BCPay.startQueryRefundById(TestConstant.INVALID_OBJECT_ID);
 		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
 	}
+	
+	private void testRefundUpdate(PAY_CHANNEL channel) {
+		BCQueryStatusResult result = BCPay.startRefundUpdate(null, refundNo);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		
+		result = BCPay.startRefundUpdate(channel, null);
+		System.out.println(result.getErrDetail());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+	
+		result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + "000");
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		System.out.println(result.getErrDetail());
+		result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_LESSER_THAN_3);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		System.out.println(result.getErrDetail());
+		result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_GREATER_THAN_24);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		System.out.println(result.getErrDetail());
+		
+		result = BCPay.startRefundUpdate(channel, refundNo);
+		if (channel.equals(PAY_CHANNEL.WX) || channel.equals(PAY_CHANNEL.KUAIQIAN) || channel.equals(PAY_CHANNEL.YEE) || channel.equals(PAY_CHANNEL.BD)) {
+			System.out.println(result.getErrDetail());
+			Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.NO_SUCH_REFUND.name()));
+			
+			result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_WITH_SPECIAL_CHARACTER);
+			System.out.println(result.getErrDetail());
+			Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.NO_SUCH_REFUND.name()));
+		} else {
+			Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getErrDetail().contains("渠道选择错误"));
+			
+			result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_WITH_SPECIAL_CHARACTER);
+			Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getErrDetail().contains("渠道选择错误"));
+		}
+	}
+	
 	
 }

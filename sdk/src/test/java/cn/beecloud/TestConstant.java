@@ -44,22 +44,32 @@ public class TestConstant {
 	public static Integer billTimeOut = 300;
 	
 	public static enum CHANNEL_TYPE {
+		WX,
         WX_APP,
         WX_NATIVE,
         WX_JSAPI,
+        ALI,
         ALI_APP,
         ALI_WEB,
         ALI_QRCODE,
         ALI_OFFLINE_QRCODE,
+        UN,
         UN_APP,
         UN_WEB,
+        KUAIQIAN,
         KUAIQIAN_WAP,
         KUAIQIAN_WEB,
         PAYPAL,
+        YEE,
         YEE_WAP,
         YEE_WEB,
+        JD,
         JD_WEB,
-        JD_WAP
+        JD_WAP,
+        BD,
+        BD_WEB,
+        BD_WAP,
+        BD_APP
     }
 	
 	public static enum REQUEST_TYPE {

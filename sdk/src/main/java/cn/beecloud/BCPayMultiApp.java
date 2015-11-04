@@ -549,7 +549,7 @@ public class BCPayMultiApp {
     public BCQueryStatusResult startRefundUpdate(PAY_CHANNEL channel, String refundNo) {
 
     	BCQueryStatusResult result;
-    	result = ValidationUtil.validateQueryRefundStatus(refundNo);
+    	result = ValidationUtil.validateQueryRefundStatus(channel, refundNo);
     	
 		if (!result.getResultCode().equals("0")) {
 			return result;
