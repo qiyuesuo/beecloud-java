@@ -439,12 +439,17 @@
 	}
 %>
 <c:if test="${billSize != null and billSize !=0}">
-	<table border="3" class="table"><tr><th>订单号</th><th>总金额</th><th>标题</th><th>渠道交易号</th><th>渠道</th><th>子渠道</th><th>已付款</th><th>已撤销</th><th>已退款</th><th>附加数据</th><th>渠道详细信息</th><th>创建时间</th><th>发起退款</th></tr>
+	<table border="3" class="table"><tr><th>订单号</th><th>总金额</th><th>标题</th><th>渠道交易号</th><th>渠道</th><th>子渠道</th><th>已付款</th><th>已撤销</th><th>已退款</th><th>附加数据</th><th>渠道详细信息</th><th>创建时间</th><th>发起退款</th><th>发起预退款</th></tr>
 		<c:forEach var="bill" items="${bills}" varStatus="index"> 
 			<tr><td>${bill.billNo}</td><td>${bill.totalFee}</td><td>${bill.title}</td><td>${bill.channelTradeNo}</td><td>${bill.channel}</td><td>${bill.subChannel}</td><td>${bill.spayResult}</td><td>${bill.revertResult}</td><td>${bill.refundResult}</td><td>${bill.optional}</td><td>${bill.messageDetail}</td><td>${bill.dateTime}</td>
 				<c:if test="${bill.spayResult == true && bill.refundResult == false && nochannel == null}">
 						<td align="center" >
 							<input class="button" type="button" onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${bill.channel}', false, ${isYeeWap eq '1' ? '1':'0'})" value="退款"/>
+						</td>
+				</c:if>
+				<c:if test="${bill.spayResult == true && bill.refundResult == false && nochannel == null}">
+						<td align="center" >
+							<input class="button" type="button" onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${bill.channel}', true, ${isYeeWap eq '1' ? '1':'0'})" value="预退款"/>
 						</td>
 				</c:if>
 				<c:if test="${bill.spayResult == true && bill.refundResult == false && nochannel != null}">
