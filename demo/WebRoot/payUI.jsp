@@ -257,6 +257,7 @@ input {
 		<div style="clear: both;">
 			<input name="queryBIll" type="submit" class="button" value="订单查询">
 			<input name="queryRefund" type="submit" class="button" value="退款查询">
+			<input name="queryPrefund" type="submit" class="button" value="预退款查询">
 		</div>
 	</form>
 	

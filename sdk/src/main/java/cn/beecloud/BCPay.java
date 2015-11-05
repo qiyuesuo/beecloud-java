@@ -561,10 +561,9 @@ public class BCPay {
             Response response = target.request().get();
             if (response.getStatus() == 200) {
                 Map<String, Object> ret = response.readEntity(Map.class);
-                
-                result.setResultCode(ret.get("result_code").toString());
-                result.setResultMsg(ret.get("result_msg").toString());
-                result.setErrDetail(ret.get("err_detail").toString());
+                result.setResultCode(ret.get("resultCode").toString());
+                result.setResultMsg(ret.get("errMsg").toString());
+                result.setErrDetail(ret.get("errMsg").toString());
                 
                 boolean isSuccess = (result.getResultCode().equals("0"));
 
@@ -982,5 +981,32 @@ public class BCPay {
 		map.put("signType", ret.get("sign_type"));
 		
 		return map;
+	}
+    
+    private static List<BCRefundBean> generateBCOrderListByCondition(List<Map<String, Object>> results){
+    	List<BCRefundBean> bcRefundList = new ArrayList<BCRefundBean>();
+		for (Map refund : results){
+			BCRefundBean bcRefund = new BCRefundBean();
+			bcRefund.setObjectId(refund.get("objectid").toString());
+			bcRefund.setBillNo(refund.get("bill_no").toString());
+	    	bcRefund.setChannel(refund.get("channel").toString());
+	    	bcRefund.setSubChannel(refund.get("sub_channel").toString());
+	    	bcRefund.setFinished((Boolean)refund.get("finish"));
+//	    	bcRefund.setCreatedTime((Long)refund.get("create_time"));
+	    	bcRefund.setCreatedTime((Long)refund.get("createdat"));
+//	    	bcRefund.setOptional(refund.get("optional").toString());
+	    	bcRefund.setRefunded((Boolean)refund.get("result"));
+	    	bcRefund.setTitle(refund.get("title").toString());
+	    	bcRefund.setTotalFee(refund.get("total_fee").toString());
+	    	bcRefund.setRefundFee(refund.get("refund_fee").toString());
+	    	bcRefund.setRefundNo(refund.get("refund_no").toString());
+//	    	bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("create_time")));
+	    	bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("createdat")));
+//			if (refund.containsKey("message_detail")) {
+//				bcRefund.setMessageDetail(refund.get("message_detail").toString());
+//			}
+	    	bcRefundList.add(bcRefund);
+		}
+		return bcRefundList;
 	}
 }

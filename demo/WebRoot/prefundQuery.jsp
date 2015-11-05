@@ -31,12 +31,12 @@
 		param.setChannel(PAY_CHANNEL.ALI);
 		
 		bcQueryResult = BCPay.startQueryPrefundByConditon(param, "refund__");
-		if (bcQueryResult.getType().ordinal() == 0) {
+		if (bcQueryResult.getResultCode().equals("0")) {
 			pageContext.setAttribute("refunds", bcQueryResult.getBcRefundList());
 			pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 			pageContext.setAttribute("channel", "ALI");
 		} else {
-			out.println(bcQueryResult.getErrMsg());
+			out.println(bcQueryResult.getResultMsg());
 			out.println(bcQueryResult.getErrDetail());
 		}
 	
@@ -45,12 +45,12 @@
 		param.setChannel(PAY_CHANNEL.WX);
 		
 		bcQueryResult = BCPay.startQueryPrefundByConditon(param, "refund__");
-		if (bcQueryResult.getType().ordinal() == 0) {
+		if (bcQueryResult.getResultCode().equals("0")) {
 			pageContext.setAttribute("refunds", bcQueryResult.getBcRefundList());
 			pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 			pageContext.setAttribute("channel", "WX");
 		} else {
-			out.println(bcQueryResult.getErrMsg());
+			out.println(bcQueryResult.getResultMsg());
 			out.println(bcQueryResult.getErrDetail());
 		}
 	} else if (querytype.equals("unionQuery")) {
@@ -58,12 +58,12 @@
 		param.setChannel(PAY_CHANNEL.UN);
 		
 		bcQueryResult = BCPay.startQueryPrefundByConditon(param, "refund__");
-		if (bcQueryResult.getType().ordinal() == 0) {
+		if (bcQueryResult.getResultCode().equals("0")) {
 			pageContext.setAttribute("refunds", bcQueryResult.getBcRefundList());
 			pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 			pageContext.setAttribute("channel", "UN");
 		} else {
-			out.println(bcQueryResult.getErrMsg());
+			out.println(bcQueryResult.getResultMsg());
 			out.println(bcQueryResult.getErrDetail());
 		}
 	} else if (querytype.equals("yeeQuery")) {
@@ -71,12 +71,12 @@
 		param.setChannel(PAY_CHANNEL.YEE_WEB);
 		
 		bcQueryResult = BCPay.startQueryPrefundByConditon(param, "refund__");
-		if (bcQueryResult.getType().ordinal() == 0) {
+		if (bcQueryResult.getResultCode().equals("0")) {
 			pageContext.setAttribute("refunds", bcQueryResult.getBcRefundList());
 			pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 			pageContext.setAttribute("channel", "YEE");
 		} else {
-			out.println(bcQueryResult.getErrMsg());
+			out.println(bcQueryResult.getResultMsg());
 			out.println(bcQueryResult.getErrDetail());
 		}
 	} else if (querytype.equals("yeeWapQuery")) {
@@ -87,13 +87,13 @@
 		bcQueryResult = BCPay.startQueryPrefundByConditon(param, "refund__");
 		BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
 		
-		if (bcQueryResult.getType().ordinal() == 0) {
+		if (bcQueryResult.getResultCode().equals("0")) {
 			pageContext.setAttribute("refunds", bcQueryResult.getBcRefundList());
 			pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 			pageContext.setAttribute("channel", "YEE");
 			pageContext.setAttribute("isYeeWap", "1");
 		} else {
-			out.println(bcQueryResult.getErrMsg());
+			out.println(bcQueryResult.getResultMsg());
 			out.println(bcQueryResult.getErrDetail());
 		}
 	} else if (querytype.equals("jdQuery")) {
@@ -101,12 +101,12 @@
 		param.setChannel(PAY_CHANNEL.JD);
 		
 		bcQueryResult = BCPay.startQueryPrefundByConditon(param, "refund__");
-		if (bcQueryResult.getType().ordinal() == 0) {
+		if (bcQueryResult.getResultCode().equals("0")) {
 			pageContext.setAttribute("refunds", bcQueryResult.getBcRefundList());
 			pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 			pageContext.setAttribute("channel", "JD");
 		} else {
-			out.println(bcQueryResult.getErrMsg());
+			out.println(bcQueryResult.getResultMsg());
 			out.println(bcQueryResult.getErrDetail());
 		}
 	} else if (querytype.equals("kqQuery")) {
@@ -114,12 +114,12 @@
 		param.setChannel(PAY_CHANNEL.KUAIQIAN);
 		
 		bcQueryResult = BCPay.startQueryPrefundByConditon(param, "refund__");
-		if (bcQueryResult.getType().ordinal() == 0) {
+		if (bcQueryResult.getResultCode().equals("0")) {
 			pageContext.setAttribute("refunds", bcQueryResult.getBcRefundList());
 			pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 			pageContext.setAttribute("channel", "KUAIQIAN");
 		} else {
-			out.println(bcQueryResult.getErrMsg());
+			out.println(bcQueryResult.getResultMsg());
 			out.println(bcQueryResult.getErrDetail());
 		}
 	} else if (querytype.equals("bdQuery")) {
@@ -127,12 +127,12 @@
 		param.setChannel(PAY_CHANNEL.BD);
 		
 		bcQueryResult = BCPay.startQueryPrefundByConditon(param, "refund__");
-		if (bcQueryResult.getType().ordinal() == 0) {
+		if (bcQueryResult.getResultCode().equals("0")) {
 			pageContext.setAttribute("refunds", bcQueryResult.getBcRefundList());
 			pageContext.setAttribute("refundSize", bcQueryResult.getBcRefundList().size());
 			pageContext.setAttribute("channel", "BD");
 		} else {
-			out.println(bcQueryResult.getErrMsg());
+			out.println(bcQueryResult.getResultMsg());
 			out.println(bcQueryResult.getErrDetail());
 		}
 	}else if (querytype.equals("noChannelQuery")) {
@@ -140,13 +140,13 @@
 		param.setLimit(50);
 		
 		bcQueryResult = BCPay.startQueryBill(param);
-		if (bcQueryResult.getType().ordinal() == 0) {
+		if (bcQueryResult.getResultCode().equals("0")) {
 			pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
 			pageContext.setAttribute("billSize", bcQueryResult.getBcOrders().size());
 			pageContext.setAttribute("nochannel", true);
 			pageContext.setAttribute("channel", null);
 		} else {
-			out.println(bcQueryResult.getErrMsg());
+			out.println(bcQueryResult.getResultMsg());
 			out.println(bcQueryResult.getErrDetail());
 		}
 	}
