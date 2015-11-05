@@ -12,6 +12,7 @@ package cn.beecloud;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -518,6 +519,74 @@ public class BCPay {
         }
     	return result;
     }
+    
+    public static BCQueryResult startQueryPrefundByConditon(BCQueryParameter para, String table) {
+    	BCQueryResult result;
+    	 
+    	Map<String, Object> param = new HashMap<String, Object>();
+    	param.put("table", table);
+    	param.put("appId", BCCache.getAppID());
+        param.put("appSign", BCUtilPrivate.getAppSignature());
+        List<Map<String, Object>> conditions = new LinkedList<Map<String, Object>>();
+        Map<String, Object> channel = new HashMap<String, Object>();
+        channel.put("cname", "channel");
+        channel.put("value", para.getChannel().toString());
+        channel.put("type", "e");
+        if (para.getChannel().toString().contains("_")) {
+        	channel.put("cname", "sub_channel");
+        }
+        Map<String, Object> needApproval = new HashMap<String, Object>();
+        needApproval.put("cname", "need_approval");
+        needApproval.put("value", true);
+        needApproval.put("type", "e");
+        conditions.add(channel);
+        conditions.add(needApproval);
+        String order = "createdat,desc";
+        param.put("conditions", conditions);
+        param.put("order", order);
+        param.put("limit", 20);
+        
+        result = new BCQueryResult();
+    	
+    	Client client = BCAPIClient.client;
+    	  
+    	StringBuilder sb = new StringBuilder();   
+        sb.append(BCUtilPrivate.getkApiQueryBillByCondition());
+        
+        try {
+            sb.append(URLEncoder.encode(
+                            JSONObject.fromObject(param).toString(), "UTF-8"));
+
+            WebTarget target = client.target(sb.toString());
+            Response response = target.request().get();
+            if (response.getStatus() == 200) {
+                Map<String, Object> ret = response.readEntity(Map.class);
+                
+                result.setResultCode(ret.get("result_code").toString());
+                result.setResultMsg(ret.get("result_msg").toString());
+                result.setErrDetail(ret.get("err_detail").toString());
+                
+                boolean isSuccess = (result.getResultCode().equals("0"));
+
+                if (isSuccess) {
+                    if (ret.containsKey("results")
+                                    && !StrUtil.empty(ret.get("results"))) {
+                        result.setBcRefundList(generateBCOrderListByCondition((List<Map<String, Object>>)ret.get("results")));
+                    }
+                    result.setTotalCount((Integer)ret.get("count"));
+                } 
+            } else {
+            	result.setResultCode("0");
+             	result.setResultMsg("Not correct response!");
+             	result.setErrDetail("Not correct response!");
+            }
+        } catch (Exception e) {
+        	result.setResultCode("-1");
+          	result.setResultMsg("Network error!");
+          	result.setErrDetail(e.getMessage());
+        }
+    	return result;
+    }	
     
     /**
      * @param refundNo

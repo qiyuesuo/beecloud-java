@@ -88,6 +88,14 @@ class BCUtilPrivate {
 		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/refunds/count?para=";
 	}
 	
+	static String getkApiQueryBillByCondition() {
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/query/byCondition?para=";
+	}
+	
+	static String getApiBatchRefund() {
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/refund";
+	}
+	
 	static String transferDateFromLongToString(long millisecond) {
 		Date date = new Date(millisecond);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
