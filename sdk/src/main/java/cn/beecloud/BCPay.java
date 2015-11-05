@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;   
@@ -29,6 +30,7 @@ import cn.beecloud.bean.BCQueryParameter;
 import cn.beecloud.bean.BCRefundBean;
 import cn.beecloud.bean.BCRefundParameter;
 import cn.beecloud.bean.BCRefundQueryParameter;
+import cn.beecloud.bean.BCBatchRefundResult;
 import cn.beecloud.bean.TransferData;
 import net.sf.json.JSONObject;
 
@@ -716,6 +718,76 @@ public class BCPay {
            	result.setErrDetail(e.getMessage());
          }
          return result;
+    }
+    
+    /**
+     * 发起预退款审核，包括批量否决和批量同意
+     * @param ids 
+     * （必填）待批量审核的预退款记录唯一标识列表
+     * @param channel
+     * (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含：
+     *  YEE 易宝
+	 *  WX 微信
+	 *  KUAIQIAN 快钱
+	 *  BD 百度
+	 *  ALI 支付宝
+	 *  KUAIQIAN 快钱
+	 *  JD 京东
+     * @param agree
+     * （必填） 批量同意或者批量否决
+     * @return BatchRefundResult
+     */
+    public static BCBatchRefundResult startBatchRefund(List<String> ids, String channel, Boolean agree) {
+    	BCBatchRefundResult result;
+    	
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("channel", channel);
+        param.put("agree", agree);
+        param.put("ids", ids);
+        param.put("app_id", BCCache.getAppID());
+    	param.put("timestamp", System.currentTimeMillis());
+    	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
+        
+        result = new BCBatchRefundResult();
+        
+        Client client = BCAPIClient.client;
+        WebTarget target = client.target(BCUtilPrivate.getApiBatchRefund());
+        try {
+            Response response = target.request().put(Entity.entity(param, MediaType.APPLICATION_JSON));
+            if (response.getStatus() == 200) {
+                Map<String, Object> ret = response.readEntity(Map.class);
+                
+                result.setResultCode(ret.get("result_code").toString());
+                result.setResultMsg(ret.get("result_msg").toString());
+                result.setErrDetail(ret.get("err_detail").toString());
+
+
+                boolean isSuccess = (result.getResultCode().equals("0"));
+                if (isSuccess) {
+                	if (agree == true) {
+	                	if (ret.containsKey("result_map") && null != ret.get("result_map")) {
+	                		if (channel.equals("ALI")) {
+	                			result.setAliRefundUrl(ret.get("url").toString());
+	                		}
+	                        for (Entry<String, String> perResult:((Map<String, String>)ret.get("result_map")).entrySet()) {
+	                        	String id = perResult.getKey().toString();
+	                        	String info = perResult.getValue().toString();
+	                        	result.getIdResult().put(id, info);
+	                        }
+	                    }
+                	}
+                } 
+            } else {
+            	result.setResultCode("0");
+              	result.setResultMsg("Not correct response!");
+              	result.setErrDetail("Not correct response!");
+            }
+        } catch (Exception e) {
+        	result.setResultCode("-1");
+           	result.setResultMsg("Network error!");
+           	result.setErrDetail(e.getMessage());
+        }
+        return result;
     }
     
     /**
