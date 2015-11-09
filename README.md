@@ -333,7 +333,7 @@ return   |  BCPayResult对象， 根据type决定返回内容
 
 
 ### <a name="transfer">批量打款</a>
-调用以下接口发起批量退款并将得到BCPayResult对象，BCPayResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。正确状态调用getUrl()方法，getUrl()方法返回跳转url,如跳转至此url页面，即可开始支付。
+调用以下接口发起企业批量打款并将得到BCPayResult对象，BCPayResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。正确状态调用getUrl()方法，getUrl()方法返回跳转url,如跳转至此url页面，即可开始支付。
 
 ```java
 List<TransferData> list = new ArrayList<TransferData>();
