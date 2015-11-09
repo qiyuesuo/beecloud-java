@@ -12,6 +12,14 @@ import java.util.Map;
 
 import javax.ws.rs.client.Client;
 
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.NonStrictExpectations;
+
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -58,19 +66,19 @@ public class BCPayTest {
 		
 		testPay(param, PAY_CHANNEL.ALI_WEB);
 		
-		testQueryBillById(param);
-		
-		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
-		refundOptional.put("aliWebRefund", "aliWebRefund");
-		refundParam.setChannel(PAY_CHANNEL.ALI);
-		
-		testRefund(refundParam, PAY_CHANNEL.ALI);
-		testRefundUpdate(PAY_CHANNEL.ALI);
-		testQueryRefundById();
-		testQueryBill(PAY_CHANNEL.ALI_WEB);
-		testQueryBillCount(PAY_CHANNEL.ALI_WEB);
-		testQueryRefund(PAY_CHANNEL.ALI_WEB);
-		testQueryBillCount(PAY_CHANNEL.ALI_WEB);
+//		testQueryBillById(param);
+//		
+//		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
+//		refundOptional.put("aliWebRefund", "aliWebRefund");
+//		refundParam.setChannel(PAY_CHANNEL.ALI);
+//		
+//		testRefund(refundParam, PAY_CHANNEL.ALI);
+//		testRefundUpdate(PAY_CHANNEL.ALI);
+//		testQueryRefundById();
+//		testQueryBill(PAY_CHANNEL.ALI_WEB);
+//		testQueryBillCount(PAY_CHANNEL.ALI_WEB);
+//		testQueryRefund(PAY_CHANNEL.ALI_WEB);
+//		testQueryBillCount(PAY_CHANNEL.ALI_WEB);
 	}
 	
 	@Test
@@ -458,115 +466,130 @@ public class BCPayTest {
 	
 	@Test
 	public void testQueryBillById() {
-		BCQueryResult result = BCPay.startQueryBillById("21c295fe-0f74-4697-b403-983ec61230ab");
+		//BCQueryResult result = BCPay.startQueryBillById("21c295fe-0f74-4697-b403-983ec61230ab");
 		System.out.println(result.getOrder());
 		System.out.println("test query by id!" + result);
 	}
 	
-	@SuppressWarnings("deprecation")
 	private void testPay(BCOrder param, PAY_CHANNEL channel) {
 		System.out.println("billNO:" + billNo);
 		
-		BCPayResult result = BCPay.startBCPay(null);
-		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		new Expectations(simple){
+	   {
+		   BCPay bcPay;
+	    Deencapsulation.invoke(BCPay.class, "doPost", with()).
+	    returns("I got INVOKED");
+	   }
+	  };
+		
+		try {
+			BCPay.startBCPay(null);
+			Assert.fail("BCException is not thrown as expected");  
+		} catch (BCException e) {
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		}
 		
 		param.setChannel(null);
-		result = BCPay.startBCPay(param);
-		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+		try {
+			BCPay.startBCPay(null);
+			Assert.fail("BCException is not thrown as expected");  
+		} catch (BCException e) {
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		}
 		param.setChannel(channel);
-		
-		param.setTotalFee(null);
-		result = BCPay.startBCPay(param);
-		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-		param.setTotalFee(1);
-		
-		param.setBillNo(null);
-		result = BCPay.startBCPay(param);
-		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-		param.setBillNo(billNo);
-		
-		param.setTitle(null);
-		result = BCPay.startBCPay(param);
-		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-		param.setTitle(subject);
-		
-		param.setTitle("正好十六个汉字的标题哈哈哈哈哈哈");
-		result = BCPay.startBCPay(param);
-		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
-		param.setTitle(subject);
-		
-		param.setTitle(TestConstant.TITLE_WITH_CHARACTER＿GREATER_THAN_32);
-		result = BCPay.startBCPay(param);
-		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-		param.setTitle(subject);
-		
-		param.setBillNo(TestConstant.BILL_NO_WITH_SPECIAL_CHARACTER);
-		result = BCPay.startBCPay(param);
-		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-		param.setBillNo(billNo);
-		
-		param.setBillNo(billNo.substring(0, 7));
-		System.out.println("xiaoyu 8:" + param.getBillNo());
-		result = BCPay.startBCPay(param);
-		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-		param.setBillNo(billNo);
-		
-		param.setBillNo(billNo + "A");
-		result = BCPay.startBCPay(param);
-		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-		param.setBillNo(billNo);
-		
-		if(param.getBillTimeout() != null) {
-			param.setBillTimeout(0);
-			result = BCPay.startBCPay(param);
-			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-			param.setBillTimeout(TestConstant.billTimeOut);
-		}
-		
-		if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE) || channel.equals(PAY_CHANNEL.UN_WEB)
-				|| channel.equals(PAY_CHANNEL.JD_WAP) || channel.equals(PAY_CHANNEL.JD_WEB)) {
-			String returnUrl = param.getReturnUrl();
-			param.setReturnUrl(null);
-			result = BCPay.startBCPay(param);
-			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-			param.setReturnUrl(returnUrl);
-		}
-		
-		if (channel.equals(PAY_CHANNEL.WX_JSAPI)) {
-			String openId = param.getOpenId();
-			param.setOpenId(null);
-			result = BCPay.startBCPay(param);
-			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-			param.setOpenId(openId);
-		}
-		
-		if (channel.equals(PAY_CHANNEL.ALI_QRCODE)) {
-			QR_PAY_MODE qrPayMode = param.getQrPayMode();
-			param.setQrPayMode(null);
-			result = BCPay.startBCPay(param);
-			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-			param.setQrPayMode(qrPayMode);
-		}
-		
-		if (channel.equals(PAY_CHANNEL.YEE_NOBANKCARD)) {
-			String cardNo = param.getCardNo();
-			param.setCardNo(null);
-			result = BCPay.startBCPay(param);
-			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-			param.setCardNo(cardNo);
-			
-			String cardpwd = param.getCardPwd();
-			param.setCardPwd(null);
-			result = BCPay.startBCPay(param);
-			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-			param.setCardPwd(cardpwd);
-			
-			String frqid = param.getFrqid();
-			param.setFrqid(null);
-			result = BCPay.startBCPay(param);
-			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-			param.setFrqid(frqid);
-		}
+//		
+//		param.setTotalFee(null);
+//		result = BCPay.startBCPay(param);
+//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//		param.setTotalFee(1);
+//		
+//		param.setBillNo(null);
+//		result = BCPay.startBCPay(param);
+//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//		param.setBillNo(billNo);
+//		
+//		param.setTitle(null);
+//		result = BCPay.startBCPay(param);
+//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//		param.setTitle(subject);
+//		
+//		param.setTitle("正好十六个汉字的标题哈哈哈哈哈哈");
+//		result = BCPay.startBCPay(param);
+//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
+//		param.setTitle(subject);
+//		
+//		param.setTitle(TestConstant.TITLE_WITH_CHARACTER＿GREATER_THAN_32);
+//		result = BCPay.startBCPay(param);
+//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//		param.setTitle(subject);
+//		
+//		param.setBillNo(TestConstant.BILL_NO_WITH_SPECIAL_CHARACTER);
+//		result = BCPay.startBCPay(param);
+//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//		param.setBillNo(billNo);
+//		
+//		param.setBillNo(billNo.substring(0, 7));
+//		System.out.println("xiaoyu 8:" + param.getBillNo());
+//		result = BCPay.startBCPay(param);
+//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//		param.setBillNo(billNo);
+//		
+//		param.setBillNo(billNo + "A");
+//		result = BCPay.startBCPay(param);
+//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//		param.setBillNo(billNo);
+//		
+//		if(param.getBillTimeout() != null) {
+//			param.setBillTimeout(0);
+//			result = BCPay.startBCPay(param);
+//			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//			param.setBillTimeout(TestConstant.billTimeOut);
+//		}
+//		
+//		if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE) || channel.equals(PAY_CHANNEL.UN_WEB)
+//				|| channel.equals(PAY_CHANNEL.JD_WAP) || channel.equals(PAY_CHANNEL.JD_WEB)) {
+//			String returnUrl = param.getReturnUrl();
+//			param.setReturnUrl(null);
+//			result = BCPay.startBCPay(param);
+//			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//			param.setReturnUrl(returnUrl);
+//		}
+//		
+//		if (channel.equals(PAY_CHANNEL.WX_JSAPI)) {
+//			String openId = param.getOpenId();
+//			param.setOpenId(null);
+//			result = BCPay.startBCPay(param);
+//			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//			param.setOpenId(openId);
+//		}
+//		
+//		if (channel.equals(PAY_CHANNEL.ALI_QRCODE)) {
+//			QR_PAY_MODE qrPayMode = param.getQrPayMode();
+//			param.setQrPayMode(null);
+//			result = BCPay.startBCPay(param);
+//			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//			param.setQrPayMode(qrPayMode);
+//		}
+//		
+//		if (channel.equals(PAY_CHANNEL.YEE_NOBANKCARD)) {
+//			String cardNo = param.getCardNo();
+//			param.setCardNo(null);
+//			result = BCPay.startBCPay(param);
+//			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//			param.setCardNo(cardNo);
+//			
+//			String cardpwd = param.getCardPwd();
+//			param.setCardPwd(null);
+//			result = BCPay.startBCPay(param);
+//			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//			param.setCardPwd(cardpwd);
+//			
+//			String frqid = param.getFrqid();
+//			param.setFrqid(null);
+//			result = BCPay.startBCPay(param);
+//			assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
+//			param.setFrqid(frqid);
+//		}
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -1042,5 +1065,19 @@ public class BCPayTest {
 		}
 	}
 	
+	class paySucceedMatcher extends TypeSafeMatcher<Map<String, Object>> {
+
+		@Override
+		public void describeTo(Description arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		protected boolean matchesSafely(Map<String, Object> arg0) {
+			// TODO Auto-generated method stub
+			return false;
+		} 
+	}
 	
 }

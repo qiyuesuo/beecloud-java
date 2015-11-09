@@ -12,18 +12,14 @@ package cn.beecloud;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;   
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MediaType;  
 import javax.ws.rs.core.Response;
-
-import org.glassfish.jersey.model.internal.RankedComparator.Order;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
@@ -32,8 +28,6 @@ import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.BCOrder;
 import cn.beecloud.bean.BCQueryParameter;
 import cn.beecloud.bean.BCRefund;
-import cn.beecloud.bean.BCRefundParameter;
-import cn.beecloud.bean.BCBatchRefundResult;
 import cn.beecloud.bean.TransferData;
 import net.sf.json.JSONObject;
 
@@ -105,8 +99,6 @@ public class BCPay {
     @SuppressWarnings("unchecked")
 	public static List<BCOrder> startQueryBill(BCQueryParameter para) throws BCException {
     	
-    	BCQueryResult result;
-    	
     	ValidationUtil.validateQueryBill(para);
     	 
     	Map<String, Object> param = new HashMap<String, Object>();
@@ -125,8 +117,6 @@ public class BCPay {
      * @throws BCException 
      */
     public static BCOrder startQueryBillById(String objectId) throws BCException {
-    	
-    	 BCQueryResult result;
     	
 		 Map<String, Object> param = new HashMap<String, Object>();
 	     param.put("app_id", BCCache.getAppID());
@@ -186,8 +176,6 @@ public class BCPay {
      */
     public static BCRefund startQueryRefundById(String objectId) throws BCException {
     	
-    	 BCQueryResult result;
-    	
 		 Map<String, Object> param = new HashMap<String, Object>();
 	     param.put("app_id", BCCache.getAppID());
 	     param.put("timestamp", System.currentTimeMillis());
@@ -221,73 +209,6 @@ public class BCPay {
     	
         return (Integer)ret.get("count");
     }
-    
-    public static BCQueryResult startQueryPrefundByConditon(BCQueryParameter para, String table) {
-    	BCQueryResult result;
-    	 
-    	Map<String, Object> param = new HashMap<String, Object>();
-    	param.put("table", table);
-    	param.put("appId", BCCache.getAppID());
-        param.put("appSign", BCUtilPrivate.getAppSignature());
-        List<Map<String, Object>> conditions = new LinkedList<Map<String, Object>>();
-        Map<String, Object> channel = new HashMap<String, Object>();
-        channel.put("cname", "channel");
-        channel.put("value", para.getChannel().toString());
-        channel.put("type", "e");
-        if (para.getChannel().toString().contains("_")) {
-        	channel.put("cname", "sub_channel");
-        }
-        Map<String, Object> needApproval = new HashMap<String, Object>();
-        needApproval.put("cname", "need_approval");
-        needApproval.put("value", true);
-        needApproval.put("type", "e");
-        conditions.add(channel);
-        conditions.add(needApproval);
-        String order = "createdat,desc";
-        param.put("conditions", conditions);
-        param.put("order", order);
-        param.put("limit", 20);
-        
-        result = new BCQueryResult();
-    	
-    	Client client = BCAPIClient.client;
-    	  
-    	StringBuilder sb = new StringBuilder();   
-        sb.append(BCUtilPrivate.getkApiQueryBillByCondition());
-        
-        try {
-            sb.append(URLEncoder.encode(
-                            JSONObject.fromObject(param).toString(), "UTF-8"));
-
-            WebTarget target = client.target(sb.toString());
-            Response response = target.request().get();
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-                result.setResultCode(ret.get("resultCode").toString());
-                result.setResultMsg(ret.get("errMsg").toString());
-                result.setErrDetail(ret.get("errMsg").toString());
-                
-                boolean isSuccess = (result.getResultCode().equals("0"));
-
-                if (isSuccess) {
-                    if (ret.containsKey("results")
-                                    && !StrUtil.empty(ret.get("results"))) {
-                        result.setBcRefundList(generateBCOrderListByCondition((List<Map<String, Object>>)ret.get("results")));
-                    }
-                    result.setTotalCount((Integer)ret.get("count"));
-                } 
-            } else {
-            	result.setResultCode("0");
-             	result.setResultMsg("Not correct response!");
-             	result.setErrDetail("Not correct response!");
-            }
-        } catch (Exception e) {
-        	result.setResultCode("-1");
-          	result.setResultMsg("Network error!");
-          	result.setErrDetail(e.getMessage());
-        }
-    	return result;
-    }	
     
     /**
      * @param refundNo
@@ -518,6 +439,10 @@ public class BCPay {
         if (para.getNeedDetail() != null && para.getNeedDetail()) {
         	param.put("need_detail", para.getNeedDetail());
         }
+        if (para.getNeedApproval() != null && para.getNeedApproval()) {
+        	param.put("need_approval", para.getNeedApproval());
+        }
+        
 	}
     
 	/**
@@ -666,33 +591,7 @@ public class BCPay {
 		return map;
 	}
     
-    private static List<BCRefund> generateBCOrderListByCondition(List<Map<String, Object>> results){
-    	List<BCRefund> bcRefundList = new ArrayList<BCRefund>();
-		for (Map refund : results){
-			BCRefund bcRefund = new BCRefund();
-			bcRefund.setObjectId(refund.get("objectid").toString());
-			bcRefund.setBillNo(refund.get("bill_no").toString());
-	    	bcRefund.setChannel(refund.get("sub_channel").toString());
-	    	bcRefund.setFinished((Boolean)refund.get("finish"));
-//	    	bcRefund.setCreatedTime((Long)refund.get("create_time"));
-	    	bcRefund.setCreatedTime((Long)refund.get("createdat"));
-//	    	bcRefund.setOptional(refund.get("optional").toString());
-	    	bcRefund.setRefunded((Boolean)refund.get("result"));
-	    	bcRefund.setTitle(refund.get("title").toString());
-	    	bcRefund.setTotalFee(refund.get("total_fee").toString());
-	    	bcRefund.setRefundFee(refund.get("refund_fee").toString());
-	    	bcRefund.setRefundNo(refund.get("refund_no").toString());
-//	    	bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("create_time")));
-	    	bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("createdat")));
-//			if (refund.containsKey("message_detail")) {
-//				bcRefund.setMessageDetail(refund.get("message_detail").toString());
-//			}
-	    	bcRefundList.add(bcRefund);
-		}
-		return bcRefundList;
-	}
-    
-    public static Map<String, Object> doPost(String url,
+    private static Map<String, Object> doPost(String url,
 			Map<String, Object> param) throws BCException {
         Client client = BCAPIClient.client;
         if (client == null) {
@@ -722,7 +621,7 @@ public class BCPay {
         }
 	}
     
-    public static Map<String, Object> doPut(String url,
+    private static Map<String, Object> doPut(String url,
 			Map<String, Object> param) throws BCException {
         Client client = BCAPIClient.client;
         if (client == null) {
@@ -751,8 +650,8 @@ public class BCPay {
         	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
         }
 	}
-       
-    public static Map<String, Object> doGet(String url,
+    
+    private static Map<String, Object> doGet(String url,
 			Map<String, Object> param) throws BCException {
         Client client = BCAPIClient.client;
         if (client == null) {
@@ -760,7 +659,6 @@ public class BCPay {
         }
         
     	StringBuilder sb = new StringBuilder();   
-        
         
         try {
         	sb.append(URLEncoder.encode(url, "UTF-8"));
@@ -779,9 +677,7 @@ public class BCPay {
                 boolean isSuccess = (resultCode == 0);
 
                 if (isSuccess) {
-                	if (url.equals(BCUtilPrivate.getkApiQueryBill())) {
-                        return ret;
-                    }
+                    return ret;
                 } else {
                 	throw new BCException(resultCode, resultMessage, errorDetail);
                 }

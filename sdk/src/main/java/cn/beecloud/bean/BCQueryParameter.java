@@ -25,6 +25,10 @@ public class BCQueryParameter {
 	
 	private Boolean needDetail;
 	
+	private Boolean payResult;
+	
+	private Boolean needApproval;
+	
 	private String refundNo;
 	
 	/**
@@ -172,5 +176,21 @@ public class BCQueryParameter {
 	 */
 	public void setRefundNo(String refundNo) {
 		this.refundNo = refundNo;
+	}
+
+	public Boolean getPayResult() {
+		return payResult;
+	}
+
+	public void setPayResult(Boolean payResult) {
+		this.payResult = payResult;
+	}
+
+	public Boolean getNeedApproval() {
+		return needApproval;
+	}
+
+	public void setNeedApproval(Boolean needApproval) {
+		this.needApproval = needApproval;
 	}	
 }
