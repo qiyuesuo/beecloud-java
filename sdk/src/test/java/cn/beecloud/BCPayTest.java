@@ -50,7 +50,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "ALI_WEB unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.ALI_WEB, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.ALI_WEB, 1, billNo, subject);
 		payOptional.put("aliWebPay", "aliWebPay");
 		param.setReturnUrl(TestConstant.aliReturnUrl);
 		param.setOptional(payOptional);
@@ -78,7 +78,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "ALI_QRCODE unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.ALI_QRCODE, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.ALI_QRCODE, 1, billNo, subject);
 		payOptional.put("aliQrCodePay", "aliQrCodePay");
 		param.setReturnUrl(TestConstant.aliReturnUrl);
 		param.setOptional(payOptional);
@@ -99,7 +99,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "ALI_WAP unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.ALI_WAP, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.ALI_WAP, 1, billNo, subject);
 		payOptional.put("aliWapPay", "aliWapPay");
 		param.setOptional(payOptional);
 		param.setBillTimeout(TestConstant.billTimeOut);
@@ -215,7 +215,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "WX_NATIVE unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.WX_NATIVE, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.WX_NATIVE, 1, billNo, subject);
 		payOptional.put("wxNativePay", "wxNativePay");
 		param.setOptional(payOptional);
 		param.setBillTimeout(TestConstant.billTimeOut);
@@ -238,7 +238,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "WX_NATIVE unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.WX_NATIVE, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.WX_NATIVE, 1, billNo, subject);
 		payOptional.put("wxNativePay", "wxNativePay");
 		param.setOptional(payOptional);
 		param.setBillTimeout(TestConstant.billTimeOut);
@@ -258,7 +258,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "UN_WEB unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.UN_WEB, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.UN_WEB, 1, billNo, subject);
 		payOptional.put("unWebPay", "unWebPay");
 		param.setOptional(payOptional);
 		param.setReturnUrl(TestConstant.unReturnUrl);
@@ -285,7 +285,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "YEE_WEB unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.YEE_WEB, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.YEE_WEB, 1, billNo, subject);
 		payOptional.put("yeeWebPay", "yeeWebPay");
 		param.setOptional(payOptional);
 		param.setBillTimeout(TestConstant.billTimeOut);
@@ -305,7 +305,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "YEE_WAP unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.YEE_WAP, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.YEE_WAP, 1, billNo, subject);
 		payOptional.put("yeeWapPay", "yeeWapPay");
 		param.setOptional(payOptional);
 		param.setBillTimeout(TestConstant.billTimeOut);
@@ -325,7 +325,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "YEE_NOBANKCARD unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.YEE_NOBANKCARD, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.YEE_NOBANKCARD, 1, billNo, subject);
 		payOptional.put("yeeNobankCardPay", "yeeNobankCardPay");
 		param.setOptional(payOptional);
 		param.setBillTimeout(TestConstant.billTimeOut);
@@ -339,7 +339,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "JD_WEB unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.JD_WEB, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.JD_WEB, 1, billNo, subject);
 		payOptional.put("jdWebPay", "jdWebPay");
 		param.setReturnUrl(TestConstant.jdWebReturnUrl);
 		param.setOptional(payOptional);
@@ -359,7 +359,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "JD_WAP unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.JD_WAP, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.JD_WAP, 1, billNo, subject);
 		payOptional.put("jdWapPay", "jdWapPay");
 		param.setReturnUrl(TestConstant.jdWapReturnUrl);
 		param.setOptional(payOptional);
@@ -373,7 +373,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "KUAIQIAN_WEB unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.KUAIQIAN_WEB, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.KUAIQIAN_WEB, 1, billNo, subject);
 		payOptional.put("kqWebPay", "kqWebPay");
 		param.setOptional(payOptional);
 		
@@ -392,7 +392,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "KUAIQIAN_WAP unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.KUAIQIAN_WAP, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.KUAIQIAN_WAP, 1, billNo, subject);
 		payOptional.put("kqWapPay", "kqWapPay");
 		param.setOptional(payOptional);
 		
@@ -405,7 +405,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "BD_WEB unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.BD_WEB, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.BD_WEB, 1, billNo, subject);
 		payOptional.put("bdWebPay", "bdWebPay");
 		param.setOptional(payOptional);
 		
@@ -424,7 +424,7 @@ public class BCPayTest {
 		billNo = BCUtil.generateRandomUUIDPure();
 		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
 		subject = "BD_WAP unit test";
-		BCPayParameter param = new BCPayParameter(PAY_CHANNEL.BD_WAP, 1, billNo, subject);
+		BCOrder param = new BCOrder(PAY_CHANNEL.BD_WAP, 1, billNo, subject);
 		payOptional.put("bdWapPay", "bdWapPay");
 		param.setOptional(payOptional);
 		
@@ -464,7 +464,7 @@ public class BCPayTest {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private void testPay(BCPayParameter param, PAY_CHANNEL channel) {
+	private void testPay(BCOrder param, PAY_CHANNEL channel) {
 		System.out.println("billNO:" + billNo);
 		
 		BCPayResult result = BCPay.startBCPay(null);
@@ -985,7 +985,7 @@ public class BCPayTest {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void testQueryBillById(BCPayParameter param) {
+	public void testQueryBillById(BCOrder param) {
 		BCPayResult result = BCPay.startBCPay(param);
 		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
 		

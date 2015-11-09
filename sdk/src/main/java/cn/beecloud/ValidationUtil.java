@@ -8,10 +8,11 @@ import java.util.Map;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
-import cn.beecloud.bean.BCPayParameter;
+import cn.beecloud.bean.BCException;
+import cn.beecloud.bean.BCOrder;
 import cn.beecloud.bean.BCQueryParameter;
+import cn.beecloud.bean.BCRefund;
 import cn.beecloud.bean.BCRefundParameter;
-import cn.beecloud.bean.BCRefundQueryParameter;
 import cn.beecloud.bean.TransferData;
 
 /**
@@ -251,86 +252,83 @@ public class ValidationUtil
 		return new BCPayResult(RESULT_TYPE.OK);
 	}
 
-	public static BCPayResult validateBCPay(BCPayParameter para) {
+	public static void validateBCPay(BCOrder para) throws BCException {
 		
 		if (para == null) {
-			return new BCPayResult(PAY_PARAM_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), PAY_PARAM_EMPTY);
 		}
 		if (para.getChannel() == null) {
-			return new BCPayResult(CHANNEL_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), CHANNEL_EMPTY);
 		}  else if (StrUtil.empty(para.getBillNo())) {
-			return new BCPayResult(BILL_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_EMPTY);
 		}  else if (StrUtil.empty(para.getTitle())) {
-			return new BCPayResult(TITLE_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TITLE_EMPTY);
 		}  else if (StrUtil.empty(para.getTotalFee())) {
-			return new BCPayResult(TOTAL_FEE_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TOTAL_FEE_EMPTY);
 		}  else if (para.getBillNo() != null && !para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
-			return new BCPayResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_FORMAT_INVALID);
 		}  else if (StrUtil.empty(para.getReturnUrl()) && 
 				(para.getChannel().equals(PAY_CHANNEL.ALI_WEB) || 
 						para.getChannel().equals(PAY_CHANNEL.ALI_QRCODE) || 
 						para.getChannel().equals(PAY_CHANNEL.UN_WEB) ||
 						para.getChannel().equals(PAY_CHANNEL.JD_WEB) ||
 						para.getChannel().equals(PAY_CHANNEL.JD_WAP))) {
-			return new BCPayResult(RETURN_URL_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), RETURN_URL_EMPTY);
 		} else if (para.getChannel().equals(PAY_CHANNEL.WX_JSAPI) && StrUtil.empty(para.getOpenId())){
-			return new BCPayResult(OPENID_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), OPENID_EMPTY);
 		} else if (para.getChannel().equals(PAY_CHANNEL.ALI_QRCODE) && StrUtil.empty(para.getQrPayMode())){
-			return new BCPayResult(QR_PAY_MODE_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), QR_PAY_MODE_EMPTY);
 		} else if (para.getChannel().equals(PAY_CHANNEL.YEE_NOBANKCARD) && (para.getCardNo() == null ||
 				para.getCardPwd() == null || para.getFrqid() == null)) {
-			return new BCPayResult(YEE_NOBANCARD_FACTOR_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), YEE_NOBANCARD_FACTOR_EMPTY);
 		} else
 			try {
 				if (para.getTitle().getBytes("GBK").length > 32) {
-					return new BCPayResult(TITLE_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
+					throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TITLE_FORMAT_INVALID);
 				}
 			} catch (UnsupportedEncodingException e) {
 				if (para.getTitle().length() > 16) {
-					return new BCPayResult(TITLE_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
+					throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TITLE_FORMAT_INVALID);
 				}
 			}
-		return new BCPayResult(RESULT_TYPE.OK);	
 	}
 
-	public static BCPayResult validateBCRefund(BCRefundParameter para) {
+	public static void validateBCRefund(BCRefund para) throws BCException {
 		if (para == null) {
-			return new BCPayResult(REFUND_PARAM_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), REFUND_PARAM_EMPTY);
 		} else if (StrUtil.empty(para.getBillNo())) {
-			return new BCPayResult(BILL_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_EMPTY);
 		} else if (StrUtil.empty(para.getRefundFee())) {
-			return new BCPayResult(REFUND_FEE_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), REFUND_FEE_EMPTY);
 		} else if (para.getRefundFee() <=0) {
-			return new BCPayResult(REFUND_FEE_INVALID, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), REFUND_FEE_INVALID);
 		} else if (StrUtil.empty(para.getRefundNo())) {
-			return new BCPayResult(REFUND_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), REFUND_NO_EMPTY);
 		} else if (para.getChannel() != null && !para.getChannel().equals(PAY_CHANNEL.WX) && !para.getChannel().equals(PAY_CHANNEL.ALI) && !para.getChannel().equals(PAY_CHANNEL.UN) 
 				 && !para.getChannel().equals(PAY_CHANNEL.YEE) && !para.getChannel().equals(PAY_CHANNEL.JD) && !para.getChannel().equals(PAY_CHANNEL.KUAIQIAN) && !para.getChannel().equals(PAY_CHANNEL.BD)) {
-			 return new BCPayResult(CHANNEL_INVALID_FOR_REFUND, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), CHANNEL_INVALID_FOR_REFUND); 
 		} else if (!para.getRefundNo().startsWith(new SimpleDateFormat("yyyyMMdd").format(new Date()))){
-			return new BCPayResult(REFUND_NO_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), REFUND_NO_FORMAT_INVALID); 
 		} else if (!para.getRefundNo().substring(8, para.getRefundNo().length()).matches("[0-9A-Za-z]{3,24}") || 
 				para.getRefundNo().substring(8, para.getRefundNo().length()).matches("000") ){
-			return new BCPayResult(REFUND_NO_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), REFUND_NO_FORMAT_INVALID); 
 		} else if (!para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
-			return new BCPayResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_FORMAT_INVALID); 
 		} 
-		return new BCPayResult(RESULT_TYPE.OK);	
 	}
 
-	public static BCQueryResult validateQueryBill(BCQueryParameter para) {
+	public static void validateQueryBill(BCQueryParameter para) throws BCException {
 		if (para == null) {
-			return new BCQueryResult(QUERY_PARAM_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), QUERY_PARAM_EMPTY); 
 		} else if (!StrUtil.empty(para.getBillNo()) && !para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
-			return new BCQueryResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_FORMAT_INVALID); 
 		} else if (para.getLimit() != null && para.getLimit() > 50) {
-			return new BCQueryResult(LIMIT_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), LIMIT_FORMAT_INVALID); 
 		}
 		 
-		 return new BCQueryResult(RESULT_TYPE.OK);
 	}
 
-	public static BCQueryResult validateQueryRefund(BCRefundQueryParameter para) {
+	public static BCQueryResult validateQueryRefund(BCQueryParameter para) {
 		
 		if (para == null) {
 			return new BCQueryResult(QUERY_PARAM_EMPTY, RESULT_TYPE.PARAM_INVALID);

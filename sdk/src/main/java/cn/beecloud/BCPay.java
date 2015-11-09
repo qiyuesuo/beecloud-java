@@ -23,13 +23,16 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.glassfish.jersey.model.internal.RankedComparator.Order;
+
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
-import cn.beecloud.bean.BCOrderBean;
-import cn.beecloud.bean.BCPayParameter;
+import cn.beecloud.BCEumeration.RESULT_TYPE;
+import cn.beecloud.bean.BCBatchRefund;
+import cn.beecloud.bean.BCException;
+import cn.beecloud.bean.BCOrder;
 import cn.beecloud.bean.BCQueryParameter;
-import cn.beecloud.bean.BCRefundBean;
+import cn.beecloud.bean.BCRefund;
 import cn.beecloud.bean.BCRefundParameter;
-import cn.beecloud.bean.BCRefundQueryParameter;
 import cn.beecloud.bean.BCBatchRefundResult;
 import cn.beecloud.bean.TransferData;
 import net.sf.json.JSONObject;
@@ -43,195 +46,85 @@ import net.sf.json.JSONObject;
  */
 public class BCPay {
 	
+	private final static String NOT_REGISTER = "为注册";
+	
+	private final static String NOT_CORRECT_RESPONSE = "响应不正确";
+	
+	private final static String NETWORK_ERROR = "网络错误";
+	
 	/**
-	 * @param para {@link BCPayParameter}支付参数
+	 * @param para {@link BCOrder}支付参数
 	 * (必填)
 	 * @return 调起比可支付后的返回结果
+	 * @throws BCException 
 	 */
-    public static BCPayResult startBCPay(BCPayParameter para) {
+    public static BCOrder startBCPay(BCOrder order) throws BCException {
     	
-    	BCPayResult result;
-    	result = ValidationUtil.validateBCPay(para);
-    	
-    	if (!result.getResultCode().equals("0")) {
-    		return result;
-    	}
+    	ValidationUtil.validateBCPay(order);
     	
         Map<String, Object> param = new HashMap<String, Object>();
         
-        buildPayParam(param, para);
+        buildPayParam(param, order);
         
-        PAY_CHANNEL channel = para.getChannel();
-        Client client = BCAPIClient.client;
-        WebTarget target = client.target(BCUtilPrivate.getkApiPay());
-        try {
-            Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-                result.setResultCode(ret.get("result_code").toString());
-                result.setResultMsg(ret.get("result_msg").toString());
-                result.setErrDetail(ret.get("err_detail").toString());
-
-                boolean isSuccess = (result.getResultCode().equals("0"));
-                if (isSuccess) {
-                	result.setObjectId(ret.get("id").toString());
-                	if (channel.equals(PAY_CHANNEL.WX_NATIVE)){
-	                    if (ret.containsKey("code_url") && null != ret.get("code_url")) {
-	                        result.setCodeUrl(ret.get("code_url").toString());
-	                    } 
-                	} else if (channel.equals(PAY_CHANNEL.WX_JSAPI)) {
-                    	result.setWxJSAPIMap(generateWXJSAPIMap(ret));
-                    } else if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE) || channel.equals(PAY_CHANNEL.ALI_WAP)) {
-                		if (ret.containsKey("html") && null != ret.get("html") && 
-                				ret.containsKey("url") && null != ret.get("url")) {
-	                        result.setHtml(ret.get("html").toString());
-	                        result.setUrl(ret.get("url").toString());
-	                    }
-                	} else if (channel.equals(PAY_CHANNEL.UN_WEB) || channel.equals(PAY_CHANNEL.JD_WAP)
-                			|| channel.equals(PAY_CHANNEL.JD_WEB) || channel.equals(PAY_CHANNEL.KUAIQIAN_WAP) 
-                			|| channel.equals(PAY_CHANNEL.KUAIQIAN_WEB)) {
-                		if (ret.containsKey("html") && null != ret.get("html")) {
-	                        result.setHtml(ret.get("html").toString());
-	                    }
-                	} else if (channel.equals(PAY_CHANNEL.YEE_WAP) || channel.equals(PAY_CHANNEL.YEE_WEB) || 
-                			channel.equals(PAY_CHANNEL.BD_WEB) || 
-                			channel.equals(PAY_CHANNEL.BD_WAP) ) {
-                		if (ret.containsKey("url") && null != ret.get("url")) {
-	                        result.setUrl(ret.get("url").toString());
-	                    }
-                	} else if (channel.equals(PAY_CHANNEL.YEE_NOBANKCARD)) {
-                		result.setSucessMsg(ValidationUtil.PAY_SUCCESS);
-                	}
-                } 
-            } else {
-            	result.setResultCode("0");
-            	result.setResultMsg("Not correct response!");
-            	result.setErrDetail("Not correct response!");
-            }
-        } catch (Exception e) {
-        	result.setResultCode("-1");
-        	result.setResultMsg("Network error!");
-        	result.setErrDetail(e.getMessage());
-        }
-        return result;
+        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiPay(), param);
+        
+        placeOrder(order, ret);
+        
+        return order;
     }
-    
-
+	
 	/**
-	 * @param para {@link BCRefundParameter}退款参数
+	 * @param para {@link BCRefund}退款参数
 	 * @return 发起退款的返回结果
+	 * @throws BCException 
 	 */
-    public static BCPayResult startBCRefund(BCRefundParameter para) {
+    public static BCRefund startBCRefund(BCRefund refund) throws BCException {
     	 
-    	BCPayResult result;
-    	result = ValidationUtil.validateBCRefund(para);
-    	
-    	if (!result.getResultCode().equals("0")) {
-    		return result;
-    	}
+    	ValidationUtil.validateBCRefund(refund);
     	
     	Map<String, Object> param = new HashMap<String, Object>();
     	
-    	buildRefundParam(para, param);
-         
-     	Client client = BCAPIClient.client;
-
-     	WebTarget target = client.target(BCUtilPrivate.getkApiRefund());
-     	try {
-             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
-             if (response.getStatus() == 200) {
-                 Map<String, Object> ret = response.readEntity(Map.class);
-                 result.setResultCode(ret.get("result_code").toString());
-                 result.setResultMsg(ret.get("result_msg").toString());
-                 result.setErrDetail(ret.get("err_detail").toString());
-
-                 boolean isSuccess = (result.getResultCode().equals("0"));
-
-                 if (isSuccess) {
-                	 result.setObjectId(ret.get("id").toString());
-             		if (ret.containsKey("url")) {
-            			result.setUrl(ret.get("url").toString());
-            		} 
-        			result.setSucessMsg(ValidationUtil.REFUND_SUCCESS);
-                 }
-             } else {
-            	result.setResultCode("0");
-             	result.setResultMsg("Not correct response!");
-             	result.setErrDetail("Not correct response!");
-             }
-         } catch (Exception e) {
-        	result.setResultCode("-1");
-         	result.setResultMsg("Network error!");
-         	result.setErrDetail(e.getMessage());
-         }
-         return result;
+    	buildRefundParam(refund, param);
+    	
+    	Map<String, Object> ret = doPost(BCUtilPrivate.getkApiRefund(), param);
+        
+    	refund.setObjectId(ret.get("id").toString());
+    	if (ret.containsKey("url")) {
+    		refund.setAliRefundUrl(ret.get("url").toString());
+		} 
+    	
+    	return refund;
     }
 
 
     /**
      * @param para {@link BCQueryParameter}订单查询参数
      * @return 订单查询返回的结果
+     * @throws BCException 
      */
-    public static BCQueryResult startQueryBill(BCQueryParameter para) {
+    @SuppressWarnings("unchecked")
+	public static List<BCOrder> startQueryBill(BCQueryParameter para) throws BCException {
     	
     	BCQueryResult result;
     	
-    	result = ValidationUtil.validateQueryBill(para);
-    	
-    	if (!result.getResultCode().equals("0")) {
-    		return result;
-    	}
+    	ValidationUtil.validateQueryBill(para);
     	 
     	Map<String, Object> param = new HashMap<String, Object>();
         buildQueryParam(param, para);
-         
-        result = new BCQueryResult();
-    	
-    	Client client = BCAPIClient.client;
-    	  
-    	StringBuilder sb = new StringBuilder();   
-        sb.append(BCUtilPrivate.getkApiQueryBill());
         
-        try {
-            sb.append(URLEncoder.encode(
-                            JSONObject.fromObject(param).toString(), "UTF-8"));
-
-            WebTarget target = client.target(sb.toString());
-            Response response = target.request().get();
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-                
-                result.setResultCode(ret.get("result_code").toString());
-                result.setResultMsg(ret.get("result_msg").toString());
-                result.setErrDetail(ret.get("err_detail").toString());
-
-                boolean isSuccess = (result.getResultCode().equals("0"));
-
-                if (isSuccess) {
-                    if (ret.containsKey("bills")
-                                    && !StrUtil.empty(ret.get("bills"))) {
-                        result.setBcOrders(generateBCOrderList((List<Map<String, Object>>)ret.get("bills")));
-                    }
-                }
-            } else {
-            	result.setResultCode("0");
-            	result.setResultMsg("Not correct response!");
-            	result.setErrDetail("Not correct response!");
-            }
-        } catch (Exception e) {
-        	result.setResultCode("-1");
-         	result.setResultMsg("Network error!");
-         	result.setErrDetail(e.getMessage());
-        }
-    	return result;
+        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBill(), param);
+        
+        return generateBCOrderList((List<Map<String, Object>>)ret.get("bills"));
+        
     }
     
     /**
      * Bill Query by Id.
      * @param objectId the id to query by.
-     * @return BCQueryResult
+     * @return BCOrder
+     * @throws BCException 
      */
-    public static BCQueryResult startQueryBillById(String objectId) {
+    public static BCOrder startQueryBillById(String objectId) throws BCException {
     	
     	 BCQueryResult result;
     	
@@ -240,175 +133,58 @@ public class BCPay {
 	     param.put("timestamp", System.currentTimeMillis());
 	     param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
          
-         result = new BCQueryResult();
-    	
-    	 Client client = BCAPIClient.client;
-    	  
-    	 StringBuilder sb = new StringBuilder();   
-         sb.append(BCUtilPrivate.getkApiQueryBillById());
-        
-         try {
-        	sb.append("/" + URLEncoder.encode(objectId, "UTF-8"));
-        	sb.append("?para=");
-            sb.append(URLEncoder.encode(
-                            JSONObject.fromObject(param).toString(), "UTF-8"));
-
-            WebTarget target = client.target(sb.toString());
-            Response response = target.request().get();
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                result.setResultCode(ret.get("result_code").toString());
-                result.setResultMsg(ret.get("result_msg").toString());
-                result.setErrDetail(ret.get("err_detail").toString());
-
-                boolean isSuccess = (result.getResultCode().equals("0"));
-                if (isSuccess) {
-                    if (ret.containsKey("pay")
-                                    && ret.get("pay") != null) {
-                        result.setOrder(generateBCOrder((Map<String, Object>)ret.get("pay")));
-                    }
-                }
-            } else {
-            	result.setResultCode("0");
-            	result.setResultMsg("Not correct response!");
-            	result.setErrDetail("Not correct response!");
-            }
-        } catch (Exception e) {
-        	result.setResultCode("-1");
-         	result.setResultMsg("Network error!");
-         	result.setErrDetail(e.getMessage());
-        }
-    	
-    	return result;
+	     StringBuilder urlSb = new StringBuilder();
+	     urlSb.append(BCUtilPrivate.getkApiQueryBillById());
+	     urlSb.append("/");
+	     urlSb.append(objectId);
+	     urlSb.append("?para=");
+	     Map<String, Object> ret = doGet(urlSb.toString(), param);
+	     
+         return generateBCOrder((Map<String, Object>)ret.get("pay"));
     }
     
     /**
      * @param para {@link BCQueryParameter}订单总数查询参数
      * @return 订单总数查询返回的结果
+     * @throws BCException 
      */
-    public static BCQueryResult startQueryBillCount(BCQueryParameter para) {
+    public static Integer startQueryBillCount(BCQueryParameter para) throws BCException {
     	
-    	BCQueryResult result;
+    	ValidationUtil.validateQueryBill(para);
     	
-    	result = ValidationUtil.validateQueryBill(para);
-    	
-    	if (!result.getResultCode().equals("0")) {
-    		return result;
-    	}
-    	 
     	Map<String, Object> param = new HashMap<String, Object>();
         buildQueryCountParam(param, para);
          
-        result = new BCQueryResult();
+        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBillCount(), param);
     	
-    	Client client = BCAPIClient.client;
-    	  
-    	StringBuilder sb = new StringBuilder();   
-        sb.append(BCUtilPrivate.getkApiQueryBillCount());
-        
-        try {
-            sb.append(URLEncoder.encode(
-                            JSONObject.fromObject(param).toString(), "UTF-8"));
-
-            WebTarget target = client.target(sb.toString());
-            Response response = target.request().get();
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                result.setResultCode(ret.get("result_code").toString());
-                result.setResultMsg(ret.get("result_msg").toString());
-                result.setErrDetail(ret.get("err_detail").toString());
-
-                boolean isSuccess = (result.getResultCode().equals("0"));
-
-                if (isSuccess) {
-                    if (ret.containsKey("count")
-                                    && !StrUtil.empty(ret.get("count"))) {
-                    	result.setTotalCount((Integer)ret.get("count"));
-                    }
-                } 
-            } else {
-            	result.setResultCode("0");
-            	result.setResultMsg("Not correct response!");
-            	result.setErrDetail("Not correct response!");
-            }
-        } catch (Exception e) {
-        	result.setResultCode("-1");
-         	result.setResultMsg("Network error!");
-         	result.setErrDetail(e.getMessage());
-        }
-    	return result;
+        return (Integer)ret.get("count");
     }
     
 	/**
-	 * @param para {@link BCRefundQueryParameter}}
+	 * @param para {@link BCQueryParameter}}
 	 * @return 退款查询返回的结果
+	 * @throws BCException 
 	 */
-    public static BCQueryResult startQueryRefund(BCRefundQueryParameter para) {
+    public static List<BCRefund> startQueryRefund(BCQueryParameter para) throws BCException {
     	
-    	BCQueryResult result;
-    	result = ValidationUtil.validateQueryRefund(para);
-    	if (!result.getResultCode().equals("0")) {
-    		return result;
-    	}
-		
-		result = new BCQueryResult();
+    	ValidationUtil.validateQueryRefund(para);
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-        param.put("app_id", BCCache.getAppID());
-        param.put("timestamp", System.currentTimeMillis());
-        param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
+		
         buildQueryParam(param, para);
-        if (para.getRefundNo() != null) {
-        	param.put("refund_no", para.getRefundNo());
-        }
         
-	    Client client = BCAPIClient.client;
+        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryRefund(), param);
      	
-     	StringBuilder sb = new StringBuilder();
-     	sb.append(BCUtilPrivate.getkApiQueryRefund());
-         
-        try {
-             sb.append(URLEncoder.encode(
-                             JSONObject.fromObject(param).toString(), "UTF-8"));
-
-             WebTarget target = client.target(sb.toString());
-             Response response = target.request().get();
-             if (response.getStatus() == 200) {
-                 Map<String, Object> ret = response.readEntity(Map.class);
-
-                 result.setResultCode(ret.get("result_code").toString());
-                 result.setResultMsg(ret.get("result_msg").toString());
-                 result.setErrDetail(ret.get("err_detail").toString());
-
-                 boolean isSuccess = (result.getResultCode().equals("0"));
-                 if (isSuccess) {
-                     if (ret.containsKey("refunds")
-                                     && ret.get("refunds") != null) {
-                         result.setBcRefundList(generateBCRefundList((List<Map<String, Object>>)ret.get("refunds")));
-                     }
-                 }
-             } else {
-            	result.setResultCode("0");
-             	result.setResultMsg("Not correct response!");
-             	result.setErrDetail("Not correct response!");
-             }
-         } catch (Exception e) {
-        	result.setResultCode("-1");
-          	result.setResultMsg("Network error!");
-          	result.setErrDetail(e.getMessage());
-         }
-     	
-     	return result;
+        return generateBCRefundList((List<Map<String, Object>>)ret.get("refunds"));
     }
     
     /**
      * Bill Query by Id.
      * @param objectId the id to query by.
-     * @return BCQueryResult
+     * @return BCRefund
+     * @throws BCException 
      */
-    public static BCQueryResult startQueryRefundById(String objectId) {
+    public static BCRefund startQueryRefundById(String objectId) throws BCException {
     	
     	 BCQueryResult result;
     	
@@ -417,109 +193,33 @@ public class BCPay {
 	     param.put("timestamp", System.currentTimeMillis());
 	     param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
          
-         result = new BCQueryResult();
-    	
-    	 Client client = BCAPIClient.client;
-    	  
-    	 StringBuilder sb = new StringBuilder();   
-         sb.append(BCUtilPrivate.getkApiQueryRefundById());
-        
-         try {
-        	sb.append("/" + URLEncoder.encode(objectId, "UTF-8"));
-        	sb.append("?para=");
-            sb.append(URLEncoder.encode(
-                            JSONObject.fromObject(param).toString(), "UTF-8"));
-
-            WebTarget target = client.target(sb.toString());
-            Response response = target.request().get();
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                result.setResultCode(ret.get("result_code").toString());
-                result.setResultMsg(ret.get("result_msg").toString());
-                result.setErrDetail(ret.get("err_detail").toString());
-
-                boolean isSuccess = (result.getResultCode().equals("0"));
-
-                if (isSuccess) {
-                    if (ret.containsKey("refund")
-                                    && ret.get("refund") != null) {
-                        result.setRefund(generateBCRefund((Map<String, Object>)ret.get("refund")));
-                    }
-                }
-            } else {
-            	result.setResultCode("0");
-             	result.setResultMsg("Not correct response!");
-             	result.setErrDetail("Not correct response!");
-            }
-        } catch (Exception e) {
-        	result.setResultCode("-1");
-          	result.setResultMsg("Network error!");
-          	result.setErrDetail(e.getMessage());
-        }
-    	
-    	return result;
+	     StringBuilder urlSb = new StringBuilder();
+	     urlSb.append(BCUtilPrivate.getkApiQueryRefundById());
+	     urlSb.append("/");
+	     urlSb.append(objectId);
+	     urlSb.append("?para=");
+	     Map<String, Object> ret = doGet(urlSb.toString(), param);
+	     
+	     return generateBCRefund((Map<String, Object>)ret.get("refund"));
+	     
     }
     
     /**
-     * @param para {@link BCRefundQueryParameter}退款总数查询参数
+     * @param para {@link BCQueryParameter}退款总数查询参数
      * @return 退款总数查询返回的结果
+     * @throws BCException 
      */
-    public static BCQueryResult startQueryRefundCount(BCRefundQueryParameter para) {
+    public static Integer startQueryRefundCount(BCQueryParameter para) throws BCException {
     	
-    	BCQueryResult result;
     	
-    	result = ValidationUtil.validateQueryRefund(para);
+    	ValidationUtil.validateQueryRefund(para);
     	
-    	if (!result.getResultCode().equals("0")) {
-    		return result;
-    	}
-    	 
     	Map<String, Object> param = new HashMap<String, Object>();
         buildQueryCountParam(param, para);
-        if (para.getRefundNo() != null) {
-        	param.put("refund_no", para.getRefundNo());
-        }
          
-        result = new BCQueryResult();
+        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBillCount(), param);
     	
-    	Client client = BCAPIClient.client;
-    	  
-    	StringBuilder sb = new StringBuilder();   
-        sb.append(BCUtilPrivate.getkApiQueryRefundCount());
-        
-        try {
-            sb.append(URLEncoder.encode(
-                            JSONObject.fromObject(param).toString(), "UTF-8"));
-
-            WebTarget target = client.target(sb.toString());
-            Response response = target.request().get();
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                result.setResultCode(ret.get("result_code").toString());
-                result.setResultMsg(ret.get("result_msg").toString());
-                result.setErrDetail(ret.get("err_detail").toString());
-
-                boolean isSuccess = (result.getResultCode().equals("0"));
-
-                if (isSuccess) {
-                    if (ret.containsKey("count")
-                                    && !StrUtil.empty(ret.get("count"))) {
-                    	result.setTotalCount((Integer)ret.get("count"));
-                    }
-                } 
-            } else {
-            	result.setResultCode("0");
-             	result.setResultMsg("Not correct response!");
-             	result.setErrDetail("Not correct response!");
-            }
-        } catch (Exception e) {
-        	result.setResultCode("-1");
-          	result.setResultMsg("Network error!");
-          	result.setErrDetail(e.getMessage());
-        }
-    	return result;
+        return (Integer)ret.get("count");
     }
     
     public static BCQueryResult startQueryPrefundByConditon(BCQueryParameter para, String table) {
@@ -598,16 +298,12 @@ public class BCPay {
 	 *  WX 微信
 	 *  KUAIQIAN 快钱
 	 *  BD 百度
-     * @return BCQueryStatusResult
+     * @return String
+     * @throws BCException 
      */
-    public static BCQueryStatusResult startRefundUpdate(PAY_CHANNEL channel, String refundNo) {
+    public static String startRefundUpdate(PAY_CHANNEL channel, String refundNo) throws BCException {
 
-    	BCQueryStatusResult result;
-    	result = ValidationUtil.validateQueryRefundStatus(channel, refundNo);
-    	
-		if (!result.getResultCode().equals("0")) {
-			return result;
-		}
+    	ValidationUtil.validateQueryRefundStatus(channel, refundNo);
     	
 		Map<String, Object> param = new HashMap<String, Object>();
         param.put("app_id", BCCache.getAppID());
@@ -616,41 +312,8 @@ public class BCPay {
         param.put("channel", channel.toString());
         param.put("refund_no", refundNo);
         
-        StringBuilder sb = new StringBuilder();   
-        sb.append(BCUtilPrivate.getkApiRefundUpdate());
-        
-        
-        Client client = BCAPIClient.client;
-        
-        try {
-        	sb.append(URLEncoder.encode(
-                    JSONObject.fromObject(param).toString(), "UTF-8"));
-        	WebTarget target = client.target(sb.toString());
-		    Response response = target.request().get();
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                result.setResultCode(ret.get("result_code").toString());
-                result.setResultMsg(ret.get("result_msg").toString());
-                result.setErrDetail(ret.get("err_detail").toString());
-
-                boolean isSuccess = (result.getResultCode().equals("0"));
-
-                if (isSuccess) {
-                	result.setRefundStatus(ret.get("refund_status").toString());
-                } 
-            } else {
-            	result.setResultCode("0");
-             	result.setResultMsg("Not correct response!");
-             	result.setErrDetail("Not correct response!");
-            }
-        } catch (Exception e) {
-        	result.setResultCode("-1");
-          	result.setResultMsg("Network error!");
-          	result.setErrDetail(e.getMessage());
-        }
-        return result;
-    	
+        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiRefundUpdate(), param);
+        return ret.get("refund_status").toString();
     }
     
     /**
@@ -663,14 +326,11 @@ public class BCPay {
      * @param transferData
      * （必填） 付款的详细数据 {TransferData} 的 List集合。
      * @return BCPayResult
+     * @throws BCException 
      */
-    public static BCPayResult startTransfer(PAY_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) {
-    	BCPayResult result;
-    	result = ValidationUtil.validateBCTransfer(channel, batchNo, accountName, transferData);
-    	
-    	if (!result.getResultCode().equals("0")) {
-    		return result;
-    	}
+    public static String startTransfer(PAY_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) throws BCException {
+    
+    	ValidationUtil.validateBCTransfer(channel, batchNo, accountName, transferData);
     	
     	Map<String, Object> param = new HashMap<String, Object>();
     	param.put("app_id", BCCache.getAppID());
@@ -690,34 +350,10 @@ public class BCPay {
     		transferList.add(map);
     	}
     	param.put("transfer_data", transferList);
-         
-     	Client client = BCAPIClient.client;
-
-     	WebTarget target = client.target(BCUtilPrivate.getkApiTransfer());
-     	try {
-             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
-             if (response.getStatus() == 200) {
-                 Map<String, Object> ret = response.readEntity(Map.class);
-
-                 result.setResultCode(ret.get("result_code").toString());
-                 result.setResultMsg(ret.get("result_msg").toString());
-                 result.setErrDetail(ret.get("err_detail").toString());
-
-                 boolean isSuccess = (result.getResultCode().equals("0"));
-                 if (isSuccess) {
-        			result.setUrl(ret.get("url").toString());
-                 }
-             } else {
-            	result.setResultCode("0");
-              	result.setResultMsg("Not correct response!");
-              	result.setErrDetail("Not correct response!");
-             }
-         } catch (Exception e) {
-        	result.setResultCode("-1");
-           	result.setResultMsg("Network error!");
-           	result.setErrDetail(e.getMessage());
-         }
-         return result;
+        
+    	Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfer(), param);
+    	
+     	return ret.get("url").toString();
     }
     
     /**
@@ -735,59 +371,30 @@ public class BCPay {
 	 *  JD 京东
      * @param agree
      * （必填） 批量同意或者批量否决
-     * @return BatchRefundResult
+     * @return BCBatchRefund
+     * @throws BCException 
      */
-    public static BCBatchRefundResult startBatchRefund(List<String> ids, String channel, Boolean agree) {
-    	BCBatchRefundResult result;
+    public static BCBatchRefund startBatchRefund(BCBatchRefund batchRefund) throws BCException {
     	
         Map<String, Object> param = new HashMap<String, Object>();
-        param.put("channel", channel);
-        param.put("agree", agree);
-        param.put("ids", ids);
+        param.put("channel", batchRefund.getChannel().toString());
+        param.put("agree", batchRefund.getAgree());
+        param.put("ids", batchRefund.getIds());
         param.put("app_id", BCCache.getAppID());
     	param.put("timestamp", System.currentTimeMillis());
     	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
         
-        result = new BCBatchRefundResult();
         
-        Client client = BCAPIClient.client;
-        WebTarget target = client.target(BCUtilPrivate.getApiBatchRefund());
-        try {
-            Response response = target.request().put(Entity.entity(param, MediaType.APPLICATION_JSON));
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-                
-                result.setResultCode(ret.get("result_code").toString());
-                result.setResultMsg(ret.get("result_msg").toString());
-                result.setErrDetail(ret.get("err_detail").toString());
-
-
-                boolean isSuccess = (result.getResultCode().equals("0"));
-                if (isSuccess) {
-                	if (agree == true) {
-	                	if (ret.containsKey("result_map") && null != ret.get("result_map")) {
-	                		if (channel.equals("ALI")) {
-	                			result.setAliRefundUrl(ret.get("url").toString());
-	                		}
-	                        for (Entry<String, String> perResult:((Map<String, String>)ret.get("result_map")).entrySet()) {
-	                        	String id = perResult.getKey().toString();
-	                        	String info = perResult.getValue().toString();
-	                        	result.getIdResult().put(id, info);
-	                        }
-	                    }
-                	}
-                } 
-            } else {
-            	result.setResultCode("0");
-              	result.setResultMsg("Not correct response!");
-              	result.setErrDetail("Not correct response!");
-            }
-        } catch (Exception e) {
-        	result.setResultCode("-1");
-           	result.setResultMsg("Network error!");
-           	result.setErrDetail(e.getMessage());
+        Map<String, Object> ret = doPut(BCUtilPrivate.getApiBatchRefund(), param);
+        
+        if (ret.containsKey("result_map")) {
+        	batchRefund.setIdResult((Map<String, String>)ret.get("result_map"));
+        	if (ret.containsKey("url")) {
+            	batchRefund.setAliRefundUrl(ret.get("url").toString());
+    		} 
         }
-        return result;
+        
+        return batchRefund;
     }
     
     /**
@@ -813,7 +420,7 @@ public class BCPay {
      * @param para used for building 
      */
     private static void buildPayParam(Map<String, Object> param,
-			BCPayParameter para) {
+			BCOrder para) {
     	
     	param.put("app_id", BCCache.getAppID());
         param.put("timestamp", System.currentTimeMillis());
@@ -857,7 +464,7 @@ public class BCPay {
      * @param param to be built
      * @param para used for building 
      */
-    private static void buildRefundParam(BCRefundParameter para,
+    private static void buildRefundParam(BCRefund para,
 			Map<String, Object> param) {
 		
 		param.put("app_id", BCCache.getAppID());
@@ -870,8 +477,8 @@ public class BCPay {
 		if (para.getChannel() != null) {
     		param.put("channel", para.getChannel().toString());
     	}
-    	if (para.getNeedApproval() != null) {
-    		param.put("need_approval", para.getNeedApproval());
+    	if (para.isNeedApproval() != null) {
+    		param.put("need_approval", para.isNeedApproval());
     	}
     	if (para.getOptional() != null && para.getOptional().size() > 0)
     		param.put("optional", para.getOptional());
@@ -893,13 +500,15 @@ public class BCPay {
         if (para.getBillNo() != null) {
         	param.put("bill_no", para.getBillNo());
         }
+        if (para.getRefundNo() != null) {
+        	param.put("refund_no", para.getRefundNo());
+        }
         if (para.getSkip() != null) {
         	param.put("skip", para.getSkip());
         }
         if (para.getLimit() != null) {
         	param.put("limit", para.getLimit());
         }
-        
         if (para.getStartTime() != null) {
         	param.put("start_time", para.getStartTime().getTime());
         }
@@ -927,6 +536,9 @@ public class BCPay {
         if (para.getBillNo() != null) {
         	param.put("bill_no", para.getBillNo());
         }
+        if (para.getRefundNo() != null) {
+        	param.put("refund_no", para.getRefundNo());
+        }
         if (para.getStartTime() != null) {
         	param.put("start_time", para.getStartTime().getTime());
         }
@@ -940,11 +552,11 @@ public class BCPay {
      * @param bills
      * @return list of BCOrderBean
      */
-	private static List<BCOrderBean> generateBCOrderList(List<Map<String, Object>> bills) {
+	private static List<BCOrder> generateBCOrderList(List<Map<String, Object>> bills) {
 		
-		List<BCOrderBean> bcOrderList = new ArrayList<BCOrderBean>();
+		List<BCOrder> bcOrderList = new ArrayList<BCOrder>();
 		for (Map<String, Object> bill : bills){
-			BCOrderBean bcOrder = new BCOrderBean();
+			BCOrder bcOrder = new BCOrder();
 			generateBCOrderBean(bill, bcOrder);
 			bcOrderList.add(bcOrder);
 		}
@@ -956,8 +568,8 @@ public class BCPay {
      * @param bill
      * @return an object of BCOrderBean
      */
-	private static BCOrderBean generateBCOrder(Map<String, Object> bill) {
-		BCOrderBean bcOrder = new BCOrderBean();
+	private static BCOrder generateBCOrder(Map<String, Object> bill) {
+		BCOrder bcOrder = new BCOrder();
 		generateBCOrderBean(bill, bcOrder);
 		return bcOrder;
 	}
@@ -967,11 +579,11 @@ public class BCPay {
      * @param refundList the list of refund taken in
      * @return list of BCRefundBean object
      */
-    private static List<BCRefundBean> generateBCRefundList(List<Map<String, Object>> refundList) {
+    private static List<BCRefund> generateBCRefundList(List<Map<String, Object>> refundList) {
     	
-    	List<BCRefundBean> bcRefundList = new ArrayList<BCRefundBean>();
+    	List<BCRefund> bcRefundList = new ArrayList<BCRefund>();
 		for (Map<String, Object> refund : refundList){
-			BCRefundBean bcRefund = new BCRefundBean();
+			BCRefund bcRefund = new BCRefund();
 			generateBCRefundBean(refund, bcRefund);
 	    	bcRefundList.add(bcRefund);
 		}
@@ -983,8 +595,8 @@ public class BCPay {
      * @param refund the refund map taken in
      * @return list of BCRefundBean object
      */
-    private static BCRefundBean generateBCRefund(Map<String, Object> refund) {
-    	BCRefundBean bcRefund = new BCRefundBean();
+    private static BCRefund generateBCRefund(Map<String, Object> refund) {
+    	BCRefund bcRefund = new BCRefund();
     	generateBCRefundBean(refund, bcRefund);
     	return bcRefund;
     }
@@ -994,18 +606,17 @@ public class BCPay {
      * @param bill the map taken in
      */
     private static void generateBCOrderBean(Map<String, Object> bill,
-			BCOrderBean bcOrder) {
+			BCOrder bcOrder) {
+    	bcOrder.setObjectId(bill.get("id").toString());
 		bcOrder.setBillNo(bill.get("bill_no").toString());
-		bcOrder.setTotalFee(bill.get("total_fee").toString());
+		bcOrder.setTotalFee((Integer)bill.get("total_fee"));
 		bcOrder.setTitle(bill.get("title").toString());
-		bcOrder.setChannel(bill.get("channel").toString());
-		bcOrder.setSpayResult(((Boolean)bill.get("spay_result")));
-		bcOrder.setSubChannel((bill.get("sub_channel").toString()));
-		bcOrder.setCreatedTime((Long)bill.get("create_time"));
+		bcOrder.setChannel(PAY_CHANNEL.valueOf(bill.get("sub_channel").toString()));
+		bcOrder.setResulted(((Boolean)bill.get("spay_result")));
 		if (bill.containsKey("trade_no") && bill.get("trade_no") != null) {
 			bcOrder.setChannelTradeNo(bill.get("trade_no").toString());
 		}
-		bcOrder.setOptional(bill.get("optional").toString());
+		bcOrder.setOptionalString((bill.get("optional").toString()));
 		bcOrder.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)bill.get("create_time")));
 		if (bill.containsKey("message_detail")) {
 			bcOrder.setMessageDetail(bill.get("message_detail").toString());
@@ -1019,17 +630,17 @@ public class BCPay {
      * @param refund the map taken in
      */
 	private static void generateBCRefundBean(Map<String, Object> refund,
-			BCRefundBean bcRefund) {
+			BCRefund bcRefund) {
+		bcRefund.setObjectId(refund.get("id").toString());
 		bcRefund.setBillNo(refund.get("bill_no").toString());
-		bcRefund.setChannel(refund.get("channel").toString());
-		bcRefund.setSubChannel(refund.get("sub_channel").toString());
+		bcRefund.setChannel(PAY_CHANNEL.valueOf(refund.get("sub_channel").toString()));
 		bcRefund.setFinished((Boolean)refund.get("finish"));
-		bcRefund.setCreatedTime((Long)refund.get("create_time"));
-		bcRefund.setOptional(refund.get("optional").toString());
+		bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("create_time")));
+		bcRefund.setOptionalString(refund.get("optional").toString());
 		bcRefund.setRefunded((Boolean)refund.get("result"));
 		bcRefund.setTitle(refund.get("title").toString());
 		bcRefund.setTotalFee(refund.get("total_fee").toString());
-		bcRefund.setRefundFee(refund.get("refund_fee").toString());
+		bcRefund.setRefundFee((Integer)refund.get("refund_fee"));
 		bcRefund.setRefundNo(refund.get("refund_no").toString());
 		bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("create_time")));
 		if (refund.containsKey("message_detail")) {
@@ -1055,14 +666,13 @@ public class BCPay {
 		return map;
 	}
     
-    private static List<BCRefundBean> generateBCOrderListByCondition(List<Map<String, Object>> results){
-    	List<BCRefundBean> bcRefundList = new ArrayList<BCRefundBean>();
+    private static List<BCRefund> generateBCOrderListByCondition(List<Map<String, Object>> results){
+    	List<BCRefund> bcRefundList = new ArrayList<BCRefund>();
 		for (Map refund : results){
-			BCRefundBean bcRefund = new BCRefundBean();
+			BCRefund bcRefund = new BCRefund();
 			bcRefund.setObjectId(refund.get("objectid").toString());
 			bcRefund.setBillNo(refund.get("bill_no").toString());
-	    	bcRefund.setChannel(refund.get("channel").toString());
-	    	bcRefund.setSubChannel(refund.get("sub_channel").toString());
+	    	bcRefund.setChannel(refund.get("sub_channel").toString());
 	    	bcRefund.setFinished((Boolean)refund.get("finish"));
 //	    	bcRefund.setCreatedTime((Long)refund.get("create_time"));
 	    	bcRefund.setCreatedTime((Long)refund.get("createdat"));
@@ -1081,4 +691,134 @@ public class BCPay {
 		}
 		return bcRefundList;
 	}
+    
+    public static Map<String, Object> doPost(String url,
+			Map<String, Object> param) throws BCException {
+        Client client = BCAPIClient.client;
+        if (client == null) {
+        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
+        }
+        WebTarget target = client.target(url);
+        try {
+            Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
+            if (response.getStatus() == 200) {
+                Map<String, Object> ret = response.readEntity(Map.class);
+                
+                Integer resultCode = (Integer)ret.get("result_code");
+                String resultMessage = ret.get("result_msg").toString();
+                String errorDetail = ret.get("err_detail").toString();
+
+                boolean isSuccess = (resultCode == 0);
+                if (isSuccess) {
+                	return ret;
+                } else {
+                	throw new BCException(resultCode, resultMessage, errorDetail);
+                }
+            } else {
+            	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
+            }
+        } catch (Exception e) {
+        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
+        }
+	}
+    
+    public static Map<String, Object> doPut(String url,
+			Map<String, Object> param) throws BCException {
+        Client client = BCAPIClient.client;
+        if (client == null) {
+        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
+        }
+        WebTarget target = client.target(url);
+        try {
+            Response response = target.request().put(Entity.entity(param, MediaType.APPLICATION_JSON));
+            if (response.getStatus() == 200) {
+                Map<String, Object> ret = response.readEntity(Map.class);
+                
+                Integer resultCode = (Integer)ret.get("result_code");
+                String resultMessage = ret.get("result_msg").toString();
+                String errorDetail = ret.get("err_detail").toString();
+
+                boolean isSuccess = (resultCode == 0);
+                if (isSuccess) {
+                	return ret;
+                } else {
+                	throw new BCException(resultCode, resultMessage, errorDetail);
+                }
+            } else {
+            	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
+            }
+        } catch (Exception e) {
+        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
+        }
+	}
+       
+    public static Map<String, Object> doGet(String url,
+			Map<String, Object> param) throws BCException {
+        Client client = BCAPIClient.client;
+        if (client == null) {
+        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
+        }
+        
+    	StringBuilder sb = new StringBuilder();   
+        
+        
+        try {
+        	sb.append(URLEncoder.encode(url, "UTF-8"));
+            sb.append(URLEncoder.encode(
+                            JSONObject.fromObject(param).toString(), "UTF-8"));
+
+            WebTarget target = client.target(sb.toString());
+            Response response = target.request().get();
+            if (response.getStatus() == 200) {
+                Map<String, Object> ret = response.readEntity(Map.class);
+                
+                Integer resultCode = (Integer)ret.get("result_code");
+                String resultMessage = ret.get("result_msg").toString();
+                String errorDetail = ret.get("err_detail").toString();
+
+                boolean isSuccess = (resultCode == 0);
+
+                if (isSuccess) {
+                	if (url.equals(BCUtilPrivate.getkApiQueryBill())) {
+                        return ret;
+                    }
+                } else {
+                	throw new BCException(resultCode, resultMessage, errorDetail);
+                }
+            } else {
+            	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
+            }
+        } catch (Exception e) {
+        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
+        }
+	}
+    
+    private static void placeOrder(BCOrder order, Map<String, Object> ret) {
+    	order.setObjectId(ret.get("id").toString());
+    	if (order.getChannel().equals(PAY_CHANNEL.WX_NATIVE)){
+            if (ret.containsKey("code_url") && null != ret.get("code_url")) {
+            	order.setCodeUrl(ret.get("code_url").toString());
+            } 
+    	} else if (order.getChannel().equals(PAY_CHANNEL.WX_JSAPI)) {
+    		order.setWxJSAPIMap(generateWXJSAPIMap(ret));
+        } else if (order.getChannel().equals(PAY_CHANNEL.ALI_WEB) || order.getChannel().equals(PAY_CHANNEL.ALI_QRCODE) || order.getChannel().equals(PAY_CHANNEL.ALI_WAP)) {
+    		if (ret.containsKey("html") && null != ret.get("html") && 
+    				ret.containsKey("url") && null != ret.get("url")) {
+    			order.setHtml(ret.get("html").toString());
+    			order.setUrl(ret.get("url").toString());
+            }
+    	} else if (order.getChannel().equals(PAY_CHANNEL.UN_WEB) || order.getChannel().equals(PAY_CHANNEL.JD_WAP)
+    			|| order.getChannel().equals(PAY_CHANNEL.JD_WEB) || order.getChannel().equals(PAY_CHANNEL.KUAIQIAN_WAP) 
+    			|| order.getChannel().equals(PAY_CHANNEL.KUAIQIAN_WEB)) {
+    		if (ret.containsKey("html") && null != ret.get("html")) {
+    			order.setHtml(ret.get("html").toString());
+            }
+    	} else if (order.getChannel().equals(PAY_CHANNEL.YEE_WAP) || order.getChannel().equals(PAY_CHANNEL.YEE_WEB) || 
+    			order.getChannel().equals(PAY_CHANNEL.BD_WEB) || 
+    			order.getChannel().equals(PAY_CHANNEL.BD_WAP) ) {
+    		if (ret.containsKey("url") && null != ret.get("url")) {
+    			order.setUrl(ret.get("url").toString());
+            }
+    	}
+    }
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import cn.beecloud.BCEumeration.RESULT_TYPE;
 import cn.beecloud.bean.BCOrderBean;
-import cn.beecloud.bean.BCRefundBean;
+import cn.beecloud.bean.BCRefund;
 
 
 /**
@@ -24,7 +24,7 @@ public class BCQueryResult {
 	
 	private BCOrderBean order;
 	
-	private BCRefundBean refund;
+	private BCRefund refund;
 	
 	private Integer totalCount;
 	
@@ -32,7 +32,7 @@ public class BCQueryResult {
     private List<BCOrderBean> bcOrders;
     
     //if the result is for refund query
-    private List<BCRefundBean> bcRefundList;
+    private List<BCRefund> bcRefundList;
     
 	public BCQueryResult(RESULT_TYPE type) {
 		this.resultCode = StrUtil.toStr(type.ordinal());
@@ -80,11 +80,11 @@ public class BCQueryResult {
 		this.errDetail = errDetail;
 	}
 
-	public List<BCRefundBean> getBcRefundList() {
+	public List<BCRefund> getBcRefundList() {
 		return bcRefundList;
 	}
 
-	public void setBcRefundList(List<BCRefundBean> bcRefundList) {
+	public void setBcRefundList(List<BCRefund> bcRefundList) {
 		this.bcRefundList = bcRefundList;
 	}
 
@@ -96,11 +96,11 @@ public class BCQueryResult {
 		this.order = order;
 	}
 
-	public BCRefundBean getRefund() {
+	public BCRefund getRefund() {
 		return refund;
 	}
 
-	public void setRefund(BCRefundBean refund) {
+	public void setRefund(BCRefund refund) {
 		this.refund = refund;
 	}
 

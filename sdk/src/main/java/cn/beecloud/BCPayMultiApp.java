@@ -12,10 +12,11 @@ package cn.beecloud;
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.QR_PAY_MODE;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
+import cn.beecloud.bean.BCBatchRefund;
 import cn.beecloud.bean.BCOrderBean;
-import cn.beecloud.bean.BCPayParameter;
+import cn.beecloud.bean.BCOrder;
 import cn.beecloud.bean.BCQueryParameter;
-import cn.beecloud.bean.BCRefundBean;
+import cn.beecloud.bean.BCRefund;
 import cn.beecloud.bean.BCRefundParameter;
 import cn.beecloud.bean.BCRefundQueryParameter;
 import cn.beecloud.bean.TransferData;
@@ -59,11 +60,11 @@ public class BCPayMultiApp {
     }
     
     /**
-	 * @param para {@link BCPayParameter}支付参数
+	 * @param para {@link BCOrder}支付参数
 	 * (必填)
 	 * @return 调起比可支付后的返回结果
 	 */
-    public BCPayResult startBCPay(BCPayParameter para) {
+    public BCPayResult startBCPay(BCOrder para) {
     	
     	BCPayResult result;
     	result = ValidationUtil.validateBCPay(para);
@@ -546,7 +547,7 @@ public class BCPayMultiApp {
 	 *  BD 百度
      * @return BCQueryStatusResult
      */
-    public BCQueryStatusResult startRefundUpdate(PAY_CHANNEL channel, String refundNo) {
+    public BCBatchRefund startRefundUpdate(BCBatchRefund batchRefund) {
 
     	BCQueryStatusResult result;
     	result = ValidationUtil.validateQueryRefundStatus(channel, refundNo);
@@ -739,11 +740,11 @@ public class BCPayMultiApp {
      * @param refundList
      * @return list of refund
      */
-    private List<BCRefundBean> generateBCRefundList(List<Map<String, Object>> refundList) {
+    private List<BCRefund> generateBCRefundList(List<Map<String, Object>> refundList) {
 
-        List<BCRefundBean> bcRefundList = new ArrayList<BCRefundBean>();
+        List<BCRefund> bcRefundList = new ArrayList<BCRefund>();
         for (Map refund : refundList) {
-            BCRefundBean bcRefund = new BCRefundBean();
+            BCRefund bcRefund = new BCRefund();
             bcRefund.setBillNo(refund.get("bill_no").toString());
             bcRefund.setRefundNo(refund.get("refund_no").toString());
             bcRefund.setTotalFee(refund.get("total_fee").toString());
@@ -762,8 +763,8 @@ public class BCPayMultiApp {
      * @param refund the refund map taken in
      * @return list of BCRefundBean object
      */
-    private BCRefundBean generateBCRefund(Map<String, Object> refund) {
-    	BCRefundBean bcRefund = new BCRefundBean();
+    private BCRefund generateBCRefund(Map<String, Object> refund) {
+    	BCRefund bcRefund = new BCRefund();
     	generateBCRefundBean(refund, bcRefund);
     	return bcRefund;
     }
@@ -773,7 +774,7 @@ public class BCPayMultiApp {
      * @param refund the map taken in
      */
 	private void generateBCRefundBean(Map<String, Object> refund,
-			BCRefundBean bcRefund) {
+			BCRefund bcRefund) {
 		bcRefund.setBillNo(refund.get("bill_no").toString());
 		bcRefund.setChannel(refund.get("channel").toString());
 		bcRefund.setSubChannel(refund.get("sub_channel").toString());
@@ -816,7 +817,7 @@ public class BCPayMultiApp {
      * @param para used for building 
      */
     private void buildPayParam(Map<String, Object> param,
-			BCPayParameter para) {
+			BCOrder para) {
     	
     	param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());

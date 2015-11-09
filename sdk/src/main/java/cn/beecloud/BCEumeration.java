@@ -19,7 +19,9 @@ public class BCEumeration {
         REFUND_AMOUNT_TOO_LARGE,
         NO_SUCH_REFUND,
         RECORD_DUPLICATE,
-        RUNTIME_ERORR
+        RUNTIME_ERORR,
+        NOT_CORRECT_RESPONSE,
+        OTHER_ERROR
 	}
 
 	public enum PAY_CHANNEL {

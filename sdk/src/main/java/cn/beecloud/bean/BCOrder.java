@@ -9,7 +9,9 @@ import cn.beecloud.BCEumeration.QR_PAY_MODE;
  * @author Rui.Feng
  * @since 2015.9.24
  */
-public class BCPayParameter {
+public class BCOrder {
+	
+	private String objectId;
 	
 	private PAY_CHANNEL channel;
 	
@@ -19,7 +21,17 @@ public class BCPayParameter {
 	
 	private String title;
 	
+	private String codeUrl;
+	
+	private String html;
+	
+	private String url;
+	
+	private Map<String, Object> wxJSAPIMap;
+	
 	private Map<String, Object> optional;
+	
+	private String optionalString;
 	
 	private String returnUrl;
 	
@@ -37,6 +49,21 @@ public class BCPayParameter {
 	
 	private String frqid;
 	
+	private String channelTradeNo;
+	
+	private boolean resulted;
+    
+	private boolean refundResult;
+	
+	private boolean revertResult;
+	
+	private String messageDetail = "不显示";
+	
+	private String dateTime;
+	
+	public BCOrder() {
+	}
+
 	/**
 	 * 构造函数，参数为发起支付的4个必填参数
 	 * @param channel {@link #setChannel}
@@ -44,7 +71,7 @@ public class BCPayParameter {
 	 * @param billNo {@link #setBillNo}
 	 * @param title {@link #setTitle}
 	 */
-	public BCPayParameter(PAY_CHANNEL channel, Integer totalFee, String billNo,
+	public BCOrder(PAY_CHANNEL channel, Integer totalFee, String billNo,
 			String title) {
 		this.channel = channel;
 		this.totalFee = totalFee;
@@ -279,5 +306,107 @@ public class BCPayParameter {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	/**
+	 * @return 渠道交易号， 支付完成之后获得
+	 */
+	public String getChannelTradeNo() {
+		return channelTradeNo;
+	}
+
+	public boolean isRefundResult() {
+		return refundResult;
+	}
+	
+	/**
+	 * @return 支付成功
+	 */
+	public boolean isResulted() {
+		return resulted;
+	}
+
+	public void setResulted(boolean resulted) {
+		this.resulted = resulted;
+	}
+
+	public void setRefundResult(boolean refundResult) {
+		this.refundResult = refundResult;
+	}
+
+	public boolean isRevertResult() {
+		return revertResult;
+	}
+
+	public void setRevertResult(boolean revertResult) {
+		this.revertResult = revertResult;
+	}
+
+	public String getMessageDetail() {
+		return messageDetail;
+	}
+
+	public void setMessageDetail(String messageDetail) {
+		this.messageDetail = messageDetail;
+	}
+
+	public String getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(String objectId) {
+		this.objectId = objectId;
+	}
+
+	public String getCodeUrl() {
+		return codeUrl;
+	}
+
+	public void setCodeUrl(String codeUrl) {
+		this.codeUrl = codeUrl;
+	}
+
+	public String getHtml() {
+		return html;
+	}
+
+	public void setHtml(String html) {
+		this.html = html;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public Map<String, Object> getWxJSAPIMap() {
+		return wxJSAPIMap;
+	}
+
+	public void setWxJSAPIMap(Map<String, Object> wxJSAPIMap) {
+		this.wxJSAPIMap = wxJSAPIMap;
+	}
+
+	public String getDateTime() {
+		return dateTime;
+	}
+
+	public void setDateTime(String dateTime) {
+		this.dateTime = dateTime;
+	}
+
+	public void setChannelTradeNo(String channelTradeNo) {
+		this.channelTradeNo = channelTradeNo;
+	}
+
+	public String getOptionalString() {
+		return optionalString;
+	}
+
+	public void setOptionalString(String optionalString) {
+		this.optionalString = optionalString;
 	}
 }
