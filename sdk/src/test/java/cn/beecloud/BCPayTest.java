@@ -1,36 +1,20 @@
 package cn.beecloud;
 
-import static junit.framework.Assert.assertEquals;
-
+import cn.beecloud.BCEumeration.PAY_CHANNEL;
+import cn.beecloud.BCEumeration.QR_PAY_MODE;
+import cn.beecloud.BCEumeration.RESULT_TYPE;
+import cn.beecloud.bean.BCException;
+import cn.beecloud.bean.BCOrder;
+import cn.beecloud.bean.BCRefundParameter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import javax.ws.rs.client.Client;
-
-import mockit.Deencapsulation;
-import mockit.Delegate;
-import mockit.Expectations;
-import mockit.Mock;
-import mockit.MockUp;
-import mockit.NonStrictExpectations;
-
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import cn.beecloud.BCEumeration.PAY_CHANNEL;
-import cn.beecloud.BCEumeration.QR_PAY_MODE;
-import cn.beecloud.BCEumeration.RESULT_TYPE;
-import cn.beecloud.TestConstant.CHANNEL_TYPE;
-import cn.beecloud.bean.*;
 
 public class BCPayTest {
 	
@@ -1164,19 +1148,19 @@ public class BCPayTest {
 //		}
 //	}
 	
-	class wxNativeMatcher extends TypeSafeMatcher<Map<String, Object>> {
-
-		@Override
-		public void describeTo(Description arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		protected boolean matchesSafely(Map<String, Object> arg0) {
-			// TODO Auto-generated method stub
-			return false;
-		} 
-	}
+//	class wxNativeMatcher extends TypeSafeMatcher<Map<String, Object>> {
+//
+//		@Override
+//		public void describeTo(Description arg0) {
+//			// TODO Auto-generated method stub
+//
+//		}
+//
+//		@Override
+//		protected boolean matchesSafely(Map<String, Object> arg0) {
+//			// TODO Auto-generated method stub
+//			return false;
+//		}
+//	}
 	
 }
