@@ -47,7 +47,7 @@ public class BCPay {
 	private final static String NETWORK_ERROR = "网络错误";
 	
 	/**
-	 * @param para {@link BCOrder}支付参数
+	 * @param order {@link BCOrder}支付参数
 	 * (必填)
 	 * @return 调起比可支付后的返回结果
 	 * @throws BCException 
@@ -68,7 +68,7 @@ public class BCPay {
     }
 	
 	/**
-	 * @param para {@link BCRefund}退款参数
+	 * @param refund {@link BCRefund}退款参数
 	 * @return 发起退款的返回结果
 	 * @throws BCException 
 	 */
@@ -279,19 +279,8 @@ public class BCPay {
     
     /**
      * 发起预退款审核，包括批量否决和批量同意
-     * @param ids 
-     * （必填）待批量审核的预退款记录唯一标识列表
-     * @param channel
-     * (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含：
-     *  YEE 易宝
-	 *  WX 微信
-	 *  KUAIQIAN 快钱
-	 *  BD 百度
-	 *  ALI 支付宝
-	 *  KUAIQIAN 快钱
-	 *  JD 京东
-     * @param agree
-     * （必填） 批量同意或者批量否决
+     * @param batchRefund
+     * （必填） 批量退款参数
      * @return BCBatchRefund
      * @throws BCException 
      */
@@ -602,7 +591,7 @@ public class BCPay {
             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
             if (response.getStatus() == 200) {
                 Map<String, Object> ret = response.readEntity(Map.class);
-                
+                //TODO
                 Integer resultCode = (Integer)ret.get("result_code");
                 String resultMessage = ret.get("result_msg").toString();
                 String errorDetail = ret.get("err_detail").toString();
@@ -632,7 +621,7 @@ public class BCPay {
             Response response = target.request().put(Entity.entity(param, MediaType.APPLICATION_JSON));
             if (response.getStatus() == 200) {
                 Map<String, Object> ret = response.readEntity(Map.class);
-                
+                //TODO
                 Integer resultCode = (Integer)ret.get("result_code");
                 String resultMessage = ret.get("result_msg").toString();
                 String errorDetail = ret.get("err_detail").toString();
@@ -671,8 +660,8 @@ public class BCPay {
                 Map<String, Object> ret = response.readEntity(Map.class);
                 
                 Integer resultCode = (Integer)ret.get("result_code");
-                String resultMessage = ret.get("result_msg").toString();
-                String errorDetail = ret.get("err_detail").toString();
+                String resultMessage = StrUtil.toStr(ret.get("result_msg"));
+                String errorDetail = StrUtil.toStr(ret.get("err_detail").toString());
 
                 boolean isSuccess = (resultCode == 0);
 

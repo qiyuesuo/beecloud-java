@@ -1,19 +1,16 @@
 package cn.beecloud;
 
-import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
 import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.BCOrder;
 import cn.beecloud.bean.BCQueryParameter;
 import cn.beecloud.bean.BCRefund;
-import cn.beecloud.bean.BCRefundParameter;
 import cn.beecloud.bean.TransferData;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class is used to unify the validation for all the
@@ -123,91 +120,55 @@ public class ValidationUtil
 	private final static String BILL_TIME_OUT_ZERO =
 			"billTimeout不能为0！";
 	
-	final static String PRE_REFUND_SUCCEED = "预退款成功！ ";
-	
-	final static String REFUND_REJECT = "退款被拒绝！ ";
-	
-	final static String REFUND_SUCCESS = "退款已经成功！ ";
-	
-	final static String PAY_SUCCESS = "支付成功！ ";
-	
-	public static BCPayResult validateBCPay(PAY_CHANNEL channel, String billNo, String title, String returnUrl, String openId) {
-		if (channel == null) {
-			return new BCPayResult(CHANNEL_EMPTY, RESULT_TYPE.PARAM_INVALID);
-		} else if (StrUtil.empty(billNo)) {
-			return new BCPayResult(BILL_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
-		} else if (!billNo.matches("[0-9A-Za-z]{8,32}")) {
-			return new BCPayResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
-		} else if (StrUtil.empty(title)) {
-			return new BCPayResult(TITLE_EMPTY, RESULT_TYPE.PARAM_INVALID);
-		} else if (StrUtil.empty(returnUrl) && 
-				(channel.equals(PAY_CHANNEL.ALI_WEB) || 
-						channel.equals(PAY_CHANNEL.ALI_QRCODE) || 
-							channel.equals(PAY_CHANNEL.UN_WEB))) {
-			return new BCPayResult(RETURN_URL_EMPTY, RESULT_TYPE.PARAM_INVALID);
-		} else if (channel.equals(PAY_CHANNEL.WX_JSAPI) && StrUtil.empty(openId)){
-			return new BCPayResult(OPENID_EMPTY, RESULT_TYPE.PARAM_INVALID);
-		} else
-			try {
-				if (title.getBytes("GBK").length > 32) {
-					return new BCPayResult(TITLE_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
-				}
-			} catch (UnsupportedEncodingException e) {
-				if (title.length() > 16) {
-					return new BCPayResult(TITLE_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
-				}
-			}
-		
-		return new BCPayResult(RESULT_TYPE.OK);	
-	}
-
-	public static BCQueryStatusResult validateQueryRefundStatus(PAY_CHANNEL channel,
+	public static void validateQueryRefundStatus(PAY_CHANNEL channel,
 			String refundNo) {
 		if (channel == null) {
-			return new BCQueryStatusResult(CHANNEL_EMPTY, RESULT_TYPE.PARAM_INVALID);
+//			return new BCQueryStatusResult(CHANNEL_EMPTY, RESULT_TYPE.PARAM_INVALID);
 		} else if (StrUtil.empty(refundNo)) {
-			return new BCQueryStatusResult(REFUND_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
+//			return new BCQueryStatusResult(REFUND_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
 		}
-		return new BCQueryStatusResult(RESULT_TYPE.OK);
+//		return new BCQueryStatusResult(RESULT_TYPE.OK);
+        //TODO:
 	}
 
-	public static BCPayResult validateBCTransfer(PAY_CHANNEL channel,
+	public static void validateBCTransfer(PAY_CHANNEL channel,
 			String batchNo, String accountName, List<TransferData> transferData) {
 		if (channel == null) {
-			return new BCPayResult(CHANNEL_EMPTY, RESULT_TYPE.PARAM_INVALID);
+//			return new BCPayResult(CHANNEL_EMPTY, RESULT_TYPE.PARAM_INVALID);
 		} else if (!channel.equals(PAY_CHANNEL.ALI)) { 
-			return new BCPayResult(CHANNEL_SUPPORT_INVALID, RESULT_TYPE.PARAM_INVALID);
+//			return new BCPayResult(CHANNEL_SUPPORT_INVALID, RESULT_TYPE.PARAM_INVALID);
 		} else if (batchNo == null) {
-			return new BCPayResult(BATCH_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
+//			return new BCPayResult(BATCH_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
 		} else if (!batchNo.matches("[0-9A-Za-z]{11,32}")) {
-			return new BCPayResult(BATCH_NO_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
+//			return new BCPayResult(BATCH_NO_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
 		} else if (accountName == null) {
-			return new BCPayResult(ACCOUNT_NAME_EMPTY, RESULT_TYPE.PARAM_INVALID);
+//			return new BCPayResult(ACCOUNT_NAME_EMPTY, RESULT_TYPE.PARAM_INVALID);
 		} else if (transferData == null) {
-			return new BCPayResult(TRANSFER_DATA_EMPTY, RESULT_TYPE.PARAM_INVALID);
+//			return new BCPayResult(TRANSFER_DATA_EMPTY, RESULT_TYPE.PARAM_INVALID);
 		}
 		for(TransferData data : transferData) {
 			if (StrUtil.empty(data.getTransferId())) {
-				return new BCPayResult(TRANSFER_ID_EMPTY, RESULT_TYPE.PARAM_INVALID); 
+//				return new BCPayResult(TRANSFER_ID_EMPTY, RESULT_TYPE.PARAM_INVALID);
 			} else if (!data.getTransferId().matches("[0-9A-Za-z]{1,32}")) {
-				return new BCPayResult(TRANSFER_ID_FORMAT_EMPTY, RESULT_TYPE.PARAM_INVALID); 
+//				return new BCPayResult(TRANSFER_ID_FORMAT_EMPTY, RESULT_TYPE.PARAM_INVALID);
 			} else if (StrUtil.empty(data.getReceiverAccount())) {
-				return new BCPayResult(RECEIVER_ACCOUNT_EMPTY, RESULT_TYPE.PARAM_INVALID); 
+//				return new BCPayResult(RECEIVER_ACCOUNT_EMPTY, RESULT_TYPE.PARAM_INVALID);
 			} else if (StrUtil.empty(data.getReceiverName())) {
-				return new BCPayResult(RECEIVER_NAME_EMPTY, RESULT_TYPE.PARAM_INVALID); 
+//				return new BCPayResult(RECEIVER_NAME_EMPTY, RESULT_TYPE.PARAM_INVALID);
 			} else if (StrUtil.empty(data.getTransferFee())) {
-				return new BCPayResult(TRANSFER_FEE_EMPTY, RESULT_TYPE.PARAM_INVALID); 
+//				return new BCPayResult(TRANSFER_FEE_EMPTY, RESULT_TYPE.PARAM_INVALID);
 			} else if (data.getTransferFee() <= 0) {
-				return new BCPayResult(TRANSFER_FEE_INVALID, RESULT_TYPE.PARAM_INVALID); 
+//				return new BCPayResult(TRANSFER_FEE_INVALID, RESULT_TYPE.PARAM_INVALID);
 			} else if (StrUtil.empty(data.getTransferNote())) {
-				return new BCPayResult(TRANSFER_NOTE_EMPTY, RESULT_TYPE.PARAM_INVALID); 
+//				return new BCPayResult(TRANSFER_NOTE_EMPTY, RESULT_TYPE.PARAM_INVALID);
 			}
 		}
 		
 		if (transferData.size() > 1000) {
-			return new BCPayResult(TRANSFER_LIST_SIZE_INVALID, RESULT_TYPE.PARAM_INVALID); 
+//			return new BCPayResult(TRANSFER_LIST_SIZE_INVALID, RESULT_TYPE.PARAM_INVALID);
 		}
-		return new BCPayResult(RESULT_TYPE.OK);
+        //TODO:
+//		return new BCPayResult(RESULT_TYPE.OK);
 	}
 
 	public static void validateBCPay(BCOrder para) throws BCException {

@@ -298,19 +298,8 @@ private final static String NOT_REGISTER = "为注册";
     
     /**
      * 发起预退款审核，包括批量否决和批量同意
-     * @param ids 
-     * （必填）待批量审核的预退款记录唯一标识列表
-     * @param channel
-     * (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含：
-     *  YEE 易宝
-	 *  WX 微信
-	 *  KUAIQIAN 快钱
-	 *  BD 百度
-	 *  ALI 支付宝
-	 *  KUAIQIAN 快钱
-	 *  JD 京东
-     * @param agree
-     * （必填） 批量同意或者批量否决
+     * @param batchRefund
+     * （必填） 批量退款参数
      * @return BCBatchRefund
      * @throws BCException 
      */
