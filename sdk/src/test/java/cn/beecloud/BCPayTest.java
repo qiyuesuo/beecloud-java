@@ -682,12 +682,12 @@ public class BCPayTest {
 		}
 		
 		if (channel.equals(PAY_CHANNEL.WX_NATIVE)) {
-			new Expectations(){
-				   {
-				    Deencapsulation.invoke(BCPay.class, "doPost", withArgThat(new wxNativeMatcher()));
-				    returns("I got INVOKED");
-				   }
-				  };
+//			new Expectations(){
+//				   {
+//				    Deencapsulation.invoke(BCPay.class, "doPost", withArgThat(new wxNativeMatcher()));
+//				    returns("I got INVOKED");
+//				   }
+//				  };
 		}
 	}
 	
