@@ -131,11 +131,11 @@ public class ValidationUtil
         //TODO:
 	}
 
-	public static void validateBCTransfer(PAY_CHANNEL channel,
+	public static void validateBCTransfer(BCEumeration.TRANSFER_CHANNEL channel,
 			String batchNo, String accountName, List<TransferData> transferData) {
 		if (channel == null) {
 //			return new BCPayResult(CHANNEL_EMPTY, RESULT_TYPE.PARAM_INVALID);
-		} else if (!channel.equals(PAY_CHANNEL.ALI)) { 
+		} else if (!channel.equals(BCEumeration.TRANSFER_CHANNEL.ALI_TRANSFER)) {
 //			return new BCPayResult(CHANNEL_SUPPORT_INVALID, RESULT_TYPE.PARAM_INVALID);
 		} else if (batchNo == null) {
 //			return new BCPayResult(BATCH_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);

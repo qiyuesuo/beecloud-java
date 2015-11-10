@@ -31,8 +31,8 @@
 	optional.put("rui", "睿");
 	
 	Properties prop = loadProperty();
-	String wxJSAPIAppId = prop.get("wxJSAPIAppId").toString();
-	String wxJSAPISecret = prop.get("wxJSAPISecret").toString();
+    String wxJSAPIAppId = prop.get("wxJSAPIAppId").toString();
+    String wxJSAPISecret = prop.get("wxJSAPISecret").toString();
 	
 	
 	String code = request.getParameter("code");

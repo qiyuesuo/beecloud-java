@@ -137,67 +137,67 @@ input {
 		<div>
 			<ul class="clear" style="margin-top:20px">
 				<li class="clicked" onclick="paySwitch(this)">
-			   		<input type="radio"  value="alipay" name="paytype" checked="checked">
+			   		<input type="radio"  value="ALI_WEB" name="paytype" checked="checked">
 			    	<img src="http://beeclouddoc.qiniudn.com/ali.png" alt="">
 		        </li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="wechatQr" name="paytype">
+					<input type="radio"  value="WX_NATIVE" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/wechats.png" alt="">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="wechatJSAPI" name="paytype">
+					<input type="radio"  value="WX_JSAPI" name="paytype">
 					<img src="http://7xavqo.com1.z0.glb.clouddn.com/wechatgzh.png" alt="">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="unionpay" name="paytype">
+					<input type="radio"  value="UN_WEB" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/unionpay.png" alt="">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="alipayQr" name="paytype">
+					<input type="radio"  value="ALI_QRCODE" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/alis.png" alt="">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="alipayWAP" name="paytype">
+					<input type="radio"  value="ALI_WAP" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/aliwap.png" alt="">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="alitransfer" name="paytype">
+					<input type="radio"  value="ALI_TRANSFER" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/alitransfer.png" alt="">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="yeeWap" name="paytype">
+					<input type="radio"  value="YEE_WAP" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/ybwap.png" alt="YEE WAP">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="yeeWeb" name="paytype">
+					<input type="radio"  value="YEE_WEB" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/yb.png" alt="YEE WEB">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="yeeNoBankCard" name="paytype">
+					<input type="radio"  value="YEE_NOBANKCARD" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/ybcard.png" alt="YEE WEB">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="jdWap" name="paytype">
+					<input type="radio"  value="JD_WAP" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/jdwap.png" alt="JD　WAP">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="jdWeb" name="paytype">
+					<input type="radio"  value="JD_WEB" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/jd.png" alt="JD　WEB">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="kqWap" name="paytype">
+					<input type="radio"  value="KUAIQIAN_WAP" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/kqwap.png" alt="KUAIQIAN WAP">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="kqWeb" name="paytype">
+					<input type="radio"  value="KUAIQIAN_WEB" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/kq.png" alt="KUAIQIAN WEB">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="bdWeb" name="paytype">
+					<input type="radio"  value="BD_WEB" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/bd.png" alt="KUAIQIAN WEB">
 				</li>
 				<li onclick="paySwitch(this)">
-					<input type="radio"  value="bdWap" name="paytype">
+					<input type="radio"  value="BD_WAP" name="paytype">
 					<img src="http://beeclouddoc.qiniudn.com/bdwap.png" alt="KUAIQIAN WEB">
 				</li>
   		    </ul>

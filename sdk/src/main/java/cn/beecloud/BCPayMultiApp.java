@@ -268,7 +268,7 @@ private final static String NOT_REGISTER = "为注册";
      * @return BCPayResult
      * @throws BCException 
      */
-    public String startTransfer(PAY_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) throws BCException {
+    public String startTransfer(BCEumeration.TRANSFER_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) throws BCException {
     
     	ValidationUtil.validateBCTransfer(channel, batchNo, accountName, transferData);
     	
@@ -276,7 +276,7 @@ private final static String NOT_REGISTER = "为注册";
     	param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
         param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
-		param.put("channel", channel.toString());
+		param.put("channel", "ALI");
     	param.put("batch_no", batchNo);
     	param.put("account_name", accountName);
     	List<Map<String, Object>> transferList = new ArrayList<Map<String, Object>>();
