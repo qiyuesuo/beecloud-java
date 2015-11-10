@@ -120,6 +120,9 @@ public class ValidationUtil
 	private final static String CHANNEL_SUPPORT_INVALID =
 			"批量打款仅支持ALI";
 	
+	private final static String BILL_TIME_OUT_ZERO =
+			"billTimeout不能为0！";
+	
 	final static String PRE_REFUND_SUCCEED = "预退款成功！ ";
 	
 	final static String REFUND_REJECT = "退款被拒绝！ ";
@@ -220,6 +223,8 @@ public class ValidationUtil
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TITLE_EMPTY);
 		}  else if (StrUtil.empty(para.getTotalFee())) {
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TOTAL_FEE_EMPTY);
+		}  else if (para.getBillTimeout() != null && para.getBillTimeout() == 0) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BILL_TIME_OUT_ZERO);
 		}  else if (para.getBillNo() != null && !para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_FORMAT_INVALID);
 		}  else if (StrUtil.empty(para.getReturnUrl()) && 

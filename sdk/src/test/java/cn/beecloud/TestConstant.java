@@ -43,6 +43,108 @@ public class TestConstant {
 
 	public static Integer billTimeOut = 300;
 	
+	public final static String BILL_NO_FORMAT_INVALID =
+			"billNo 是一个长度介于8至32字符的数字字母字符串！";
+	
+	public final static String BATCH_NO_FORMAT_INVALID =
+			"batchNo 是一个长度在11到32个字符的数字字母字符串！";
+	
+	public final static String PAY_PARAM_EMPTY =
+			"支付参数不能为空！";
+	
+	public final static String REFUND_PARAM_EMPTY = 
+			"退款参数不能为空！";
+	
+	public final static String QUERY_PARAM_EMPTY = 
+			"查询参数不能为空！";
+	
+	public final static String BILL_NO_EMPTY =
+			"billNo 必填！";
+	
+	public final static String BATCH_NO_EMPTY =
+			"batchNo 必填！";
+	
+	public final static String TRANSFER_DATA_EMPTY =
+			"transferData 必填！";
+
+	public final static String TRANSFER_ID_EMPTY =
+			"transferId 不能为空！";
+	
+	public final static String RECEIVER_ACCOUNT_EMPTY =
+			"receiverAccount 不能为空！";
+	
+	public final static String RECEIVER_NAME_EMPTY =
+			"receiverName 不能为空！";
+	
+	public final static String TRANSFER_FEE_EMPTY =
+			"transferFee 不能为空！";
+	
+	public final static String TRANSFER_FEE_INVALID = 
+			"transferFee 必须大于0！";
+	
+	public final static String TRANSFER_NOTE_EMPTY =
+			"transferNote 不能为空！";
+	
+	public final static String ACCOUNT_NAME_EMPTY =
+			"accountName 必填！";
+	
+	public final static String TITLE_EMPTY =
+			"title 必填！";
+	
+	public final static String TOTAL_FEE_EMPTY =
+			"totalFee 必填！";
+	
+	public final static String REFUND_FEE_EMPTY =
+			"refundFee 必填！";
+	
+	public final static String REFUND_FEE_INVALID =
+			"refundFee 必须大于零！";
+	
+	public final static String QR_PAY_MODE_EMPTY =
+			"qrPayMode 必填！";
+	
+	public final static String RETURN_URL_EMPTY = 
+			"returnUrl 必填！";
+	
+	public final static String REFUND_NO_EMPTY =
+			"refundNo 必填！";
+	
+	public final static String CHANNEL_EMPTY =
+			"channel 必填！";
+	
+	public final static String YEE_NOBANCARD_FACTOR_EMPTY =
+			"cardNo, cardPwd, frqid 必填！";
+	
+	public final static String REFUND_NO_FORMAT_INVALID =
+			"refundNo 是格式为当前日期加3-24位数字字母（不能为000）流水号的字符串！ ";
+	
+	public final static String TITLE_FORMAT_INVALID =
+			"title 是一个长度不超过32字节的字符串！";
+	
+	public final static String LIMIT_FORMAT_INVALID =
+			"limit 的最大长度为50！";
+	
+	public final static String OPENID_EMPTY =
+			"openid 必填！";
+	
+	public final static String CHANNEL_INVALID_FOR_REFUND =
+			"退款只支持WX, UN, ALI !";
+	
+	public final static String TRANSFER_ID_FORMAT_EMPTY = 
+			"transferId 是一个长度不超过32字符的数字字母字符串！";
+	
+	public final static String TRANSFER_LIST_SIZE_INVALID = 
+			"transferData 长度不能超过1000！";
+	
+	public final static String CHANNEL_SUPPORT_INVALID =
+			"批量打款仅支持ALI";
+	
+	public static String ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN = 
+			"BCException为抛出！";
+	
+	public final static String BILL_TIME_OUT_ZERO =
+			"billTimeout不能为0！";
+	
 	public static enum CHANNEL_TYPE {
 		WX,
         WX_APP,
