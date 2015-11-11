@@ -1134,17 +1134,33 @@ public class BCPayTest {
 		returnMap.put("result_code", 0);
 		returnMap.put("result_msg", "OK");
 		returnMap.put("err_detail", "");
+		Map<String, Object> payMap = new HashMap<String, Object>();
+		payMap.put("spay_result", TestConstant.MOCK_PAY_RESULT);
+		payMap.put("create_time", TestConstant.MOCK_CREATE_TIME);
+		payMap.put("total_fee", TestConstant.MOCK_TOTAL_FEE);
+		payMap.put("channel", TestConstant.MOCK_CHANNEL);
+		payMap.put("trade_no", "");
+		payMap.put("bill_no", TestConstant.MOCK_BILL_NO);
+		payMap.put("optional", "");
+		payMap.put("revert_result", false);
+		payMap.put("title", TestConstant.MOCK_TITLE);
+		payMap.put("sub_channel", TestConstant.MOCK_SUB_CHANNEL);
+		payMap.put("message_detail", "");
+		payMap.put("refund_result", false);
+		returnMap.put("pay", payMap);
 		
 		new Expectations(BCPay.class){
 		   {
 		    Deencapsulation.invoke(BCPay.class, "doGet", withSubstring(BCUtilPrivate.getkApiQueryBillById().substring(14)), withAny(Map.class));
 		    returns(returnMap);
-		    result = new BCException(RESULT_TYPE.RUNTIME_ERORR.ordinal(), RESULT_TYPE.RUNTIME_ERORR.name(), RESULT_TYPE.RUNTIME_ERORR.name());
+		    result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(), RESULT_TYPE.APP_INVALID.name(), RESULT_TYPE.APP_INVALID.name());
 		   }
 		};
 		
 		try {
-			BCPay.startQueryBillById(param.getObjectId());
+			BCOrder order = BCPay.startQueryBillById(param.getObjectId());
+			Assert.assertEquals("",TestConstant.MOCK_BILL_NO, order.getBillNo());
+			Assert.assertEquals("",TestConstant.MOCK_OBJECT_ID, order.getObjectId());
 		} catch (BCException e) {
 			e.printStackTrace();
 		}

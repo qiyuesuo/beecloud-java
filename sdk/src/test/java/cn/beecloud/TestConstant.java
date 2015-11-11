@@ -47,6 +47,15 @@ public class TestConstant {
 	public static String MOCK_OBJECT_ID = "abcdefg1234556890";
 	public static String MOCK_PAY_URL = "http://www.163.com";
 	public static String MOCK_PAY_HTML = "<form></form><script>form.submit()</script>";
+	public static boolean MOCK_PAY_RESULT = false;
+	public static long MOCK_CREATE_TIME = 1447224624009l;
+	public static int MOCK_TOTAL_FEE = 1;
+	public static String MOCK_CHANNEL = "WX";
+	public static String MOCK_SUB_CHANNEL = "WX_NATIVE";
+	public static String MOCK_BILL_NO = "e59990442bf04290b8943a36c3538f49";
+	public static String MOCK_TITLE = "demo测试";
+	
+	
 	
 	public final static String BILL_NO_FORMAT_INVALID =
 			"billNo 是一个长度介于8至32字符的数字字母字符串！";
