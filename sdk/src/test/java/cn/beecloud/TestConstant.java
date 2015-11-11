@@ -43,6 +43,11 @@ public class TestConstant {
 
 	public static Integer billTimeOut = 300;
 	
+	public static String MOCK_CODE_URL = "weixin://weixinmockurl001";
+	public static String MOCK_OBJECT_ID = "abcdefg1234556890";
+	public static String MOCK_PAY_URL = "http://www.163.com";
+	public static String MOCK_PAY_HTML = "<form></form><script>form.submit()</script>";
+	
 	public final static String BILL_NO_FORMAT_INVALID =
 			"billNo 是一个长度介于8至32字符的数字字母字符串！";
 	
@@ -140,7 +145,7 @@ public class TestConstant {
 			"批量打款仅支持ALI";
 	
 	public static String ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN = 
-			"BCException为抛出！";
+			"BCException未抛出！";
 	
 	public final static String BILL_TIME_OUT_ZERO =
 			"billTimeout不能为0！";

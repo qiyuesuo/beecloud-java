@@ -1,6 +1,10 @@
 package cn.beecloud;
 
 import static junit.framework.Assert.assertEquals;
+import mockit.integration.junit4.JMockit;
+   
+
+
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +29,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.QR_PAY_MODE;
@@ -32,6 +37,7 @@ import cn.beecloud.BCEumeration.RESULT_TYPE;
 import cn.beecloud.TestConstant.CHANNEL_TYPE;
 import cn.beecloud.bean.*;
 
+@RunWith(JMockit.class)
 public class BCPayTest {
 	
 	protected Client client;
@@ -475,14 +481,6 @@ public class BCPayTest {
 	private void testPay(BCOrder param, PAY_CHANNEL channel) {
 		System.out.println("billNO:" + billNo);
 		
-//		new Expectations(simple){
-//	   {
-//		   BCPay bcPay;
-//	    Deencapsulation.invoke(BCPay.class, "doPost", with()).
-//	    returns("I got INVOKED");
-//	   }
-//	  };
-		
 		try {
 			BCPay.startBCPay(null);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
@@ -494,7 +492,7 @@ public class BCPayTest {
 		
 		try {
 			param.setChannel(null);
-			BCPay.startBCPay(null);
+			BCPay.startBCPay(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
 		} catch (Exception e) {
 			Assert.assertTrue(e.getMessage(), e instanceof BCException);
@@ -625,6 +623,7 @@ public class BCPayTest {
 			try {
 				param.setOpenId(null);
 				BCPay.startBCPay(param);
+				Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
 			} catch (Exception e) {
 				Assert.assertTrue(e.getMessage(), e instanceof BCException);
 				Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
@@ -638,6 +637,7 @@ public class BCPayTest {
 			try {
 				param.setQrPayMode(null);
 				BCPay.startBCPay(param);
+				Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
 			} catch(Exception e) {
 				Assert.assertTrue(e.getMessage(), e instanceof BCException);
 				Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
@@ -651,6 +651,7 @@ public class BCPayTest {
 			try {
 			param.setCardNo(null);
 			BCPay.startBCPay(param);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
 			} catch(Exception e) {
 				Assert.assertTrue(e.getMessage(), e instanceof BCException);
 				Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
@@ -662,6 +663,7 @@ public class BCPayTest {
 			try {
 				param.setCardPwd(null);
 				BCPay.startBCPay(param);
+				Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
 			} catch(Exception e) {
 				Assert.assertTrue(e.getMessage(), e instanceof BCException);
 				Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
@@ -673,6 +675,7 @@ public class BCPayTest {
 			try {
 				param.setFrqid(null);
 				BCPay.startBCPay(param);
+				Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
 			} catch(Exception e) {
 				Assert.assertTrue(e.getMessage(), e instanceof BCException);
 				Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
@@ -682,14 +685,18 @@ public class BCPayTest {
 		}
 		
 		if (channel.equals(PAY_CHANNEL.WX_NATIVE)) {
-			new Expectations(){
-				   {
-				    Deencapsulation.invoke(BCPay.class, "doPost", withArgThat(new wxNativeMatcher()));
-				    returns("I got INVOKED");
-				   }
-				  };
+			mockWxNativePay(param, channel);
+		}
+		if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE) || channel.equals(PAY_CHANNEL.ALI_WAP)) {
+			mockUrlAndHtmlPay(param, channel);
+		}
+		if (channel.equals(PAY_CHANNEL.UN_WEB) || channel.equals(PAY_CHANNEL.JD_WAP)
+    			|| channel.equals(PAY_CHANNEL.JD_WEB) || channel.equals(PAY_CHANNEL.KUAIQIAN_WAP) 
+    			|| channel.equals(PAY_CHANNEL.KUAIQIAN_WEB)) {
+			mockHtmlPay(param, channel);
 		}
 	}
+
 	
 //	@SuppressWarnings("deprecation")
 //	private void testRefund(BCRefundParameter refundParam, PAY_CHANNEL ali) {
@@ -1164,6 +1171,99 @@ public class BCPayTest {
 //		}
 //	}
 	
+	private void mockWxNativePay(BCOrder param, PAY_CHANNEL channel) {
+		final Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
+		returnMap.put("code_url", TestConstant.MOCK_CODE_URL);
+		
+		new Expectations(BCPay.class){
+		   {
+		    Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate.getkApiPay().substring(14)), withAny(Map.class));
+		    returns(returnMap);
+		    result = new BCException(RESULT_TYPE.PAY_FACTOR_NOT_SET.ordinal(), RESULT_TYPE.PAY_FACTOR_NOT_SET.name(), RESULT_TYPE.PAY_FACTOR_NOT_SET.name());
+		   }
+		};
+		BCOrder order;
+		try {
+			order = BCPay.startBCPay(param);
+			Assert.assertEquals("",TestConstant.MOCK_CODE_URL, order.getCodeUrl());
+			Assert.assertEquals("",TestConstant.MOCK_OBJECT_ID, order.getObjectId());
+		} catch (BCException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			order = BCPay.startBCPay(param);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
+		} catch (Exception ex) {
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PAY_FACTOR_NOT_SET.name()));
+		}
+	}
+	
+	private void mockUrlAndHtmlPay(BCOrder param, PAY_CHANNEL channel) {
+		final Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
+		returnMap.put("url", TestConstant.MOCK_PAY_URL);
+		returnMap.put("html", TestConstant.MOCK_PAY_HTML);
+		
+		new Expectations(BCPay.class){
+		   {
+		    Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate.getkApiPay().substring(14)), withAny(Map.class));
+		    returns(returnMap);
+		    result = new BCException(RESULT_TYPE.RUNTIME_ERORR.ordinal(), RESULT_TYPE.RUNTIME_ERORR.name(), RESULT_TYPE.RUNTIME_ERORR.name());
+		   }
+		};
+		
+		BCOrder order;
+		try {
+			order = BCPay.startBCPay(param);
+			Assert.assertEquals("",TestConstant.MOCK_PAY_URL, order.getUrl());
+			Assert.assertEquals("",TestConstant.MOCK_PAY_HTML, order.getHtml());
+		} catch (BCException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			order = BCPay.startBCPay(param);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
+		} catch (Exception ex) {
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.RUNTIME_ERORR.name()));
+		}
+	}
+	
+	private void mockHtmlPay(BCOrder param, PAY_CHANNEL channel) {
+		final Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
+		returnMap.put("html", TestConstant.MOCK_PAY_HTML);
+		
+		new Expectations(BCPay.class){
+		   {
+		    Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate.getkApiPay().substring(14)), withAny(Map.class));
+		    returns(returnMap);
+		    result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(), RESULT_TYPE.APP_INVALID.name(), RESULT_TYPE.APP_INVALID.name());
+		   }
+		};
+		BCOrder order;
+		try {
+			order = BCPay.startBCPay(param);
+			Assert.assertEquals("",TestConstant.MOCK_PAY_HTML, order.getHtml());
+			Assert.assertEquals("",TestConstant.MOCK_OBJECT_ID, order.getObjectId());
+		} catch (BCException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			order = BCPay.startBCPay(param);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
+		} catch (Exception ex) {
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.APP_INVALID.name()));
+		}
+	}
+	
+	
 	class wxNativeMatcher extends TypeSafeMatcher<Map<String, Object>> {
 
 		@Override
@@ -1173,8 +1273,10 @@ public class BCPayTest {
 		}
 
 		@Override
-		protected boolean matchesSafely(Map<String, Object> arg0) {
-			// TODO Auto-generated method stub
+		protected boolean matchesSafely(Map<String, Object> map) {
+			if (map.get("channel").toString().equals(PAY_CHANNEL.WX_NATIVE.toString())) {
+				return true;
+			}
 			return false;
 		} 
 	}
