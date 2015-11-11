@@ -9,6 +9,7 @@ import mockit.integration.junit4.JMockit;
 
 
 
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1119,11 +1120,10 @@ public class BCPayTest {
 //		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getTotalCount() == null );
 //	}
 	
-	@SuppressWarnings("deprecation")
 	public void testQueryBillById(BCOrder param) {
 		try {
 			BCPay.startQueryBillById(TestConstant.INVALID_OBJECT_ID);
-			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN); 
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
 		} catch(Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
 			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
@@ -1156,15 +1156,32 @@ public class BCPayTest {
 		    result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(), RESULT_TYPE.APP_INVALID.name(), RESULT_TYPE.APP_INVALID.name());
 		   }
 		};
-		
+		BCOrder order;
 		try {
-			BCOrder order = BCPay.startQueryBillById(param.getObjectId());
+			order = BCPay.startQueryBillById(param.getObjectId());
 			Assert.assertEquals("",TestConstant.MOCK_BILL_NO, order.getBillNo());
-			Assert.assertEquals("",TestConstant.MOCK_OBJECT_ID, order.getObjectId());
+			Assert.assertEquals("","", order.getChannelTradeNo());
+			Assert.assertEquals("",TestConstant.MOCK_PAY_RESULT, order.isResulted());
+			Assert.assertEquals("",TestUtil.transferDateFromLongToString(TestConstant.MOCK_CREATE_TIME), order.getDateTime());
+			Assert.assertEquals("",TestConstant.MOCK_TOTAL_FEE, order.getTotalFee());
+			Assert.assertEquals("",TestConstant.MOCK_CHANNEL, order.getChannel().toString().split("_")[0]);
+			Assert.assertEquals("",TestConstant.MOCK_SUB_CHANNEL, order.getChannel().toString());
+			Assert.assertEquals("","", order.getOptionalString());
+			Assert.assertEquals("", false, order.isRevertResult());
+			Assert.assertEquals("", false, order.isRefundResult());
+			Assert.assertEquals("", "", order.getMessageDetail());
+			Assert.assertEquals("", TestConstant.MOCK_TITLE, order.getTitle());
 		} catch (BCException e) {
-			e.printStackTrace();
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
 		}
 		
+		try {
+			order = BCPay.startQueryBillById(param.getObjectId());
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
+		} catch (Exception ex) {
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.APP_INVALID.name()));
+		}
 		
 		
 	}
