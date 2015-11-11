@@ -146,6 +146,8 @@ public class TestConstant {
 	
 	public static String ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN = 
 			"BCException未抛出！";
+	public static String ASSERT_MESSAGE_BCEXCEPTION_THROWN =
+			"BCException抛出";
 	
 	public final static String BILL_TIME_OUT_ZERO =
 			"billTimeout不能为0！";
