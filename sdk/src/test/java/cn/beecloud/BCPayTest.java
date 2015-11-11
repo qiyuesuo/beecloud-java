@@ -6,6 +6,8 @@ import mockit.integration.junit4.JMockit;
 
 
 
+
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -695,6 +697,9 @@ public class BCPayTest {
     			|| channel.equals(PAY_CHANNEL.KUAIQIAN_WEB)) {
 			mockHtmlPay(param, channel);
 		}
+		if (channel.equals(PAY_CHANNEL.WX_JSAPI)) {
+			mockWxJsapi(param, channel);
+		}
 	}
 
 	
@@ -1171,10 +1176,19 @@ public class BCPayTest {
 //		}
 //	}
 	
+	private void mockWxJsapi(BCOrder param, PAY_CHANNEL channel) {
+		final Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
+		returnMap.put("", value);
+	}
+
 	private void mockWxNativePay(BCOrder param, PAY_CHANNEL channel) {
 		final Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
 		returnMap.put("code_url", TestConstant.MOCK_CODE_URL);
+		returnMap.put("result_code", 0);
+		returnMap.put("result_msg", "OK");
+		returnMap.put("err_detail", "");
 		
 		new Expectations(BCPay.class){
 		   {

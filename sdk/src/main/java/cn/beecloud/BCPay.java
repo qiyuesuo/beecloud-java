@@ -634,8 +634,8 @@ public class BCPay {
                 Map<String, Object> ret = response.readEntity(Map.class);
                 
                 Integer resultCode = (Integer)ret.get("result_code");
-                String resultMessage = ret.get("result_msg").toString();
-                String errorDetail = ret.get("err_detail").toString();
+                String resultMessage = StrUtil.toStr(ret.get("result_msg"));
+                String errorDetail = StrUtil.toStr(ret.get("err_detail"));
 
                 boolean isSuccess = (resultCode == 0);
                 if (isSuccess) {
@@ -671,9 +671,9 @@ public class BCPay {
                 Map<String, Object> ret = response.readEntity(Map.class);
                 
                 Integer resultCode = (Integer)ret.get("result_code");
-                String resultMessage = ret.get("result_msg").toString();
-                String errorDetail = ret.get("err_detail").toString();
-
+                String resultMessage = StrUtil.toStr(ret.get("result_msg"));
+                String errorDetail = StrUtil.toStr(ret.get("err_detail"));
+                
                 boolean isSuccess = (resultCode == 0);
 
                 if (isSuccess) {
