@@ -8,6 +8,7 @@ import mockit.integration.junit4.JMockit;
 
 
 
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -75,7 +76,7 @@ public class BCPayTest {
 		
 		testPay(param, PAY_CHANNEL.ALI_WEB);
 		
-//		testQueryBillById(param);
+		testQueryBillById(param);
 //		
 //		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
 //		refundOptional.put("aliWebRefund", "aliWebRefund");
@@ -1118,19 +1119,39 @@ public class BCPayTest {
 //		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getTotalCount() == null );
 //	}
 	
-//	@SuppressWarnings("deprecation")
-//	public void testQueryBillById(BCOrder param) {
-//		BCPayResult result = BCPay.startBCPay(param);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
-//		
-//		String objectId = result.getObjectId();
-//		System.out.println(objectId);
-//		BCQueryResult queryResult = BCPay.startQueryBillById(objectId);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), queryResult.getResultMsg());
-//		
-//		queryResult = BCPay.startQueryBillById(TestConstant.INVALID_OBJECT_ID);
-//		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, queryResult.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
-//	}
+	@SuppressWarnings("deprecation")
+	public void testQueryBillById(BCOrder param) {
+		try {
+			BCPay.startQueryBillById(TestConstant.INVALID_OBJECT_ID);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN); 
+		} catch(Exception ex) {
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains("无记录"));
+		}
+		
+		final Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("result_code", 0);
+		returnMap.put("result_msg", "OK");
+		returnMap.put("err_detail", "");
+		
+		new Expectations(BCPay.class){
+		   {
+		    Deencapsulation.invoke(BCPay.class, "doGet", withSubstring(BCUtilPrivate.getkApiQueryBillById().substring(14)), withAny(Map.class));
+		    returns(returnMap);
+		    result = new BCException(RESULT_TYPE.RUNTIME_ERORR.ordinal(), RESULT_TYPE.RUNTIME_ERORR.name(), RESULT_TYPE.RUNTIME_ERORR.name());
+		   }
+		};
+		
+		try {
+			BCPay.startQueryBillById(param.getObjectId());
+		} catch (BCException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
 	
 //	@SuppressWarnings("deprecation")
 //	@Test
@@ -1179,7 +1200,7 @@ public class BCPayTest {
 	private void mockWxJsapi(BCOrder param, PAY_CHANNEL channel) {
 		final Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
-		returnMap.put("", value);
+//		returnMap.put("", value);
 	}
 
 	private void mockWxNativePay(BCOrder param, PAY_CHANNEL channel) {
