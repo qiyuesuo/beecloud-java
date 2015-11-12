@@ -1330,9 +1330,15 @@ public class BCPayTest {
 			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.CHANNEL_EMPTY));
 		}
 		
-		message = BCPay.startRefundUpdate(channel, null);
-		System.out.println(result.getErrDetail());
-		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		try {
+			message = BCPay.startRefundUpdate(channel, null);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+		} catch(Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);  
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.REFUND_NO_EMPTY));
+		}
+		
 	
 		result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + "000");
 		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
