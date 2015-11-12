@@ -42,6 +42,16 @@ public class BCRefund {
 	
 	private String messageDetail = "不显示";
 	
+	public BCRefund(String billNo, String refundNo, Integer refundFee) {
+		
+		this.billNo = billNo;
+		this.refundNo = refundNo;
+		this.refundFee = refundFee;
+	}
+
+	public BCRefund() {
+	}
+
 	public String getBillNo() {
 		return billNo;
 	}

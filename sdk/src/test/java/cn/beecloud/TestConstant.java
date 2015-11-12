@@ -54,7 +54,16 @@ public class TestConstant {
 	public static String MOCK_SUB_CHANNEL = "WX_NATIVE";
 	public static String MOCK_BILL_NO = "e59990442bf04290b8943a36c3538f49";
 	public static String MOCK_TITLE = "demo测试";
+	public static String MOCK_WXJSAPI_APPID = "wx119a2bda81854ae0";
+	public static String MOCK_WXJSAP_TIMESTAMP = "1447233544";
+	public static String MOCK_WXJSAPI_NONCESTR = "5420ba9fced94dbbbd20d5f473058d3e";
+	public static String MOCK_WXJSAPI_PACKAGE = "prepay_id=wx201511111719040099f391140762911510";
+	public static String MOCK_WXJSAPI_PAYSIGN = "817F3E861DD73B04D2BE9E78FBEBA65F";
+	public static String MOCK_WXJSAP_SIGNTYPE = "MD5";
+	public static String MOCK_TITLE_16_CHINESE_CHARACTER = "正好十六个汉字的标题哈哈哈哈哈哈";
+
 	
+	public static String MOCK_ALI_REFUND_URL = "https://tradeexprod.alipay.com/refund/fastPayBatchPwdRefund.htm?partner=2088711322622223";
 	
 	
 	public final static String BILL_NO_FORMAT_INVALID =

@@ -27,7 +27,7 @@ public class BCOrder {
 	
 	private String url;
 	
-	private Map<String, Object> wxJSAPIMap;
+	private Map<String, String> wxJSAPIMap;
 	
 	private Map<String, Object> optional;
 	
@@ -382,11 +382,11 @@ public class BCOrder {
 		this.url = url;
 	}
 
-	public Map<String, Object> getWxJSAPIMap() {
+	public Map<String, String> getWxJSAPIMap() {
 		return wxJSAPIMap;
 	}
 
-	public void setWxJSAPIMap(Map<String, Object> wxJSAPIMap) {
+	public void setWxJSAPIMap(Map<String, String> wxJSAPIMap) {
 		this.wxJSAPIMap = wxJSAPIMap;
 	}
 

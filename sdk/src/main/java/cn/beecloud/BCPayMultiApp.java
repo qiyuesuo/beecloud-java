@@ -596,7 +596,7 @@ private final static String NOT_REGISTER = "为注册";
      * @param ret
      * @return
      */
-    private static Map<String, Object> generateWXJSAPIMap(
+    private static Map<String, String> generateWXJSAPIMap(
 			Map<String, Object> ret) {
 		HashMap map = new HashMap<String, Object>();
 		map.put("appId", ret.get("app_id"));

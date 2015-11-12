@@ -578,9 +578,9 @@ public class BCPay {
      * @param ret
      * @return
      */
-    private static Map<String, Object> generateWXJSAPIMap(
+    private static Map<String, String> generateWXJSAPIMap(
 			Map<String, Object> ret) {
-		HashMap map = new HashMap<String, Object>();
+		HashMap map = new HashMap<String, String>();
 		map.put("appId", ret.get("app_id"));
 		map.put("package", ret.get("package"));
 		map.put("nonceStr", ret.get("nonce_str"));
@@ -598,6 +598,7 @@ public class BCPay {
         	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
         }
         WebTarget target = client.target(url);
+        System.out.println("url:" + url);
         try {
             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
             if (response.getStatus() == 200) {
@@ -617,7 +618,7 @@ public class BCPay {
             	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
             }
         } catch (Exception e) {
-        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
+        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + "," + e.getMessage());
         }
 	}
     
@@ -647,7 +648,7 @@ public class BCPay {
             	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
             }
         } catch (Exception e) {
-        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
+        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + "," + e.getMessage());
         }
 	}
     
@@ -664,7 +665,7 @@ public class BCPay {
         	sb.append(URLEncoder.encode(url, "UTF-8"));
             sb.append(URLEncoder.encode(
                             JSONObject.fromObject(param).toString(), "UTF-8"));
-
+            System.out.println("url=" + sb.toString());
             WebTarget target = client.target(sb.toString());
             Response response = target.request().get();
             if (response.getStatus() == 200) {
@@ -685,7 +686,7 @@ public class BCPay {
             	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
             }
         } catch (Exception e) {
-        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
+        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + "," + e.getMessage());
         }
 	}
     
