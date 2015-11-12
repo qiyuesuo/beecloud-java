@@ -87,7 +87,7 @@ public class BCPayTest {
 		refund.setChannel(PAY_CHANNEL.ALI);
 //		
 		testRefund(refund);
-//		testRefundUpdate(PAY_CHANNEL.ALI);
+		testRefundUpdate(PAY_CHANNEL.ALI);
 //		testQueryRefundById();
 //		testQueryBill(PAY_CHANNEL.ALI_WEB);
 //		testQueryBillCount(PAY_CHANNEL.ALI_WEB);
@@ -1319,39 +1319,46 @@ public class BCPayTest {
 //		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
 //	}
 //	
-//	private void testRefundUpdate(PAY_CHANNEL channel) {
-//		BCQueryStatusResult result = BCPay.startRefundUpdate(null, refundNo);
-//		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
-//		
-//		result = BCPay.startRefundUpdate(channel, null);
-//		System.out.println(result.getErrDetail());
-//		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
-//	
-//		result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + "000");
-//		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
-//		System.out.println(result.getErrDetail());
-//		result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_LESSER_THAN_3);
-//		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
-//		System.out.println(result.getErrDetail());
-//		result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_GREATER_THAN_24);
-//		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
-//		System.out.println(result.getErrDetail());
-//		
-//		result = BCPay.startRefundUpdate(channel, refundNo);
-//		if (channel.equals(PAY_CHANNEL.WX) || channel.equals(PAY_CHANNEL.KUAIQIAN) || channel.equals(PAY_CHANNEL.YEE) || channel.equals(PAY_CHANNEL.BD)) {
-//			System.out.println(result.getErrDetail());
-//			Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.NO_SUCH_REFUND.name()));
-//			
-//			result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_WITH_SPECIAL_CHARACTER);
-//			System.out.println(result.getErrDetail());
-//			Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.NO_SUCH_REFUND.name()));
-//		} else {
-//			Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getErrDetail().contains("渠道选择错误"));
-//			
-//			result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_WITH_SPECIAL_CHARACTER);
-//			Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getErrDetail().contains("渠道选择错误"));
-//		}
-//	}
+	private void testRefundUpdate(PAY_CHANNEL channel) {
+		String message;
+		try {
+			message = BCPay.startRefundUpdate(null, refundNo);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+		} catch(Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);  
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.CHANNEL_EMPTY));
+		}
+		
+		message = BCPay.startRefundUpdate(channel, null);
+		System.out.println(result.getErrDetail());
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+	
+		result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + "000");
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		System.out.println(result.getErrDetail());
+		result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_LESSER_THAN_3);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		System.out.println(result.getErrDetail());
+		result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_GREATER_THAN_24);
+		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.PARAM_INVALID.name()));
+		System.out.println(result.getErrDetail());
+		
+		result = BCPay.startRefundUpdate(channel, refundNo);
+		if (channel.equals(PAY_CHANNEL.WX) || channel.equals(PAY_CHANNEL.KUAIQIAN) || channel.equals(PAY_CHANNEL.YEE) || channel.equals(PAY_CHANNEL.BD)) {
+			System.out.println(result.getErrDetail());
+			Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.NO_SUCH_REFUND.name()));
+			
+			result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_WITH_SPECIAL_CHARACTER);
+			System.out.println(result.getErrDetail());
+			Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getResultMsg().contains(RESULT_TYPE.NO_SUCH_REFUND.name()));
+		} else {
+			Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getErrDetail().contains("渠道选择错误"));
+			
+			result = BCPay.startRefundUpdate(channel, refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_WITH_SPECIAL_CHARACTER);
+			Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getErrDetail().contains("渠道选择错误"));
+		}
+	}
 	
 	private void mockWxJsapi(BCOrder param, PAY_CHANNEL channel) {
 		final Map<String, Object> returnMap = new HashMap<String, Object>();
