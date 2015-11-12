@@ -10,6 +10,8 @@ import mockit.integration.junit4.JMockit;
 
 
 
+
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -79,11 +81,12 @@ public class BCPayTest {
 		
 		testQueryBillById(param);
 //		
-//		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
-//		refundOptional.put("aliWebRefund", "aliWebRefund");
-//		refundParam.setChannel(PAY_CHANNEL.ALI);
+		BCRefund refund = new BCRefund(billNo, refundNo, 1);
+		refundOptional.put("aliWebRefund", "aliWebRefund");
+		refund.setOptional(refundOptional);
+		refund.setChannel(PAY_CHANNEL.ALI);
 //		
-//		testRefund(refundParam, PAY_CHANNEL.ALI);
+		testRefund(refund);
 //		testRefundUpdate(PAY_CHANNEL.ALI);
 //		testQueryRefundById();
 //		testQueryBill(PAY_CHANNEL.ALI_WEB);
@@ -239,10 +242,10 @@ public class BCPayTest {
 		param.setOptional(payOptional);
 		param.setBillTimeout(TestConstant.billTimeOut);
 		testPay(param, PAY_CHANNEL.WX_NATIVE);
-//		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
+//		BCrefundeter refund = new BCrefundeter(billNo, refundNo, 1);
 //		refundOptional.put("wxNativeRefund", "wxNativeRefund");
-//		refundParam.setChannel(PAY_CHANNEL.WX);
-//		testRefund(refundParam, PAY_CHANNEL.WX);
+//		refund.setChannel(PAY_CHANNEL.WX);
+//		testRefund(refund, PAY_CHANNEL.WX);
 //		testRefundUpdate(PAY_CHANNEL.WX);
 //		testQueryRefundById();
 //		testQueryBill(PAY_CHANNEL.WX_NATIVE);
@@ -264,11 +267,11 @@ public class BCPayTest {
 		
 		testPay(param, PAY_CHANNEL.WX_NATIVE);
 		
-		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
+		BCRefund refund = new BCRefund(billNo, refundNo, 1);
 		refundOptional.put("wxNativeRefund", "wxNativeRefund");
-		refundParam.setChannel(PAY_CHANNEL.WX);
+		refund.setChannel(PAY_CHANNEL.WX);
 		
-//		testRefund(refundParam, PAY_CHANNEL.WX);
+//		testRefund(refund, PAY_CHANNEL.WX);
 	}
 	
 	@Test
@@ -285,11 +288,11 @@ public class BCPayTest {
 		
 		testPay(param, PAY_CHANNEL.UN_WEB);
 		
-//		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
+//		BCrefundeter refund = new BCrefundeter(billNo, refundNo, 1);
 //		refundOptional.put("unWebRefund", "unWebRefund");
-//		refundParam.setChannel(PAY_CHANNEL.UN);
+//		refund.setChannel(PAY_CHANNEL.UN);
 //		
-//		testRefund(refundParam, PAY_CHANNEL.UN);
+//		testRefund(refund, PAY_CHANNEL.UN);
 //		testRefundUpdate(PAY_CHANNEL.UN);
 //		testQueryRefundById();
 //		testQueryBill(PAY_CHANNEL.UN_WEB);
@@ -311,11 +314,11 @@ public class BCPayTest {
 		
 		testPay(param, PAY_CHANNEL.YEE_WEB);
 		
-		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
+		BCRefund refund = new BCRefund(billNo, refundNo, 1);
 		refundOptional.put("yeeWebRefund", "yeeWebRefund");
-		refundParam.setChannel(PAY_CHANNEL.YEE);
+		refund.setChannel(PAY_CHANNEL.YEE);
 		
-//		testRefund(refundParam, PAY_CHANNEL.YEE);
+//		testRefund(refund, PAY_CHANNEL.YEE);
 	}
 	
 	@Test
@@ -331,11 +334,11 @@ public class BCPayTest {
 		
 		testPay(param, PAY_CHANNEL.YEE_WAP);
 		
-		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
+		BCRefund refund = new BCRefund(billNo, refundNo, 1);
 		refundOptional.put("yeeWebRefund", "yeeWebRefund");
-		refundParam.setChannel(PAY_CHANNEL.YEE);
+		refund.setChannel(PAY_CHANNEL.YEE);
 		
-//		testRefund(refundParam, PAY_CHANNEL.YEE);
+//		testRefund(refund, PAY_CHANNEL.YEE);
 	}
 	
 	@Test
@@ -365,11 +368,11 @@ public class BCPayTest {
 		
 		testPay(param, PAY_CHANNEL.JD_WEB);
 		
-		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
+		BCRefund refund = new BCRefund(billNo, refundNo, 1);
 		refundOptional.put("yeeWebRefund", "yeeWebRefund");
-		refundParam.setChannel(PAY_CHANNEL.JD);
+		refund.setChannel(PAY_CHANNEL.JD);
 		
-//		testRefund(refundParam, PAY_CHANNEL.JD);
+//		testRefund(refund, PAY_CHANNEL.JD);
 	}
 	
 	@Test
@@ -398,11 +401,11 @@ public class BCPayTest {
 		
 		testPay(param, PAY_CHANNEL.KUAIQIAN_WEB);
 		
-		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
+		BCRefund refund = new BCRefund(billNo, refundNo, 1);
 		refundOptional.put("kqWebRefund", "kqWebRefund");
-		refundParam.setChannel(PAY_CHANNEL.KUAIQIAN);
+		refund.setChannel(PAY_CHANNEL.KUAIQIAN);
 		
-//		testRefund(refundParam, PAY_CHANNEL.KUAIQIAN);
+//		testRefund(refund, PAY_CHANNEL.KUAIQIAN);
 	}
 	
 	@Test
@@ -430,11 +433,11 @@ public class BCPayTest {
 		
 		testPay(param, PAY_CHANNEL.BD_WEB);
 		
-		BCRefundParameter refundParam = new BCRefundParameter(billNo, refundNo, 1);
+		BCRefund refund = new BCRefund(billNo, refundNo, 1);
 		refundOptional.put("bdWebRefund", "bdWebRefund");
-		refundParam.setChannel(PAY_CHANNEL.BD);
+		refund.setChannel(PAY_CHANNEL.BD);
 		
-//		testRefund(refundParam, PAY_CHANNEL.BD);
+//		testRefund(refund, PAY_CHANNEL.BD);
 	}
 	
 	@Test
@@ -538,16 +541,6 @@ public class BCPayTest {
 		}
 		param.setTitle(subject);
 		
-		
-		
-		
-//		
-//		
-//		param.setTitle("正好十六个汉字的标题哈哈哈哈哈哈");
-//		result = BCPay.startBCPay(param);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
-//		param.setTitle(subject);
-//		
 		try {
 			param.setTitle(TestConstant.TITLE_WITH_CHARACTER＿GREATER_THAN_32);
 			BCPay.startBCPay(param);
@@ -605,7 +598,6 @@ public class BCPayTest {
 			}
 			param.setBillTimeout(TestConstant.billTimeOut);
 		}
-		
 		
 		if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE) || channel.equals(PAY_CHANNEL.UN_WEB)
 				|| channel.equals(PAY_CHANNEL.JD_WAP) || channel.equals(PAY_CHANNEL.JD_WEB)) {
@@ -688,6 +680,13 @@ public class BCPayTest {
 			param.setFrqid(frqid);
 		}
 		
+		try {
+			param.setTitle(TestConstant.MOCK_TITLE_16_CHINESE_CHARACTER);
+			BCPay.startBCPay(param);
+		} catch(BCException ex) {
+			Assert.assertTrue("", !ex.getMessage().contains(TestConstant.TITLE_FORMAT_INVALID));
+		}
+		
 		if (channel.equals(PAY_CHANNEL.WX_NATIVE)) {
 			mockWxNativePay(param, channel);
 		}
@@ -705,79 +704,146 @@ public class BCPayTest {
 	}
 
 	
-//	@SuppressWarnings("deprecation")
-//	private void testRefund(BCRefundParameter refundParam, PAY_CHANNEL ali) {
-//		System.out.println("refundNo:" + refundNo);
-//		
-//		BCPayResult result = BCPay.startBCRefund(null);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-//		
-//		refundParam.setBillNo(null);
-//		result = BCPay.startBCRefund(refundParam);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-//		refundParam.setBillNo(billNo);
-//		
-//		refundParam.setRefundFee(null);
-//		result = BCPay.startBCRefund(refundParam);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-//		refundParam.setRefundFee(1);
-//		
-//		refundParam.setRefundFee(0);
-//		result = BCPay.startBCRefund(refundParam);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-//		refundParam.setRefundFee(1);
-//		
-//		refundParam.setRefundNo(null);
-//		result = BCPay.startBCRefund(refundParam);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-//		refundParam.setRefundNo(refundNo);
-//		
-//		refundParam.setBillNo(billNo.substring(0, 7));
-//		result = BCPay.startBCRefund(refundParam);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-//		refundParam.setBillNo(billNo);
-//		
-//		refundParam.setBillNo(billNo + "A");
-//		result = BCPay.startBCRefund(refundParam);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-//		refundParam.setBillNo(billNo);
-//		
-//		Calendar cal = Calendar.getInstance();
-//		cal.add(Calendar.DAY_OF_WEEK, -1);
-//		String date = new SimpleDateFormat("yyyyMMdd").format(cal.getTime());
-//		refundParam.setRefundNo(date + BCUtil.generateNumberWith3to24digitals());
-//		result = BCPay.startBCRefund(refundParam);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-//		refundParam.setRefundNo(refundNo);
-//		
-//		date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-//		refundParam.setRefundNo(date + "000");
-//		result = BCPay.startBCRefund(refundParam);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-//		refundParam.setRefundNo(refundNo);
-//		
-//		refundParam.setRefundNo(date + TestConstant.REFUND_NO_SERIAL_NUMBER_LESSER_THAN_3);
-//		result = BCPay.startBCRefund(refundParam);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-//		refundParam.setRefundNo(refundNo);
-//		
-//		refundParam.setRefundNo(date + TestConstant.REFUND_NO_SERIAL_NUMBER_GREATER_THAN_24);
-//		result = BCPay.startBCRefund(refundParam);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-//		refundParam.setRefundNo(refundNo);
-//		
-//		refundParam.setRefundNo(date + TestConstant.REFUND_NO_SERIAL_NUMBER_WITH_SPECIAL_CHARACTER);
-//		result = BCPay.startBCRefund(refundParam);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.PARAM_INVALID.name(), result.getResultMsg());
-//		refundParam.setRefundNo(refundNo);
-//		
-//		result = ValidationUtil.validateBCRefund(refundParam);
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.OK.name(), result.getResultMsg());
-//		
-//		result = BCPay.startBCRefund(refundParam);
-//		System.out.println(result.getErrDetail());
-//		assertEquals(TestConstant.ASSERT_MESSAGE, RESULT_TYPE.NO_SUCH_BILL.name(), result.getResultMsg());
-//	}
+	@SuppressWarnings("deprecation")
+	private void testRefund(BCRefund refund) {
+		System.out.println("refundNo:" + refundNo);
+		try {
+			BCPay.startBCRefund(null);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
+		} catch (Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.REFUND_PARAM_EMPTY));
+		}
+		
+		try {
+			refund.setBillNo(null);
+			BCPay.startBCRefund(refund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
+		} catch(Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.REFUND_PARAM_EMPTY));
+		}
+		refund.setBillNo(billNo);
+		
+		try {
+			refund.setRefundFee(null);
+			BCPay.startBCRefund(refund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
+		} catch(Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.REFUND_FEE_EMPTY));
+		}
+		refund.setRefundFee(1);
+		
+		try {
+			refund.setRefundFee(0);
+			BCPay.startBCRefund(refund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+		} catch(Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.REFUND_FEE_INVALID));
+		}
+		refund.setRefundFee(1);
+		
+		try {
+			refund.setRefundNo(null);
+			BCPay.startBCRefund(refund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+		} catch(Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.REFUND_NO_EMPTY));
+		}
+		refund.setRefundNo(refundNo);
+		
+		try {
+			refund.setBillNo(billNo.substring(0, 7));
+			BCPay.startBCRefund(refund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+		} catch(Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.BILL_NO_FORMAT_INVALID));
+		}
+		refund.setBillNo(billNo);
+		
+		try {
+			refund.setBillNo(billNo + "A");
+			BCPay.startBCRefund(refund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+		} catch(Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.BILL_NO_FORMAT_INVALID));
+		}
+		refund.setBillNo(billNo);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_WEEK, -1);
+		String date = new SimpleDateFormat("yyyyMMdd").format(cal.getTime());
+		try {
+			refund.setRefundNo(date + BCUtil.generateNumberWith3to24digitals());
+			BCPay.startBCRefund(refund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+		} catch(Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.REFUND_NO_FORMAT_INVALID));
+		}
+		refund.setRefundNo(refundNo);
+		
+		try {
+			date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+			refund.setRefundNo(date + "000");
+			BCPay.startBCRefund(refund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+		} catch(Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.REFUND_NO_FORMAT_INVALID));
+		}
+		refund.setRefundNo(refundNo);
+		
+		try {
+			refund.setRefundNo(date + TestConstant.REFUND_NO_SERIAL_NUMBER_LESSER_THAN_3);
+			BCPay.startBCRefund(refund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+		} catch(Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.REFUND_NO_FORMAT_INVALID));
+		}
+		refund.setRefundNo(refundNo);
+		
+		try {
+			refund.setRefundNo(date + TestConstant.REFUND_NO_SERIAL_NUMBER_GREATER_THAN_24);
+			BCPay.startBCRefund(refund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+		} catch(Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.REFUND_NO_FORMAT_INVALID));
+		}
+		refund.setRefundNo(refundNo);
+		
+		try {
+			refund.setRefundNo(date + TestConstant.REFUND_NO_SERIAL_NUMBER_WITH_SPECIAL_CHARACTER);
+			BCPay.startBCRefund(refund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+		} catch(Exception e) {
+			Assert.assertTrue(e.getMessage(), e instanceof BCException);
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.REFUND_NO_FORMAT_INVALID));
+		}
+		refund.setRefundNo(refundNo);
+		
+		
+		mockRefund(refund);
+	}
 	
 //	@SuppressWarnings("deprecation")
 //	private void testQueryBill(PAY_CHANNEL channel) {
@@ -1120,11 +1186,57 @@ public class BCPayTest {
 //		Assert.assertTrue(TestConstant.ASSERT_MESSAGE, result.getTotalCount() == null );
 //	}
 	
+	private void mockRefund(BCRefund refund) {
+		final Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
+		returnMap.put("result_code", 0);
+		returnMap.put("result_msg", "OK");
+		returnMap.put("err_detail", "");
+		if (refund.getChannel().equals(PAY_CHANNEL.ALI))
+			returnMap.put("url", TestConstant.MOCK_ALI_REFUND_URL);
+		
+		new Expectations(BCPay.class){
+			   {
+			    Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate.getkApiRefund().substring(14)), withAny(Map.class));
+			    returns(returnMap);
+			    result = new BCException(RESULT_TYPE.CHANNEL_ERROR.ordinal(), RESULT_TYPE.CHANNEL_ERROR.name(), RESULT_TYPE.CHANNEL_ERROR.name());
+			    result = new BCException(RESULT_TYPE.NO_SUCH_BILL.ordinal(), RESULT_TYPE.NO_SUCH_BILL.name(), RESULT_TYPE.NO_SUCH_BILL.name());
+			   }
+			};
+		
+		try {
+			BCPay.startBCRefund(refund);
+			Assert.assertEquals("",TestConstant.MOCK_OBJECT_ID, refund.getObjectId());
+			if(refund.getChannel().equals(PAY_CHANNEL.ALI)) {
+				Assert.assertEquals("",TestConstant.MOCK_ALI_REFUND_URL, refund.getAliRefundUrl());
+			}
+		} catch (BCException ex) {
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+		}
+		
+		try {
+			BCPay.startBCRefund(refund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
+		} catch (Exception ex) {
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.CHANNEL_ERROR.name()));
+		}
+		
+		try {
+			BCPay.startBCRefund(refund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
+		} catch (Exception ex) {
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.NO_SUCH_BILL.name()));
+		}
+	}
+
 	public void testQueryBillById(BCOrder param) {
 		try {
 			BCPay.startQueryBillById(TestConstant.INVALID_OBJECT_ID);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
 		} catch(Exception ex) {
+			System.out.println(ex.getMessage());
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
 			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
 			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains("无记录"));
@@ -1182,8 +1294,6 @@ public class BCPayTest {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
 			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.APP_INVALID.name()));
 		}
-		
-		
 	}
 	
 //	@SuppressWarnings("deprecation")
@@ -1232,8 +1342,46 @@ public class BCPayTest {
 	
 	private void mockWxJsapi(BCOrder param, PAY_CHANNEL channel) {
 		final Map<String, Object> returnMap = new HashMap<String, Object>();
+		
 		returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
-//		returnMap.put("", value);
+		returnMap.put("result_code", 0);
+		returnMap.put("result_msg", "OK");
+		returnMap.put("err_detail", "");
+		returnMap.put("app_id", TestConstant.MOCK_WXJSAPI_APPID);
+		returnMap.put("timestamp", TestConstant.MOCK_WXJSAP_TIMESTAMP);
+		returnMap.put("package", TestConstant.MOCK_WXJSAPI_PACKAGE);
+		returnMap.put("nonce_str", TestConstant.MOCK_WXJSAPI_NONCESTR);
+		returnMap.put("pay_sign", TestConstant.MOCK_WXJSAPI_PAYSIGN);
+		returnMap.put("sign_type", TestConstant.MOCK_WXJSAP_SIGNTYPE);
+		
+		new Expectations(BCPay.class){
+			   {
+			    Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate.getkApiPay().substring(14)), withAny(Map.class));
+			    returns(returnMap);
+			    result = new BCException(RESULT_TYPE.CHANNEL_INVALID.ordinal(), RESULT_TYPE.CHANNEL_INVALID.name(), RESULT_TYPE.CHANNEL_INVALID.name());
+			   }
+			};
+			BCOrder order;
+			try {
+				order = BCPay.startBCPay(param);
+				Assert.assertEquals("",TestConstant.MOCK_WXJSAPI_APPID, order.getWxJSAPIMap().get("appdId"));
+				Assert.assertEquals("",TestConstant.MOCK_WXJSAPI_NONCESTR, order.getWxJSAPIMap().get("nonceStr"));
+				Assert.assertEquals("",TestConstant.MOCK_WXJSAP_TIMESTAMP, order.getWxJSAPIMap().get("timeStamp"));
+				Assert.assertEquals("",TestConstant.MOCK_WXJSAPI_PAYSIGN, order.getWxJSAPIMap().get("paySign"));
+				Assert.assertEquals("",TestConstant.MOCK_WXJSAP_SIGNTYPE, order.getWxJSAPIMap().get("signType"));
+				Assert.assertEquals("",TestConstant.MOCK_WXJSAPI_PACKAGE, order.getWxJSAPIMap().get("package"));
+				Assert.assertEquals("",TestConstant.MOCK_OBJECT_ID, order.getObjectId());
+			} catch (BCException e) {
+				Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+			}
+			
+			try {
+				order = BCPay.startBCPay(param);
+				Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
+			} catch (Exception ex) {
+				Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+				Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.CHANNEL_INVALID.name()));
+			}
 	}
 
 	private void mockWxNativePay(BCOrder param, PAY_CHANNEL channel) {
