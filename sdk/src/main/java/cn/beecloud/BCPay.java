@@ -118,6 +118,8 @@ public class BCPay {
      */
     public static BCOrder startQueryBillById(String objectId) throws BCException {
     	
+    	 ValidationUtil.validateQueryById(objectId);
+    	
 		 Map<String, Object> param = new HashMap<String, Object>();
 	     param.put("app_id", BCCache.getAppID());
 	     param.put("timestamp", System.currentTimeMillis());
@@ -532,19 +534,19 @@ public class BCPay {
      */
     private static void generateBCOrderBean(Map<String, Object> bill,
 			BCOrder bcOrder) {
-    	bcOrder.setObjectId(bill.get("id").toString());
-		bcOrder.setBillNo(bill.get("bill_no").toString());
+    	bcOrder.setObjectId(StrUtil.toStr(bill.get("id")));
+		bcOrder.setBillNo(StrUtil.toStr(bill.get("bill_no")));
 		bcOrder.setTotalFee((Integer)bill.get("total_fee"));
-		bcOrder.setTitle(bill.get("title").toString());
+		bcOrder.setTitle(StrUtil.toStr(bill.get("title")));
 		bcOrder.setChannel(PAY_CHANNEL.valueOf(bill.get("sub_channel").toString()));
 		bcOrder.setResulted(((Boolean)bill.get("spay_result")));
 		if (bill.containsKey("trade_no") && bill.get("trade_no") != null) {
-			bcOrder.setChannelTradeNo(bill.get("trade_no").toString());
+			bcOrder.setChannelTradeNo(StrUtil.toStr(bill.get("trade_no")));
 		}
-		bcOrder.setOptionalString((bill.get("optional").toString()));
+		bcOrder.setOptionalString(StrUtil.toStr(bill.get("optional").toString()));
 		bcOrder.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)bill.get("create_time")));
 		if (bill.containsKey("message_detail")) {
-			bcOrder.setMessageDetail(bill.get("message_detail").toString());
+			bcOrder.setMessageDetail(StrUtil.toStr(bill.get("message_detail")));
 		}
 		bcOrder.setRefundResult((Boolean)bill.get("refund_result"));
 		bcOrder.setRevertResult((Boolean)bill.get("revert_result"));
@@ -648,7 +650,7 @@ public class BCPay {
             	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
             }
         } catch (Exception e) {
-        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + "," + e.getMessage());
+        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), e.getMessage());
         }
 	}
     
@@ -662,7 +664,6 @@ public class BCPay {
     	StringBuilder sb = new StringBuilder();   
         
         try {
-        	sb.append(URLEncoder.encode(url, "UTF-8"));
             sb.append(URLEncoder.encode(
                             JSONObject.fromObject(param).toString(), "UTF-8"));
             System.out.println("url=" + sb.toString());
@@ -686,7 +687,7 @@ public class BCPay {
             	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
             }
         } catch (Exception e) {
-        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + "," + e.getMessage());
+        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), e.getMessage());
         }
 	}
     

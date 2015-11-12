@@ -123,6 +123,12 @@ public class ValidationUtil
 	private final static String BILL_TIME_OUT_ZERO =
 			"billTimeout不能为0！";
 	
+	private final static String OBJECT_ID_EMPTY =
+			"objectId 必填！";
+	
+	private final static String OBJECT_ID_INVALID =
+			"objectId 只能包含数字、字母或者-";
+	
 	final static String PRE_REFUND_SUCCEED = "预退款成功！ ";
 	
 	final static String REFUND_REJECT = "退款被拒绝！ ";
@@ -297,6 +303,14 @@ public class ValidationUtil
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), REFUND_NO_FORMAT_INVALID); 
 		} else if (para.getLimit() != null && para.getLimit() > 50) {
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), LIMIT_FORMAT_INVALID); 
+		}
+	}
+
+	public static void validateQueryById(String objectId) throws BCException {
+		if (objectId == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), OBJECT_ID_EMPTY); 
+		} else if (!objectId.matches("[0-9a-zA-Z\\-]+")) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), OBJECT_ID_INVALID); 
 		}
 	}
 }

@@ -170,6 +170,12 @@ public class TestConstant {
 	public final static String BILL_TIME_OUT_ZERO =
 			"billTimeout不能为0！";
 	
+	public final static String OBJECT_ID_INVALID =
+			"objectId 只能包含数字、字母或者-";
+	
+	public  final static String OBJECT_ID_EMPTY =
+			"objectId 必填！";
+	
 	public static enum CHANNEL_TYPE {
 		WX,
         WX_APP,

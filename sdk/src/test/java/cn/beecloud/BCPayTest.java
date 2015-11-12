@@ -723,7 +723,7 @@ public class BCPayTest {
 		} catch(Exception e) {
 			Assert.assertTrue(e.getMessage(), e instanceof BCException);
 			Assert.assertTrue(e.getMessage(), e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.REFUND_PARAM_EMPTY));
+			Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.BILL_NO_EMPTY));
 		}
 		refund.setBillNo(billNo);
 		
@@ -1195,7 +1195,7 @@ public class BCPayTest {
 		if (refund.getChannel().equals(PAY_CHANNEL.ALI))
 			returnMap.put("url", TestConstant.MOCK_ALI_REFUND_URL);
 		
-		new Expectations(BCPay.class){
+		new Expectations(){
 			   {
 			    Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate.getkApiRefund().substring(14)), withAny(Map.class));
 			    returns(returnMap);
@@ -1232,6 +1232,17 @@ public class BCPayTest {
 	}
 
 	public void testQueryBillById(BCOrder param) {
+		
+		try {
+			BCPay.startQueryBillById(null);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
+		} catch(Exception ex) {
+			System.out.println(ex.getMessage());
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(TestConstant.OBJECT_ID_EMPTY));
+		}
+		
 		try {
 			BCPay.startQueryBillById(TestConstant.INVALID_OBJECT_ID);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
@@ -1239,7 +1250,7 @@ public class BCPayTest {
 			System.out.println(ex.getMessage());
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
 			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains("无记录"));
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(TestConstant.OBJECT_ID_INVALID));
 		}
 		
 		final Map<String, Object> returnMap = new HashMap<String, Object>();
@@ -1247,6 +1258,7 @@ public class BCPayTest {
 		returnMap.put("result_msg", "OK");
 		returnMap.put("err_detail", "");
 		Map<String, Object> payMap = new HashMap<String, Object>();
+		payMap.put("id", TestConstant.MOCK_OBJECT_ID);
 		payMap.put("spay_result", TestConstant.MOCK_PAY_RESULT);
 		payMap.put("create_time", TestConstant.MOCK_CREATE_TIME);
 		payMap.put("total_fee", TestConstant.MOCK_TOTAL_FEE);
@@ -1261,7 +1273,7 @@ public class BCPayTest {
 		payMap.put("refund_result", false);
 		returnMap.put("pay", payMap);
 		
-		new Expectations(BCPay.class){
+		new Expectations(){
 		   {
 		    Deencapsulation.invoke(BCPay.class, "doGet", withSubstring(BCUtilPrivate.getkApiQueryBillById().substring(14)), withAny(Map.class));
 		    returns(returnMap);
@@ -1273,6 +1285,7 @@ public class BCPayTest {
 			order = BCPay.startQueryBillById(param.getObjectId());
 			Assert.assertEquals("",TestConstant.MOCK_BILL_NO, order.getBillNo());
 			Assert.assertEquals("","", order.getChannelTradeNo());
+			Assert.assertEquals("",TestConstant.MOCK_OBJECT_ID, order.getObjectId());
 			Assert.assertEquals("",TestConstant.MOCK_PAY_RESULT, order.isResulted());
 			Assert.assertEquals("",TestUtil.transferDateFromLongToString(TestConstant.MOCK_CREATE_TIME), order.getDateTime());
 			Assert.assertEquals("",TestConstant.MOCK_TOTAL_FEE, order.getTotalFee());
