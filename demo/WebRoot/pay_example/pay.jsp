@@ -48,35 +48,13 @@
 
 <%
 
-    Logger log = Logger.getLogger("redirect.jsp");
-    //returnUrl示例（商户根据自身系统指定）
-    String yeeWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/yeeWebReturnUrl.jsp";
-    String yeeWapReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/yeeWapReturnUrl.jsp";
-    String jdWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/jdWebReturnUrl.jsp";
-    String jdWapReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/jdWapReturnUrl.jsp";
-    String kqReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/kqReturnUrl.jsp";
-    String aliReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/aliReturnUrl.jsp";
-    String unReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/unReturnUrl.jsp";
-    String bdReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/bdReturnUrl.jsp";
-
-    //微信 公众号id（读取配置文件conf.properties）及微信 redirec_uri
-    Properties prop = loadProperty();
-    String wxJSAPIAppId = prop.get("wxJSAPIAppId").toString();
-    String wxJSAPISecret = prop.get("wxJSAPISecret").toString();
-    String wxJSAPIRedirectUrl = "http://javademo.beecloud.cn/demo/redirect.jsp?type=WX_NATIVE";
-    String encodedWSJSAPIRedirectUrl = URLEncoder.encode(wxJSAPIRedirectUrl);
+    Logger log = Logger.getLogger("pay.jsp");
 
     //模拟商户的交易编号、标题、金额、附加数据
     String billNo = BCUtil.generateRandomUUIDPure();
     String title = "demo测试";
-    String totalFee = "1";
     Map<String, Object> optional = new HashMap<String, Object>();
     optional.put("rui", "睿");
-
-    //易宝点卡支付参数样例
-    String cardNo = "15078120125091678";
-    String cardPwd = "121684730734269992";
-    String frqid = "SZX";
 
     String type = request.getParameter("paytype");
     PAY_CHANNEL channel;
@@ -94,7 +72,7 @@
     bcOrder.setBillTimeout(300);
     bcOrder.setOptional(optional);
 
-    //以下是WX_JSAPI用到的返回参数
+    //以下是WX_JSAPI（公众号内支付）用到的返回参数，需要在页面的js用到
     String jsapiString = "";
     String jsapiAppid = "";
     String timeStamp = "";
@@ -107,6 +85,7 @@
 
         case ALI_WEB:
         case ALI_WAP:
+            String aliReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/aliReturnUrl.jsp";
             bcOrder.setReturnUrl(aliReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -141,6 +120,12 @@
             break;
 
         case WX_JSAPI:
+            //微信 公众号id（读取配置文件conf.properties）及微信 redirec_uri
+            Properties prop = loadProperty();
+            String wxJSAPIAppId = prop.get("wxJSAPIAppId").toString();
+            String wxJSAPISecret = prop.get("wxJSAPISecret").toString();
+            String wxJSAPIRedirectUrl = "http://javademo.beecloud.cn/demo/pay.jsp?type=WX_NATIVE";
+            String encodedWSJSAPIRedirectUrl = URLEncoder.encode(wxJSAPIRedirectUrl);
             if (request.getParameter("code") == null || request.getParameter("code") == "") {
                 String redirectUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + wxJSAPIAppId + "&redirect_uri=" + encodedWSJSAPIRedirectUrl + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
                 log.info("wx jsapi redirct url:" + redirectUrl);
@@ -176,6 +161,7 @@
             break;
 
         case UN_WEB:
+            String unReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/unReturnUrl.jsp";
             bcOrder.setReturnUrl(unReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -190,7 +176,7 @@
             //真实环境可以不需要这句话
             BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0");
             //真实环境可以不需要这句话end
-
+            String yeeWapReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/yeeWapReturnUrl.jsp";
             bcOrder.setReturnUrl(yeeWapReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -201,7 +187,7 @@
             }
             break;
         case YEE_WEB:
-
+            String yeeWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/yeeWebReturnUrl.jsp";
             bcOrder.setReturnUrl(yeeWebReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -212,6 +198,10 @@
             }
             break;
         case YEE_NOBANKCARD:
+            //易宝点卡支付参数样例
+            String cardNo = "15078120125091678";
+            String cardPwd = "121684730734269992";
+            String frqid = "SZX";
             bcOrder.setCardNo(cardNo);
             bcOrder.setCardPwd(cardPwd);
             bcOrder.setFrqid(frqid);
@@ -224,6 +214,7 @@
             }
             break;
         case JD_WAP:
+            String jdWapReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/jdWapReturnUrl.jsp";
             bcOrder.setReturnUrl(jdWapReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -234,6 +225,7 @@
             }
             break;
         case JD_WEB:
+            String jdWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/jdWebReturnUrl.jsp";
             bcOrder.setReturnUrl(jdWebReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -254,7 +246,8 @@
             break;
 
         case KUAIQIAN_WAP:
-            bcOrder.setReturnUrl(jdWebReturnUrl);
+            String kqReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/kqReturnUrl.jsp";
+            bcOrder.setReturnUrl(kqReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getHtml());
@@ -264,6 +257,7 @@
             }
             break;
         case BD_WEB:
+            String bdReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/bdReturnUrl.jsp";
             bcOrder.setReturnUrl(bdReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -275,7 +269,8 @@
             break;
 
         case BD_WAP:
-            bcOrder.setReturnUrl(jdWebReturnUrl);
+            bdReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/bdReturnUrl.jsp";
+            bcOrder.setReturnUrl(bdReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getHtml());
@@ -289,21 +284,21 @@
             break;
     }
 
-        if (type.equals("ALI_TRANSFER")) {
-            List<TransferData> list = new ArrayList<TransferData>();
-            TransferData data1 = new TransferData("transfertest11223", "13584809743", "袁某某", 1, "赏赐");
-            TransferData data2 = new TransferData("transfertest11224", "13584809742", "张某某", 1, "赏赐");
-            list.add(data1);
-            list.add(data2);
-            try {
-                String url = BCPay.startTransfer(BCEumeration.TRANSFER_CHANNEL.ALI_TRANSFER,
-                        billNo, "苏州比可网络科技有限公司", list);
-                response.sendRedirect(url);
-            } catch (BCException e) {
-                log.error(e.getMessage(), e);
-                out.println(e.getMessage());
-            }
+    if (type.equals("ALI_TRANSFER")) {
+        List<TransferData> list = new ArrayList<TransferData>();
+        TransferData data1 = new TransferData("transfertest11223", "13584809743", "袁某某", 1, "赏赐");
+        TransferData data2 = new TransferData("transfertest11224", "13584809742", "张某某", 1, "赏赐");
+        list.add(data1);
+        list.add(data2);
+        try {
+            String url = BCPay.startTransfer(BCEumeration.TRANSFER_CHANNEL.ALI_TRANSFER,
+                    billNo, "苏州比可网络科技有限公司", list);
+            response.sendRedirect(url);
+        } catch (BCException e) {
+            log.error(e.getMessage(), e);
+            out.println(e.getMessage());
         }
+    }
 
 
 %>
@@ -331,7 +326,7 @@
 <div align="center" id="qrcode">
 </div>
 </body>
-<script src="./qrcode.js"></script>
+<script src="../js/qrcode.js"></script>
 <script type="text/javascript">
     function makeqrcode() {
         var qr = qrcode(10, 'M');
