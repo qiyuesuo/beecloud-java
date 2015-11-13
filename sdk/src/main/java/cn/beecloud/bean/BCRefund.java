@@ -41,8 +41,23 @@ public class BCRefund {
 	private String aliRefundUrl;
 	
 	private String messageDetail = "不显示";
-	
-	public String getBillNo() {
+
+    public BCRefund(String billNo, String refundNo, Integer refundFee) {
+        this.billNo = billNo;
+        this.refundNo = refundNo;
+        this.refundFee = refundFee;
+    }
+
+    public BCRefund(PAY_CHANNEL channel, String billNo, String refundNo, Integer refundFee) {
+        this.billNo = billNo;
+        this.refundNo = refundNo;
+        this.refundFee = refundFee;
+    }
+
+    public BCRefund() {
+    }
+
+    public String getBillNo() {
 		return billNo;
 	}
 

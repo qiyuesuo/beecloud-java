@@ -2,6 +2,9 @@
          pageEncoding="UTF-8" %>
 <%@ page import="cn.beecloud.*" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="cn.beecloud.bean.BCOrder" %>
+<%@ page import="cn.beecloud.bean.BCException" %>
+<%@ page import="cn.beecloud.bean.BCRefund" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
@@ -34,21 +37,22 @@
 	* bill Id或者refund Id可根据需求自行传入，本处数据作为样例数据，仅供参考
 	*/
     if (queryRefund != null) {
-        BCQueryResult result = BCPay.startQueryRefundById(id);
-        if (result.getResultCode().equals("0")) {
-            pageContext.setAttribute("refund", result.getRefund());
-        } else {
-            out.println(result.getResultMsg());
-            out.println(result.getErrDetail());
+        try {
+            BCRefund result = BCPay.startQueryRefundById(id);
+            pageContext.setAttribute("refund", result);
+        } catch (BCException e) {
+            out.println(e.getMessage());
         }
+
     } else {
-        BCQueryResult result = BCPay.startQueryBillById(id);
-        if (result.getResultCode().equals("0")) {
-            pageContext.setAttribute("bill", result.getOrder());
-        } else {
-            out.println(result.getResultMsg());
-            out.println(result.getErrDetail());
+        try {
+            BCOrder result = BCPay.startQueryBillById(id);
+            out.println(result);
+            pageContext.setAttribute("bill", result);
+        } catch (BCException e) {
+            out.println(e.getMessage());
         }
+
     }
 %>
 
@@ -61,7 +65,6 @@
             <th>订单金额</th>
             <th>退款金额</th>
             <th>渠道</th>
-            <th>子渠道</th>
             <th>附加数据</th>
             <th>是否结束</th>
             <th>是否退款</th>
@@ -78,19 +81,20 @@
             <td>${refund.totalFee}</td>
             <td>${refund.refundFee}</td>
             <td>${refund.channel}</td>
-            <td>${refund.subChannel}</td>
             <td>${refund.optional}</td>
             <td>${refund.finished}</td>
             <td>${refund.refunded}</td>
             <td>${refund.messageDetail}</td>
             <td>${refund.dateTime}</td>
             <td>${refund.updateDateTime}</td>
+
             <c:if test="${fn:containsIgnoreCase(refund.channel,'WX') || fn:containsIgnoreCase(refund.channel,'YEE') || fn:containsIgnoreCase(refund.channel,'BD') || fn:containsIgnoreCase(refund.channel,'KUAIQIAN')}">
                 <td>
                     <input class="button" type="button" onclick="queryStatus('${refund.channel}','${refund.refundNo}')"
                            value="查询"/>
                 </td>
             </c:if>
+
         </tr>
     </table>
 </c:if>
@@ -101,7 +105,6 @@
             <th>标题</th>
             <th>订单金额</th>
             <th>渠道</th>
-            <th>子渠道</th>
             <th>渠道交易号</th>
             <th>附加数据</th>
             <th>是否支付成功</th>
@@ -114,19 +117,20 @@
             <td>${bill.title}</td>
             <td>${bill.totalFee}</td>
             <td>${bill.channel}</td>
-            <td>${bill.subChannel}</td>
             <td>${bill.channelTradeNo}</td>
             <td>${bill.optional}</td>
-            <td>${bill.spayResult}</td>
+            <td>${bill.resulted}</td>
             <td>${bill.refundResult}</td>
             <td>${bill.messageDetail}</td>
             <td>${bill.dateTime}</td>
-            <c:if test="${bill.spayResult == true}">
-                <td align="center">
+
+            <td align="center">
+                <c:if test="${bill.resulted == true}">
                     <input class="button" type="button"
                            onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${bill.channel}')" value="退款"/>
-                </td>
-            </c:if>
+                </c:if>
+            </td>
+
         </tr>
     </table>
 </c:if>

@@ -521,7 +521,7 @@ public class BCPay {
      */
     private static void generateBCOrderBean(Map<String, Object> bill,
 			BCOrder bcOrder) {
-    	bcOrder.setObjectId(bill.get("id").toString());
+//    	bcOrder.setObjectId(bill.get("id").toString());
 		bcOrder.setBillNo(bill.get("bill_no").toString());
 		bcOrder.setTotalFee((Integer)bill.get("total_fee"));
 		bcOrder.setTitle(bill.get("title").toString());
@@ -545,7 +545,7 @@ public class BCPay {
      */
 	private static void generateBCRefundBean(Map<String, Object> refund,
 			BCRefund bcRefund) {
-		bcRefund.setObjectId(refund.get("id").toString());
+//		bcRefund.setObjectId(refund.get("id").toString());
 		bcRefund.setBillNo(refund.get("bill_no").toString());
 		bcRefund.setChannel(PAY_CHANNEL.valueOf(refund.get("sub_channel").toString()));
 		bcRefund.setFinished((Boolean)refund.get("finish"));
@@ -606,6 +606,9 @@ public class BCPay {
             	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
             }
         } catch (Exception e) {
+            if (e instanceof BCException) {
+                throw new BCException(e.getMessage());
+            }
         	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
         }
 	}
@@ -636,6 +639,9 @@ public class BCPay {
             	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
             }
         } catch (Exception e) {
+            if (e instanceof BCException) {
+                throw new BCException(e.getMessage());
+            }
         	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
         }
 	}
@@ -650,7 +656,7 @@ public class BCPay {
     	StringBuilder sb = new StringBuilder();   
         
         try {
-        	sb.append(URLEncoder.encode(url, "UTF-8"));
+        	sb.append(url);
             sb.append(URLEncoder.encode(
                             JSONObject.fromObject(param).toString(), "UTF-8"));
 
@@ -674,9 +680,12 @@ public class BCPay {
             	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
             }
         } catch (Exception e) {
-        	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
+            if (e instanceof BCException) {
+                throw new BCException(e.getMessage());
+            }
+            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
         }
-	}
+    }
     
     private static void placeOrder(BCOrder order, Map<String, Object> ret) {
     	order.setObjectId(ret.get("id").toString());
