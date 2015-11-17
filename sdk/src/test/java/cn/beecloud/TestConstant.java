@@ -30,6 +30,12 @@ public class TestConstant {
 	public static String VALID_REFUND_OBJECT_ID = "9ed1cec8-6f94-4666-b680-fbe0265d0867";
 	public static String NOT_EXIST_BILL_NO = "aaabbbcccdddeee111222333";
 	
+	public static String YEE_NOBANKCARD_NO = "15078120125091678";
+	public static String YEE_NOBANKCARD_PWD = "121684730734269992";
+	public static String YEE_NOBANKCARD_FRQID = "SZX";
+	
+	public static String WXJSAPI_OPEN_ID = "ofEy7uL6p-pgwF7SoPrzD8GqvZ0";
+	
 	
 	
 	public static String yeeWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/yeeWebReturnUrl.jsp";
@@ -68,6 +74,10 @@ public class TestConstant {
 	public static Integer MOCK_REFUND_FEE = 1;
 	public static String MOCK_REFUND_NO = "2015111600223344";
 	public static String MOCK_ALI_TRANSFER_URL = "http://alipay.transfer";
+	public static String MOCK_APPROVE_IDLIST_ID1 = "abcdefg12345678";
+	public static String MOCK_APPROVE_IDLIST_ID2 = "abcdefg12345678";
+	public static String MOCK_APPROVE_ID1_RESULT = "OK";
+	public static String MOCK_APPROVE_ID2_RESULT = "渠道错误。。。";
 	
 	
 	public static String MOCK_ALI_REFUND_URL = "https://tradeexprod.alipay.com/refund/fastPayBatchPwdRefund.htm?partner=2088711322622223";
@@ -188,6 +198,18 @@ public class TestConstant {
 	
 	public static String MOCK_APP_INVALID_ERRMSG =
 			"根据app_id找不到对应的APP或者app_sign不正确,或者timestamp不是当前UTC";
+	
+	public final static String BATCH_REFUND_PARAM_EMPTY =
+			"批量审核参数不能为空！";
+	
+	public final static String BATCH_REFUND_AGREE_EMPTY = 
+			"批量审核agree不能为空！";
+	
+	public final static String BATCH_REFUND_CHANNEL_EMPTY =
+			"批量审核channel不能为空!";
+	
+	public final static String BATCH_REFUND_ID_LIST_EMPTY =
+			"批量审核ids不能为空！";
 	
 	public static enum CHANNEL_TYPE {
 		WX,

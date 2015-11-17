@@ -50,7 +50,7 @@ public class BCPayTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		
+		  
 	}  
 
 	@Before
@@ -60,31 +60,31 @@ public class BCPayTest {
 
 	@Test
 	public void testAliWeb() {  
-		billNo = BCUtil.generateRandomUUIDPure();
-		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
-		subject = "ALI_WEB unit test";
-		BCOrder param = new BCOrder(PAY_CHANNEL.ALI_WEB, 1, billNo, subject);
-		payOptional.put("aliWebPay", "aliWebPay");
-		param.setReturnUrl(TestConstant.aliReturnUrl);
-		param.setOptional(payOptional);
-		param.setBillTimeout(TestConstant.billTimeOut);
+//		billNo = BCUtil.generateRandomUUIDPure();
+//		refundNo = new SimpleDateFormat("yyyyMMdd").format(new Date()) + BCUtil.generateNumberWith3to24digitals();
+//		subject = "ALI_WEB unit test";
+//		BCOrder param = new BCOrder(PAY_CHANNEL.ALI_WEB, 1, billNo, subject);
+//		payOptional.put("aliWebPay", "aliWebPay");
+//		param.setReturnUrl(TestConstant.aliReturnUrl);
+//		param.setOptional(payOptional);
+//		param.setBillTimeout(TestConstant.billTimeOut);
 		
-		testPay(param, PAY_CHANNEL.ALI_WEB);
+		PayTest.testPay();
 		
-		testQueryBillById(param);
-		testQueryBillCount(PAY_CHANNEL.ALI_WEB);
-		testQueryBill(PAY_CHANNEL.ALI_WEB);
-		BCRefund refund = new BCRefund(billNo, refundNo, 1);
-		refundOptional.put("aliWebRefund", "aliWebRefund");
-		refund.setOptional(refundOptional);
-		refund.setChannel(PAY_CHANNEL.ALI);
-//		
-		testRefund(refund);
-		testRefundUpdate(PAY_CHANNEL.ALI);
-		testQueryRefundById(refund);
-		testQueryRefundCount(PAY_CHANNEL.ALI_WEB);
-//		
-		testQueryRefund(PAY_CHANNEL.ALI_WEB);
+//		testQueryBillById(param);
+//		testQueryBillCount(PAY_CHANNEL.ALI_WEB);
+//		testQueryBill(PAY_CHANNEL.ALI_WEB);
+//		BCRefund refund = new BCRefund(billNo, refundNo, 1);
+//		refundOptional.put("aliWebRefund", "aliWebRefund");
+//		refund.setOptional(refundOptional);
+//		refund.setChannel(PAY_CHANNEL.ALI);
+////		
+//		testRefund(refund);
+//		testRefundUpdate(PAY_CHANNEL.ALI);
+//		testQueryRefundById(refund);
+//		testQueryRefundCount(PAY_CHANNEL.ALI_WEB);
+////		
+//		testQueryRefund(PAY_CHANNEL.ALI_WEB);
 //		
 	}
 	
@@ -128,6 +128,105 @@ public class BCPayTest {
 //		testQueryBillCount(PAY_CHANNEL.ALI_WAP);
 	}
 	
+	@Test
+	public void testBatchRefund() {
+		BCBatchRefund batchRefund = new BCBatchRefund();
+		List<String> idList = new LinkedList<String>();
+		idList.add(TestConstant.MOCK_APPROVE_IDLIST_ID1);
+		idList.add(TestConstant.MOCK_APPROVE_IDLIST_ID2);
+		batchRefund.setAgree(true);
+		batchRefund.setChannel(PAY_CHANNEL.ALI);
+		batchRefund.setIds(idList);
+		
+		try {
+			batchRefund = BCPay.startBatchRefund(null);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
+		} catch (Exception ex) {
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(TestConstant.BATCH_REFUND_PARAM_EMPTY));
+		}
+		
+		try {
+			batchRefund.setAgree(null);
+			batchRefund = BCPay.startBatchRefund(batchRefund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
+		} catch (Exception ex) {
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(TestConstant.BATCH_REFUND_AGREE_EMPTY));
+		}
+		
+		try {
+			batchRefund.setChannel(null);
+			batchRefund = BCPay.startBatchRefund(batchRefund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
+		} catch (Exception ex) {
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(TestConstant.BATCH_REFUND_CHANNEL_EMPTY));
+		}
+		
+		try {
+			batchRefund.setIds(null);
+			batchRefund = BCPay.startBatchRefund(batchRefund);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
+		} catch (Exception ex) {
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(TestConstant.BATCH_REFUND_ID_LIST_EMPTY));
+		}
+		mockBatchRefund(batchRefund);
+	}
+	
+	private void mockBatchRefund(BCBatchRefund batchRefund) {
+		final Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(TestConstant.MOCK_APPROVE_IDLIST_ID1, TestConstant.MOCK_APPROVE_ID1_RESULT);
+		map.put(TestConstant.MOCK_APPROVE_IDLIST_ID2, TestConstant.MOCK_APPROVE_ID2_RESULT);
+		returnMap.put("result_map", map);
+		returnMap.put("url", TestConstant.MOCK_ALI_REFUND_URL);
+		returnMap.put("result_code", 0);
+		returnMap.put("result_msg", "OK");
+		returnMap.put("err_detail", "");
+		
+		final Map<String, Object> returnMapDeny = new HashMap<String, Object>();
+		returnMapDeny.put("result_code", 0);
+		returnMapDeny.put("result_msg", "OK");
+		returnMapDeny.put("err_detail", "");
+		
+		new Expectations(){
+		   {
+		    Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate.getApiBatchRefund().substring(14)), withAny(Map.class));
+		    returns(returnMap, returnMapDeny);
+		    result = new BCException(RESULT_TYPE.PAY_FACTOR_NOT_SET.ordinal(), RESULT_TYPE.PAY_FACTOR_NOT_SET.name(), RESULT_TYPE.PAY_FACTOR_NOT_SET.name());
+		   }
+		};
+		
+		try {
+			batchRefund = BCPay.startBatchRefund(batchRefund);
+			for (Map.Entry<String, String> entry : batchRefund.getIdResult().entrySet()) {
+				Assert.assertTrue("", entry.getKey().equals(TestConstant.MOCK_APPROVE_ID1_RESULT) || 
+						entry.getKey().equals(TestConstant.MOCK_APPROVE_ID2_RESULT));
+				Assert.assertTrue("", entry.getValue().equals(TestConstant.MOCK_APPROVE_IDLIST_ID1) || 
+						entry.getKey().equals(TestConstant.MOCK_APPROVE_IDLIST_ID2));
+			}
+			Assert.assertEquals("",TestConstant.MOCK_ALI_REFUND_URL, batchRefund.getAliRefundUrl());
+		} catch (BCException e) {
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN); 
+		}
+		
+		try {
+			batchRefund.setAgree(false);
+			batchRefund = BCPay.startBatchRefund(batchRefund);
+			Assert.assertEquals("", null, batchRefund.getAliRefundUrl());
+			Assert.assertTrue("", batchRefund.getIdResult().isEmpty());
+		} catch (BCException e) {
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN); 
+		}
+	}
+
 	@SuppressWarnings("deprecation")
 	@Test
 	public void testAliTransfer() {  
@@ -704,6 +803,7 @@ public class BCPayTest {
 			String returnUrl = param.getReturnUrl();
 			try {
 				param.setReturnUrl(null);
+				param.setChannel(channel);
 				BCPay.startBCPay(param);
 				Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);  
 			} catch (Exception e) {
@@ -1621,76 +1721,76 @@ public class BCPayTest {
 		}
 	}
 	
-	@Test
-	public void testQueryRefundById(BCRefund refund) {
-		
-		try {
-			BCPay.startQueryRefundById(null);
-			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
-		} catch(Exception ex) {
-			System.out.println(ex.getMessage());
-			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
-			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(TestConstant.OBJECT_ID_EMPTY));
-		}
-		
-		try {
-			BCPay.startQueryRefundById(TestConstant.INVALID_OBJECT_ID);
-			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
-		} catch(Exception ex) {
-			System.out.println(ex.getMessage());
-			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
-			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(TestConstant.OBJECT_ID_INVALID));
-		}
-		
-		final Map<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap.put("result_code", 0);
-		returnMap.put("result_msg", "OK");
-		returnMap.put("err_detail", "");
-		Map<String, Object> refundMap = new HashMap<String, Object>();
-		refundMap.put("id", TestConstant.MOCK_OBJECT_ID);
-		refundMap.put("create_time", TestConstant.MOCK_CREATE_TIME);
-		refundMap.put("total_fee", TestConstant.MOCK_TOTAL_FEE);
-		refundMap.put("refund_fee", TestConstant.MOCK_REFUND_FEE);
-		refundMap.put("refund_no", TestConstant.MOCK_REFUND_NO);
-		refundMap.put("channel", TestConstant.MOCK_CHANNEL);
-		refundMap.put("bill_no", TestConstant.MOCK_BILL_NO);
-		refundMap.put("result", true);
-		refundMap.put("finish", true);
-		refundMap.put("optional", TestConstant.MOCK_OPTIONAL_JSON_STRING);
-		refundMap.put("title", TestConstant.MOCK_TITLE);
-		refundMap.put("sub_channel", TestConstant.MOCK_SUB_CHANNEL);
-		refundMap.put("message_detail", TestConstant.MOCK_MESSAGE_DETAIL_STRING);
-		returnMap.put("refund", refundMap);
-		
-		new Expectations(){
-		   {
-		    Deencapsulation.invoke(BCPay.class, "doGet", withSubstring(BCUtilPrivate.getkApiQueryRefundById().substring(14)), withAny(Map.class));
-		    returns(returnMap);
-		   }
-		};
-		
-		try {
-			refund = BCPay.startQueryRefundById(refund.getObjectId());
-			Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, refund.getObjectId());
-			Assert.assertEquals("", TestConstant.MOCK_BILL_NO, refund.getBillNo());
-			Assert.assertEquals("", TestConstant.MOCK_REFUND_NO, refund.getRefundNo());
-			Assert.assertEquals("", TestConstant.MOCK_REFUND_FEE, refund.getRefundFee());
-			Assert.assertEquals("", TestConstant.MOCK_TOTAL_FEE, refund.getTotalFee());
-			Assert.assertEquals("", TestConstant.MOCK_CHANNEL, refund.getChannel().toString().split("_")[0]);
-			Assert.assertEquals("", TestConstant.MOCK_SUB_CHANNEL, refund.getChannel().toString());
-			Assert.assertEquals("", TestConstant.MOCK_MESSAGE_DETAIL_STRING, refund.getMessageDetail());
-			Assert.assertEquals("", TestConstant.MOCK_OPTIONAL_JSON_STRING, refund.getOptionalString());
-			Assert.assertEquals("", TestConstant.MOCK_TITLE, refund.getTitle());
-			Assert.assertEquals("", true, refund.isFinished());
-			Assert.assertEquals("", true, refund.isRefunded());
-			Assert.assertEquals("", TestUtil.transferDateFromLongToString(TestConstant.MOCK_CREATE_TIME), refund.getDateTime());
-
-		} catch (BCException e) {
-			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
-		}
-	}
+//	@Test
+//	public void testQueryRefundById(BCRefund refund) {
+//		
+//		try {
+//			BCPay.startQueryRefundById(null);
+//			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
+//		} catch(Exception ex) {
+//			System.out.println(ex.getMessage());
+//			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+//			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+//			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(TestConstant.OBJECT_ID_EMPTY));
+//		}
+//		
+//		try {
+//			BCPay.startQueryRefundById(TestConstant.INVALID_OBJECT_ID);
+//			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN); 
+//		} catch(Exception ex) {
+//			System.out.println(ex.getMessage());
+//			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+//			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+//			Assert.assertTrue(ex.getMessage(), ex.getMessage().contains(TestConstant.OBJECT_ID_INVALID));
+//		}
+//		
+//		final Map<String, Object> returnMap = new HashMap<String, Object>();
+//		returnMap.put("result_code", 0);
+//		returnMap.put("result_msg", "OK");
+//		returnMap.put("err_detail", "");
+//		Map<String, Object> refundMap = new HashMap<String, Object>();
+//		refundMap.put("id", TestConstant.MOCK_OBJECT_ID);
+//		refundMap.put("create_time", TestConstant.MOCK_CREATE_TIME);
+//		refundMap.put("total_fee", TestConstant.MOCK_TOTAL_FEE);
+//		refundMap.put("refund_fee", TestConstant.MOCK_REFUND_FEE);
+//		refundMap.put("refund_no", TestConstant.MOCK_REFUND_NO);
+//		refundMap.put("channel", TestConstant.MOCK_CHANNEL);
+//		refundMap.put("bill_no", TestConstant.MOCK_BILL_NO);
+//		refundMap.put("result", true);
+//		refundMap.put("finish", true);
+//		refundMap.put("optional", TestConstant.MOCK_OPTIONAL_JSON_STRING);
+//		refundMap.put("title", TestConstant.MOCK_TITLE);
+//		refundMap.put("sub_channel", TestConstant.MOCK_SUB_CHANNEL);
+//		refundMap.put("message_detail", TestConstant.MOCK_MESSAGE_DETAIL_STRING);
+//		returnMap.put("refund", refundMap);
+//		
+//		new Expectations(){
+//		   {
+//		    Deencapsulation.invoke(BCPay.class, "doGet", withSubstring(BCUtilPrivate.getkApiQueryRefundById().substring(14)), withAny(Map.class));
+//		    returns(returnMap);
+//		   }
+//		};
+//		
+//		try {
+//			refund = BCPay.startQueryRefundById(refund.getObjectId());
+//			Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, refund.getObjectId());
+//			Assert.assertEquals("", TestConstant.MOCK_BILL_NO, refund.getBillNo());
+//			Assert.assertEquals("", TestConstant.MOCK_REFUND_NO, refund.getRefundNo());
+//			Assert.assertEquals("", TestConstant.MOCK_REFUND_FEE, refund.getRefundFee());
+//			Assert.assertEquals("", TestConstant.MOCK_TOTAL_FEE, refund.getTotalFee());
+//			Assert.assertEquals("", TestConstant.MOCK_CHANNEL, refund.getChannel().toString().split("_")[0]);
+//			Assert.assertEquals("", TestConstant.MOCK_SUB_CHANNEL, refund.getChannel().toString());
+//			Assert.assertEquals("", TestConstant.MOCK_MESSAGE_DETAIL_STRING, refund.getMessageDetail());
+//			Assert.assertEquals("", TestConstant.MOCK_OPTIONAL_JSON_STRING, refund.getOptionalString());
+//			Assert.assertEquals("", TestConstant.MOCK_TITLE, refund.getTitle());
+//			Assert.assertEquals("", true, refund.isFinished());
+//			Assert.assertEquals("", true, refund.isRefunded());
+//			Assert.assertEquals("", TestUtil.transferDateFromLongToString(TestConstant.MOCK_CREATE_TIME), refund.getDateTime());
+//
+//		} catch (BCException e) {
+//			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+//		}
+//	}
 	
 	private void testRefundUpdate(PAY_CHANNEL channel) {
 		String message;

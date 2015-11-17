@@ -301,6 +301,8 @@ public class BCPay {
      */
     public static BCBatchRefund startBatchRefund(BCBatchRefund batchRefund) throws BCException {
     	
+    	ValidationUtil.validateBatchRefund(batchRefund);
+    	
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("channel", batchRefund.getChannel().toString());
         param.put("agree", batchRefund.getAgree());

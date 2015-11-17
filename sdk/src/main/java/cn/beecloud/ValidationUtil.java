@@ -8,6 +8,7 @@ import java.util.Map;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
+import cn.beecloud.bean.BCBatchRefund;
 import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.BCOrder;
 import cn.beecloud.bean.BCQueryParameter;
@@ -32,6 +33,9 @@ public class ValidationUtil
 	
 	private final static String PAY_PARAM_EMPTY =
 			"支付参数不能为空！";
+	
+	private final static String BATCH_REFUND_PARAM_EMPTY =
+			"批量审核参数不能为空！";
 	
 	private final static String REFUND_PARAM_EMPTY = 
 			"退款参数不能为空！";
@@ -89,6 +93,15 @@ public class ValidationUtil
 	
 	private final static String REFUND_NO_EMPTY =
 			"refundNo 必填！";
+	
+	private final static String BATCH_REFUND_AGREE_EMPTY = 
+			"批量审核agree不能为空！";
+	
+	private final static String BATCH_REFUND_CHANNEL_EMPTY =
+			"批量审核channel不能为空!";
+	
+	private final static String BATCH_REFUND_ID_LIST_EMPTY =
+			"批量审核ids不能为空！";
 	
 	private final static String CHANNEL_EMPTY =
 			"channel 必填！";
@@ -315,6 +328,18 @@ public class ValidationUtil
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), OBJECT_ID_EMPTY); 
 		} else if (!objectId.matches("[0-9a-zA-Z\\-]+")) {
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), OBJECT_ID_INVALID); 
+		}
+	}
+	
+	public static void validateBatchRefund(BCBatchRefund batchRefund) throws BCException {
+		if (batchRefund == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BATCH_REFUND_PARAM_EMPTY); 
+		} else if (batchRefund.getAgree() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BATCH_REFUND_AGREE_EMPTY); 
+		} else if (batchRefund.getChannel() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BATCH_REFUND_CHANNEL_EMPTY); 
+		} else if (batchRefund.getIds() == null || batchRefund.getIds().size() == 0) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BATCH_REFUND_ID_LIST_EMPTY); 
 		}
 	}
 }
