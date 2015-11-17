@@ -586,13 +586,13 @@ public class BCPay {
      */
     private static Map<String, String> generateWXJSAPIMap(
 			Map<String, Object> ret) {
-		HashMap map = new HashMap<String, String>();
-		map.put("appId", ret.get("app_id"));
-		map.put("package", ret.get("package"));
-		map.put("nonceStr", ret.get("nonce_str"));
-		map.put("timeStamp", ret.get("timestamp"));
-		map.put("paySign", ret.get("pay_sign"));
-		map.put("signType", ret.get("sign_type"));
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("appId", StrUtil.toStr(ret.get("app_id")));
+		map.put("package", StrUtil.toStr(ret.get("package")));
+		map.put("nonceStr", StrUtil.toStr(ret.get("nonce_str")));
+		map.put("timeStamp", StrUtil.toStr(ret.get("timestamp")));
+		map.put("paySign", StrUtil.toStr(ret.get("pay_sign")));
+		map.put("signType", StrUtil.toStr(ret.get("sign_type")));
 		
 		return map;
 	}
