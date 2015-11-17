@@ -177,8 +177,10 @@ public class BCPay {
      * @throws BCException 
      */
     public static BCRefund startQueryRefundById(String objectId) throws BCException {
-    	
-		 Map<String, Object> param = new HashMap<String, Object>();
+    	 
+    	 ValidationUtil.validateQueryById(objectId);
+		 
+    	 Map<String, Object> param = new HashMap<String, Object>();
 	     param.put("app_id", BCCache.getAppID());
 	     param.put("timestamp", System.currentTimeMillis());
 	     param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
@@ -207,7 +209,7 @@ public class BCPay {
     	Map<String, Object> param = new HashMap<String, Object>();
         buildQueryCountParam(param, para);
          
-        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBillCount(), param);
+        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryRefundCount(), param);
     	
         return (Integer)ret.get("count");
     }

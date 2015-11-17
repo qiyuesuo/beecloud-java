@@ -103,7 +103,7 @@ public class ValidationUtil
 			"title 是一个长度不超过32字节的字符串！";
 	
 	private final static String LIMIT_FORMAT_INVALID =
-			"limit 的最大长度为50！";
+			"limit 的最大长度为50！ 并且不能小于10！";
 	
 	private final static String OPENID_EMPTY =
 			"openid 必填！";
@@ -128,6 +128,9 @@ public class ValidationUtil
 	
 	private final static String OBJECT_ID_INVALID =
 			"objectId 只能包含数字、字母或者-";
+	
+	private final static String REFUND_UPDATE_CHANNEL_INVALID =
+			"退款更新仅支持微信、百度、易宝、快钱！";
 	
 	final static String PRE_REFUND_SUCCEED = "预退款成功！ ";
 	
@@ -167,53 +170,54 @@ public class ValidationUtil
 		return new BCPayResult(RESULT_TYPE.OK);	
 	}
 
-	public static BCQueryStatusResult validateQueryRefundStatus(PAY_CHANNEL channel,
-			String refundNo) {
+	public static void validateQueryRefundStatus(PAY_CHANNEL channel,
+			String refundNo) throws BCException {
 		if (channel == null) {
-			return new BCQueryStatusResult(CHANNEL_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), CHANNEL_EMPTY);
+		} else if ( !channel.equals(PAY_CHANNEL.BD) && !channel.equals(PAY_CHANNEL.WX) && 
+				!channel.equals(PAY_CHANNEL.YEE) && !channel.equals(PAY_CHANNEL.KUAIQIAN)) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), REFUND_UPDATE_CHANNEL_INVALID);
 		} else if (StrUtil.empty(refundNo)) {
-			return new BCQueryStatusResult(REFUND_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), REFUND_NO_EMPTY);
 		}
-		return new BCQueryStatusResult(RESULT_TYPE.OK);
 	}
 
-	public static BCPayResult validateBCTransfer(PAY_CHANNEL channel,
-			String batchNo, String accountName, List<TransferData> transferData) {
+	public static void validateBCTransfer(PAY_CHANNEL channel,
+			String batchNo, String accountName, List<TransferData> transferData) throws BCException {
 		if (channel == null) {
-			return new BCPayResult(CHANNEL_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), CHANNEL_EMPTY);
 		} else if (!channel.equals(PAY_CHANNEL.ALI)) { 
-			return new BCPayResult(CHANNEL_SUPPORT_INVALID, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), CHANNEL_SUPPORT_INVALID);
 		} else if (batchNo == null) {
-			return new BCPayResult(BATCH_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BATCH_NO_EMPTY);
 		} else if (!batchNo.matches("[0-9A-Za-z]{11,32}")) {
-			return new BCPayResult(BATCH_NO_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BATCH_NO_FORMAT_INVALID);
 		} else if (accountName == null) {
-			return new BCPayResult(ACCOUNT_NAME_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), ACCOUNT_NAME_EMPTY);
 		} else if (transferData == null) {
-			return new BCPayResult(TRANSFER_DATA_EMPTY, RESULT_TYPE.PARAM_INVALID);
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_DATA_EMPTY);
 		}
 		for(TransferData data : transferData) {
 			if (StrUtil.empty(data.getTransferId())) {
-				return new BCPayResult(TRANSFER_ID_EMPTY, RESULT_TYPE.PARAM_INVALID); 
+				throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_ID_EMPTY);
 			} else if (!data.getTransferId().matches("[0-9A-Za-z]{1,32}")) {
-				return new BCPayResult(TRANSFER_ID_FORMAT_EMPTY, RESULT_TYPE.PARAM_INVALID); 
+				throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_ID_FORMAT_EMPTY);
 			} else if (StrUtil.empty(data.getReceiverAccount())) {
-				return new BCPayResult(RECEIVER_ACCOUNT_EMPTY, RESULT_TYPE.PARAM_INVALID); 
+				throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), RECEIVER_ACCOUNT_EMPTY);
 			} else if (StrUtil.empty(data.getReceiverName())) {
-				return new BCPayResult(RECEIVER_NAME_EMPTY, RESULT_TYPE.PARAM_INVALID); 
+				throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), RECEIVER_NAME_EMPTY);
 			} else if (StrUtil.empty(data.getTransferFee())) {
-				return new BCPayResult(TRANSFER_FEE_EMPTY, RESULT_TYPE.PARAM_INVALID); 
+				throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_FEE_EMPTY);
 			} else if (data.getTransferFee() <= 0) {
-				return new BCPayResult(TRANSFER_FEE_INVALID, RESULT_TYPE.PARAM_INVALID); 
+				throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_FEE_INVALID);
 			} else if (StrUtil.empty(data.getTransferNote())) {
-				return new BCPayResult(TRANSFER_NOTE_EMPTY, RESULT_TYPE.PARAM_INVALID); 
+				throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_NOTE_EMPTY);
 			}
 		}
 		
 		if (transferData.size() > 1000) {
-			return new BCPayResult(TRANSFER_LIST_SIZE_INVALID, RESULT_TYPE.PARAM_INVALID); 
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_LIST_SIZE_INVALID);
 		}
-		return new BCPayResult(RESULT_TYPE.OK);
 	}
 
 	public static void validateBCPay(BCOrder para) throws BCException {
@@ -288,7 +292,7 @@ public class ValidationUtil
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), QUERY_PARAM_EMPTY); 
 		} else if (!StrUtil.empty(para.getBillNo()) && !para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_FORMAT_INVALID); 
-		} else if (para.getLimit() != null && para.getLimit() > 50) {
+		} else if (para.getLimit() != null && (para.getLimit() > 50 || para.getLimit() < 10)) {
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), LIMIT_FORMAT_INVALID); 
 		}
 	}
@@ -301,7 +305,7 @@ public class ValidationUtil
 		} else if (!StrUtil.empty(para.getRefundNo()) && (!para.getRefundNo().substring(8, para.getRefundNo().length()).matches("[0-9A-Za-z]{3,24}") || 
 				para.getRefundNo().substring(8, para.getRefundNo().length()).matches("000")) ) {
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), REFUND_NO_FORMAT_INVALID); 
-		} else if (para.getLimit() != null && para.getLimit() > 50) {
+		} else if (para.getLimit() != null && (para.getLimit() > 50 || para.getLimit() < 10)) {
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), LIMIT_FORMAT_INVALID); 
 		}
 	}

@@ -61,7 +61,14 @@ public class TestConstant {
 	public static String MOCK_WXJSAPI_PAYSIGN = "817F3E861DD73B04D2BE9E78FBEBA65F";
 	public static String MOCK_WXJSAP_SIGNTYPE = "MD5";
 	public static String MOCK_TITLE_16_CHINESE_CHARACTER = "正好十六个汉字的标题哈哈哈哈哈哈";
-
+	public static String MOCK_TRADE_NO = "2015052300001000620053541865";
+	public static String MOCK_OPTIONAL_JSON_STRING = "{\"rui\":\"rui\"}";
+	public static String MOCK_MESSAGE_DETAIL_STRING = "{\"bc_appid\":\"c37d661d-7e61-49ea-96a5-68c34e83db3b_728a592b-fe29-45e3-bddf-c4c54bf2d3f9\",\"payment_type\":\"1\",\"subject\":\"demo测试\",\"trade_no\":\"2015111600001000610062919539\",\"buyer_email\":\"13861331391\",\"gmt_create\":\"2015-11-16 14:59:53\",\"notify_type\":\"trade_status_sync\",\"quantity\":\"1\",\"out_trade_no\":\"6047c40979734cb586645517d23ee833\",\"seller_id\":\"2088711322600312\",\"notify_time\":\"2015-11-16 14:59:54\",\"trade_status\":\"TRADE_SUCCESS\",\"is_total_fee_adjust\":\"N\",\"total_fee\":\"0.01\",\"gmt_payment\":\"2015-11-16 14:59:54\",\"seller_email\":\"admin@beecloud.cn\",\"price\":\"0.01\",\"buyer_id\":\"2088502992657614\",\"notify_id\":\"0cbfa4cc5883b8e6afe37c52dcef71015e\",\"use_coupon\":\"N\",\"sign_type\":\"MD5\",\"sign\":\"5b6d83caec01406a93f85bfe367817cf\"}";
+	public static String MOCK_REFUND_UPDATE_MSG = "SUCCESS";
+	public static Integer MOCK_REFUND_FEE = 1;
+	public static String MOCK_REFUND_NO = "2015111600223344";
+	public static String MOCK_ALI_TRANSFER_URL = "http://alipay.transfer";
+	
 	
 	public static String MOCK_ALI_REFUND_URL = "https://tradeexprod.alipay.com/refund/fastPayBatchPwdRefund.htm?partner=2088711322622223";
 	
@@ -175,6 +182,12 @@ public class TestConstant {
 	
 	public  final static String OBJECT_ID_EMPTY =
 			"objectId 必填！";
+	
+	public final static String REFUND_UPDATE_CHANNEL_INVALID =
+			"退款更新仅支持微信、百度、易宝、快钱！";
+	
+	public static String MOCK_APP_INVALID_ERRMSG =
+			"根据app_id找不到对应的APP或者app_sign不正确,或者timestamp不是当前UTC";
 	
 	public static enum CHANNEL_TYPE {
 		WX,
