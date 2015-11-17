@@ -34,7 +34,6 @@ public class BCEumeration {
 		ALI_WEB,
 		ALI_WAP,
 		ALI_QRCODE,
-		ALI_OFFLINE_QRCODE,
 		UN,
 		UN_APP,
 		UN_WEB,
@@ -55,6 +54,12 @@ public class BCEumeration {
 		PAYPAL_SANDBOX,
 		PAYPAL_LIVE
 	}
+
+    public enum TRANSFER_CHANNEL{
+        ALI_TRANSFER,
+        WX_REDPACK,
+        WX_TRANSFER
+    }
 
 	public enum QR_PAY_MODE {
 		MODE_BRIEF_FRONT,
