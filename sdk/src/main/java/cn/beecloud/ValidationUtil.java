@@ -1,20 +1,19 @@
 package cn.beecloud;
 
-import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
+import cn.beecloud.BCEumeration.TRANSFER_CHANNEL;
 import cn.beecloud.bean.BCBatchRefund;
 import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.BCOrder;
 import cn.beecloud.bean.BCQueryParameter;
 import cn.beecloud.bean.BCRefund;
-import cn.beecloud.bean.BCRefundParameter;
 import cn.beecloud.bean.TransferData;
+
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class is used to unify the validation for all the
@@ -153,36 +152,6 @@ public class ValidationUtil
 	
 	final static String PAY_SUCCESS = "支付成功！ ";
 	
-	public static BCPayResult validateBCPay(PAY_CHANNEL channel, String billNo, String title, String returnUrl, String openId) {
-		if (channel == null) {
-			return new BCPayResult(CHANNEL_EMPTY, RESULT_TYPE.PARAM_INVALID);
-		} else if (StrUtil.empty(billNo)) {
-			return new BCPayResult(BILL_NO_EMPTY, RESULT_TYPE.PARAM_INVALID);
-		} else if (!billNo.matches("[0-9A-Za-z]{8,32}")) {
-			return new BCPayResult(BILL_NO_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
-		} else if (StrUtil.empty(title)) {
-			return new BCPayResult(TITLE_EMPTY, RESULT_TYPE.PARAM_INVALID);
-		} else if (StrUtil.empty(returnUrl) && 
-				(channel.equals(PAY_CHANNEL.ALI_WEB) || 
-						channel.equals(PAY_CHANNEL.ALI_QRCODE) || 
-							channel.equals(PAY_CHANNEL.UN_WEB))) {
-			return new BCPayResult(RETURN_URL_EMPTY, RESULT_TYPE.PARAM_INVALID);
-		} else if (channel.equals(PAY_CHANNEL.WX_JSAPI) && StrUtil.empty(openId)){
-			return new BCPayResult(OPENID_EMPTY, RESULT_TYPE.PARAM_INVALID);
-		} else
-			try {
-				if (title.getBytes("GBK").length > 32) {
-					return new BCPayResult(TITLE_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
-				}
-			} catch (UnsupportedEncodingException e) {
-				if (title.length() > 16) {
-					return new BCPayResult(TITLE_FORMAT_INVALID, RESULT_TYPE.PARAM_INVALID);
-				}
-			}
-		
-		return new BCPayResult(RESULT_TYPE.OK);	
-	}
-
 	public static void validateQueryRefundStatus(PAY_CHANNEL channel,
 			String refundNo) throws BCException {
 		if (channel == null) {
@@ -195,11 +164,11 @@ public class ValidationUtil
 		}
 	}
 
-	public static void validateBCTransfer(PAY_CHANNEL channel,
+	public static void validateBCTransfer(TRANSFER_CHANNEL channel,
 			String batchNo, String accountName, List<TransferData> transferData) throws BCException {
 		if (channel == null) {
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), CHANNEL_EMPTY);
-		} else if (!channel.equals(PAY_CHANNEL.ALI)) { 
+		} else if (!channel.equals(TRANSFER_CHANNEL.ALI_TRANSFER)) { 
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), CHANNEL_SUPPORT_INVALID);
 		} else if (batchNo == null) {
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BATCH_NO_EMPTY);
@@ -227,7 +196,6 @@ public class ValidationUtil
 				throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_NOTE_EMPTY);
 			}
 		}
-		
 		if (transferData.size() > 1000) {
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_LIST_SIZE_INVALID);
 		}

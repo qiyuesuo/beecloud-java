@@ -33,3 +33,4 @@ public class BCPayTest {
 		TransferTest.testAliTransfer();
 	}
 }
+	

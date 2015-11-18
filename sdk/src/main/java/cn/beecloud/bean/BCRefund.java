@@ -52,7 +52,7 @@ public class BCRefund {
 	public BCRefund() {
 	}
 
-	public String getBillNo() {
+    public String getBillNo() {
 		return billNo;
 	}
 

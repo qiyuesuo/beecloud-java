@@ -14,6 +14,7 @@ import org.junit.Assert;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
+import cn.beecloud.BCEumeration.TRANSFER_CHANNEL;
 import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.TransferData;
 
@@ -54,7 +55,7 @@ public class TransferTest {
 		}
 
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, null,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, null,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -66,7 +67,7 @@ public class TransferTest {
 		}
 
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.WX, batchNo,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.WX_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -80,7 +81,7 @@ public class TransferTest {
 		}
 
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo, null, list);
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo, null, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -91,7 +92,7 @@ public class TransferTest {
 		}
 
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, null);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -103,7 +104,7 @@ public class TransferTest {
 		}
 
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER,
 					TestConstant.ALI_TRANSFER_BATCH_NO_WITH_SPECIAL_CHARACTER,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
@@ -118,7 +119,7 @@ public class TransferTest {
 		}
 
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo + "A",
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo + "A",
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -132,7 +133,7 @@ public class TransferTest {
 		}
 
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER,
 					batchNo.substring(0, 10),
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
@@ -152,7 +153,7 @@ public class TransferTest {
 				TestConstant.TRANSFER_NOTE);
 		list.add(data1);
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -169,7 +170,7 @@ public class TransferTest {
 				TestConstant.TRANSFER_NOTE);
 		list.add(data1);
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -188,7 +189,7 @@ public class TransferTest {
 				TestConstant.TRANSFER_NOTE);
 		list.add(data1);
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -206,7 +207,7 @@ public class TransferTest {
 				TestConstant.TRANSFER_NOTE);
 		list.add(data1);
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -223,7 +224,7 @@ public class TransferTest {
 				TestConstant.ALI_TRANSFER_RECEIVER_NAME_1, 1, null);
 		list.add(data1);
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -241,7 +242,7 @@ public class TransferTest {
 				TestConstant.TRANSFER_NOTE);
 		list.add(data1);
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -261,7 +262,7 @@ public class TransferTest {
 				TestConstant.TRANSFER_NOTE);
 		list.add(data1);
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -279,7 +280,7 @@ public class TransferTest {
 				TestConstant.TRANSFER_NOTE);
 		list.add(data1);
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -299,7 +300,7 @@ public class TransferTest {
 				TestConstant.TRANSFER_NOTE);
 		list.add(data1);
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -317,7 +318,7 @@ public class TransferTest {
 				TestConstant.TRANSFER_NOTE);
 		list.add(data1);
 		try {
-			url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo,
+			url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
@@ -364,7 +365,7 @@ public class TransferTest {
 		};
 
 		try {
-			String url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo,
+			String url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			assertEquals(TestConstant.ASSERT_MESSAGE,
 					TestConstant.MOCK_ALI_TRANSFER_URL, url);
@@ -373,7 +374,7 @@ public class TransferTest {
 		}
 		
 		try {
-			String url = BCPay.startTransfer(PAY_CHANNEL.ALI, batchNo,
+			String url = BCPay.startTransfer(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
 					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (BCException ex) {

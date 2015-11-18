@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
+import cn.beecloud.BCEumeration.TRANSFER_CHANNEL;
 import cn.beecloud.bean.BCBatchRefund;
 import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.BCOrder;
@@ -253,7 +254,7 @@ public class BCPay {
      * @return BCPayResult
      * @throws BCException 
      */
-    public static String startTransfer(PAY_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) throws BCException {
+    public static String startTransfer(TRANSFER_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) throws BCException {
     
     	ValidationUtil.validateBCTransfer(channel, batchNo, accountName, transferData);
     	
@@ -604,7 +605,6 @@ public class BCPay {
         	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
         }
         WebTarget target = client.target(url);
-        System.out.println("url:" + url);
         try {
             Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
             if (response.getStatus() == 200) {
@@ -626,7 +626,7 @@ public class BCPay {
         } catch (Exception e) {
         	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + "," + e.getMessage());
         }
-	}
+	}  
     
     private static Map<String, Object> doPut(String url,
 			Map<String, Object> param) throws BCException {
