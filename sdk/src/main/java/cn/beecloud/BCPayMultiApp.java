@@ -582,7 +582,7 @@ private final static String NOT_REGISTER = "为注册";
 		bcRefund.setOptionalString(refund.get("optional").toString());
 		bcRefund.setRefunded((Boolean)refund.get("result"));
 		bcRefund.setTitle(refund.get("title").toString());
-		bcRefund.setTotalFee(refund.get("total_fee").toString());
+		bcRefund.setTotalFee((Integer)refund.get("total_fee"));
 		bcRefund.setRefundFee((Integer)refund.get("refund_fee"));
 		bcRefund.setRefundNo(refund.get("refund_no").toString());
 		bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("create_time")));

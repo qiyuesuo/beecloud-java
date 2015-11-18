@@ -16,7 +16,7 @@ public class BCRefund {
 	
 	private String refundNo;
 	
-	private String totalFee;
+	private Integer totalFee;
 	
 	private Integer refundFee;
 	
@@ -68,11 +68,11 @@ public class BCRefund {
 		this.refundNo = refundNo;
 	}
 
-	public String getTotalFee() {
+	public Integer getTotalFee() {
 		return totalFee;
 	}
 
-	public void setTotalFee(String totalFee) {
+	public void setTotalFee(Integer totalFee) {
 		this.totalFee = totalFee;
 	}
 

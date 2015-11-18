@@ -54,11 +54,11 @@ class BCUtilPrivate {
     }
 
 	static String getkApiPay() {
-		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/bill";
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/bill";
 	}
 
 	static String getkApiRefund() {
-		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/refund";
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/refund";
 	}
 
 	static String getkApiQueryBill() {
@@ -78,11 +78,11 @@ class BCUtilPrivate {
 	}
 	
 	static String getkApiRefundUpdate() {
-		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/refund/status?para=";
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/refund/status?para=";
 	}
 	
 	static String getkApiTransfer() {
-		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/transfers";
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/transfers";
 	}
 	
 	static String getkApiQueryBillCount() {
@@ -98,7 +98,7 @@ class BCUtilPrivate {
 	}
 	
 	static String getApiBatchRefund() {
-		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion + "/rest/refund";
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/refund";
 	}
 	
 	static String transferDateFromLongToString(long millisecond) {

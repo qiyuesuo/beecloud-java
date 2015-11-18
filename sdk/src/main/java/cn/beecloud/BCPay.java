@@ -570,7 +570,7 @@ public class BCPay {
 		bcRefund.setOptionalString(refund.get("optional").toString());
 		bcRefund.setRefunded((Boolean)refund.get("result"));
 		bcRefund.setTitle(refund.get("title").toString());
-		bcRefund.setTotalFee(refund.get("total_fee").toString());
+		bcRefund.setTotalFee((Integer)refund.get("total_fee"));
 		bcRefund.setRefundFee((Integer)refund.get("refund_fee"));
 		bcRefund.setRefundNo(refund.get("refund_no").toString());
 		bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)refund.get("create_time")));
@@ -666,11 +666,11 @@ public class BCPay {
         }
         
     	StringBuilder sb = new StringBuilder();   
+    	sb.append(url);
         
         try {
             sb.append(URLEncoder.encode(
                             JSONObject.fromObject(param).toString(), "UTF-8"));
-            System.out.println("url=" + sb.toString());
             WebTarget target = client.target(sb.toString());
             Response response = target.request().get();
             if (response.getStatus() == 200) {
@@ -679,7 +679,6 @@ public class BCPay {
                 Integer resultCode = (Integer)ret.get("result_code");
                 String resultMessage = StrUtil.toStr(ret.get("result_msg"));
                 String errorDetail = StrUtil.toStr(ret.get("err_detail"));
-                
                 boolean isSuccess = (resultCode == 0);
 
                 if (isSuccess) {
@@ -691,6 +690,9 @@ public class BCPay {
             	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
             }
         } catch (Exception e) {
+        	if (e instanceof BCException) {
+        		throw (BCException)e;
+        	}
         	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), e.getMessage());
         }
 	}
