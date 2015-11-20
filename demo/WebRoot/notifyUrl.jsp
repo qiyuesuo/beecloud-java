@@ -73,6 +73,7 @@
 
 	String sign = jsonObj.getString("sign");
 	String timestamp = jsonObj.getString("timestamp");
+	String objectId = jsonObj.getString("id");
 
 	boolean status = verifySign(sign, timestamp);
 	
