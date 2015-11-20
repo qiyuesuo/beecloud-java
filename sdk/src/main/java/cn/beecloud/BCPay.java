@@ -242,6 +242,34 @@ public class BCPay {
         return ret.get("refund_status").toString();
     }
     
+    public static String startTransfer(TRANSFER_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) throws BCException {
+        
+    	ValidationUtil.validateBCTransfer(channel, batchNo, accountName, transferData);
+    	
+    	Map<String, Object> param = new HashMap<String, Object>();
+    	param.put("app_id", BCCache.getAppID());
+    	param.put("timestamp", System.currentTimeMillis());
+    	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
+		param.put("channel", channel.toString());
+    	param.put("batch_no", batchNo);
+    	param.put("account_name", accountName);
+    	List<Map<String, Object>> transferList = new ArrayList<Map<String, Object>>();
+    	for (TransferData data : transferData) {
+    		Map<String, Object> map = new HashMap<String, Object>();
+    		map.put("transfer_id", data.getTransferId());
+    		map.put("receiver_account", data.getReceiverAccount());
+    		map.put("receiver_name", data.getReceiverName());
+    		map.put("transfer_fee", data.getTransferFee());
+    		map.put("transfer_note", data.getTransferNote());
+    		transferList.add(map);
+    	}
+    	param.put("transfer_data", transferList);
+        
+    	Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfers(), param);
+    	
+     	return ret.get("url").toString();
+    }
+    
     /**
      * @param channel
      * （必填）渠道类型， 暂时只支持ALI 
@@ -254,7 +282,7 @@ public class BCPay {
      * @return BCPayResult
      * @throws BCException 
      */
-    public static String startTransfer(TRANSFER_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) throws BCException {
+    public static String startTransfers(TRANSFER_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) throws BCException {
     
     	ValidationUtil.validateBCTransfer(channel, batchNo, accountName, transferData);
     	
@@ -277,7 +305,7 @@ public class BCPay {
     	}
     	param.put("transfer_data", transferList);
         
-    	Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfer(), param);
+    	Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfers(), param);
     	
      	return ret.get("url").toString();
     }

@@ -81,7 +81,7 @@ class BCUtilPrivate {
 		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/refund/status?para=";
 	}
 	
-	static String getkApiTransfer() {
+	static String getkApiTransfers() {
 		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/transfers";
 	}
 	
