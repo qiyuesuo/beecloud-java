@@ -104,13 +104,13 @@ public class TestConstant {
 			"查询参数不能为空！";
 	
 	public final static String BILL_NO_EMPTY =
-			"billNo 必填！";
+			"billNo 不能为空！";
 	
 	public final static String BATCH_NO_EMPTY =
-			"batchNo 必填！";
+			"batchNo 不能为空！";
 	
 	public final static String TRANSFER_DATA_EMPTY =
-			"transferData 必填！";
+			"transferData 不能为空！";
 
 	public final static String TRANSFER_ID_EMPTY =
 			"transferId 不能为空！";
@@ -131,34 +131,34 @@ public class TestConstant {
 			"transferNote 不能为空！";
 	
 	public final static String ACCOUNT_NAME_EMPTY =
-			"accountName 必填！";
+			"accountName 不能为空！";
 	
 	public final static String TITLE_EMPTY =
-			"title 必填！";
+			"title 不能为空！";
 	
 	public final static String TOTAL_FEE_EMPTY =
-			"totalFee 必填！";
+			"totalFee 不能为空！";
 	
 	public final static String REFUND_FEE_EMPTY =
-			"refundFee 必填！";
+			"refundFee 不能为空！";
 	
 	public final static String REFUND_FEE_INVALID =
 			"refundFee 必须大于零！";
 	
 	public final static String QR_PAY_MODE_EMPTY =
-			"qrPayMode 必填！";
+			"qrPayMode 不能为空！";
 	
 	public final static String RETURN_URL_EMPTY = 
-			"returnUrl 必填！";
+			"returnUrl 不能为空！";
 	
 	public final static String REFUND_NO_EMPTY =
-			"refundNo 必填！";
+			"refundNo 不能为空！";
 	
 	public final static String CHANNEL_EMPTY =
-			"channel 必填！";
+			"channel 不能为空！";
 	
 	public final static String YEE_NOBANCARD_FACTOR_EMPTY =
-			"cardNo, cardPwd, frqid 必填！";
+			"cardNo, cardPwd, frqid 不能为空！";
 	
 	public final static String REFUND_NO_FORMAT_INVALID =
 			"refundNo 是格式为当前日期加3-24位数字字母（不能为000）流水号的字符串！ ";
@@ -170,12 +170,12 @@ public class TestConstant {
 			"limit 的最大长度为50！";
 	
 	public final static String OPENID_EMPTY =
-			"openid 必填！";
+			"openid 不能为空！";
 	
 	public final static String CHANNEL_INVALID_FOR_REFUND =
 			"退款只支持WX, UN, ALI !";
 	
-	public final static String TRANSFER_ID_FORMAT_EMPTY = 
+	public final static String TRANSFER_ID_FORMAT_INVALID = 
 			"transferId 是一个长度不超过32字符的数字字母字符串！";
 	
 	public final static String TRANSFER_LIST_SIZE_INVALID = 
@@ -196,7 +196,7 @@ public class TestConstant {
 			"objectId 只能包含数字、字母或者-";
 	
 	public  final static String OBJECT_ID_EMPTY =
-			"objectId 必填！";
+			"objectId 不能为空！";
 	
 	public final static String REFUND_UPDATE_CHANNEL_INVALID =
 			"退款更新仅支持微信、百度、易宝、快钱！";
@@ -256,10 +256,31 @@ public class TestConstant {
 			"微信红包sendName、wishing、activityName 不能为空!";
 	
 	public final static String TRANSFER_PARAM_EMPTY =
-			"transfer参数必填！";
+			"transfer参数不能为空！";
 	
 	public final static String WX_TRANSFER_NO_INVALID =
 			"微信单笔打款transferNo 是一个长度为10的数字！";
+	
+	public final static String TRANSFERS_PARAM_EMPTY =
+			"批量打款参数不能为空！";
+	
+	public final static String TRANSFERS_CHANNEL_EMPTY =
+			"批量打款channel 不能为空！";
+	
+	public final static String TRANSFERS_DATA_LIST_EMPTY =
+			"批量打款transferDataList 不能为空！";
+	
+	public final static String TRANSFERS_BATCH_NO_EMPTY =
+			"批量打款batchNo 不能为空！";
+	
+	public final static String TRANSFERS_ACCOUNT_NAME_EMPTY =
+			"accountName 不能为空！";
+	
+	public final static String TRANSFERS_CHANNEL_SUPPORT_INVALID =
+			"批量打款仅支持ALI";
+	
+	public final static String TRANSFERS_BATCH_NO_FORMAT_INVALID =
+			"batchNo 是一个长度在11到32个字符的数字字母字符串！";
 	
 	public static enum CHANNEL_TYPE {
 		WX,

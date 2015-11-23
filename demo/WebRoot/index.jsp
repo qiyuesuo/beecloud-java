@@ -162,10 +162,6 @@
                 <img src="http://beeclouddoc.qiniudn.com/aliwap.png" alt="">
             </li>
             <li onclick="paySwitch(this)">
-                <input type="radio" value="ALI_TRANSFER" name="paytype">
-                <img src="http://beeclouddoc.qiniudn.com/alitransfer.png" alt="">
-            </li>
-            <li onclick="paySwitch(this)">
                 <input type="radio" value="YEE_WAP" name="paytype">
                 <img src="http://beeclouddoc.qiniudn.com/ybwap.png" alt="YEE WAP">
             </li>
@@ -222,6 +218,10 @@
              <li onclick="paySwitch(this)">
                 <input type="radio" value="ALI_TRANSFER" name="transferType">
                 <img src="http://beeclouddoc.qiniudn.com/alitransfer.png" alt="支付宝单笔打款">
+            </li>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="ALI_TRANSFER" name="batchTransferType">
+                <img src="http://beeclouddoc.qiniudn.com/alitransfer.png" alt="">
             </li>
     	</ul>
     </div>

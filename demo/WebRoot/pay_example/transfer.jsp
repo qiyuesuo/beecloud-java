@@ -57,65 +57,71 @@
 	TransferParameter param;
 	
 	
-	String type = request.getParameter("transferType");
-	TRANSFER_CHANNEL channel;
-	try {
-	    channel = TRANSFER_CHANNEL.valueOf(type);
-	} catch (Exception e) {
-	    channel = null;
-	    log.error(e.getMessage(), e);
-	}
+	String transfer = request.getParameter("transferType");
+	String batchTransfer = request.getParameter("batchTransferType");
 	
-	switch (channel) {
-		case WX_REDPACK:
-			param = new TransferParameter();
-			param.setChannel(TRANSFER_CHANNEL.WX_REDPACK);
-			param.setChannelUserId(openId);
-			param.setTransferNo(redpackTransferNo);
-			param.setTotalFee(200);
-			param.setRedpackInfo(redpackInfo);
-			param.setDescription("发红包");
-	        try {
-	            String result = BCPay.startTransfer(param);
-	            out.println("微信红包发送成功！");
-	        } catch (BCException e) {
-	            log.error(e.getMessage(), e);
-	            out.println(e.getMessage());
-	        }
-	        break;
-		case WX_TRANSFER:
-			param = new TransferParameter();
-			param.setChannel(TRANSFER_CHANNEL.WX_TRANSFER);
-			param.setChannelUserId(openId);
-			param.setTransferNo(redpackTransferNo);
-			param.setTotalFee(200);
-			param.setDescription("微信单笔打款！");
-			try {
-	            String result = BCPay.startTransfer(param);
-	            out.println("微信单笔打款成功！");
-		    } catch (BCException e) {
+	if (transfer != null) {
+		TRANSFER_CHANNEL channel;
+		try {
+		    channel = TRANSFER_CHANNEL.valueOf(transfer);
+		} catch (Exception e) {
+		    channel = null;
+		    log.error(e.getMessage(), e);
+		}
+		
+		switch (channel) {
+			case WX_REDPACK:
+				param = new TransferParameter();
+				param.setChannel(TRANSFER_CHANNEL.WX_REDPACK);
+				param.setChannelUserId(openId);
+				param.setTransferNo(redpackTransferNo);
+				param.setTotalFee(200);
+				param.setRedpackInfo(redpackInfo);
+				param.setDescription("发红包");
+		        try {
+		            String result = BCPay.startTransfer(param);
+		            out.println("微信红包发送成功！");
+		        } catch (BCException e) {
 		            log.error(e.getMessage(), e);
 		            out.println(e.getMessage());
-	        }
-	        break;
-		case ALI_TRANSFER:
-			param = new TransferParameter();
-			param.setChannel(TRANSFER_CHANNEL.ALI_TRANSFER);
-			param.setChannelUserId(aliUserId);
-			param.setChannelUserName(aliUserName);
-			param.setTotalFee(1);
-			param.setDescription("支付宝单笔打款！");
-			param.setAccountName("苏州比可网络科技有限公司");
-			param.setTransferNo(aliTransferNo);
-			try {
-	            String url = BCPay.startTransfer(param);
-	            response.sendRedirect(url);
-		    } catch (BCException e) {
-		            log.error(e.getMessage(), e);
-		            out.println(e.getMessage());
-	        }
-	        break;
-	    default:
-	        break;
+		        }
+		        break;
+			case WX_TRANSFER:
+				param = new TransferParameter();
+				param.setChannel(TRANSFER_CHANNEL.WX_TRANSFER);
+				param.setChannelUserId(openId);
+				param.setTransferNo(redpackTransferNo);
+				param.setTotalFee(200);
+				param.setDescription("微信单笔打款！");
+				try {
+		            String result = BCPay.startTransfer(param);
+		            out.println("微信单笔打款成功！");
+			    } catch (BCException e) {
+			            log.error(e.getMessage(), e);
+			            out.println(e.getMessage());
+		        }
+		        break;
+			case ALI_TRANSFER:
+				param = new TransferParameter();
+				param.setChannel(TRANSFER_CHANNEL.ALI_TRANSFER);
+				param.setChannelUserId(aliUserId);
+				param.setChannelUserName(aliUserName);
+				param.setTotalFee(1);
+				param.setDescription("支付宝单笔打款！");
+				param.setAccountName("苏州比可网络科技有限公司");
+				param.setTransferNo(aliTransferNo);
+				try {
+		            String url = BCPay.startTransfer(param);
+		            response.sendRedirect(url);
+			    } catch (BCException e) {
+			            log.error(e.getMessage(), e);
+			            out.println(e.getMessage());
+		        }
+		        break;
+		    default:
+		        break;
+		}
+	} else if (batchTransfer != null) {
+		
 	}
 %>

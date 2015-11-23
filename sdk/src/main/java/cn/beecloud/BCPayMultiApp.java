@@ -271,17 +271,17 @@ private final static String NOT_REGISTER = "为注册";
      */
     public String startTransfers(TransfersParameter para) throws BCException {
     
-    	ValidationUtil.validateBCTransfers(channel, batchNo, accountName, transferData);
+    	ValidationUtil.validateBCTransfers(para);
     	
     	Map<String, Object> param = new HashMap<String, Object>();
     	param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
         param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
 		param.put("channel", "ALI");
-    	param.put("batch_no", batchNo);
-    	param.put("account_name", accountName);
+    	param.put("batch_no", para.getBatchNo());
+    	param.put("account_name", para.getAccountName());
     	List<Map<String, Object>> transferList = new ArrayList<Map<String, Object>>();
-    	for (ALITransferData data : transferData) {
+    	for (ALITransferData data : para.getTransferDataList()) {
     		Map<String, Object> map = new HashMap<String, Object>();
     		map.put("transfer_id", data.getTransferId());
     		map.put("receiver_account", data.getReceiverAccount());

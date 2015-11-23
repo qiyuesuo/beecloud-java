@@ -11,6 +11,7 @@ import javax.swing.RepaintManager;
 
 import mockit.Deencapsulation;
 import mockit.Expectations;
+import mockit.StrictExpectations;
 
 import org.junit.Assert;
 
@@ -399,6 +400,17 @@ public class TransferTest {
 		} catch (BCException ex) {
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
 		}
+		
+		new StrictExpectations() {
+			{
+				Deencapsulation.invoke(BCPay.class, "doPost",
+						withSubstring(BCUtilPrivate.getkApiTransfer()
+								.substring(14)), withAny(Map.class));
+				result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
+						RESULT_TYPE.APP_INVALID.name(),
+						TestConstant.MOCK_APP_INVALID_ERRMSG);
+			}
+		};
 		
 		try {
 			String url = BCPay.startTransfer(param);

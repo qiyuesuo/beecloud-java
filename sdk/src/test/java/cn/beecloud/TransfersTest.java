@@ -9,6 +9,7 @@ import java.util.Map;
 
 import mockit.Deencapsulation;
 import mockit.Expectations;
+import mockit.StrictExpectations;
 
 import org.junit.Assert;
 
@@ -16,96 +17,97 @@ import cn.beecloud.BCEumeration.RESULT_TYPE;
 import cn.beecloud.BCEumeration.TRANSFER_CHANNEL;
 import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.ALITransferData;
+import cn.beecloud.bean.TransfersParameter;
 
 public class TransfersTest {
 	
 	static String batchNo = BCUtil.generateRandomUUIDPure();
 	static String transferId1 = BCUtil.generateRandomUUIDPure();
 	static String transferId2 = BCUtil.generateRandomUUIDPure();
+	static String receiverName1 = TestConstant.ALI_TRANSFER_RECEIVER_NAME_1;
+	static String receiverName2 = TestConstant.ALI_TRANSFER_RECEIVER_NAME_2;
+	static String receiverAccount1 = TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_1;
+	static String receiverAccount2 = TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_2;
+	static String transferNote = TestConstant.TRANSFER_NOTE;
 	static List<ALITransferData> list = new ArrayList<ALITransferData>();
+	static String accountName = TestConstant.ALI_TRANSFER_ACCOUNT_NAME;
+	static TRANSFER_CHANNEL channel = TRANSFER_CHANNEL.ALI_TRANSFER;
 	static ALITransferData data1;
 	static ALITransferData data2;
 
 	static {
 		data1 = new ALITransferData(transferId1,
-				TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_1,
-				TestConstant.ALI_TRANSFER_RECEIVER_NAME_1, 1,
-				TestConstant.TRANSFER_NOTE);
+				receiverAccount1,
+				receiverName1, 1,
+				transferNote);
 		data2 = new ALITransferData(transferId2,
-				TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_2,
-				TestConstant.ALI_TRANSFER_RECEIVER_NAME_2, 1,
-				TestConstant.TRANSFER_NOTE);
+				receiverAccount2,
+				receiverName2, 1,
+				transferNote);
 		list.add(data1);
 		list.add(data2);
 	}
 
 	static void testTransfers() {
+		TransfersParameter param = new TransfersParameter();
+		initTransfersParam(param);
 		String url = "";
+		
 		try {
-			url = BCPay.startTransfers(null, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			url = BCPay.startTransfers(null);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
 			Assert.assertTrue(ex.getMessage(),
 					ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
 			Assert.assertTrue(ex.getMessage(),
-					ex.getMessage().contains(TestConstant.CHANNEL_EMPTY));
+					ex.getMessage().contains(TestConstant.TRANSFERS_PARAM_EMPTY));
 		}
 
+		
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, null,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			param.setChannel(null);
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
 			Assert.assertTrue(ex.getMessage(),
 					ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
 			Assert.assertTrue(ex.getMessage(),
-					ex.getMessage().contains(TestConstant.BATCH_NO_EMPTY));
+					ex.getMessage().contains(TestConstant.TRANSFERS_CHANNEL_EMPTY));
 		}
-
+		param.setChannel(channel);
+		
+		
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.WX_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
-			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
-		} catch (Exception ex) {
-			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
-			Assert.assertTrue(ex.getMessage(),
-					ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-			Assert.assertTrue(
-					ex.getMessage(),
-					ex.getMessage().contains(
-							TestConstant.CHANNEL_SUPPORT_INVALID));
-		}
-
-		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo, null, list);
+			param.setBatchNo(null);
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
 			Assert.assertTrue(ex.getMessage(),
 					ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
 			Assert.assertTrue(ex.getMessage(),
-					ex.getMessage().contains(TestConstant.ACCOUNT_NAME_EMPTY));
+					ex.getMessage().contains(TestConstant.TRANSFERS_BATCH_NO_EMPTY));
 		}
-
+		param.setBatchNo(batchNo);
+		
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, null);
+			param.setAccountName(null);
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
 			Assert.assertTrue(ex.getMessage(),
 					ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
 			Assert.assertTrue(ex.getMessage(),
-					ex.getMessage().contains(TestConstant.TRANSFER_DATA_EMPTY));
+					ex.getMessage().contains(TestConstant.TRANSFERS_ACCOUNT_NAME_EMPTY));
 		}
-
+		param.setAccountName(accountName);
+		
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER,
-					TestConstant.ALI_TRANSFER_BATCH_NO_WITH_SPECIAL_CHARACTER,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			param.setChannel(TRANSFER_CHANNEL.WX_TRANSFER);
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -114,12 +116,27 @@ public class TransfersTest {
 			Assert.assertTrue(
 					ex.getMessage(),
 					ex.getMessage().contains(
-							TestConstant.BATCH_NO_FORMAT_INVALID));
+							TestConstant.TRANSFERS_CHANNEL_SUPPORT_INVALID));
 		}
+		param.setChannel(channel);
 
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo + "A",
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			param.setTransferDataList(null);
+			url = BCPay.startTransfers(param);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+		} catch (Exception ex) {
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(),
+					ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(ex.getMessage(),
+					ex.getMessage().contains(TestConstant.TRANSFERS_DATA_LIST_EMPTY));
+		}
+		param.setTransferDataList(list);
+		
+		
+		try {
+			param.setBatchNo(TestConstant.ALI_TRANSFER_BATCH_NO_WITH_SPECIAL_CHARACTER);
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -128,13 +145,12 @@ public class TransfersTest {
 			Assert.assertTrue(
 					ex.getMessage(),
 					ex.getMessage().contains(
-							TestConstant.BATCH_NO_FORMAT_INVALID));
+							TestConstant.TRANSFERS_BATCH_NO_FORMAT_INVALID));
 		}
 
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER,
-					batchNo.substring(0, 10),
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			param.setBatchNo(batchNo + "A");
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -143,17 +159,27 @@ public class TransfersTest {
 			Assert.assertTrue(
 					ex.getMessage(),
 					ex.getMessage().contains(
-							TestConstant.BATCH_NO_FORMAT_INVALID));
+							TestConstant.TRANSFERS_BATCH_NO_FORMAT_INVALID));
 		}
 
-		ALITransferData data1 = new ALITransferData(null,
-				TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_1,
-				TestConstant.ALI_TRANSFER_RECEIVER_NAME_1, 1,
-				TestConstant.TRANSFER_NOTE);
-		list.add(data1);
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			param.setBatchNo(batchNo.substring(0, 10));
+			url = BCPay.startTransfers(param);
+			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+		} catch (Exception ex) {
+			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+			Assert.assertTrue(ex.getMessage(),
+					ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+			Assert.assertTrue(
+					ex.getMessage(),
+					ex.getMessage().contains(
+							TestConstant.TRANSFERS_BATCH_NO_FORMAT_INVALID));
+		}
+		param.setBatchNo(batchNo);
+		
+		try {
+			data1.setTransferId(null);
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -162,15 +188,11 @@ public class TransfersTest {
 			Assert.assertTrue(ex.getMessage(),
 					ex.getMessage().contains(TestConstant.TRANSFER_ID_EMPTY));
 		}
-		list.remove(data1);
+		data1.setTransferId(transferId1);
 
-		data1 = new ALITransferData(transferId1, null,
-				TestConstant.ALI_TRANSFER_RECEIVER_NAME_1, 1,
-				TestConstant.TRANSFER_NOTE);
-		list.add(data1);
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			data1.setReceiverAccount(null);
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -181,15 +203,11 @@ public class TransfersTest {
 					ex.getMessage().contains(
 							TestConstant.RECEIVER_ACCOUNT_EMPTY));
 		}
-		list.remove(data1);
+		data1.setReceiverAccount(receiverAccount1);
 
-		data1 = new ALITransferData(transferId1,
-				TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_1, null, 1,
-				TestConstant.TRANSFER_NOTE);
-		list.add(data1);
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			data1.setReceiverName(null);
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -198,16 +216,11 @@ public class TransfersTest {
 			Assert.assertTrue(ex.getMessage(),
 					ex.getMessage().contains(TestConstant.RECEIVER_NAME_EMPTY));
 		}
-		list.remove(data1);
+		data1.setReceiverName(receiverName1);
 
-		data1 = new ALITransferData(transferId1,
-				TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_1,
-				TestConstant.ALI_TRANSFER_RECEIVER_NAME_1, null,
-				TestConstant.TRANSFER_NOTE);
-		list.add(data1);
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			data1.setTransferFee(null);
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -216,15 +229,12 @@ public class TransfersTest {
 			Assert.assertTrue(ex.getMessage(),
 					ex.getMessage().contains(TestConstant.TRANSFER_FEE_EMPTY));
 		}
-		list.remove(data1);
+		data1.setTransferFee(1);
 
-		data1 = new ALITransferData(transferId1,
-				TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_1,
-				TestConstant.ALI_TRANSFER_RECEIVER_NAME_1, 1, null);
-		list.add(data1);
+		
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			data1.setTransferNote(null);
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -233,16 +243,11 @@ public class TransfersTest {
 			Assert.assertTrue(ex.getMessage(),
 					ex.getMessage().contains(TestConstant.TRANSFER_NOTE_EMPTY));
 		}
-		list.remove(data1);
+		data1.setTransferNote(transferNote);
 
-		data1 = new ALITransferData(transferId1 + "A",
-				TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_1,
-				TestConstant.ALI_TRANSFER_RECEIVER_NAME_1, 1,
-				TestConstant.TRANSFER_NOTE);
-		list.add(data1);
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			data1.setTransferId(transferId1 + "A");
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -251,36 +256,12 @@ public class TransfersTest {
 			Assert.assertTrue(
 					ex.getMessage(),
 					ex.getMessage().contains(
-							TestConstant.TRANSFER_ID_FORMAT_EMPTY));
+							TestConstant.TRANSFER_ID_FORMAT_INVALID));
 		}
-		list.remove(data1);
 
-		data1 = new ALITransferData("",
-				TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_1,
-				TestConstant.ALI_TRANSFER_RECEIVER_NAME_1, 1,
-				TestConstant.TRANSFER_NOTE);
-		list.add(data1);
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
-			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
-		} catch (Exception ex) {
-			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
-			Assert.assertTrue(ex.getMessage(),
-					ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-			Assert.assertTrue(ex.getMessage(),
-					ex.getMessage().contains(TestConstant.TRANSFER_ID_EMPTY));
-		}
-		list.remove(data1);
-
-		data1 = new ALITransferData(TestConstant.INVALID_TRANSFER_ID,
-				TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_1,
-				TestConstant.ALI_TRANSFER_RECEIVER_NAME_1, 1,
-				TestConstant.TRANSFER_NOTE);
-		list.add(data1);
-		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			data1.setTransferId(TestConstant.INVALID_TRANSFER_ID);
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -289,18 +270,13 @@ public class TransfersTest {
 			Assert.assertTrue(
 					ex.getMessage(),
 					ex.getMessage().contains(
-							TestConstant.TRANSFER_ID_FORMAT_EMPTY));
+							TestConstant.TRANSFER_ID_FORMAT_INVALID));
 		}
-		list.remove(data1);
+		data1.setTransferId(transferId1);
 
-		data1 = new ALITransferData(transferId1,
-				TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_1,
-				TestConstant.ALI_TRANSFER_RECEIVER_NAME_1, -1,
-				TestConstant.TRANSFER_NOTE);
-		list.add(data1);
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			data1.setTransferFee(-1);
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -309,16 +285,10 @@ public class TransfersTest {
 			Assert.assertTrue(ex.getMessage(),
 					ex.getMessage().contains(TestConstant.TRANSFER_FEE_INVALID));
 		}
-		list.remove(data1);
-
-		data1 = new ALITransferData(transferId1,
-				TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_1,
-				TestConstant.ALI_TRANSFER_RECEIVER_NAME_1, 0,
-				TestConstant.TRANSFER_NOTE);
-		list.add(data1);
+		
 		try {
-			url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			data1.setTransferFee(0);
+			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -327,23 +297,12 @@ public class TransfersTest {
 			Assert.assertTrue(ex.getMessage(),
 					ex.getMessage().contains(TestConstant.TRANSFER_FEE_INVALID));
 		}
-		list.remove(data1);
-		list.remove(data2);
-
-		mockAliTransfer();
+		data1.setTransferFee(1);
+		
+		mockTransfers(param);
 	}
 
-	private static void mockAliTransfer() {
-		data1 = new ALITransferData(transferId1,
-				TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_1,
-				TestConstant.ALI_TRANSFER_RECEIVER_NAME_1, 1,
-				TestConstant.TRANSFER_NOTE);
-		data2 = new ALITransferData(transferId2,
-				TestConstant.ALI_TRANSFER_RECEIVER_ACCOUNT_2,
-				TestConstant.ALI_TRANSFER_RECEIVER_NAME_2, 1,
-				TestConstant.TRANSFER_NOTE);
-		list.add(data1);
-		list.add(data2);
+	private static void mockTransfers(TransfersParameter param) {
 
 		final Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("result_code", 0);
@@ -364,17 +323,16 @@ public class TransfersTest {
 		};
 
 		try {
-			String url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			String url = BCPay.startTransfers(param);
 			assertEquals(TestConstant.ASSERT_MESSAGE,
 					TestConstant.MOCK_ALI_TRANSFER_URL, url);
 		} catch (BCException ex) {
+			ex.printStackTrace();
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
 		}
 		
 		try {
-			String url = BCPay.startTransfers(TRANSFER_CHANNEL.ALI_TRANSFER, batchNo,
-					TestConstant.ALI_TRANSFER_ACCOUNT_NAME, list);
+			String url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (BCException ex) {
 			Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
@@ -383,5 +341,12 @@ public class TransfersTest {
 			Assert.assertTrue(ex.getMessage(),
 					ex.getMessage().contains(TestConstant.MOCK_APP_INVALID_ERRMSG));
 		}
+	}
+	
+	private static void initTransfersParam(TransfersParameter param) {
+		param.setAccountName(accountName);
+		param.setBatchNo(batchNo);
+		param.setChannel(channel);
+		param.setTransferDataList(list);
 	}
 }
