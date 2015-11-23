@@ -29,7 +29,9 @@ import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.BCOrder;
 import cn.beecloud.bean.BCQueryParameter;
 import cn.beecloud.bean.BCRefund;
-import cn.beecloud.bean.TransferData;
+import cn.beecloud.bean.ALITransferData;
+import cn.beecloud.bean.TransferParameter;
+import cn.beecloud.bean.TransfersParameter;
 import net.sf.json.JSONObject;
 
 /**
@@ -242,35 +244,48 @@ public class BCPay {
         return ret.get("refund_status").toString();
     }
     
-    public static String startTransfer(TRANSFER_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) throws BCException {
+    public static String startTransfer(TransferParameter para) throws BCException {
         
-    	ValidationUtil.validateBCTransfer(channel, batchNo, accountName, transferData);
+    	ValidationUtil.validateBCTransfer(para);
     	
     	Map<String, Object> param = new HashMap<String, Object>();
+    	
+    	buildTransferParam(param, para);
+        
+    	Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfer(), param);
+    	
+    	if (ret.containsKey("url")) {
+    		return ret.get("url").toString();
+		} 
+    	return "";
+    }
+    
+    private static void buildTransferParam(Map<String, Object> param,
+			TransferParameter para) {
     	param.put("app_id", BCCache.getAppID());
     	param.put("timestamp", System.currentTimeMillis());
     	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
-		param.put("channel", channel.toString());
-    	param.put("batch_no", batchNo);
-    	param.put("account_name", accountName);
-    	List<Map<String, Object>> transferList = new ArrayList<Map<String, Object>>();
-    	for (TransferData data : transferData) {
-    		Map<String, Object> map = new HashMap<String, Object>();
-    		map.put("transfer_id", data.getTransferId());
-    		map.put("receiver_account", data.getReceiverAccount());
-    		map.put("receiver_name", data.getReceiverName());
-    		map.put("transfer_fee", data.getTransferFee());
-    		map.put("transfer_note", data.getTransferNote());
-    		transferList.add(map);
+		param.put("channel", para.getChannel().toString());
+    	param.put("transfer_no", para.getTransferNo());
+    	param.put("total_fee", para.getTotalFee());
+    	param.put("desc", para.getDescription());
+    	param.put("channel_user_id", para.getChannelUserId());
+    	if (para.getChannelUserName() != null) {
+    		param.put("channel_user_name", para.getChannelUserName());
     	}
-    	param.put("transfer_data", transferList);
-        
-    	Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfers(), param);
-    	
-     	return ret.get("url").toString();
-    }
-    
-    /**
+    	if (para.getRedpackInfo() != null) {
+    		Map<String, Object> redpackInfo = new HashMap<String, Object>();
+    		redpackInfo.put("send_name", para.getRedpackInfo().getSendName());
+    		redpackInfo.put("wishing", para.getRedpackInfo().getWishing());
+    		redpackInfo.put("act_name", para.getRedpackInfo().getActivityName());
+    		param.put("redpack_info", redpackInfo);
+    	}
+    	if (para.getAccountName() != null) {
+    		param.put("account_name", para.getAccountName());
+    	}
+	}
+
+	/**
      * @param channel
      * （必填）渠道类型， 暂时只支持ALI 
      * @param batchNo 
@@ -282,19 +297,19 @@ public class BCPay {
      * @return BCPayResult
      * @throws BCException 
      */
-    public static String startTransfers(TRANSFER_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) throws BCException {
+    public static String startTransfers(TransfersParameter para) throws BCException {
     
-    	ValidationUtil.validateBCTransfer(channel, batchNo, accountName, transferData);
+    	ValidationUtil.validateBCTransfers(para);
     	
     	Map<String, Object> param = new HashMap<String, Object>();
     	param.put("app_id", BCCache.getAppID());
     	param.put("timestamp", System.currentTimeMillis());
     	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
-		param.put("channel", channel.toString());
-    	param.put("batch_no", batchNo);
-    	param.put("account_name", accountName);
+		param.put("channel", para.getChannel().toString());
+    	param.put("batch_no", para.getBatchNo());
+    	param.put("account_name", para.getAccountName());
     	List<Map<String, Object>> transferList = new ArrayList<Map<String, Object>>();
-    	for (TransferData data : transferData) {
+    	for (ALITransferData data : para.getTransferDataList()) {
     		Map<String, Object> map = new HashMap<String, Object>();
     		map.put("transfer_id", data.getTransferId());
     		map.put("receiver_account", data.getReceiverAccount());
@@ -652,6 +667,9 @@ public class BCPay {
             	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
             }
         } catch (Exception e) {
+        	if ( e instanceof BCException) {
+        		throw (BCException)e;
+        	}
         	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + "," + e.getMessage());
         }
 	}  
@@ -682,6 +700,9 @@ public class BCPay {
             	throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(), NOT_CORRECT_RESPONSE);
             }
         } catch (Exception e) {
+        	if (e instanceof BCException) {
+        		throw (BCException)e;
+        	}
         	throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), e.getMessage());
         }
 	}

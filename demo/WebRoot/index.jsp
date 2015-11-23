@@ -208,6 +208,27 @@
     </div>
 </form>
 
+<form action="pay_example/transfer.jsp" method="POST" target="_blank">
+	<div>
+    	<ul>
+   		 	<li onclick="paySwitch(this)">
+                <input type="radio" value="WX_REDPACK" name="transferType">
+                <img src="http://beeclouddoc.qiniudn.com/redpack.png" alt="微信红包">
+            </li>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="WX_TRANSFER" name="transferType">
+                <img src="http://beeclouddoc.qiniudn.com/wetransfer.png" alt="微信单笔打款">
+            </li>
+             <li onclick="paySwitch(this)">
+                <input type="radio" value="ALI_TRANSFER" name="transferType">
+                <img src="http://beeclouddoc.qiniudn.com/alitransfer.png" alt="支付宝单笔打款">
+            </li>
+    	</ul>
+    </div>
+     <div style="clear: both;">
+        <input type="submit" class="button" value="确认打款">
+    </div>
+</form>
 <hr/>
 <div>
     <h2>订单查询及发起退款，退款查询，退款状态查询</h2>

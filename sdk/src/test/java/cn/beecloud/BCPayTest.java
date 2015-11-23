@@ -30,7 +30,8 @@ public class BCPayTest {
 		RefundQueryTest.testQueryRefundCount();
 		RefundTest.testRefundUpdate();
 		BatchHandleTest.testBatchRefund();
-		TransferTest.testAliTransfer();
+		TransferTest.testTransfer();
+		TransfersTest.testTransfers();
 	}
 }
 	

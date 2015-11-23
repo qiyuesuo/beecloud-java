@@ -18,7 +18,8 @@ import cn.beecloud.bean.BCOrder;
 import cn.beecloud.bean.BCQueryParameter;
 import cn.beecloud.bean.BCRefund;
 import cn.beecloud.bean.BCRefundParameter;
-import cn.beecloud.bean.TransferData;
+import cn.beecloud.bean.ALITransferData;
+import cn.beecloud.bean.TransfersParameter;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -268,9 +269,9 @@ private final static String NOT_REGISTER = "为注册";
      * @return BCPayResult
      * @throws BCException 
      */
-    public String startTransfer(BCEumeration.TRANSFER_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) throws BCException {
+    public String startTransfers(TransfersParameter para) throws BCException {
     
-    	ValidationUtil.validateBCTransfer(channel, batchNo, accountName, transferData);
+    	ValidationUtil.validateBCTransfers(channel, batchNo, accountName, transferData);
     	
     	Map<String, Object> param = new HashMap<String, Object>();
     	param.put("app_id", this.appId);
@@ -280,7 +281,7 @@ private final static String NOT_REGISTER = "为注册";
     	param.put("batch_no", batchNo);
     	param.put("account_name", accountName);
     	List<Map<String, Object>> transferList = new ArrayList<Map<String, Object>>();
-    	for (TransferData data : transferData) {
+    	for (ALITransferData data : transferData) {
     		Map<String, Object> map = new HashMap<String, Object>();
     		map.put("transfer_id", data.getTransferId());
     		map.put("receiver_account", data.getReceiverAccount());
@@ -291,7 +292,7 @@ private final static String NOT_REGISTER = "为注册";
     	}
     	param.put("transfer_data", transferList);
         
-    	Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfer(), param);
+    	Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfers(), param);
     	
      	return ret.get("url").toString();
     }

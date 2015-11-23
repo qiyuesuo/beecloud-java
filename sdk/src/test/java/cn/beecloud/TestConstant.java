@@ -38,6 +38,9 @@ public class TestConstant {
 	
 	public static String WXJSAPI_OPEN_ID = "ofEy7uL6p-pgwF7SoPrzD8GqvZ0";
 	
+	public static String TRANSFER_NO_WITH_SPECIAL_CHARACTER = "billno123!@#";
+	public static String WX_TRANSFER_NO_WITH_INVALID_LENGTH = "123456789";
+	
 	
 	
 	public static String yeeWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/yeeWebReturnUrl.jsp";
@@ -212,6 +215,51 @@ public class TestConstant {
 	
 	public final static String BATCH_REFUND_ID_LIST_EMPTY =
 			"批量审核ids不能为空！";
+	
+	public final static String TRANSFER_CHANNEL_EMPTY =
+			"单笔打款channel 不能为空!";
+	
+	public final static String TRANSFER_TRANSFER_NO_EMPTY =
+			"单笔打款transferNo 不能为空！";
+	
+	public final static String TRANSFER_TOTAL_FEE_EMPTY =
+			"单笔打款totalFee 不能为空！";
+	
+	public final static String TRANSFER_DESC_EMPTY =
+			"单笔打款description 不能为空！";
+	
+	public final static String TRANSFER_USER_ID_EMPTY =
+			"单笔打款channelUserId 不能为空！";
+	
+	public final static String TRANSFER_REDPACK_INFO_EMPTY =
+			"微信红包redpackInfo 不能为空! ";
+	
+	public final static String TRANSFER_USER_NAME_EMPTY =
+			"支付宝单笔打款channelUserName 不能为空！";
+	
+	public final static String TRANSFER_ACCOUNT_NAME_EMPTY = 
+			"支付宝单笔打款accountName 不能为空！";
+	
+	public final static String ALI_TRANSFER_NO_INVALID =
+			"支付宝单笔打款transferNo 是一个长度在11到32个字符的数字字母字符串";
+	
+	public final static String WX_TRANSFER_TOTAL_FEE_INVALID =
+			"微信打款金额不能小于1.00元，totalFee必须大于等于100!";
+	
+	public final static String WX_REDPACK_TOTAL_FEE_INVALID =
+			"只能发放1.00块到200块钱的红包，totalFee范围必须在(100~20000)内";
+	
+	public final static String ALI_TRANSFER_TOTAL_FEE_INVALID = 
+			"支付宝单笔打款totalFee 必须大于 0！";
+	
+	public final static String TRANSFER_REDPACK_INFO_FIELD_EMPTY =
+			"微信红包sendName、wishing、activityName 不能为空!";
+	
+	public final static String TRANSFER_PARAM_EMPTY =
+			"transfer参数必填！";
+	
+	public final static String WX_TRANSFER_NO_INVALID =
+			"微信单笔打款transferNo 是一个长度为10的数字！";
 	
 	public static enum CHANNEL_TYPE {
 		WX,

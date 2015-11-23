@@ -8,12 +8,13 @@ import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.BCOrder;
 import cn.beecloud.bean.BCQueryParameter;
 import cn.beecloud.bean.BCRefund;
-import cn.beecloud.bean.TransferData;
+import cn.beecloud.bean.ALITransferData;
+import cn.beecloud.bean.TransferParameter;
+import cn.beecloud.bean.TransfersParameter;
 
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 /**
  * This class is used to unify the validation for all the
@@ -27,7 +28,7 @@ public class ValidationUtil
 	private final static String BILL_NO_FORMAT_INVALID =
 			"billNo 是一个长度介于8至32字符的数字字母字符串！";
 	
-	private final static String BATCH_NO_FORMAT_INVALID =
+	private final static String TRANSFERS_BATCH_NO_FORMAT_INVALID =
 			"batchNo 是一个长度在11到32个字符的数字字母字符串！";
 	
 	private final static String PAY_PARAM_EMPTY =
@@ -43,13 +44,64 @@ public class ValidationUtil
 			"查询参数不能为空！";
 	
 	private final static String BILL_NO_EMPTY =
-			"billNo 必填！";
+			"billNo 不能为空！";
 	
-	private final static String BATCH_NO_EMPTY =
-			"batchNo 必填！";
+	private final static String TRANSFERS_BATCH_NO_EMPTY =
+			"批量打款batchNo 不能为空！";
 	
-	private final static String TRANSFER_DATA_EMPTY =
-			"transferData 必填！";
+	private final static String TRANSFER_PARAM_EMPTY =
+			"transfer参数不能为空！";
+	
+	private final static String TRANSFER_CHANNEL_EMPTY =
+			"单笔打款channel 不能为空!";
+	
+	private final static String TRANSFER_TRANSFER_NO_EMPTY =
+			"单笔打款transferNo 不能为空！";
+	
+	private final static String TRANSFER_TOTAL_FEE_EMPTY =
+			"单笔打款totalFee 不能为空！";
+	
+	private final static String TRANSFER_DESC_EMPTY =
+			"单笔打款description 不能为空！";
+	
+	private final static String TRANSFER_USER_ID_EMPTY =
+			"单笔打款channelUserId 不能为空！";
+	
+	private final static String TRANSFER_REDPACK_INFO_EMPTY =
+			"微信红包redpackInfo 不能为空! ";
+	
+	private final static String TRANSFER_USER_NAME_EMPTY =
+			"支付宝单笔打款channelUserName 不能为空！";
+	
+	private final static String TRANSFER_ACCOUNT_NAME_EMPTY = 
+			"支付宝单笔打款accountName 不能为空！";
+	
+	private final static String ALI_TRANSFER_NO_INVALID =
+			"支付宝单笔打款transferNo 是一个长度在11到32个字符的数字字母字符串";
+	
+	private final static String WX_TRANSFER_TOTAL_FEE_INVALID =
+			"微信打款金额不能小于1.00元，totalFee必须大于等于100!";
+	
+	private final static String WX_REDPACK_TOTAL_FEE_INVALID =
+			"只能发放1.00块到200块钱的红包，totalFee范围必须在(100~20000)内";
+	
+	private final static String ALI_TRANSFER_TOTAL_FEE_INVALID = 
+			"支付宝单笔打款totalFee 必须大于 0！";
+	
+	private final static String TRANSFER_REDPACK_INFO_FIELD_EMPTY =
+			"微信红包sendName、wishing、activityName 不能为空!";
+	
+	private final static String WX_TRANSFER_NO_INVALID =
+			"微信单笔打款transferNo 是一个长度为10的数字！";
+	
+	private final static String TRANSFERS_PARAM_EMPTY =
+			"批量打款参数不能为空！";
+	
+	private final static String TRANSFERS_CHANNEL_EMPTY =
+			"批量打款channel 不能为空！";
+	
+	private final static String TRANSFERS_DATA_LIST_EMPTY =
+			"批量打款transferDataList 不能为空！";
 
 	private final static String TRANSFER_ID_EMPTY =
 			"transferId 不能为空！";
@@ -69,29 +121,29 @@ public class ValidationUtil
 	private final static String TRANSFER_NOTE_EMPTY =
 			"transferNote 不能为空！";
 	
-	private final static String ACCOUNT_NAME_EMPTY =
-			"accountName 必填！";
+	private final static String TRANSFERS_ACCOUNT_NAME_EMPTY =
+			"accountName 不能为空！";
 	
 	private final static String TITLE_EMPTY =
-			"title 必填！";
+			"title 不能为空！";
 	
 	private final static String TOTAL_FEE_EMPTY =
-			"totalFee 必填！";
+			"totalFee 不能为空！";
 	
 	private final static String REFUND_FEE_EMPTY =
-			"refundFee 必填！";
+			"refundFee 不能为空！";
 	
 	private final static String REFUND_FEE_INVALID =
 			"refundFee 必须大于零！";
 	
 	private final static String QR_PAY_MODE_EMPTY =
-			"qrPayMode 必填！";
+			"qrPayMode 不能为空！";
 	
 	private final static String RETURN_URL_EMPTY = 
-			"returnUrl 必填！";
+			"returnUrl 不能为空！";
 	
 	private final static String REFUND_NO_EMPTY =
-			"refundNo 必填！";
+			"refundNo 不能为空！";
 	
 	private final static String BATCH_REFUND_AGREE_EMPTY = 
 			"批量审核agree不能为空！";
@@ -103,10 +155,10 @@ public class ValidationUtil
 			"批量审核ids不能为空！";
 	
 	private final static String CHANNEL_EMPTY =
-			"channel 必填！";
+			"channel 不能为空！";
 	
 	private final static String YEE_NOBANCARD_FACTOR_EMPTY =
-			"cardNo, cardPwd, frqid 必填！";
+			"cardNo, cardPwd, frqid 不能为空！";
 	
 	private final static String REFUND_NO_FORMAT_INVALID =
 			"refundNo 是格式为当前日期加3-24位数字字母（不能为000）流水号的字符串！ ";
@@ -118,7 +170,7 @@ public class ValidationUtil
 			"limit 的最大长度为50！ 并且不能小于10！";
 	
 	private final static String OPENID_EMPTY =
-			"openid 必填！";
+			"openid 不能为空！";
 	
 	private final static String CHANNEL_INVALID_FOR_REFUND =
 			"退款只支持WX, UN, ALI !";
@@ -126,17 +178,17 @@ public class ValidationUtil
 	private final static String TRANSFER_ID_FORMAT_EMPTY = 
 			"transferId 是一个长度不超过32字符的数字字母字符串！";
 	
-	private final static String TRANSFER_LIST_SIZE_INVALID = 
-			"transferData 长度不能超过1000！";
+	private final static String TRANSFERS_LIST_SIZE_INVALID = 
+			"transferDataList 长度不能超过1000！";
 	
-	private final static String CHANNEL_SUPPORT_INVALID =
+	private final static String TRANSFERS_CHANNEL_SUPPORT_INVALID =
 			"批量打款仅支持ALI";
 	
 	private final static String BILL_TIME_OUT_ZERO =
 			"billTimeout不能为0！";
 	
 	private final static String OBJECT_ID_EMPTY =
-			"objectId 必填！";
+			"objectId 不能为空！";
 	
 	private final static String OBJECT_ID_INVALID =
 			"objectId 只能包含数字、字母或者-";
@@ -164,22 +216,24 @@ public class ValidationUtil
 		}
 	}
 
-	public static void validateBCTransfer(TRANSFER_CHANNEL channel,
-			String batchNo, String accountName, List<TransferData> transferData) throws BCException {
-		if (channel == null) {
-			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), CHANNEL_EMPTY);
-		} else if (!channel.equals(TRANSFER_CHANNEL.ALI_TRANSFER)) { 
-			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), CHANNEL_SUPPORT_INVALID);
-		} else if (batchNo == null) {
-			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BATCH_NO_EMPTY);
-		} else if (!batchNo.matches("[0-9A-Za-z]{11,32}")) {
-			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BATCH_NO_FORMAT_INVALID);
-		} else if (accountName == null) {
-			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), ACCOUNT_NAME_EMPTY);
-		} else if (transferData == null) {
-			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_DATA_EMPTY);
+	public static void validateBCTransfers(TransfersParameter para) throws BCException {
+		if (para == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFERS_PARAM_EMPTY);
+
+		} else if (para.getChannel() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFERS_CHANNEL_EMPTY);
+		} else if (!para.getChannel().equals(TRANSFER_CHANNEL.ALI_TRANSFER)) { 
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFERS_CHANNEL_SUPPORT_INVALID);
+		} else if (para.getBatchNo() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFERS_BATCH_NO_EMPTY);
+		} else if (!para.getBatchNo().matches("[0-9A-Za-z]{11,32}")) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFERS_BATCH_NO_FORMAT_INVALID);
+		} else if (para.getAccountName() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFERS_ACCOUNT_NAME_EMPTY);
+		} else if (para.getTransferDataList() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFERS_DATA_LIST_EMPTY);
 		}
-		for(TransferData data : transferData) {
+		for(ALITransferData data : para.getTransferDataList()) {
 			if (StrUtil.empty(data.getTransferId())) {
 				throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_ID_EMPTY);
 			} else if (!data.getTransferId().matches("[0-9A-Za-z]{1,32}")) {
@@ -196,8 +250,8 @@ public class ValidationUtil
 				throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_NOTE_EMPTY);
 			}
 		}
-		if (transferData.size() > 1000) {
-			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_LIST_SIZE_INVALID);
+		if ( para.getTransferDataList().size() > 1000) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFERS_LIST_SIZE_INVALID);
 		}
 	}
 
@@ -309,5 +363,39 @@ public class ValidationUtil
 		} else if (batchRefund.getIds() == null || batchRefund.getIds().size() == 0) {
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BATCH_REFUND_ID_LIST_EMPTY); 
 		}
+	}
+
+	public static void validateBCTransfer(TransferParameter para) throws BCException {
+		if (para == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_PARAM_EMPTY);
+		} else if (para.getChannel() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_CHANNEL_EMPTY);
+		} else if (para.getTransferNo() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_TRANSFER_NO_EMPTY);
+		} else if (para.getChannel().equals(TRANSFER_CHANNEL.ALI_TRANSFER) && !para.getTransferNo().matches("[0-9A-Za-z]{11,32}")) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), ALI_TRANSFER_NO_INVALID);
+		} else if (!para.getChannel().equals(TRANSFER_CHANNEL.ALI_TRANSFER) && !para.getTransferNo().matches("[0-9]{10}")) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), WX_TRANSFER_NO_INVALID);
+		} else if (para.getTotalFee() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_TOTAL_FEE_EMPTY);
+		} else if (para.getChannel().equals(TRANSFER_CHANNEL.WX_TRANSFER) && para.getTotalFee() < 100) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), WX_TRANSFER_TOTAL_FEE_INVALID);
+		} else if (para.getChannel().equals(TRANSFER_CHANNEL.WX_REDPACK) && (para.getTotalFee() > 20000 || para.getTotalFee() < 100)) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), WX_REDPACK_TOTAL_FEE_INVALID);
+		} else if (para.getChannel().equals(TRANSFER_CHANNEL.ALI_TRANSFER) && para.getTotalFee() <= 0) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), ALI_TRANSFER_TOTAL_FEE_INVALID);
+		} else if (para.getDescription() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_DESC_EMPTY);
+		} else if (para.getChannelUserId() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_USER_ID_EMPTY);
+		} else if (para.getChannel().equals(TRANSFER_CHANNEL.ALI_TRANSFER) && para.getChannelUserName() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_USER_NAME_EMPTY);
+		} else if (para.getChannel().equals(TRANSFER_CHANNEL.WX_REDPACK) && para.getRedpackInfo() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_REDPACK_INFO_EMPTY);
+		} else if (para.getChannel().equals(TRANSFER_CHANNEL.WX_REDPACK) && (para.getRedpackInfo() != null) && (para.getRedpackInfo().getSendName() == null|| para.getRedpackInfo().getWishing() == null|| para.getRedpackInfo().getActivityName() == null)) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_REDPACK_INFO_FIELD_EMPTY);
+		} else if (para.getChannel().equals(TRANSFER_CHANNEL.ALI_TRANSFER) && para.getAccountName() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_ACCOUNT_NAME_EMPTY);
+		} 
 	}
 }
