@@ -197,6 +197,18 @@
                 <input type="radio" value="BD_WAP" name="paytype">
                 <img src="http://beeclouddoc.qiniudn.com/bdwap.png" alt="KUAIQIAN WEB">
             </li>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="PAYPAL_PAYPAL" name="paytype">
+                <img src="http://beeclouddoc.qiniudn.com/p.png" alt="PAYPAL PAYPAL">
+            </li>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="PAYPAL_CREDITCARD" name="paytype">
+                <img src="http://beeclouddoc.qiniudn.com/pp.png" alt="PAYPAL CREDITCARD WEB">
+            </li>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="PAYPAL_SAVED_CREDITCARD" name="paytype">
+                <img src="http://beeclouddoc.qiniudn.com/pp.png" alt="PAYPAL SAVED CREDITCARD">
+            </li>
         </ul>
     </div>
     <div style="clear: both;">

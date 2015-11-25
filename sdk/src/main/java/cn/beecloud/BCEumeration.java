@@ -52,7 +52,10 @@ public class BCEumeration {
 		BD_WAP,
 		PAYPAL,
 		PAYPAL_SANDBOX,
-		PAYPAL_LIVE
+		PAYPAL_LIVE,
+		PAYPAL_PAYPAL,
+    	PAYPAL_CREDITCARD,
+    	PAYPAL_SAVED_CREDITCARD
 	}
 
     public enum TRANSFER_CHANNEL{
@@ -60,11 +63,45 @@ public class BCEumeration {
         WX_REDPACK,
         WX_TRANSFER
     }
-
+    
 	public enum QR_PAY_MODE {
 		MODE_BRIEF_FRONT,
 		MODE_FRONT,
 		MODE_MINI_FRONT
+	}
+	
+	public enum PAYPAL_CURRENCY {
+		AUD,
+		BRL,
+		CAD,
+		CZK,
+		DKK,
+		EUR,
+		HKD,
+		HUF,
+		ILS,
+		JPY,
+		MYR,
+		MXN,
+		TWD,
+		NZD,
+		NOK,
+		PHP,
+		PLN,
+		GBP,
+		SGD,
+		SEK,
+		CHF,
+		THB,
+		TRY,
+		USD
+	}
+	
+	public enum CARD_TYPE {
+		visa,
+		mastercard,
+		discover,
+		amex
 	}
 }
 

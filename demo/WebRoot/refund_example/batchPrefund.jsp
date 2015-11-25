@@ -1,6 +1,6 @@
-<%@page import="cn.beecloud.bean.*" %>
-<%@page import="java.util.Calendar" %>
-<%@page import="cn.beecloud.BCEumeration.PAY_CHANNEL" %>
+<%@ page import="cn.beecloud.bean.*" %>
+<%@ page import="cn.beecloud.BCEumeration.*" %>
+<%@ page import="org.apache.log4j.Logger" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ page import="cn.beecloud.*" %>
@@ -25,59 +25,63 @@
 </head>
 <body>
 <%
+	Logger log = Logger.getLogger("batchPrefund.jsp");
+
     String[] ids = request.getParameterValues("id");
     if (ids == null) {
         out.println("请选择预退款记录!");
         return;
     }
-    System.out.println(ids);
-    String channel = request.getParameter("channel");
-    String isYeeWap = request.getParameter("isYeeWap");
-    System.out.println("channel" + channel);
-    System.out.println("isYeeWap " + isYeeWap);
+    BCBatchRefund batchRefund = new BCBatchRefund();
+    PAY_CHANNEL channel;
+    try {
+        channel = PAY_CHANNEL.valueOf(request.getParameter("channel").toString());
+    } catch (Exception e) {
+        channel = null;
+        log.error(e.getMessage(), e);
+    }
     Object agree = request.getParameter("agree");
+    batchRefund.setIds(Arrays.asList(ids));
+    batchRefund.setChannel(channel);
+    batchRefund.setAgree(agree != null?true:false);
+    
+    String isYeeWap = request.getParameter("isYeeWap");
+    
     if (isYeeWap.equals("1")) {
         BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0");
     }
     if (agree != null) {
-        BCBatchRefundResult result = BCPay.startBatchRefund(Arrays.asList(ids), channel, true);
-        if (isYeeWap.equals("1")) {
-            BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
-        }
-        if (result.getResultCode().equals("0")) {
-            Thread.sleep(5000);
-            out.println("<div>");
+    	try {
+        	BCBatchRefund result = BCPay.startBatchRefund(batchRefund);
+        	 if (isYeeWap.equals("1")) {
+                 BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
+             }
+        	out.println("<div>");
             for (String key : result.getIdResult().keySet()) {
                 String info = result.getIdResult().get(key);
                 out.println(key + ":" + info + "<br/>");
             }
-            if (channel.equals("ALI"))
+            if (channel.equals(PAY_CHANNEL.ALI))
                 out.println("</div><br/><div style=\"clear: both;\"><input onclick=\"confirm('" + result.getAliRefundUrl() + "')\" name=\"confirm\" type=\"submit\" class=\"button\" value=\"确认\"></div>");
             else
                 out.println("</div><br/><div style=\"clear: both;\"><input onclick='javascript:window.close();' class=\"button\" value=\"确认\"></div>");
-
-        } else {
-            //handle the error message as you wish！
-            out.println(result.getResultMsg());
-            out.println(result.getErrDetail());
-        }
+    	} catch(BCException ex) {
+    		ex.printStackTrace();
+            out.println(ex.getMessage());
+    	}
     } else {
-        System.out.println(channel);
-        BCBatchRefundResult result = BCPay.startBatchRefund(Arrays.asList(ids), channel, false);
-        if (isYeeWap.equals("1")) {
-            BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
-        }
-        if (result.getResultCode().equals("0")) {
-            out.println("<h3>批量驳回成功!</h3>");
+    	try {
+	    	BCBatchRefund result = BCPay.startBatchRefund(batchRefund);
+	        if (isYeeWap.equals("1")) {
+	            BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
+	        }
+	        out.println("<h3>批量驳回成功!</h3>");
             out.println("<br><br><div style=\"clear: both;\"><input onclick='javascript:window.close();' class=\"button\" value=\"确认\"></div>");
-        } else {
-            //handle the error message as you wish！
-            out.println(result.getResultMsg());
-            out.println(result.getErrDetail());
-        }
+    	} catch(BCException ex) {
+    		ex.printStackTrace();
+            out.println(ex.getMessage());
+    	}
     }
-
-
 %>
 </body>
 </html>

@@ -6,7 +6,7 @@
 <%@ page import="cn.beecloud.BCEumeration.*"%>
 
 <%@ page import="cn.beecloud.bean.BCException" %>
-<%@ page import="cn.beecloud.bean.TransferData" %>
+<%@ page import="cn.beecloud.bean.ALITransferData" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.List" %>
@@ -122,6 +122,40 @@
 		        break;
 		}
 	} else if (batchTransfer != null) {
+		String batchNo = BCUtil.generateRandomUUIDPure();
+		String accountName = "苏州比可网络科技有限公司";
+		List<ALITransferData> list = new ArrayList<ALITransferData>();
+		ALITransferData data1 = new ALITransferData("transfertest11223", "13584809743", "袁某某", 1, "赏赐");
+		ALITransferData data2 = new ALITransferData("transfertest11224", "13584809742", "张某某", 1, "赏赐");
+        list.add(data1);
+        list.add(data2);
 		
+		TRANSFER_CHANNEL channel;
+		try {
+		    channel = TRANSFER_CHANNEL.valueOf(batchTransfer);
+		} catch (Exception e) {
+		    channel = null;
+		    log.error(e.getMessage(), e);
+		}
+		
+		switch (channel) {
+			case ALI_TRANSFER:
+				TransfersParameter para = new TransfersParameter();
+				para.setChannel(TRANSFER_CHANNEL.ALI_TRANSFER);
+				para.setBatchNo(batchNo);
+				para.setAccountName(accountName);
+				para.setTransferDataList(list);
+				
+				try {
+		            String url = BCPay.startTransfers(para);
+		            response.sendRedirect(url);
+			    } catch (BCException e) {
+			            log.error(e.getMessage(), e);
+			            out.println(e.getMessage());
+		        }
+		        break;
+		    default:
+		    	break;
+		}
 	}
 %>

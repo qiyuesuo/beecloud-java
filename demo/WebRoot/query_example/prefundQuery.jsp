@@ -40,7 +40,7 @@
 
 
 
-        param.setNeedDetail(true);
+        param.setNeedApproval(true);
         try {
             int count = BCPay.startQueryRefundCount(param);
             pageContext.setAttribute("count", count);
@@ -51,6 +51,7 @@
         try {
             List<BCRefund> bcRefunds = BCPay.startQueryRefund(param);
             pageContext.setAttribute("refunds", bcRefunds);
+            pageContext.setAttribute("channel", param.getChannel().toString().split("_")[0]);
             System.out.println("refundList:" + bcRefunds.size());
         } catch (BCException e) {
             out.println(e.getMessage());

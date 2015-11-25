@@ -23,9 +23,9 @@ import javax.ws.rs.core.Response;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
-import cn.beecloud.BCEumeration.TRANSFER_CHANNEL;
 import cn.beecloud.bean.BCBatchRefund;
 import cn.beecloud.bean.BCException;
+import cn.beecloud.bean.BCInternationlOrder;
 import cn.beecloud.bean.BCOrder;
 import cn.beecloud.bean.BCQueryParameter;
 import cn.beecloud.bean.BCRefund;
@@ -260,7 +260,51 @@ public class BCPay {
     	return "";
     }
     
-    private static void buildTransferParam(Map<String, Object> param,
+    public static BCInternationlOrder startBCInternatioalPay(BCInternationlOrder order) throws BCException {
+    	
+    	ValidationUtil.validateBCInternatioalPay(order);
+    	
+    	Map<String, Object> param = new HashMap<String, Object>();
+
+    	buildInternatioalPayParam(param, order);
+    	
+    	Map<String, Object> ret = doPost(BCUtilPrivate.getApiInternationalPay(), param);
+    	
+    	placePayPalOrder(order, ret);
+        
+        return order;
+    }
+    
+	private static void buildInternatioalPayParam(Map<String, Object> param,
+			BCInternationlOrder order) {
+    	param.put("app_id", BCCache.getAppID());
+    	param.put("timestamp", System.currentTimeMillis());
+    	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
+		param.put("channel", StrUtil.toStr(order.getChannel().toString()));
+		param.put("currency", StrUtil.toStr(order.getCurrency()));
+		param.put("bill_no", order.getBillNo());
+		param.put("title", order.getTitle());
+		param.put("total_fee", order.getTotalFee());
+		if (order.getCreditCardInfo() != null) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			param.put("credit_card_info", map);
+			map.put("card_number", order.getCreditCardInfo().getCardNo());
+			map.put("expire_month", order.getCreditCardInfo().getExpireMonth());
+			map.put("expire_year", order.getCreditCardInfo().getExpireYear());
+			map.put("cvv", order.getCreditCardInfo().getCvv());
+			map.put("first_name", order.getCreditCardInfo().getFirstName());
+			map.put("last_name", order.getCreditCardInfo().getLastName());
+			map.put("card_type", StrUtil.toStr(order.getCreditCardInfo().getCardType()));
+		}
+		if (order.getCreditCardId() != null) {
+			param.put("credit_card_id", order.getCreditCardId());
+		} 
+		if (order.getReturnUrl() != null) {
+			param.put("return_url", order.getReturnUrl());
+		}
+	}
+
+	private static void buildTransferParam(Map<String, Object> param,
 			TransferParameter para) {
     	param.put("app_id", BCCache.getAppID());
     	param.put("timestamp", System.currentTimeMillis());
@@ -591,7 +635,7 @@ public class BCPay {
 		if (bill.containsKey("trade_no") && bill.get("trade_no") != null) {
 			bcOrder.setChannelTradeNo(StrUtil.toStr(bill.get("trade_no")));
 		}
-		bcOrder.setOptionalString(StrUtil.toStr(bill.get("optional").toString()));
+		bcOrder.setOptionalString(StrUtil.toStr(bill.get("optional")));
 		bcOrder.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long)bill.get("create_time")));
 		if (bill.containsKey("message_detail")) {
 			bcOrder.setMessageDetail(StrUtil.toStr(bill.get("message_detail")));
@@ -774,4 +818,14 @@ public class BCPay {
             }
     	}
     }
+    
+    private static void placePayPalOrder(BCInternationlOrder order,
+			Map<String, Object> ret) {
+    	order.setObjectId(StrUtil.toStr(ret.get("id")));
+		if (order.getChannel().equals(PAY_CHANNEL.PAYPAL_PAYPAL)) {
+			order.setUrl(StrUtil.toStr(ret.get("url")));
+		} else if (order.getChannel().equals(PAY_CHANNEL.PAYPAL_CREDITCARD)) {
+			order.setCreditCardId(StrUtil.toStr(ret.get("credit_card_id")));
+		}
+	}
 }

@@ -1,6 +1,5 @@
 <%@page import="cn.beecloud.BCEumeration.PAY_CHANNEL" %>
 <%@page import="cn.beecloud.BCPay" %>
-<%@page import="cn.beecloud.BCQueryResult" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ page import="cn.beecloud.BeeCloud" %>
@@ -23,7 +22,7 @@
     <title>redirect</title>
     <script type="text/javascript">
         function queryStatus(channel, refund_no, isYeeWap) {
-            window.location.href = "refundUpdate.jsp?refund_no=" + refund_no + "&channel=" + channel + "&isYeeWap=" + isYeeWap;
+            window.location.href = "../refund_example/refundUpdate.jsp?refund_no=" + refund_no + "&channel=" + channel + "&isYeeWap=" + isYeeWap;
             ;
         }
 
@@ -129,7 +128,7 @@
                 <td>${bill.resulted}</td>
                 <td>${bill.revertResult}</td>
                 <td>${bill.refundResult}</td>
-                <td>${bill.optional}</td>
+                <td>${bill.optionalString}</td>
                 <td>${bill.messageDetail}</td>
                 <td>${bill.dateTime}</td>
 
@@ -146,15 +145,13 @@
                 </td>
 
 
-                    <td align="center">
-                        <c:if test="${bill.resulted == true && bill.refundResult == false && nochannel == null}">
-                        <input class="button" type="button"
-                               onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${bill.channel}', true, ${isYeeWap eq '1' ? '1':'0'})"
-                               value="预退款"/>
-                        </c:if>
-                    </td>
-
-
+                <td align="center">
+                    <c:if test="${bill.resulted == true && bill.refundResult == false && nochannel == null}">
+                    <input class="button" type="button"
+                           onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${bill.channel}', true, ${isYeeWap eq '1' ? '1':'0'})"
+                           value="预退款"/>
+                    </c:if>
+                </td>
             </tr>
         </c:forEach>
         <tr>
@@ -188,7 +185,7 @@
                 <td>${refund.channel}</td>
                 <td>${refund.finished}</td>
                 <td>${refund.refunded}</td>
-                <td>${refund.optional}</td>
+                <td>${refund.optionalString}</td>
                 <td>${refund.messageDetail}</td>
                 <td>${refund.dateTime}</td>
 

@@ -16,11 +16,11 @@
     <link href="../css/demo.css" rel="stylesheet" type="text/css"/>
     <title>Query By Id</title>
     <script type="text/javascript">
-        function queryStatus(channel, refund_no) {
-            window.location.href = "refundUpdate.jsp?refund_no=" + refund_no + "&channel=" + channel;
+        function queryStatus(channel, refund_no, isYeeWap) {
+            window.location.href = "../refund_example/refundUpdate.jsp?refund_no=" + refund_no + "&channel=" + channel + "&isYeeWap=" + isYeeWap;
         }
-        function startRefund(bill_no, total_fee, channel) {
-            window.location.href = "startRefund.jsp?bill_no=" + bill_no + "&total_fee=" + total_fee + "&channel=" + channel;
+        function startRefund(bill_no, total_fee, channel, prefund, isYeeWap) {
+            window.location.href = "../refund_example/startRefund.jsp?bill_no=" + bill_no + "&total_fee=" + total_fee + "&channel=" + channel + "&prefund=" + prefund + "&isYeeWap=" + isYeeWap;
         }
     </script>
 </head>
@@ -70,7 +70,6 @@
             <th>是否退款</th>
             <th>渠道详细信息</th>
             <th>退款创建时间</th>
-            <th>退款更新时间</th>
             <c:if test="${fn:containsIgnoreCase(refund.channel,'WX') || fn:containsIgnoreCase(refund.channel,'YEE') || fn:containsIgnoreCase(refund.channel,'BD') || fn:containsIgnoreCase(refund.channel,'KUAIQIAN')}">
                 <th>退款状态查询</th>
             </c:if></tr>
@@ -81,17 +80,18 @@
             <td>${refund.totalFee}</td>
             <td>${refund.refundFee}</td>
             <td>${refund.channel}</td>
-            <td>${refund.optional}</td>
+            <td>${refund.optionalString}</td>
             <td>${refund.finished}</td>
             <td>${refund.refunded}</td>
             <td>${refund.messageDetail}</td>
             <td>${refund.dateTime}</td>
-            <td>${refund.updateDateTime}</td>
-
-            <c:if test="${fn:containsIgnoreCase(refund.channel,'WX') || fn:containsIgnoreCase(refund.channel,'YEE') || fn:containsIgnoreCase(refund.channel,'BD') || fn:containsIgnoreCase(refund.channel,'KUAIQIAN')}">
+            <c:if test="${fn:containsIgnoreCase(refund.channel,'WX') || 
+	            fn:containsIgnoreCase(refund.channel,'YEE') || 
+	            fn:containsIgnoreCase(refund.channel,'BD') || 
+	            fn:containsIgnoreCase(refund.channel,'KUAIQIAN')}">
                 <td>
-                    <input class="button" type="button" onclick="queryStatus('${refund.channel}','${refund.refundNo}')"
-                           value="查询"/>
+                <input class="button" type="button" onclick="queryStatus('${refund.channel}','${refund.refundNo}', ${isYeeWap eq '1'?'1':'0'})"
+                       value="查询"/>
                 </td>
             </c:if>
 
@@ -111,6 +111,8 @@
             <th>已退款</th>
             <th>渠道详细信息</th>
             <th>订单创建时间</th>
+            <th>发起退款</th>
+            <th>发起预退款</th>
         </tr>
         <tr align="center">
             <td>${bill.billNo}</td>
@@ -118,7 +120,7 @@
             <td>${bill.totalFee}</td>
             <td>${bill.channel}</td>
             <td>${bill.channelTradeNo}</td>
-            <td>${bill.optional}</td>
+            <td>${bill.optionalString}</td>
             <td>${bill.resulted}</td>
             <td>${bill.refundResult}</td>
             <td>${bill.messageDetail}</td>
@@ -126,11 +128,18 @@
 
             <td align="center">
                 <c:if test="${bill.resulted == true}">
-                    <input class="button" type="button"
-                           onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${bill.channel}')" value="退款"/>
+                <input class="button" type="button"
+                       onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${bill.channel}', false, ${isYeeWap eq '1' ? '1':'0'})" value="退款"/>
                 </c:if>
             </td>
-
+            
+            <td align="center">
+                <c:if test="${bill.resulted == true && bill.refundResult == false && nochannel == null}">
+                <input class="button" type="button"
+                       onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${bill.channel}', true, ${isYeeWap eq '1' ? '1':'0'})"
+                       value="预退款"/>
+                </c:if>
+            </td>
         </tr>
     </table>
 </c:if>

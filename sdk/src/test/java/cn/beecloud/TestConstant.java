@@ -84,9 +84,11 @@ public class TestConstant {
 	public static String MOCK_APPROVE_ID1_RESULT = "OK";
 	public static String MOCK_APPROVE_ID2_RESULT = "渠道错误。。。";
 	
+	public static String MOCK_CREDIT_CARD_ID = "CARD_ADMJ324234DJLKJS";
+	
 	
 	public static String MOCK_ALI_REFUND_URL = "https://tradeexprod.alipay.com/refund/fastPayBatchPwdRefund.htm?partner=2088711322622223";
-	
+	public static String MOCK_CHANNEL_ERROR_MSG = "channel error:xxxxx";
 	
 	public final static String BILL_NO_FORMAT_INVALID =
 			"billNo 是一个长度介于8至32字符的数字字母字符串！";
@@ -281,6 +283,21 @@ public class TestConstant {
 	
 	public final static String TRANSFERS_BATCH_NO_FORMAT_INVALID =
 			"batchNo 是一个长度在11到32个字符的数字字母字符串！";
+	
+	public final static String INTERNATIONAL_PAY_PARAM_EMPTY =
+			"境外支付参数不能为空！";
+	
+	public final static String CURRENCY_EMPTY =
+			"currency不能为空！";
+	
+	public final static String CREDIT_CARD_INFO_EMPTY =
+			"信用卡信息不能为空！";
+	
+	public final static String CREDIT_CARD_ID_EMPTY =
+			"存储的信用卡ID不能为空！";
+	
+	public final static String PAYPAL_RETURN_URL_EMPTY =
+			"PAYPAL直接支付returnUrl不能为空！";
 	
 	public static enum CHANNEL_TYPE {
 		WX,

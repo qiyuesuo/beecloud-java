@@ -8,7 +8,7 @@ public class BeeCloud {
     public static final double kBeeCloudVersionNumber = 2.30;
 
     /**
-     * 设置appID和appSecret，在程序开始时运行一遍即可
+     * 设置appID和appSecret，在程序开始时运行一遍即可，用于支付、查询接口
      *
      * @param appID 用户在比可网络中的应用标识符
      * @param appSecret 应用密码
@@ -19,7 +19,21 @@ public class BeeCloud {
         BCCache.setAppSecret(appSecret);
         BCAPIClient.initClient();
     }
-
+    
+    /**
+     * 设置appID、appSecret、masterSecret，在程序开始时运行一遍即可, 用于退款、单笔打款、批量打款接口
+     * @param appID
+     * @param appSecret
+     * @param masterSecret
+     */
+    public static void registerApp(String appID, String appSecret, String masterSecret) {
+    	
+    	BCCache.setAppID(appID);
+        BCCache.setAppSecret(appSecret);
+        BCCache.setMasterKey(masterSecret);
+        BCAPIClient.initClient();
+    }
+    
     /**
      * 设置masterkey, 后续ACL需求预留
      *

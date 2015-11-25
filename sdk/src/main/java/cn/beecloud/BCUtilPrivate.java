@@ -105,6 +105,11 @@ class BCUtilPrivate {
 		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/refund";
 	}
 	
+	static String getApiInternationalPay() {
+		return BCCache.apiHostArray[(int)(Math.random()*4)] + "/" + BCUtilPrivate.kApiVersion2 + "/rest/international/bill";
+
+	}
+	
 	static String transferDateFromLongToString(long millisecond) {
 		Date date = new Date(millisecond);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

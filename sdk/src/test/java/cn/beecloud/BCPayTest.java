@@ -32,6 +32,7 @@ public class BCPayTest {
 		BatchHandleTest.testBatchRefund();
 		TransferTest.testTransfer();
 		TransfersTest.testTransfers();
+		InternationalPayTest.testInternationalPay();
 	}
 }
 	

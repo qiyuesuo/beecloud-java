@@ -5,6 +5,7 @@ import cn.beecloud.BCEumeration.RESULT_TYPE;
 import cn.beecloud.BCEumeration.TRANSFER_CHANNEL;
 import cn.beecloud.bean.BCBatchRefund;
 import cn.beecloud.bean.BCException;
+import cn.beecloud.bean.BCInternationlOrder;
 import cn.beecloud.bean.BCOrder;
 import cn.beecloud.bean.BCQueryParameter;
 import cn.beecloud.bean.BCRefund;
@@ -195,6 +196,21 @@ public class ValidationUtil
 	
 	private final static String REFUND_UPDATE_CHANNEL_INVALID =
 			"退款更新仅支持微信、百度、易宝、快钱！";
+	
+	private final static String INTERNATIONAL_PAY_PARAM_EMPTY =
+			"境外支付参数不能为空！";
+	
+	private final static String CURRENCY_EMPTY =
+			"currency不能为空！";
+	
+	private final static String CREDIT_CARD_INFO_EMPTY =
+			"信用卡信息不能为空！";
+	
+	private final static String CREDIT_CARD_ID_EMPTY =
+			"存储的信用卡ID不能为空！";
+	
+	private final static String PAYPAL_RETURN_URL_EMPTY =
+			"PAYPAL直接支付returnUrl不能为空！";
 	
 	final static String PRE_REFUND_SUCCEED = "预退款成功！ ";
 	
@@ -397,5 +413,39 @@ public class ValidationUtil
 		} else if (para.getChannel().equals(TRANSFER_CHANNEL.ALI_TRANSFER) && para.getAccountName() == null) {
 			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_ACCOUNT_NAME_EMPTY);
 		} 
+	}
+
+	public static void validateBCInternatioalPay(BCInternationlOrder order) throws BCException {
+		if (order == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), INTERNATIONAL_PAY_PARAM_EMPTY);
+		} else if (order.getBillNo() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_EMPTY);
+		} else if (order.getChannel() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), CHANNEL_EMPTY);
+		} else if (order.getTotalFee() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TOTAL_FEE_EMPTY);
+		} else if (order.getBillNo() != null && !order.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_FORMAT_INVALID);
+		} else if (order.getCurrency() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), CURRENCY_EMPTY);
+		} else if (order.getTitle() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TITLE_EMPTY);
+		} else if (order.getChannel().equals(PAY_CHANNEL.PAYPAL_CREDITCARD) && order.getCreditCardInfo() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), CREDIT_CARD_INFO_EMPTY);
+		} else if (order.getChannel().equals(PAY_CHANNEL.PAYPAL_SAVED_CREDITCARD) && order.getCreditCardId() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), CREDIT_CARD_ID_EMPTY);
+		} else if(order.getChannel().equals(PAY_CHANNEL.PAYPAL_PAYPAL) && order.getReturnUrl() == null) {
+			throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), PAYPAL_RETURN_URL_EMPTY);
+		} else {
+			try {
+				if (order.getTitle().getBytes("GBK").length > 32) {
+					throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TITLE_FORMAT_INVALID);
+				}
+			} catch (UnsupportedEncodingException e) {
+				if (order.getTitle().length() > 16) {
+					throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), TITLE_FORMAT_INVALID);
+				}
+			}
+		}
 	}
 }

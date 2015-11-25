@@ -1,3 +1,7 @@
+<%@page import="cn.beecloud.BCEumeration.CARD_TYPE"%>
+<%@ page import="cn.beecloud.bean.CreditCardInfo"%>
+<%@ page import="cn.beecloud.BCEumeration.PAYPAL_CURRENCY"%>
+<%@ page import="cn.beecloud.bean.BCInternationlOrder"%>
 <%@ page import="cn.beecloud.BCEumeration.PAY_CHANNEL" %>
 <%@ page import="cn.beecloud.BCEumeration.QR_PAY_MODE" %>
 <%@ page import="cn.beecloud.BCPay" %>
@@ -7,7 +11,6 @@
 <%@ page import="cn.beecloud.BeeCloud" %>
 <%@ page import="cn.beecloud.bean.BCException" %>
 <%@ page import="cn.beecloud.bean.BCOrder" %>
-<%@ page import="cn.beecloud.bean.TransferData" %>
 <%@ page import="java.io.BufferedReader" %>
 <%@ page import="java.io.InputStreamReader" %>
 <%@ page import="java.net.HttpURLConnection" %>
@@ -42,7 +45,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; UTF-8">
-    <title>redirect</title>
+    <title>pay</title>
 </head>
 <body>
 
@@ -69,6 +72,7 @@
     //BCPayResult的type字段有OK和非OK两种，当type字段是OK时（对应值为0），bcPayResult包含支付所需的内容如html或者code_url或者支付成功信息,
     //当type的字段为非OK的时候，，bcPayResult包含通用错误和具体的错误信息。商户系统可以任意显示，打印或者记录日志。
     BCOrder bcOrder = new BCOrder(channel, 1, billNo, title);
+    BCInternationlOrder internationalOrder = new BCInternationlOrder();
     bcOrder.setBillTimeout(300);
     bcOrder.setOptional(optional);
 
@@ -89,6 +93,8 @@
             bcOrder.setReturnUrl(aliReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -97,7 +103,6 @@
             break;
         case ALI_QRCODE:
             bcOrder.setQrPayMode(QR_PAY_MODE.MODE_FRONT);
-            bcOrder = BCPay.startBCPay(bcOrder);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getHtml());
@@ -108,7 +113,6 @@
             break;
 
         case WX_NATIVE:
-            bcOrder = BCPay.startBCPay(bcOrder);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
@@ -144,7 +148,7 @@
                     try {
                         bcOrder = BCPay.startBCPay(bcOrder);
                         out.println(bcOrder.getObjectId());
-                        Map<String, Object> map = bcOrder.getWxJSAPIMap();
+                        Map<String, String> map = bcOrder.getWxJSAPIMap();
                         jsapiAppid = map.get("appId").toString();
                         timeStamp = map.get("timeStamp").toString();
                         nonceStr = map.get("nonceStr").toString();
@@ -279,28 +283,68 @@
                 out.println(e.getMessage());
             }
             break;
-
+		
+        case PAYPAL_PAYPAL:
+        	internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_PAYPAL);
+        	internationalOrder.setBillNo(billNo);
+        	internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
+        	internationalOrder.setTitle("paypal test");
+        	internationalOrder.setTotalFee(1);
+        	internationalOrder.setReturnUrl("http://localhost:8080/PC-Web-Pay-Demo/return_url/paypalReturnUrl.jsp");
+        	 try {
+        		 internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
+                 response.sendRedirect(internationalOrder.getUrl());
+             } catch (BCException e) {
+                 log.error(e.getMessage(), e);
+                 out.println(e.getMessage());
+             }
+             break;
+        
+        case PAYPAL_CREDITCARD:
+        	CreditCardInfo creditCardInfo = new CreditCardInfo();
+        	creditCardInfo.setCardNo("5187187005718530");
+        	creditCardInfo.setExpireMonth(11);
+        	creditCardInfo.setExpireYear(19);
+        	creditCardInfo.setCvv(350);
+        	creditCardInfo.setFirstName("RUI");
+        	creditCardInfo.setLastName("FENG");
+        	creditCardInfo.setCardType(CARD_TYPE.mastercard);
+        	internationalOrder.setBillNo(billNo);
+        	internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_CREDITCARD);
+        	internationalOrder.setCreditCardInfo(creditCardInfo);
+        	internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
+        	internationalOrder.setTitle("paypal credit card test");
+        	internationalOrder.setTotalFee(1);
+        	try {
+       			internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
+       			out.println("PAYPAL_CREDITCARD 支付成功！");
+       			out.println(internationalOrder.getCreditCardId());
+       			request.getSession().setAttribute("creditCardId", internationalOrder.getCreditCardId());
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
+            break;
+            
+        case PAYPAL_SAVED_CREDITCARD:
+        	internationalOrder.setBillNo(billNo);
+        	internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_SAVED_CREDITCARD);
+        	internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
+        	internationalOrder.setTitle("PAYPAL_SAVED_CREDITCARD test");
+        	internationalOrder.setTotalFee(1);
+        	internationalOrder.setBillNo(request.getSession().getAttribute("creditCardId").toString());
+        	try {
+       			internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
+       			out.println("PAYPAL_SAVED_CREDITCARD 支付成功！");
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
+            break;
+            
         default:
             break;
     }
-
-    if (type.equals("ALI_TRANSFER")) {
-        List<TransferData> list = new ArrayList<TransferData>();
-        TransferData data1 = new TransferData("transfertest11223", "13584809743", "袁某某", 1, "赏赐");
-        TransferData data2 = new TransferData("transfertest11224", "13584809742", "张某某", 1, "赏赐");
-        list.add(data1);
-        list.add(data2);
-        try {
-            String url = BCPay.startTransfer(BCEumeration.TRANSFER_CHANNEL.ALI_TRANSFER,
-                    billNo, "苏州比可网络科技有限公司", list);
-            response.sendRedirect(url);
-        } catch (BCException e) {
-            log.error(e.getMessage(), e);
-            out.println(e.getMessage());
-        }
-    }
-
-
 %>
 <%!
     String sendGet(String url) throws Exception {

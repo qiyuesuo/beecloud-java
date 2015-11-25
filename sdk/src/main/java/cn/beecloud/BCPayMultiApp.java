@@ -14,6 +14,7 @@ import cn.beecloud.BCEumeration.QR_PAY_MODE;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
 import cn.beecloud.bean.BCBatchRefund;
 import cn.beecloud.bean.BCException;
+import cn.beecloud.bean.BCInternationlOrder;
 import cn.beecloud.bean.BCOrder;
 import cn.beecloud.bean.BCQueryParameter;
 import cn.beecloud.bean.BCRefund;
@@ -327,6 +328,21 @@ private final static String NOT_REGISTER = "为注册";
         return batchRefund;
     }
     
+    public static BCInternationlOrder startBCInternatioalPay(BCInternationlOrder order) throws BCException {
+    	
+    	ValidationUtil.validateBCInternatioalPay(order);
+    	
+    	Map<String, Object> param = new HashMap<String, Object>();
+
+    	buildInternatioalPayParam(param, order);
+    	
+    	Map<String, Object> ret = doPost(BCUtilPrivate.getApiInternationalPay(), param);
+    	
+    	placePayPalOrder(order, ret);
+        
+        return order;
+    }
+    
     /**
      * @param sign
      *            Webhook提供的签名
@@ -478,6 +494,35 @@ private final static String NOT_REGISTER = "为注册";
         if (para.getEndTime() != null) {
        	 param.put("end_time", para.getEndTime().getTime());
         }
+	}
+	
+	private static void buildInternatioalPayParam(Map<String, Object> param,
+			BCInternationlOrder order) {
+    	param.put("app_id", BCCache.getAppID());
+    	param.put("timestamp", System.currentTimeMillis());
+    	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
+		param.put("channel", StrUtil.toStr(order.getChannel()));
+		param.put("currency", StrUtil.toStr(order.getCurrency()));
+		param.put("bill_no", order.getBillNo());
+		param.put("title", order.getTitle());
+		param.put("total_fee", order.getTotalFee());
+		if (order.getCreditCardInfo() != null) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			param.put("credit_card_info", map);
+			map.put("card_number", order.getCreditCardInfo().getCardNo());
+			map.put("expire_month", order.getCreditCardInfo().getExpireMonth());
+			map.put("expire_year", order.getCreditCardInfo().getExpireYear());
+			map.put("cvv", order.getCreditCardInfo().getCvv());
+			map.put("first_name", order.getCreditCardInfo().getFirstName());
+			map.put("last_name", order.getCreditCardInfo().getLastName());
+			map.put("card_type", StrUtil.toStr(order.getCreditCardInfo().getCardType()));
+		}
+		if (order.getCreditCardId() != null) {
+			param.put("credit_card_id", order.getCreditCardId());
+		} 
+		if (order.getReturnUrl() != null) {
+			param.put("return_url", order.getReturnUrl());
+		}
 	}
 	
     /**
@@ -725,4 +770,14 @@ private final static String NOT_REGISTER = "为注册";
             }
     	}
     }
+    
+    private static void placePayPalOrder(BCInternationlOrder order,
+			Map<String, Object> ret) {
+    	order.setObjectId(StrUtil.toStr(ret.get("id")));
+		if (order.getChannel().equals(PAY_CHANNEL.PAYPAL_PAYPAL)) {
+			order.setUrl(StrUtil.toStr(ret.get("url")));
+		} else if (order.getChannel().equals(PAY_CHANNEL.PAYPAL_CREDITCARD)) {
+			order.setCreditCardId(StrUtil.toStr(ret.get("credit_card_id")));
+		}
+	}
 }
