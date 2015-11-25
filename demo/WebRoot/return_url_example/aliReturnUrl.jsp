@@ -11,6 +11,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Iterator" %>
+<%@ page import="java.util.Enumeration" %>
 <%
     /* *
      功能：支付完成后同步跳转至本页面
@@ -30,6 +31,15 @@
 </head>
 <body>
 <%
+
+	//遍历所有字段代码样例
+	Enumeration<String> enu = request.getParameterNames();
+	while(enu.hasMoreElements()) {
+		String key = enu.nextElement();
+		System.out.println("key:" + key + ";value:" + request.getParameter(key));
+	}
+	
+	/*业务处理代码样例*/
     Object tradeStatus = request.getParameter("trade_status");
 
     if (tradeStatus != null) {

@@ -275,59 +275,7 @@ public class BCPay {
         return order;
     }
     
-	private static void buildInternatioalPayParam(Map<String, Object> param,
-			BCInternationlOrder order) {
-    	param.put("app_id", BCCache.getAppID());
-    	param.put("timestamp", System.currentTimeMillis());
-    	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
-		param.put("channel", StrUtil.toStr(order.getChannel().toString()));
-		param.put("currency", StrUtil.toStr(order.getCurrency()));
-		param.put("bill_no", order.getBillNo());
-		param.put("title", order.getTitle());
-		param.put("total_fee", order.getTotalFee());
-		if (order.getCreditCardInfo() != null) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			param.put("credit_card_info", map);
-			map.put("card_number", order.getCreditCardInfo().getCardNo());
-			map.put("expire_month", order.getCreditCardInfo().getExpireMonth());
-			map.put("expire_year", order.getCreditCardInfo().getExpireYear());
-			map.put("cvv", order.getCreditCardInfo().getCvv());
-			map.put("first_name", order.getCreditCardInfo().getFirstName());
-			map.put("last_name", order.getCreditCardInfo().getLastName());
-			map.put("card_type", StrUtil.toStr(order.getCreditCardInfo().getCardType()));
-		}
-		if (order.getCreditCardId() != null) {
-			param.put("credit_card_id", order.getCreditCardId());
-		} 
-		if (order.getReturnUrl() != null) {
-			param.put("return_url", order.getReturnUrl());
-		}
-	}
-
-	private static void buildTransferParam(Map<String, Object> param,
-			TransferParameter para) {
-    	param.put("app_id", BCCache.getAppID());
-    	param.put("timestamp", System.currentTimeMillis());
-    	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
-		param.put("channel", para.getChannel().toString());
-    	param.put("transfer_no", para.getTransferNo());
-    	param.put("total_fee", para.getTotalFee());
-    	param.put("desc", para.getDescription());
-    	param.put("channel_user_id", para.getChannelUserId());
-    	if (para.getChannelUserName() != null) {
-    		param.put("channel_user_name", para.getChannelUserName());
-    	}
-    	if (para.getRedpackInfo() != null) {
-    		Map<String, Object> redpackInfo = new HashMap<String, Object>();
-    		redpackInfo.put("send_name", para.getRedpackInfo().getSendName());
-    		redpackInfo.put("wishing", para.getRedpackInfo().getWishing());
-    		redpackInfo.put("act_name", para.getRedpackInfo().getActivityName());
-    		param.put("redpack_info", redpackInfo);
-    	}
-    	if (para.getAccountName() != null) {
-    		param.put("account_name", para.getAccountName());
-    	}
-	}
+	
 
 	/**
      * @param channel
@@ -564,6 +512,60 @@ public class BCPay {
         if (para.getEndTime() != null) {
        	 param.put("end_time", para.getEndTime().getTime());
         }
+	}
+	
+	private static void buildInternatioalPayParam(Map<String, Object> param,
+			BCInternationlOrder order) {
+    	param.put("app_id", BCCache.getAppID());
+    	param.put("timestamp", System.currentTimeMillis());
+    	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
+		param.put("channel", StrUtil.toStr(order.getChannel().toString()));
+		param.put("currency", StrUtil.toStr(order.getCurrency()));
+		param.put("bill_no", order.getBillNo());
+		param.put("title", order.getTitle());
+		param.put("total_fee", order.getTotalFee());
+		if (order.getCreditCardInfo() != null) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			param.put("credit_card_info", map);
+			map.put("card_number", order.getCreditCardInfo().getCardNo());
+			map.put("expire_month", order.getCreditCardInfo().getExpireMonth());
+			map.put("expire_year", order.getCreditCardInfo().getExpireYear());
+			map.put("cvv", order.getCreditCardInfo().getCvv());
+			map.put("first_name", order.getCreditCardInfo().getFirstName());
+			map.put("last_name", order.getCreditCardInfo().getLastName());
+			map.put("card_type", StrUtil.toStr(order.getCreditCardInfo().getCardType()));
+		}
+		if (order.getCreditCardId() != null) {
+			param.put("credit_card_id", order.getCreditCardId());
+		} 
+		if (order.getReturnUrl() != null) {
+			param.put("return_url", order.getReturnUrl());
+		}
+	}
+
+	private static void buildTransferParam(Map<String, Object> param,
+			TransferParameter para) {
+    	param.put("app_id", BCCache.getAppID());
+    	param.put("timestamp", System.currentTimeMillis());
+    	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
+		param.put("channel", para.getChannel().toString());
+    	param.put("transfer_no", para.getTransferNo());
+    	param.put("total_fee", para.getTotalFee());
+    	param.put("desc", para.getDescription());
+    	param.put("channel_user_id", para.getChannelUserId());
+    	if (para.getChannelUserName() != null) {
+    		param.put("channel_user_name", para.getChannelUserName());
+    	}
+    	if (para.getRedpackInfo() != null) {
+    		Map<String, Object> redpackInfo = new HashMap<String, Object>();
+    		redpackInfo.put("send_name", para.getRedpackInfo().getSendName());
+    		redpackInfo.put("wishing", para.getRedpackInfo().getWishing());
+    		redpackInfo.put("act_name", para.getRedpackInfo().getActivityName());
+    		param.put("redpack_info", redpackInfo);
+    	}
+    	if (para.getAccountName() != null) {
+    		param.put("account_name", para.getAccountName());
+    	}
 	}
 	
     /**

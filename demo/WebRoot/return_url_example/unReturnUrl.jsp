@@ -1,16 +1,7 @@
-<%@page import="com.sun.org.apache.xalan.internal.xsltc.compiler.sym" %>
-<%@page import="cn.beecloud.BeeCloud" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ page import="cn.beecloud.*" %>
-<%@ page import="cn.beecloud.BCEumeration.PAY_CHANNEL" %>
-<%@ page import="cn.beecloud.BCEumeration.*" %>
-<%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="net.sf.json.JSONObject" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.Iterator" %>
+<%@ page import="java.util.Enumeration" %>
+
 <%
     /* *
      功能：支付完成后同步跳转至本页面
@@ -30,6 +21,13 @@
 </head>
 <body>
 <%
+	//遍历所有字段代码样例
+	Enumeration<String> enu = request.getParameterNames();
+	while(enu.hasMoreElements()) {
+		String key = enu.nextElement();
+		System.out.println("key:" + key + ";value:" + request.getParameter(key));
+	}
+	
     Object respCode = request.getParameter("respCode");
     Object respMsg = request.getParameter("respMsg");
 

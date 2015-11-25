@@ -84,12 +84,22 @@
     String jsapipackage = "";
     String signType = "";
     String paySign = "";
-
+    
+    //以下是每个渠道的return url
+    String aliReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/aliReturnUrl.jsp";
+    String unReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/unReturnUrl.jsp";
+    String yeeWapReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/yeeWapReturnUrl.jsp";
+    String yeeWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/yeeWebReturnUrl.jsp";
+    String jdWapReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/jdWapReturnUrl.jsp";
+    String jdWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/jdWebReturnUrl.jsp";
+    String kqReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/kqReturnUrl.jsp";
+    String bdReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/bdReturnUrl.jsp";
+	String paypalReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/paypalReturnUrl.jsp";
+    	
     switch (channel) {
 
         case ALI_WEB:
         case ALI_WAP:
-            String aliReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/aliReturnUrl.jsp";
             bcOrder.setReturnUrl(aliReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -103,8 +113,11 @@
             break;
         case ALI_QRCODE:
             bcOrder.setQrPayMode(QR_PAY_MODE.MODE_FRONT);
+            bcOrder.setReturnUrl(aliReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -165,7 +178,6 @@
             break;
 
         case UN_WEB:
-            String unReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/unReturnUrl.jsp";
             bcOrder.setReturnUrl(unReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -180,7 +192,6 @@
             //真实环境可以不需要这句话
             BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0");
             //真实环境可以不需要这句话end
-            String yeeWapReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/yeeWapReturnUrl.jsp";
             bcOrder.setReturnUrl(yeeWapReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -191,7 +202,6 @@
             }
             break;
         case YEE_WEB:
-            String yeeWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/yeeWebReturnUrl.jsp";
             bcOrder.setReturnUrl(yeeWebReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -218,7 +228,6 @@
             }
             break;
         case JD_WAP:
-            String jdWapReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/jdWapReturnUrl.jsp";
             bcOrder.setReturnUrl(jdWapReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -229,7 +238,6 @@
             }
             break;
         case JD_WEB:
-            String jdWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/jdWebReturnUrl.jsp";
             bcOrder.setReturnUrl(jdWebReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -250,7 +258,6 @@
             break;
 
         case KUAIQIAN_WAP:
-            String kqReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/kqReturnUrl.jsp";
             bcOrder.setReturnUrl(kqReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -261,7 +268,6 @@
             }
             break;
         case BD_WEB:
-            String bdReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/bdReturnUrl.jsp";
             bcOrder.setReturnUrl(bdReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -273,7 +279,6 @@
             break;
 
         case BD_WAP:
-            bdReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url/bdReturnUrl.jsp";
             bcOrder.setReturnUrl(bdReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -290,7 +295,7 @@
         	internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
         	internationalOrder.setTitle("paypal test");
         	internationalOrder.setTotalFee(1);
-        	internationalOrder.setReturnUrl("http://localhost:8080/PC-Web-Pay-Demo/return_url/paypalReturnUrl.jsp");
+        	internationalOrder.setReturnUrl(paypalReturnUrl);
         	 try {
         		 internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
                  response.sendRedirect(internationalOrder.getUrl());

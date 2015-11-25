@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
+<%@ page import="java.util.Enumeration" %>
 <%
     /* *
      功能：支付完成后同步跳转至本页面
@@ -19,6 +20,14 @@
 </head>
 <body>
 <%
+	//遍历所有字段代码样例
+	Enumeration<String> enu = request.getParameterNames();
+	while(enu.hasMoreElements()) {
+		String key = enu.nextElement();
+		System.out.println("key:" + key + ";value:" + request.getParameter(key));
+	}
+		
+
     String payResult = request.getParameter("pay_result");
     if (payResult != null) {
         if (payResult.equals("1")) {

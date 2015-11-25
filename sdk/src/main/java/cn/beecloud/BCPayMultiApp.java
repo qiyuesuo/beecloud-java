@@ -20,6 +20,7 @@ import cn.beecloud.bean.BCQueryParameter;
 import cn.beecloud.bean.BCRefund;
 import cn.beecloud.bean.BCRefundParameter;
 import cn.beecloud.bean.ALITransferData;
+import cn.beecloud.bean.TransferParameter;
 import cn.beecloud.bean.TransfersParameter;
 
 import java.net.URLEncoder;
@@ -56,11 +57,6 @@ private final static String NOT_REGISTER = "为注册";
 
     private String appId;
     private String appSecret;
-
-    private String getAppSignature(String timeStamp) {
-        String str = appId + timeStamp + appSecret;
-        return BCUtilPrivate.getMessageDigest(str);
-    }
 
     public BCPayMultiApp(String appId, String appSecret) {
         this.appId = appId;
@@ -256,6 +252,22 @@ private final static String NOT_REGISTER = "为注册";
         
         Map<String, Object> ret = doGet(BCUtilPrivate.getkApiRefundUpdate(), param);
         return ret.get("refund_status").toString();
+    }
+    
+public static String startTransfer(TransferParameter para) throws BCException {
+        
+    	ValidationUtil.validateBCTransfer(para);
+    	
+    	Map<String, Object> param = new HashMap<String, Object>();
+    	
+    	buildTransferParam(param, para);
+        
+    	Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfer(), param);
+    	
+    	if (ret.containsKey("url")) {
+    		return ret.get("url").toString();
+		} 
+    	return "";
     }
     
     /**
@@ -525,6 +537,31 @@ private final static String NOT_REGISTER = "为注册";
 		}
 	}
 	
+	private static void buildTransferParam(Map<String, Object> param,
+			TransferParameter para) {
+    	param.put("app_id", BCCache.getAppID());
+    	param.put("timestamp", System.currentTimeMillis());
+    	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
+		param.put("channel", para.getChannel().toString());
+    	param.put("transfer_no", para.getTransferNo());
+    	param.put("total_fee", para.getTotalFee());
+    	param.put("desc", para.getDescription());
+    	param.put("channel_user_id", para.getChannelUserId());
+    	if (para.getChannelUserName() != null) {
+    		param.put("channel_user_name", para.getChannelUserName());
+    	}
+    	if (para.getRedpackInfo() != null) {
+    		Map<String, Object> redpackInfo = new HashMap<String, Object>();
+    		redpackInfo.put("send_name", para.getRedpackInfo().getSendName());
+    		redpackInfo.put("wishing", para.getRedpackInfo().getWishing());
+    		redpackInfo.put("act_name", para.getRedpackInfo().getActivityName());
+    		param.put("redpack_info", redpackInfo);
+    	}
+    	if (para.getAccountName() != null) {
+    		param.put("account_name", para.getAccountName());
+    	}
+	}
+	
     /**
      * The method is used to generate Order list by query.
      * @param bills
@@ -644,7 +681,7 @@ private final static String NOT_REGISTER = "为注册";
 		return map;
 	}
     
-    public static Map<String, Object> doPost(String url,
+    private static Map<String, Object> doPost(String url,
 			Map<String, Object> param) throws BCException {
         Client client = BCAPIClient.client;
         if (client == null) {
@@ -674,7 +711,7 @@ private final static String NOT_REGISTER = "为注册";
         }
 	}
     
-    public static Map<String, Object> doPut(String url,
+    private static Map<String, Object> doPut(String url,
 			Map<String, Object> param) throws BCException {
         Client client = BCAPIClient.client;
         if (client == null) {
@@ -704,7 +741,7 @@ private final static String NOT_REGISTER = "为注册";
         }
 	}
     
-    public static Map<String, Object> doGet(String url,
+    private static Map<String, Object> doGet(String url,
 			Map<String, Object> param) throws BCException {
         Client client = BCAPIClient.client;
         if (client == null) {
@@ -780,4 +817,9 @@ private final static String NOT_REGISTER = "为注册";
 			order.setCreditCardId(StrUtil.toStr(ret.get("credit_card_id")));
 		}
 	}
+    
+    private String getAppSignature(String timeStamp) {
+        String str = appId + timeStamp + appSecret;
+        return BCUtilPrivate.getMessageDigest(str);
+    }
 }

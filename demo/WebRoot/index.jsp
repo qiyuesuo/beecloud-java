@@ -199,7 +199,7 @@
             </li>
             <li onclick="paySwitch(this)">
                 <input type="radio" value="PAYPAL_PAYPAL" name="paytype">
-                <img src="http://beeclouddoc.qiniudn.com/p.png" alt="PAYPAL PAYPAL">
+                <img src="http://beeclouddoc.qiniudn.com/paypal.png" alt="PAYPAL PAYPAL">
             </li>
             <li onclick="paySwitch(this)">
                 <input type="radio" value="PAYPAL_CREDITCARD" name="paytype">
@@ -215,21 +215,26 @@
         <input type="submit" class="button" value="确认付款">
     </div>
 </form>
+<hr/>
+<div>
+    <h2>微信、支付宝企业打款</h2>
 
+    <p>请选择渠道进行操作</p>
+</div>
 <form action="pay_example/transfer.jsp" method="POST" target="_blank">
 	<div>
     	<ul>
    		 	<li onclick="paySwitch(this)">
                 <input type="radio" value="WX_REDPACK" name="transferType">
-                <img src="http://beeclouddoc.qiniudn.com/redpack.png" alt="微信红包">
+                <img src="http://beeclouddoc.qiniudn.com/wx_redpack.png" alt="微信红包">
             </li>
             <li onclick="paySwitch(this)">
                 <input type="radio" value="WX_TRANSFER" name="transferType">
-                <img src="http://beeclouddoc.qiniudn.com/wetransfer.png" alt="微信单笔打款">
+                <img src="http://beeclouddoc.qiniudn.com/wx_transfer.png" alt="微信单笔打款">
             </li>
              <li onclick="paySwitch(this)">
                 <input type="radio" value="ALI_TRANSFER" name="transferType">
-                <img src="http://beeclouddoc.qiniudn.com/alitransfer.png" alt="支付宝单笔打款">
+                <img src="http://beeclouddoc.qiniudn.com/ali_transfer.png" alt="支付宝单笔打款">
             </li>
             <li onclick="paySwitch(this)">
                 <input type="radio" value="ALI_TRANSFER" name="batchTransferType">
@@ -237,6 +242,7 @@
             </li>
     	</ul>
     </div>
+    <br/><br/>
      <div style="clear: both;">
         <input type="submit" class="button" value="确认打款">
     </div>
