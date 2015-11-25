@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 
-![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v2.3.0](https://img.shields.io/badge/Version-v2.3.0-blue.svg) 
+![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=featur_unit_test_with_batch) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v2.3.0](https://img.shields.io/badge/Version-v2.3.0-blue.svg) 
 
 ## 简介
 
