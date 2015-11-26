@@ -146,7 +146,7 @@ public class BCOrder {
 	}
 	
 	/**
-	 * @param billTimeout 订单失效时间，单位秒，非零正整数，建议不小于30，快钱(KQ)不支持该参数
+	 * @param billTimeout 订单失效时间，单位秒，非零正整数，建议不小于360，快钱(KQ)不支持该参数
 	 * (选填)
 	 */
 	public void setBillTimeout(Integer billTimeout) {
@@ -314,98 +314,164 @@ public class BCOrder {
 	public String getChannelTradeNo() {
 		return channelTradeNo;
 	}
-
+	
+	/**
+	 * @return 是否退款
+	 */
 	public boolean isRefundResult() {
 		return refundResult;
 	}
 	
 	/**
-	 * @return 支付成功
+	 * @return 是否支付
 	 */
 	public boolean isResulted() {
 		return resulted;
 	}
-
+	
+	/**
+	 * 设置字段  {@link #resulted}
+	 */
 	public void setResulted(boolean resulted) {
 		this.resulted = resulted;
 	}
-
+	
+	/**
+	 * 设置字段  {@link #refundResult}
+	 */
 	public void setRefundResult(boolean refundResult) {
 		this.refundResult = refundResult;
 	}
-
+	
+	/**
+	 * @return 订单是否撤销
+	 */
 	public boolean isRevertResult() {
 		return revertResult;
 	}
-
+	
+	/**
+	 * 设置字段  {@link #revertResult}
+	 */
 	public void setRevertResult(boolean revertResult) {
 		this.revertResult = revertResult;
 	}
-
+	
+	/**
+	 * @return 渠道信息
+	 */
 	public String getMessageDetail() {
 		return messageDetail;
 	}
-
+	
+	/**
+	 * 设置字段  {@link #messageDetail}
+	 */
 	public void setMessageDetail(String messageDetail) {
 		this.messageDetail = messageDetail;
 	}
-
+	
+	/**
+	 * @return 订单唯一标识
+	 */
 	public String getObjectId() {
 		return objectId;
 	}
-
+	
+	/**
+	 * 设置字段  {@link #objectId}
+	 */
 	public void setObjectId(String objectId) {
 		this.objectId = objectId;
 	}
-
+	
+	/**
+	 * @return WX_NATIVE 二维码url
+	 */
 	public String getCodeUrl() {
 		return codeUrl;
 	}
-
+	
+	/**
+	 * 设置字段  {@link #codeUrl}
+	 */
 	public void setCodeUrl(String codeUrl) {
 		this.codeUrl = codeUrl;
 	}
-
+	
+	/**
+	 * @return 支付跳转html
+	 */
 	public String getHtml() {
 		return html;
 	}
-
+	
+	/**
+	 * 设置字段  {@link #html}
+	 */
 	public void setHtml(String html) {
 		this.html = html;
 	}
-
+	
+	/**
+	 * @return 支付跳转url
+	 */
 	public String getUrl() {
 		return url;
 	}
-
+	
+	/**
+	 * 设置字段  {@link #url}
+	 */
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
+	
+	/**
+	 * @return WX_JSAPI 支付要素
+	 */
 	public Map<String, String> getWxJSAPIMap() {
 		return wxJSAPIMap;
 	}
-
+	
+	/**
+	 * 设置字段  {@link #wxJSAPIMap}
+	 */
 	public void setWxJSAPIMap(Map<String, String> wxJSAPIMap) {
 		this.wxJSAPIMap = wxJSAPIMap;
 	}
-
+	
+	/**
+	 * @return 订单创建时间
+	 */
 	public String getDateTime() {
 		return dateTime;
 	}
-
+	
+	/**
+	 * 设置字段  {@link #dateTime}
+	 */
 	public void setDateTime(String dateTime) {
 		this.dateTime = dateTime;
 	}
-
+	
+	/**
+	 * 设置字段  {@link #channelTradeNo}
+	 */
 	public void setChannelTradeNo(String channelTradeNo) {
 		this.channelTradeNo = channelTradeNo;
 	}
-
+	
+	/**
+	 * @return optional json字符串
+	 */
 	public String getOptionalString() {
 		return optionalString;
 	}
-
+	
+	/**
+	 * 设置字段  {@link #optionalString}
+	 */
 	public void setOptionalString(String optionalString) {
 		this.optionalString = optionalString;
 	}

@@ -248,6 +248,7 @@
             }
             break;
         case KUAIQIAN_WEB:
+        	bcOrder.setReturnUrl(kqReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getHtml());

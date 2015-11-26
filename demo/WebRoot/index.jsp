@@ -203,11 +203,11 @@
             </li>
             <li onclick="paySwitch(this)">
                 <input type="radio" value="PAYPAL_CREDITCARD" name="paytype">
-                <img src="http://beeclouddoc.qiniudn.com/pp.png" alt="PAYPAL CREDITCARD WEB">
+                <img src="http://beeclouddoc.qiniudn.com/icon_paypal_credit.png" alt="PAYPAL CREDITCARD WEB">
             </li>
             <li onclick="paySwitch(this)">
                 <input type="radio" value="PAYPAL_SAVED_CREDITCARD" name="paytype">
-                <img src="http://beeclouddoc.qiniudn.com/pp.png" alt="PAYPAL SAVED CREDITCARD">
+                <img src="http://beeclouddoc.qiniudn.com/icon_paypal_kuaijiezhifu.png" alt="PAYPAL SAVED CREDITCARD">
             </li>
         </ul>
     </div>

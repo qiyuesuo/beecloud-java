@@ -22,7 +22,7 @@
     out.println("<h3>易宝移动网易支付成功，商户应自行实现成功逻辑！</h3>");
 
     /**
-     以下代码需要商户自行传入私钥"merchantPrivateKey"实现
+               以下代码需要商户自行传入私钥"merchantPrivateKey"实现
 
      String yeepayAESKey = RSA.decrypt(encryptkey, merchantPrivateKey);
      String decryptData = AES.decryptFromBase64(data, yeepayAESKey);

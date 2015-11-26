@@ -35,8 +35,7 @@ import cn.beecloud.bean.TransfersParameter;
 import net.sf.json.JSONObject;
 
 /**
- * This is the core class of BC payment for external invocation consist of start payment, start refund, start query bill
- * start refund query and check refund status functionality.
+ * 比可网络JAVA SDK核心类， 包括支付、退款、查询、企业打款、批量退款等接口
  * 
  * @author Ray
  * @since 2015/7/11
@@ -50,8 +49,9 @@ public class BCPay {
 	private final static String NETWORK_ERROR = "网络错误";
 	
 	/**
-	 * @param para {@link BCOrder}支付参数
-	 * (必填)
+	 * 支付接口
+	 * @param para{@link BCOrder}
+	 * (必填) 支付参数
 	 * @return 调起比可支付后的返回结果
 	 * @throws BCException 
 	 */
@@ -71,7 +71,9 @@ public class BCPay {
     }
 	
 	/**
-	 * @param para {@link BCRefund}退款参数
+	 * 退款接口
+	 * @param para {@link BCRefund}
+	 * （必填） 退款参数
 	 * @return 发起退款的返回结果
 	 * @throws BCException 
 	 */
@@ -95,7 +97,9 @@ public class BCPay {
 
 
     /**
-     * @param para {@link BCQueryParameter}订单查询参数
+     * 订单查询（批量）接口
+     * @param para {@link BCQueryParameter}
+     * （必填） 订单查询参数
      * @return 订单查询返回的结果
      * @throws BCException 
      */
@@ -105,6 +109,7 @@ public class BCPay {
     	ValidationUtil.validateQueryBill(para);
     	 
     	Map<String, Object> param = new HashMap<String, Object>();
+    	
         buildQueryParam(param, para);
         
         Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBill(), param);
@@ -114,9 +119,10 @@ public class BCPay {
     }
     
     /**
-     * Bill Query by Id.
-     * @param objectId the id to query by.
-     * @return BCOrder
+     * 订单查询（单笔，根据id）接口
+     * @param objectId 
+     * （必填） 订单记录唯一标识
+     * @return id查询返回结果
      * @throws BCException 
      */
     public static BCOrder startQueryBillById(String objectId) throws BCException {
@@ -139,7 +145,9 @@ public class BCPay {
     }
     
     /**
-     * @param para {@link BCQueryParameter}订单总数查询参数
+     * 订单总数查询接口
+     * @param para {@link BCQueryParameter}
+     * （必填）订单总数查询参数
      * @return 订单总数查询返回的结果
      * @throws BCException 
      */
@@ -148,6 +156,7 @@ public class BCPay {
     	ValidationUtil.validateQueryBill(para);
     	
     	Map<String, Object> param = new HashMap<String, Object>();
+    	
         buildQueryCountParam(param, para);
          
         Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBillCount(), param);
@@ -156,7 +165,9 @@ public class BCPay {
     }
     
 	/**
+	 * 退款记录查询（批量）接口
 	 * @param para {@link BCQueryParameter}}
+	 * （必填）订单查询参数
 	 * @return 退款查询返回的结果
 	 * @throws BCException 
 	 */
@@ -174,9 +185,10 @@ public class BCPay {
     }
     
     /**
-     * Bill Query by Id.
-     * @param objectId the id to query by.
-     * @return BCRefund
+     * 退款查询接口（根据 id）
+     * @param objectId
+     * (必填) 退款记录唯一标识
+     * @return 单笔退款记录查询返回结果
      * @throws BCException 
      */
     public static BCRefund startQueryRefundById(String objectId) throws BCException {
@@ -200,7 +212,9 @@ public class BCPay {
     }
     
     /**
-     * @param para {@link BCQueryParameter}退款总数查询参数
+     * 退款记录总数查询接口
+     * @param para {@link BCQueryParameter}
+     * （必填） 退款总数查询参数
      * @return 退款总数查询返回的结果
      * @throws BCException 
      */
@@ -218,6 +232,7 @@ public class BCPay {
     }
     
     /**
+     * 退款状态更新接口
      * @param refundNo
      * （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。	
      * @param channel
@@ -226,7 +241,7 @@ public class BCPay {
 	 *  WX 微信
 	 *  KUAIQIAN 快钱
 	 *  BD 百度
-     * @return String
+     * @return 退款状态更新返回结果，包括（SUCCESS， PROCESSING, FAIL...）
      * @throws BCException 
      */
     public static String startRefundUpdate(PAY_CHANNEL channel, String refundNo) throws BCException {
@@ -244,6 +259,13 @@ public class BCPay {
         return ret.get("refund_status").toString();
     }
     
+    /**
+     * 单笔打款接口
+     * @param para {@link TransferParameter}
+     * （必填）单笔打款参数
+     * @return 如果channel类型是PAYPAL_PAYPAL, 返回需要跳转支付的url, 否则返回空字符串
+     * @throws BCException
+     */
     public static String startTransfer(TransferParameter para) throws BCException {
         
     	ValidationUtil.validateBCTransfer(para);
@@ -260,6 +282,13 @@ public class BCPay {
     	return "";
     }
     
+    /**
+     * 境外支付（paypal）接口
+     * @param order {@link BCInternationlOrder}
+     * （必填）
+     * @return 支付后返回的order
+     * @throws BCException
+     */
     public static BCInternationlOrder startBCInternatioalPay(BCInternationlOrder order) throws BCException {
     	
     	ValidationUtil.validateBCInternatioalPay(order);
@@ -274,66 +303,33 @@ public class BCPay {
         
         return order;
     }
-    
-	
 
 	/**
-     * @param channel
-     * （必填）渠道类型， 暂时只支持ALI 
-     * @param batchNo 
-     * （必填） 批量付款批号， 此次批量付款的唯一标示，11-32位数字字母组合
-     * @param accountName
-     * （必填） 付款方的支付宝账户名, 支付宝账户名称,例如:毛毛
-     * @param transferData
-     * （必填） 付款的详细数据 {TransferData} 的 List集合。
-     * @return BCPayResult
-     * @throws BCException 
-     */
+	 * 批量打款接口
+	 * @param para {@link TransfersParameter}
+	 * （必填） 批量打款参数
+	 * @return 批量打款跳转支付url
+	 * @throws BCException
+	 */
     public static String startTransfers(TransfersParameter para) throws BCException {
     
     	ValidationUtil.validateBCTransfers(para);
     	
     	Map<String, Object> param = new HashMap<String, Object>();
-    	param.put("app_id", BCCache.getAppID());
-    	param.put("timestamp", System.currentTimeMillis());
-    	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
-		param.put("channel", para.getChannel().toString());
-    	param.put("batch_no", para.getBatchNo());
-    	param.put("account_name", para.getAccountName());
-    	List<Map<String, Object>> transferList = new ArrayList<Map<String, Object>>();
-    	for (ALITransferData data : para.getTransferDataList()) {
-    		Map<String, Object> map = new HashMap<String, Object>();
-    		map.put("transfer_id", data.getTransferId());
-    		map.put("receiver_account", data.getReceiverAccount());
-    		map.put("receiver_name", data.getReceiverName());
-    		map.put("transfer_fee", data.getTransferFee());
-    		map.put("transfer_note", data.getTransferNote());
-    		transferList.add(map);
-    	}
-    	param.put("transfer_data", transferList);
+    	
+    	buildTransfersParam(para, param);
         
     	Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfers(), param);
     	
      	return ret.get("url").toString();
     }
-    
+
     /**
-     * 发起预退款审核，包括批量否决和批量同意
-     * @param ids 
-     * （必填）待批量审核的预退款记录唯一标识列表
-     * @param channel
-     * (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含：
-     *  YEE 易宝
-	 *  WX 微信
-	 *  KUAIQIAN 快钱
-	 *  BD 百度
-	 *  ALI 支付宝
-	 *  KUAIQIAN 快钱
-	 *  JD 京东
-     * @param agree
-     * （必填） 批量同意或者批量否决
-     * @return BCBatchRefund
-     * @throws BCException 
+     * 预退款审核接口，包括批量否决和批量同意
+     * @param batchRefund
+     * （必填） 预退款批量审核参数
+     * @return 批量审核结果
+     * @throws BCException
      */
     public static BCBatchRefund startBatchRefund(BCBatchRefund batchRefund) throws BCException {
     	
@@ -346,7 +342,6 @@ public class BCPay {
         param.put("app_id", BCCache.getAppID());
     	param.put("timestamp", System.currentTimeMillis());
     	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
-        
         
         Map<String, Object> ret = doPut(BCUtilPrivate.getApiBatchRefund(), param);
         
@@ -361,11 +356,12 @@ public class BCPay {
     }
     
     /**
+     * Webhook接收签名验证接口
      * @param sign
-     *            Webhook提供的签名
+     * （必填）  Webhook提供的签名
      * @param timestamp
-     *            Webhook提供的timestamp，注意是String格式
-     * @return 签名是否正确
+     * （必填）  Webhook提供的timestamp，注意是String格式
+     * @return 验签结果
      */
     public static boolean verifySign(String sign, String timestamp) {
         String mySign = MD5.sign(BCCache.getAppID() + BCCache.getAppSecret(),
@@ -378,9 +374,7 @@ public class BCPay {
     }
     
     /**
-     * Build Payment parameters
-     * @param param to be built
-     * @param para used for building 
+     * 构建支付rest api参数
      */
     private static void buildPayParam(Map<String, Object> param,
 			BCOrder para) {
@@ -423,9 +417,7 @@ public class BCPay {
 	}
     
     /**
-     * Build Refund parameters
-     * @param param to be built
-     * @param para used for building 
+     * 构建退款rest api参数
      */
     private static void buildRefundParam(BCRefund para,
 			Map<String, Object> param) {
@@ -448,9 +440,7 @@ public class BCPay {
 	}
     
     /**
-     * Build Query parameters
-     * @param param to be built
-     * @param para used for building 
+     * 构建查询rest api参数
      */
 	private static void buildQueryParam(Map<String, Object> param,
 			BCQueryParameter para) {
@@ -488,9 +478,7 @@ public class BCPay {
 	}
     
 	/**
-     * Build Query Count parameters
-     * @param param to be built
-     * @param para used for building 
+     * 构建订单总数查询rest api参数
      */
 	private static void buildQueryCountParam(Map<String, Object> param,
 			BCQueryParameter para) {
@@ -514,6 +502,9 @@ public class BCPay {
         }
 	}
 	
+	/**
+	 * 构建境外支付rest api参数
+	 */
 	private static void buildInternatioalPayParam(Map<String, Object> param,
 			BCInternationlOrder order) {
     	param.put("app_id", BCCache.getAppID());
@@ -542,7 +533,10 @@ public class BCPay {
 			param.put("return_url", order.getReturnUrl());
 		}
 	}
-
+	
+	/**
+	 * 构建单笔打款rest api参数
+	 */
 	private static void buildTransferParam(Map<String, Object> param,
 			TransferParameter para) {
     	param.put("app_id", BCCache.getAppID());
@@ -568,10 +562,32 @@ public class BCPay {
     	}
 	}
 	
+	/**
+	 * 构建批量打款rest api参数
+	 */
+	private static void buildTransfersParam(TransfersParameter para,
+			Map<String, Object> param) {
+		param.put("app_id", BCCache.getAppID());
+    	param.put("timestamp", System.currentTimeMillis());
+    	param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
+		param.put("channel", para.getChannel().toString());
+    	param.put("batch_no", para.getBatchNo());
+    	param.put("account_name", para.getAccountName());
+    	List<Map<String, Object>> transferList = new ArrayList<Map<String, Object>>();
+    	for (ALITransferData data : para.getTransferDataList()) {
+    		Map<String, Object> map = new HashMap<String, Object>();
+    		map.put("transfer_id", data.getTransferId());
+    		map.put("receiver_account", data.getReceiverAccount());
+    		map.put("receiver_name", data.getReceiverName());
+    		map.put("transfer_fee", data.getTransferFee());
+    		map.put("transfer_note", data.getTransferNote());
+    		transferList.add(map);
+    	}
+    	param.put("transfer_data", transferList);
+	}
+	
     /**
-     * The method is used to generate Order list by query.
-     * @param bills
-     * @return list of BCOrderBean
+     * 生成返回BCOrder list
      */
 	private static List<BCOrder> generateBCOrderList(List<Map<String, Object>> bills) {
 		
@@ -585,20 +601,16 @@ public class BCPay {
 	}
     
 	/**
-     * The method is used to generate an order object.
-     * @param bill
-     * @return an object of BCOrderBean
-     */
+	 * 生成返回BCOrder
+	 */
 	private static BCOrder generateBCOrder(Map<String, Object> bill) {
 		BCOrder bcOrder = new BCOrder();
 		generateBCOrderBean(bill, bcOrder);
 		return bcOrder;
 	}
 	
-    /**
-     * The method is used to generate Refund list by query.
-     * @param refundList the list of refund taken in
-     * @return list of BCRefundBean object
+	/**
+     * 生成返回BCRefund list
      */
     private static List<BCRefund> generateBCRefundList(List<Map<String, Object>> refundList) {
     	
@@ -612,9 +624,7 @@ public class BCPay {
     }
     
     /**
-     * The method is used to generate a refund object.
-     * @param refund the refund map taken in
-     * @return list of BCRefundBean object
+     * 生成返回BCRefund
      */
     private static BCRefund generateBCRefund(Map<String, Object> refund) {
     	BCRefund bcRefund = new BCRefund();
@@ -623,8 +633,7 @@ public class BCPay {
     }
     
     /**
-     * Generate order bean from order map
-     * @param bill the map taken in
+     * 构建返回BCOrder bean
      */
     private static void generateBCOrderBean(Map<String, Object> bill,
 			BCOrder bcOrder) {
@@ -647,8 +656,7 @@ public class BCPay {
 	}
     
     /**
-     * Generate refund bean from refund map
-     * @param refund the map taken in
+     * 构建返回BCRefund bean
      */
 	private static void generateBCRefundBean(Map<String, Object> refund,
 			BCRefund bcRefund) {
@@ -670,9 +678,7 @@ public class BCPay {
 	}
 	
 	/**
-     * Generate a map for JSAPI payment to receive.
-     * @param ret
-     * @return
+     * 构建WXJSAPI返回Map
      */
     private static Map<String, String> generateWXJSAPIMap(
 			Map<String, Object> ret) {
@@ -687,6 +693,13 @@ public class BCPay {
 		return map;
 	}
     
+    /**
+     * doPost方法，封装rest api POST方式请求
+     * @param url 请求url
+     * @param param 请求参数
+     * @return rest api返回参数
+     * @throws BCException
+     */
     private static Map<String, Object> doPost(String url,
 			Map<String, Object> param) throws BCException {
         Client client = BCAPIClient.client;
@@ -720,6 +733,13 @@ public class BCPay {
         }
 	}  
     
+    /**
+     * doPut方法，封装rest api PUT方式请求
+     * @param url 请求url
+     * @param param 请求参数
+     * @return rest api返回参数
+     * @throws BCException
+     */
     private static Map<String, Object> doPut(String url,
 			Map<String, Object> param) throws BCException {
         Client client = BCAPIClient.client;
@@ -753,6 +773,13 @@ public class BCPay {
         }
 	}
     
+    /**
+     * doGet方法，封装rest api GET方式请求
+     * @param url 请求url
+     * @param param 请求参数
+     * @return rest api返回参数
+     * @throws BCException
+     */
     private static Map<String, Object> doGet(String url,
 			Map<String, Object> param) throws BCException {
         Client client = BCAPIClient.client;
@@ -792,6 +819,9 @@ public class BCPay {
         }
 	}
     
+    /**
+     * 组建返回订单
+     */
     private static void placeOrder(BCOrder order, Map<String, Object> ret) {
     	order.setObjectId(ret.get("id").toString());
     	if (order.getChannel().equals(PAY_CHANNEL.WX_NATIVE)){
@@ -821,6 +851,9 @@ public class BCPay {
     	}
     }
     
+    /**
+     * 组建返回境外支付订单
+     */
     private static void placePayPalOrder(BCInternationlOrder order,
 			Map<String, Object> ret) {
     	order.setObjectId(StrUtil.toStr(ret.get("id")));
