@@ -5,7 +5,7 @@ import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.QR_PAY_MODE;
 
 /**
- * 支付参数类，封装了调起比可支付系统所需的参数
+ * 支付订单类，封装了比可网络订单信息
  * @author Rui.Feng
  * @since 2015.9.24
  */

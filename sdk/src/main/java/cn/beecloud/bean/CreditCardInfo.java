@@ -2,6 +2,11 @@ package cn.beecloud.bean;
 
 import cn.beecloud.BCEumeration.CARD_TYPE;
 
+/**
+ * PAYPAL支付信用卡信息类
+ * @author Rui.Feng
+ * @since 2015.11.24
+ */
 public class CreditCardInfo {
 	
 	private String cardNo;
@@ -21,7 +26,8 @@ public class CreditCardInfo {
 	public String getCardNo() {
 		return cardNo;
 	}
-
+	
+	
 	public void setCardNo(String cardNo) {
 		this.cardNo = cardNo;
 	}

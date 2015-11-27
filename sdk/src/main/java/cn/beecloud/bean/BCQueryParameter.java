@@ -177,19 +177,33 @@ public class BCQueryParameter {
 	public void setRefundNo(String refundNo) {
 		this.refundNo = refundNo;
 	}
-
+	
+	/**
+	 * 访问字段{@link #payResult}
+	 */
 	public Boolean getPayResult() {
 		return payResult;
 	}
-
+	
+	/**
+	 * @param payResult 支付成功与否标识。
+	 * (选填)
+	 */
 	public void setPayResult(Boolean payResult) {
 		this.payResult = payResult;
 	}
-
+	
+	/**
+	 * 访问字段{@link #needApproval}
+	 */
 	public Boolean getNeedApproval() {
 		return needApproval;
 	}
-
+	
+	/**
+	 * @param needApproval 是否是预退款。
+	 * (选填)
+	 */
 	public void setNeedApproval(Boolean needApproval) {
 		this.needApproval = needApproval;
 	}	
