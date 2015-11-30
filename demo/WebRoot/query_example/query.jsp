@@ -12,7 +12,20 @@
 <%@ page import="cn.beecloud.bean.BCOrder" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%
+   /*
+	功能：批量查询
+	版本：1.0
+	日期：2015-11-25
+	说明： 订单、退款查询展示页面，用于核查订单、退款状态,展示订单、退款详细信息， 同时可以对订单发起退款、预退款；查询退款状态
+	以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
+	该代码仅供学习和研究使用，只是提供一个参考。
 
+	//***********页面功能说明***********
+	 该页面可以在本机电脑测试。
+	//********************************
+	*/
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 

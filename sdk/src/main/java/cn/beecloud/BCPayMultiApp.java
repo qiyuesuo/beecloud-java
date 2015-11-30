@@ -36,9 +36,7 @@ import javax.ws.rs.core.Response;
 import net.sf.json.JSONObject;
 
 /**
- *
  * 主要为了一个商户下有多个收款APP使用，参考@BCPay
- *
  *
  * @author Gao
  * @since 2015/9/18
@@ -62,8 +60,10 @@ public class BCPayMultiApp {
     }
 
     /**
-     * @param para
-     *            {@link BCOrder}支付参数 (必填)
+     * 支付接口
+     * 
+     * @param order
+     * {@link BCOrder} (必填) 支付参数
      * @return 调起比可支付后的返回结果
      * @throws BCException
      */
@@ -83,8 +83,10 @@ public class BCPayMultiApp {
     }
 
     /**
-     * @param para
-     *            {@link BCRefund}退款参数
+     * 退款接口
+     * 
+     * @param refund
+     * {@link BCRefund} （必填） 退款参数
      * @return 发起退款的返回结果
      * @throws BCException
      */
@@ -107,8 +109,10 @@ public class BCPayMultiApp {
     }
 
     /**
+     * 订单查询（批量）接口
+     * 
      * @param para
-     *            {@link BCQueryParameter}订单查询参数
+     * {@link BCQueryParameter} （必填） 订单查询参数
      * @return 订单查询返回的结果
      * @throws BCException
      */
@@ -128,11 +132,11 @@ public class BCPayMultiApp {
     }
 
     /**
-     * Bill Query by Id.
+     * 订单查询（单笔，根据id）接口
      * 
      * @param objectId
-     *            the id to query by.
-     * @return BCOrder
+     * （必填） 订单记录唯一标识
+     * @return id查询返回结果
      * @throws BCException
      */
     public BCOrder startQueryBillById(String objectId) throws BCException {
@@ -154,8 +158,10 @@ public class BCPayMultiApp {
     }
 
     /**
+     * 订单总数查询接口
+     * 
      * @param para
-     *            {@link BCQueryParameter}订单总数查询参数
+     * {@link BCQueryParameter} （必填）订单总数查询参数
      * @return 订单总数查询返回的结果
      * @throws BCException
      */
@@ -174,8 +180,10 @@ public class BCPayMultiApp {
     }
 
     /**
+     * 退款记录查询（批量）接口
+     * 
      * @param para
-     *            {@link BCQueryParameter}
+     * {@link BCQueryParameter} （必填）订单查询参数
      * @return 退款查询返回的结果
      * @throws BCException
      */
@@ -196,11 +204,11 @@ public class BCPayMultiApp {
     }
 
     /**
-     * Bill Query by Id.
+     * 退款查询接口（根据 id）
      * 
      * @param objectId
-     *            the id to query by.
-     * @return BCRefund
+     * (必填) 退款记录唯一标识
+     * @return 单笔退款记录查询返回结果
      * @throws BCException
      */
     public BCRefund startQueryRefundById(String objectId) throws BCException {
@@ -223,8 +231,10 @@ public class BCPayMultiApp {
     }
 
     /**
+     * 退款记录总数查询接口
+     * 
      * @param para
-     *            {@link BCQueryParameter}退款总数查询参数
+     * {@link BCQueryParameter} （必填） 退款总数查询参数
      * @return 退款总数查询返回的结果
      * @throws BCException
      */
@@ -243,12 +253,14 @@ public class BCPayMultiApp {
     }
 
     /**
+     * 退款状态更新接口
+     * 
      * @param refundNo
-     *            （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24
-     *            位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
+     * （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24
+     * 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
      * @param channel
-     *            (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含： YEE 易宝 WX 微信 KUAIQIAN 快钱 BD 百度
-     * @return String
+     * (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含： YEE 易宝 WX 微信 KUAIQIAN 快钱 BD 百度
+     * @return 退款状态更新返回结果，包括（SUCCESS， PROCESSING, FAIL...）
      * @throws BCException
      */
     public String startRefundUpdate(PAY_CHANNEL channel, String refundNo)
@@ -269,6 +281,14 @@ public class BCPayMultiApp {
         return ret.get("refund_status").toString();
     }
 
+    /**
+     * 单笔打款接口
+     * 
+     * @param para
+     * {@link TransferParameter} （必填）单笔打款参数
+     * @return 如果channel类型是PAYPAL_PAYPAL, 返回需要跳转支付的url, 否则返回空字符串
+     * @throws BCException
+     */
     public String startTransfer(TransferParameter para) throws BCException {
 
         ValidationUtil.validateBCTransfer(para);
@@ -286,15 +306,11 @@ public class BCPayMultiApp {
     }
 
     /**
-     * @param channel
-     *            （必填）渠道类型， 暂时只支持ALI
-     * @param batchNo
-     *            （必填） 批量付款批号， 此次批量付款的唯一标示，11-32位数字字母组合
-     * @param accountName
-     *            （必填） 付款方的支付宝账户名, 支付宝账户名称,例如:毛毛
-     * @param transferData
-     *            （必填） 付款的详细数据 {TransferData} 的 List集合。
-     * @return BCPayResult
+     * 批量打款接口
+     * 
+     * @param para
+     * {@link TransfersParameter} （必填） 批量打款参数
+     * @return 批量打款跳转支付url
      * @throws BCException
      */
     public String startTransfers(TransfersParameter para) throws BCException {
@@ -315,7 +331,7 @@ public class BCPayMultiApp {
      * 发起预退款审核，包括批量否决和批量同意
      * 
      * @param batchRefund
-     *            （必填） 批量退款参数
+     * （必填） 批量退款参数
      * @return BCBatchRefund
      * @throws BCException
      */
@@ -345,6 +361,14 @@ public class BCPayMultiApp {
         return batchRefund;
     }
 
+    /**
+     * 境外支付（paypal）接口
+     * 
+     * @param order
+     * {@link BCInternationlOrder} （必填）
+     * @return 支付后返回的order
+     * @throws BCException
+     */
     public BCInternationlOrder startBCInternatioalPay(BCInternationlOrder order)
             throws BCException {
 
@@ -364,9 +388,9 @@ public class BCPayMultiApp {
 
     /**
      * @param sign
-     *            Webhook提供的签名
+     * Webhook提供的签名
      * @param timestamp
-     *            Webhook提供的timestamp，注意是String格式
+     * Webhook提供的timestamp，注意是String格式
      * @return 签名是否正确
      */
     public static boolean verifySign(String sign, String timestamp) {
@@ -383,9 +407,9 @@ public class BCPayMultiApp {
      * Build Payment parameters
      * 
      * @param param
-     *            to be built
+     * to be built
      * @param para
-     *            used for building
+     * used for building
      */
     private void buildPayParam(Map<String, Object> param, BCOrder para) {
 
@@ -433,9 +457,9 @@ public class BCPayMultiApp {
      * Build Refund parameters
      * 
      * @param param
-     *            to be built
+     * to be built
      * @param para
-     *            used for building
+     * used for building
      */
     private void buildRefundParam(Map<String, Object> param, BCRefund para) {
 
@@ -461,9 +485,9 @@ public class BCPayMultiApp {
      * Build Query parameters
      * 
      * @param param
-     *            to be built
+     * to be built
      * @param para
-     *            used for building
+     * used for building
      */
     private void buildQueryParam(Map<String, Object> param,
             BCQueryParameter para) {
@@ -504,9 +528,9 @@ public class BCPayMultiApp {
      * Build Query Count parameters
      * 
      * @param param
-     *            to be built
+     * to be built
      * @param para
-     *            used for building
+     * used for building
      */
     private void buildQueryCountParam(Map<String, Object> param,
             BCQueryParameter para) {
@@ -645,7 +669,7 @@ public class BCPayMultiApp {
      * The method is used to generate Refund list by query.
      * 
      * @param refundList
-     *            the list of refund taken in
+     * the list of refund taken in
      * @return list of BCRefundBean object
      */
     private static List<BCRefund> generateBCRefundList(
@@ -664,7 +688,7 @@ public class BCPayMultiApp {
      * The method is used to generate a refund object.
      * 
      * @param refund
-     *            the refund map taken in
+     * the refund map taken in
      * @return list of BCRefundBean object
      */
     private static BCRefund generateBCRefund(Map<String, Object> refund) {
@@ -677,7 +701,7 @@ public class BCPayMultiApp {
      * Generate order bean from order map
      * 
      * @param bill
-     *            the map taken in
+     * the map taken in
      */
     private static void generateBCOrderBean(Map<String, Object> bill,
             BCOrder bcOrder) {
@@ -705,7 +729,7 @@ public class BCPayMultiApp {
      * Generate refund bean from refund map
      * 
      * @param refund
-     *            the map taken in
+     * the map taken in
      */
     private static void generateBCRefundBean(Map<String, Object> refund,
             BCRefund bcRefund) {

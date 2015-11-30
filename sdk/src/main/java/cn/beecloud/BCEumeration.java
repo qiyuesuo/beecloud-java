@@ -1,5 +1,11 @@
 package cn.beecloud;
 
+/**
+ * BeeCoud JAVA　SDK枚举类
+ * 
+ * @author Ray
+ * @Date: 15/7/11
+ */
 public class BCEumeration {
 	
 	public enum RESULT_TYPE {
@@ -108,6 +114,3 @@ public class BCEumeration {
 		amex
 	}
 }
-
-
-

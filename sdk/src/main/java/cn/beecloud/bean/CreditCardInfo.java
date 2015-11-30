@@ -27,7 +27,6 @@ public class CreditCardInfo {
 		return cardNo;
 	}
 	
-	
 	public void setCardNo(String cardNo) {
 		this.cardNo = cardNo;
 	}

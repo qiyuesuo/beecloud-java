@@ -15,7 +15,7 @@ public class BCPayTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		BeeCloud.registerApp(TestConstant.KTestAppID, TestConstant.kTestAppSecret);
+		BeeCloud.registerApp(TestConstant.KTestAppID, TestConstant.kTestAppSecret, TestConstant.kTestMasterSecret);
 	}
 
 	@Test

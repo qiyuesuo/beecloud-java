@@ -8,7 +8,20 @@
 <%@ page import="java.util.Arrays" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
+<%
+   /*
+	   功能：批量审核
+	   版本：1.0
+	   日期：2015-11-21
+	   说明：批量审核处理页面， 用于对选择的预退款发起批量同意或者批量否决操作
+	   以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
+	   该代码仅供学习和研究使用，只是提供一个参考。
+	
+	//***********页面功能说明***********
+		 该页面可以在本机电脑测试。
+	//********************************
+	*/
+%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -48,13 +61,13 @@
     String isYeeWap = request.getParameter("isYeeWap");
     
     if (isYeeWap.equals("1")) {
-        BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0");
+        BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0", "8427e3ae-7236-4272-a22f-8cb354d54268");
     }
     if (agree != null) {
     	try {
         	BCBatchRefund result = BCPay.startBatchRefund(batchRefund);
         	 if (isYeeWap.equals("1")) {
-                 BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
+                 BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
              }
         	out.println("<div>");
             for (String key : result.getIdResult().keySet()) {
@@ -73,7 +86,7 @@
     	try {
 	    	BCBatchRefund result = BCPay.startBatchRefund(batchRefund);
 	        if (isYeeWap.equals("1")) {
-	            BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
+	            BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
 	        }
 	        out.println("<h3>批量驳回成功!</h3>");
             out.println("<br><br><div style=\"clear: both;\"><input onclick='javascript:window.close();' class=\"button\" value=\"确认\"></div>");

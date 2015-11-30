@@ -279,6 +279,31 @@ public class BCPay {
     }
 
     /**
+     * 境外支付（paypal）接口
+     * 
+     * @param order
+     * {@link BCInternationlOrder} （必填）
+     * @return 支付后返回的order
+     * @throws BCException
+     */
+    public static BCInternationlOrder startBCInternatioalPay(
+            BCInternationlOrder order) throws BCException {
+
+        ValidationUtil.validateBCInternatioalPay(order);
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildInternatioalPayParam(param, order);
+
+        Map<String, Object> ret = doPost(
+                BCUtilPrivate.getApiInternationalPay(), param);
+
+        placePayPalOrder(order, ret);
+
+        return order;
+    }
+    
+    /**
      * 单笔打款接口
      * 
      * @param para
@@ -303,31 +328,7 @@ public class BCPay {
         return "";
     }
 
-    /**
-     * 境外支付（paypal）接口
-     * 
-     * @param order
-     * {@link BCInternationlOrder} （必填）
-     * @return 支付后返回的order
-     * @throws BCException
-     */
-    public static BCInternationlOrder startBCInternatioalPay(
-            BCInternationlOrder order) throws BCException {
-
-        ValidationUtil.validateBCInternatioalPay(order);
-
-        Map<String, Object> param = new HashMap<String, Object>();
-
-        buildInternatioalPayParam(param, order);
-
-        Map<String, Object> ret = doPost(
-                BCUtilPrivate.getApiInternationalPay(), param);
-
-        placePayPalOrder(order, ret);
-
-        return order;
-    }
-
+    
     /**
      * 批量打款接口
      * 

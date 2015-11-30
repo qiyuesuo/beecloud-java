@@ -27,18 +27,18 @@
 <%@ page import="java.util.concurrent.Exchanger" %>
 <%@ include file="loadProperty.jsp" %>
 <%
-    /**
-     功能：商户结算跳转至指定支付方式页面
-     版本：3.3
-     日期：2015-03-20
-     说明：
-     以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
-     该代码仅供学习和研究使用，只是提供一个参考。
-
-     //***********页面功能说明***********
-     该页面可以在本机电脑测试。
-     //********************************
-     */
+   /*
+	   功能：用户支付
+	   版本：1.0
+	   日期：2015-11-21
+	   说明： 支付处理页面， 用于发起比可网络支付系统的请求，包括支付宝、微信、银联、易宝、京东、百度、快钱等渠道以及境外支付渠道PAYPAL
+	   以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
+	   该代码仅供学习和研究使用，只是提供一个参考。
+	
+	//***********页面功能说明***********
+		 该页面可以在本机电脑测试。
+	//********************************
+	*/
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -190,7 +190,7 @@
 
         case YEE_WAP:
             //真实环境可以不需要这句话
-            BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0");
+            BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0", "8427e3ae-7236-4272-a22f-8cb354d54268");
             //真实环境可以不需要这句话end
             bcOrder.setReturnUrl(yeeWapReturnUrl);
             try {
@@ -333,18 +333,23 @@
             break;
             
         case PAYPAL_SAVED_CREDITCARD:
-        	internationalOrder.setBillNo(billNo);
-        	internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_SAVED_CREDITCARD);
-        	internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
-        	internationalOrder.setTitle("PAYPAL_SAVED_CREDITCARD test");
-        	internationalOrder.setTotalFee(1);
-        	internationalOrder.setBillNo(request.getSession().getAttribute("creditCardId").toString());
-        	try {
-       			internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
-       			out.println("PAYPAL_SAVED_CREDITCARD 支付成功！");
-            } catch (BCException e) {
-                log.error(e.getMessage(), e);
-                out.println(e.getMessage());
+            Object creditCardId = request.getSession().getAttribute("creditCardId");
+            if (creditCardId == null) {
+                out.println("信用卡ID信息不存在，请先通过信用卡支付获取ID再进行快捷支付！");
+            } else {
+	        	internationalOrder.setBillNo(billNo);
+	        	internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_SAVED_CREDITCARD);
+	        	internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
+	        	internationalOrder.setTitle("PAYPAL_SAVED_CREDITCARD test");
+	        	internationalOrder.setTotalFee(1);
+	        	internationalOrder.setBillNo(request.getSession().getAttribute("creditCardId").toString());
+	        	try {
+	       			internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
+	       			out.println("PAYPAL_SAVED_CREDITCARD 支付成功！");
+	            } catch (BCException e) {
+	                log.error(e.getMessage(), e);
+	                out.println(e.getMessage());
+	            }
             }
             break;
             

@@ -1,56 +1,45 @@
 package cn.beecloud;
 
+/**
+ * BeeCloud 初始化类
+ * 
+ * @author Ray
+ * @Date: 15/7/11
+ */
 public class BeeCloud {
-    /**
-     * BeeCloud SDK release version.
-     */
-    public static final String kBeeCloudVersionString = "2.3.0";
-    public static final double kBeeCloudVersionNumber = 2.30;
 
     /**
-     * 设置appID、appSecret、masterSecret，在程序开始时运行一遍即可, 用于退款、单笔打款、批量打款接口
-     * @param appID
-     * @param appSecret
-     * @param masterSecret
+     * BeeCloud JAVA SDK release version.
      */
-    public static void registerApp(String appID, String appSecret, String masterSecret) {
-    	
-    	BCCache.setAppID(appID);
+    public static final String kBeeCloudVersionString = "3.0.0";
+    public static final double kBeeCloudVersionNumber = 3.00;
+
+    /**
+     * 设置appID、appSecret、masterSecret，在程序开始时运行一遍即可
+     * 
+     * @param appID
+     * （必填）商户在Beecloud后台注册的app id
+     * @param appSecret
+     * （必填）用于支付、查询
+     * @param masterSecret
+     * （必填）用于退款、批量打款
+     */
+    public static void registerApp(String appID, String appSecret,
+            String masterSecret) {
+
+        BCCache.setAppID(appID);
         BCCache.setAppSecret(appSecret);
         BCCache.setMasterKey(masterSecret);
         BCAPIClient.initClient();
-    }
-    
-    /**
-     * 设置masterkey, 后续ACL需求预留
-     *
-     * @param masterKey masterkey
-     */
-    public static void setMasterKey(String masterKey) {
-        BCCache.setMasterKey(masterKey);
     }
 
     /**
      * 设置网络超时时间, 单位ms, 默认5000
      *
-     * @param timeout 访问比可网络的超时时间
+     * @param timeout
+     * 访问比可网络的超时时间
      */
     public static void setNetworkTimeout(int timeout) {
         BCCache.setNetworkTimeout(timeout);
-    }
-
-    /**
-     * 设置是否需要本地缓存云端数据及元数据, 默认为true
-     *
-     * @param needLocalCache 是否本地缓存
-     */
-    public static void setNeedCache(boolean needLocalCache) {
-        BCCache.setNeedLocalCache(needLocalCache);
-    }
-
-    /**
-     * 清除所有本地缓存
-     */
-    public static void clearAllCache() {
     }
 }
