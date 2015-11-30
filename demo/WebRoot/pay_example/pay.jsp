@@ -47,6 +47,7 @@
 
     String type = request.getParameter("paytype");
     PAY_CHANNEL channel;
+    log.info("channel:::" + type);
     try {
         channel = PAY_CHANNEL.valueOf(type);
     } catch (Exception e) {
@@ -127,7 +128,7 @@
             Properties prop = loadProperty();
             String wxJSAPIAppId = prop.get("wxJSAPIAppId").toString();
             String wxJSAPISecret = prop.get("wxJSAPISecret").toString();
-            String wxJSAPIRedirectUrl = "http://javademo.beecloud.cn/demo/pay.jsp?type=WX_NATIVE";
+            String wxJSAPIRedirectUrl = "http://javademo.beexcloud.com/demo/pay_example/pay.jsp?paytype=WX_JSAPI";
             String encodedWSJSAPIRedirectUrl = URLEncoder.encode(wxJSAPIRedirectUrl);
             if (request.getParameter("code") == null || request.getParameter("code") == "") {
                 String redirectUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + wxJSAPIAppId + "&redirect_uri=" + encodedWSJSAPIRedirectUrl + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
