@@ -1,16 +1,8 @@
-<%@ page import="cn.beecloud.BCPay" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ page import="cn.beecloud.BCUtil" %>
-<%@ page import="cn.beecloud.bean.*" %>
-<%@ page import="cn.beecloud.BCEumeration.*"%>
-
-<%@ page import="cn.beecloud.bean.BCException" %>
-<%@ page import="cn.beecloud.bean.ALITransferData" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Map" %>
+<%@ page import="cn.beecloud.bean.*"%>
+<%@ page import="cn.beecloud.*"%>
+<%@ page import="cn.beecloud.BCEumeration.*" %>
 <%@ page import="java.util.Properties" %>
 <%@ page import="org.apache.log4j.Logger" %>
 <%@ include file="loadProperty.jsp" %>

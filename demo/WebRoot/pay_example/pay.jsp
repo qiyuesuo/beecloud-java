@@ -1,30 +1,16 @@
-<%@page import="cn.beecloud.BCEumeration.CARD_TYPE"%>
-<%@ page import="cn.beecloud.bean.CreditCardInfo"%>
-<%@ page import="cn.beecloud.BCEumeration.PAYPAL_CURRENCY"%>
-<%@ page import="cn.beecloud.bean.BCInternationlOrder"%>
-<%@ page import="cn.beecloud.BCEumeration.PAY_CHANNEL" %>
-<%@ page import="cn.beecloud.BCEumeration.QR_PAY_MODE" %>
-<%@ page import="cn.beecloud.BCPay" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ page import="cn.beecloud.BCUtil" %>
-<%@ page import="cn.beecloud.BeeCloud" %>
-<%@ page import="cn.beecloud.bean.BCException" %>
-<%@ page import="cn.beecloud.bean.BCOrder" %>
+<%@ page import="cn.beecloud.bean.*"%>
+<%@ page import="cn.beecloud.*"%>
+<%@ page import="cn.beecloud.BCEumeration.*" %>
 <%@ page import="java.io.BufferedReader" %>
 <%@ page import="java.io.InputStreamReader" %>
 <%@ page import="java.net.HttpURLConnection" %>
 <%@ page import="java.net.URL" %>
 <%@ page import="java.net.URLEncoder" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Map" %>
 <%@ page import="java.util.Properties" %>
 <%@ page import="net.sf.json.JSONObject" %>
 <%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="cn.beecloud.BCEumeration" %>
-<%@ page import="java.util.concurrent.Exchanger" %>
 <%@ include file="loadProperty.jsp" %>
 <%
    /*
@@ -57,7 +43,7 @@
     String billNo = BCUtil.generateRandomUUIDPure();
     String title = "demo测试";
     Map<String, Object> optional = new HashMap<String, Object>();
-    optional.put("rui", "睿");
+    optional.put("rui", "feng");
 
     String type = request.getParameter("paytype");
     PAY_CHANNEL channel;
@@ -216,11 +202,13 @@
             String cardNo = "15078120125091678";
             String cardPwd = "121684730734269992";
             String frqid = "SZX";
+            bcOrder.setTotalFee(10);
             bcOrder.setCardNo(cardNo);
             bcOrder.setCardPwd(cardPwd);
             bcOrder.setFrqid(frqid);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
+                out.println("点卡支付成功！");
                 out.println(bcOrder.getObjectId());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -283,7 +271,7 @@
             bcOrder.setReturnUrl(bdReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                out.println(bcOrder.getHtml());
+                response.sendRedirect(bcOrder.getUrl());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
                 out.println(e.getMessage());
@@ -307,13 +295,17 @@
              break;
         
         case PAYPAL_CREDITCARD:
+            /*
+             * 请传入用户信用卡信息，包括:cardNo、expireMonth、expireYear、cvv、firstName、lastName
+             * 以及cardType(visa/mastercard/discover/amex)
+             */
         	CreditCardInfo creditCardInfo = new CreditCardInfo();
-        	creditCardInfo.setCardNo("5187187005718530");
+        	creditCardInfo.setCardNo("5183182005528540");
         	creditCardInfo.setExpireMonth(11);
         	creditCardInfo.setExpireYear(19);
         	creditCardInfo.setCvv(350);
-        	creditCardInfo.setFirstName("RUI");
-        	creditCardInfo.setLastName("FENG");
+        	creditCardInfo.setFirstName("SAN");
+        	creditCardInfo.setLastName("ZHANG");
         	creditCardInfo.setCardType(CARD_TYPE.mastercard);
         	internationalOrder.setBillNo(billNo);
         	internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_CREDITCARD);

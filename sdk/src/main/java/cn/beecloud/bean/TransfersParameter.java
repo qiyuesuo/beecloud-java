@@ -3,7 +3,7 @@ package cn.beecloud.bean;
 import java.util.LinkedList;
 import java.util.List;
 
-import cn.beecloud.BCEumeration.TRANSFER_CHANNEL;
+import cn.beecloud.BCEumeration.PAY_CHANNEL;
 
 /**
  * 比可网络批量打款参数类
@@ -12,7 +12,7 @@ import cn.beecloud.BCEumeration.TRANSFER_CHANNEL;
  */
 public class TransfersParameter {
 	
-	private TRANSFER_CHANNEL channel;
+	private PAY_CHANNEL channel;
 	
 	private String batchNo;
 	
@@ -23,16 +23,16 @@ public class TransfersParameter {
 	/**
 	 * 访问字段 {@link #channel}
 	 */
-	public TRANSFER_CHANNEL getChannel() {
+	public PAY_CHANNEL getChannel() {
 		return channel;
 	}
 	
 	/**
 	 * @param channel
 	 * （必填）渠道类型，根据不同场景选择不同的支付方式，包含：
-	 * {@link TRANSFER_CHANNEL#ALI_TRANSFER}: 支付宝企业打款
+	 * {@link PAY_CHANNEL#ALI}: 支付宝企业打款
 	 */
-	public void setChannel(TRANSFER_CHANNEL channel) {
+	public void setChannel(PAY_CHANNEL channel) {
 		this.channel = channel;
 	}
 	

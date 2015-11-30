@@ -27,7 +27,7 @@
 	}
 
     String billNo = (String) request.getParameter("bill_no").trim();
-    String result = (String) request.getParameter("result").trim();
+    String result = (String) request.getParameter("state").trim();
 
     if (result.equals("approved")) {
         out.println("<h3>PAYPAL支付成功，商户应自行实现成功逻辑！</h3>");

@@ -176,7 +176,7 @@ public class ValidationUtil {
         } else if (para.getChannel() == null) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), TRANSFERS_CHANNEL_EMPTY);
-        } else if (!para.getChannel().equals(TRANSFER_CHANNEL.ALI_TRANSFER)) {
+        } else if (!para.getChannel().equals(PAY_CHANNEL.ALI)) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(),
                     TRANSFERS_CHANNEL_SUPPORT_INVALID);
