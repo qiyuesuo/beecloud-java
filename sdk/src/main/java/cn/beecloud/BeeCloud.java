@@ -37,7 +37,7 @@ public class BeeCloud {
      * 设置网络超时时间, 单位ms, 默认5000
      *
      * @param timeout
-     * 访问比可网络的超时时间
+     * 访问BeeCloud的超时时间
      */
     public static void setNetworkTimeout(int timeout) {
         BCCache.setNetworkTimeout(timeout);

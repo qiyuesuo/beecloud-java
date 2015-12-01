@@ -1,7 +1,7 @@
 package cn.beecloud.bean;
 
 /**
- * 比可网络自定义异常，该异常信息包含错误码，错误基本信息、错误详细信息
+ * BeeCloud自定义异常，该异常信息包含错误码，错误基本信息、错误详细信息
  * 
  * @author Rui.Feng
  * @since 2015.11.24

@@ -35,7 +35,7 @@ import cn.beecloud.bean.TransfersParameter;
 import net.sf.json.JSONObject;
 
 /**
- * 比可网络JAVA SDK核心类， 包括支付、退款、查询、企业打款、批量退款等接口
+ * BeeCloud JAVA SDK核心类， 包括支付、退款、查询、企业打款、批量退款等接口
  * 
  * @author Ray
  * @since 2015/7/11
@@ -53,7 +53,7 @@ public class BCPay {
      * 
      * @param order
      * {@link BCOrder} (必填) 支付参数
-     * @return 调起比可支付后的返回结果
+     * @return 调起BeeCloud支付后的返回结果
      * @throws BCException
      */
     public static BCOrder startBCPay(BCOrder order) throws BCException {
@@ -302,7 +302,7 @@ public class BCPay {
 
         return order;
     }
-    
+
     /**
      * 单笔打款接口
      * 
@@ -328,7 +328,6 @@ public class BCPay {
         return "";
     }
 
-    
     /**
      * 批量打款接口
      * 
@@ -907,35 +906,42 @@ public class BCPay {
      */
     private static void placeOrder(BCOrder order, Map<String, Object> ret) {
         order.setObjectId(ret.get("id").toString());
-        if (order.getChannel().equals(PAY_CHANNEL.WX_NATIVE)) {
-            if (ret.containsKey("code_url") && null != ret.get("code_url")) {
-                order.setCodeUrl(ret.get("code_url").toString());
-            }
-        } else if (order.getChannel().equals(PAY_CHANNEL.WX_JSAPI)) {
-            order.setWxJSAPIMap(generateWXJSAPIMap(ret));
-        } else if (order.getChannel().equals(PAY_CHANNEL.ALI_WEB)
-                || order.getChannel().equals(PAY_CHANNEL.ALI_QRCODE)
-                || order.getChannel().equals(PAY_CHANNEL.ALI_WAP)) {
-            if (ret.containsKey("html") && null != ret.get("html")
-                    && ret.containsKey("url") && null != ret.get("url")) {
-                order.setHtml(ret.get("html").toString());
-                order.setUrl(ret.get("url").toString());
-            }
-        } else if (order.getChannel().equals(PAY_CHANNEL.UN_WEB)
-                || order.getChannel().equals(PAY_CHANNEL.JD_WAP)
-                || order.getChannel().equals(PAY_CHANNEL.JD_WEB)
-                || order.getChannel().equals(PAY_CHANNEL.KUAIQIAN_WAP)
-                || order.getChannel().equals(PAY_CHANNEL.KUAIQIAN_WEB)) {
-            if (ret.containsKey("html") && null != ret.get("html")) {
-                order.setHtml(ret.get("html").toString());
-            }
-        } else if (order.getChannel().equals(PAY_CHANNEL.YEE_WAP)
-                || order.getChannel().equals(PAY_CHANNEL.YEE_WEB)
-                || order.getChannel().equals(PAY_CHANNEL.BD_WEB)
-                || order.getChannel().equals(PAY_CHANNEL.BD_WAP)) {
-            if (ret.containsKey("url") && null != ret.get("url")) {
-                order.setUrl(ret.get("url").toString());
-            }
+        switch (order.getChannel()) {
+            case WX_NATIVE:
+                if (ret.containsKey("code_url") && null != ret.get("code_url")) {
+                    order.setCodeUrl(ret.get("code_url").toString());
+                }
+                break;
+            case WX_JSAPI:
+                order.setWxJSAPIMap(generateWXJSAPIMap(ret));
+                break;
+            case ALI_WEB:
+            case ALI_QRCODE:
+            case ALI_WAP:
+                if (ret.containsKey("html") && null != ret.get("html")
+                        && ret.containsKey("url") && null != ret.get("url")) {
+                    order.setHtml(ret.get("html").toString());
+                    order.setUrl(ret.get("url").toString());
+                }
+                break;
+            case UN_WEB:
+            case JD_WAP:
+            case JD_WEB:
+            case KUAIQIAN_WAP:
+            case KUAIQIAN_WEB:
+                if (ret.containsKey("html") && null != ret.get("html")) {
+                    order.setHtml(ret.get("html").toString());
+                }
+                break;
+            case YEE_WAP:
+            case YEE_WEB:
+            case BD_WEB:
+            case BD_WAP:
+                if (ret.containsKey("url") && null != ret.get("url")) {
+                    order.setUrl(ret.get("url").toString());
+                }
+            default:
+                break;
         }
     }
 
@@ -945,10 +951,15 @@ public class BCPay {
     private static void placePayPalOrder(BCInternationlOrder order,
             Map<String, Object> ret) {
         order.setObjectId(StrUtil.toStr(ret.get("id")));
-        if (order.getChannel().equals(PAY_CHANNEL.PAYPAL_PAYPAL)) {
-            order.setUrl(StrUtil.toStr(ret.get("url")));
-        } else if (order.getChannel().equals(PAY_CHANNEL.PAYPAL_CREDITCARD)) {
-            order.setCreditCardId(StrUtil.toStr(ret.get("credit_card_id")));
+        switch (order.getChannel()) {
+            case PAYPAL_PAYPAL:
+                order.setUrl(StrUtil.toStr(ret.get("url")));
+                break;
+            case PAYPAL_CREDITCARD:
+                order.setCreditCardId(StrUtil.toStr(ret.get("credit_card_id")));
+                break;
+            default:
+                break;
         }
     }
 }

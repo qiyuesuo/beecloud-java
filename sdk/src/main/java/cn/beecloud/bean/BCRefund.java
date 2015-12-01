@@ -5,7 +5,7 @@ import java.util.Map;
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 
 /**
- * 退款信息类，封装了比可网络退款记录信息
+ * 退款信息类，封装了BeeCloud退款记录信息
  * @author Rui.Feng
  * @since 2015.9.24
  */

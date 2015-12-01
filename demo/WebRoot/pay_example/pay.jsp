@@ -47,7 +47,6 @@
 
     String type = request.getParameter("paytype");
     PAY_CHANNEL channel;
-    log.info("channel:::" + type);
     try {
         channel = PAY_CHANNEL.valueOf(type);
     } catch (Exception e) {
@@ -56,11 +55,9 @@
     }
     boolean success = false;
 
-    //BCPayResult的type字段有OK和非OK两种，当type字段是OK时（对应值为0），bcPayResult包含支付所需的内容如html或者code_url或者支付成功信息,
-    //当type的字段为非OK的时候，，bcPayResult包含通用错误和具体的错误信息。商户系统可以任意显示，打印或者记录日志。
     BCOrder bcOrder = new BCOrder(channel, 1, billNo, title);
     BCInternationlOrder internationalOrder = new BCInternationlOrder();
-    bcOrder.setBillTimeout(300);
+    bcOrder.setBillTimeout(360);
     bcOrder.setOptional(optional);
 
     //以下是WX_JSAPI（公众号内支付）用到的返回参数，需要在页面的js用到

@@ -64,7 +64,7 @@ public class BCPayMultiApp {
      * 
      * @param order
      * {@link BCOrder} (必填) 支付参数
-     * @return 调起比可支付后的返回结果
+     * @return 调起BeeCloud支付后的返回结果
      * @throws BCException
      */
     public BCOrder startBCPay(BCOrder order) throws BCException {
@@ -401,12 +401,7 @@ public class BCPayMultiApp {
     }
 
     /**
-     * Build Payment parameters
-     * 
-     * @param param
-     * to be built
-     * @param para
-     * used for building
+     * 构建支付rest api参数
      */
     private void buildPayParam(Map<String, Object> param, BCOrder para) {
 
@@ -451,12 +446,7 @@ public class BCPayMultiApp {
     }
 
     /**
-     * Build Refund parameters
-     * 
-     * @param param
-     * to be built
-     * @param para
-     * used for building
+     * 构建退款rest api参数
      */
     private void buildRefundParam(Map<String, Object> param, BCRefund para) {
 
@@ -479,12 +469,7 @@ public class BCPayMultiApp {
     }
 
     /**
-     * Build Query parameters
-     * 
-     * @param param
-     * to be built
-     * @param para
-     * used for building
+     * 构建查询rest api参数
      */
     private void buildQueryParam(Map<String, Object> param,
             BCQueryParameter para) {
@@ -522,12 +507,7 @@ public class BCPayMultiApp {
     }
 
     /**
-     * Build Query Count parameters
-     * 
-     * @param param
-     * to be built
-     * @param para
-     * used for building
+     * 构建订单总数查询rest api参数
      */
     private void buildQueryCountParam(Map<String, Object> param,
             BCQueryParameter para) {
@@ -551,13 +531,15 @@ public class BCPayMultiApp {
             param.put("end_time", para.getEndTime().getTime());
         }
     }
-
-    private static void buildInternatioalPayParam(Map<String, Object> param,
+    
+    /**
+     * 构建境外支付rest api参数
+     */
+    private void buildInternatioalPayParam(Map<String, Object> param,
             BCInternationlOrder order) {
-        param.put("app_id", BCCache.getAppID());
+        param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
-        param.put("app_sign", BCUtilPrivate.getAppSignature(param.get(
-                "timestamp").toString()));
+        param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
         param.put("channel", StrUtil.toStr(order.getChannel()));
         param.put("currency", StrUtil.toStr(order.getCurrency()));
         param.put("bill_no", order.getBillNo());
@@ -582,7 +564,10 @@ public class BCPayMultiApp {
             param.put("return_url", order.getReturnUrl());
         }
     }
-
+    
+    /**
+     * 构建单笔打款rest api参数
+     */
     private void buildTransferParam(Map<String, Object> param,
             TransferParameter para) {
         param.put("app_id", this.appId);
@@ -609,7 +594,10 @@ public class BCPayMultiApp {
             param.put("account_name", para.getAccountName());
         }
     }
-
+    
+    /**
+     * 构建批量打款rest api参数
+     */
     private void buildTransfersParam(Map<String, Object> param,
             TransfersParameter para) {
         param.put("app_id", this.appId);
@@ -633,10 +621,7 @@ public class BCPayMultiApp {
     }
 
     /**
-     * The method is used to generate Order list by query.
-     * 
-     * @param bills
-     * @return list of BCOrderBean
+     * 生成返回BCOrder list
      */
     private static List<BCOrder> generateBCOrderList(
             List<Map<String, Object>> bills) {
@@ -651,10 +636,7 @@ public class BCPayMultiApp {
     }
 
     /**
-     * The method is used to generate an order object.
-     * 
-     * @param bill
-     * @return an object of BCOrderBean
+     * 生成返回BCOrder
      */
     private static BCOrder generateBCOrder(Map<String, Object> bill) {
         BCOrder bcOrder = new BCOrder();
@@ -663,11 +645,7 @@ public class BCPayMultiApp {
     }
 
     /**
-     * The method is used to generate Refund list by query.
-     * 
-     * @param refundList
-     * the list of refund taken in
-     * @return list of BCRefundBean object
+     * 生成返回BCRefund list
      */
     private static List<BCRefund> generateBCRefundList(
             List<Map<String, Object>> refundList) {
@@ -682,11 +660,7 @@ public class BCPayMultiApp {
     }
 
     /**
-     * The method is used to generate a refund object.
-     * 
-     * @param refund
-     * the refund map taken in
-     * @return list of BCRefundBean object
+     * 生成返回BCRefund
      */
     private static BCRefund generateBCRefund(Map<String, Object> refund) {
         BCRefund bcRefund = new BCRefund();
@@ -695,10 +669,7 @@ public class BCPayMultiApp {
     }
 
     /**
-     * Generate order bean from order map
-     * 
-     * @param bill
-     * the map taken in
+     * 构建返回BCOrder bean
      */
     private static void generateBCOrderBean(Map<String, Object> bill,
             BCOrder bcOrder) {
@@ -723,10 +694,7 @@ public class BCPayMultiApp {
     }
 
     /**
-     * Generate refund bean from refund map
-     * 
-     * @param refund
-     * the map taken in
+     * 构建返回BCRefund bean
      */
     private static void generateBCRefundBean(Map<String, Object> refund,
             BCRefund bcRefund) {
@@ -751,10 +719,7 @@ public class BCPayMultiApp {
     }
 
     /**
-     * Generate a map for JSAPI payment to receive.
-     * 
-     * @param ret
-     * @return
+     * 构建WXJSAPI返回Map
      */
     private static Map<String, String> generateWXJSAPIMap(
             Map<String, Object> ret) {
@@ -768,7 +733,17 @@ public class BCPayMultiApp {
 
         return map;
     }
-
+    
+    /**
+     * doPost方法，封装rest api POST方式请求
+     * 
+     * @param url
+     * 请求url
+     * @param param
+     * 请求参数
+     * @return rest api返回参数
+     * @throws BCException
+     */
     private static Map<String, Object> doPost(String url,
             Map<String, Object> param) throws BCException {
         Client client = BCAPIClient.client;
@@ -804,7 +779,17 @@ public class BCPayMultiApp {
                     NETWORK_ERROR);
         }
     }
-
+    
+    /**
+     * doPut方法，封装rest api PUT方式请求
+     * 
+     * @param url
+     * 请求url
+     * @param param
+     * 请求参数
+     * @return rest api返回参数
+     * @throws BCException
+     */
     private static Map<String, Object> doPut(String url,
             Map<String, Object> param) throws BCException {
         Client client = BCAPIClient.client;
@@ -840,7 +825,17 @@ public class BCPayMultiApp {
                     NETWORK_ERROR);
         }
     }
-
+    
+    /**
+     * doGet方法，封装rest api GET方式请求
+     * 
+     * @param url
+     * 请求url
+     * @param param
+     * 请求参数
+     * @return rest api返回参数
+     * @throws BCException
+     */
     private static Map<String, Object> doGet(String url,
             Map<String, Object> param) throws BCException {
         Client client = BCAPIClient.client;
@@ -883,48 +878,66 @@ public class BCPayMultiApp {
                     NETWORK_ERROR);
         }
     }
-
+    
+    /**
+     * 组建返回订单
+     */
     private static void placeOrder(BCOrder order, Map<String, Object> ret) {
         order.setObjectId(ret.get("id").toString());
-        if (order.getChannel().equals(PAY_CHANNEL.WX_NATIVE)) {
-            if (ret.containsKey("code_url") && null != ret.get("code_url")) {
-                order.setCodeUrl(ret.get("code_url").toString());
-            }
-        } else if (order.getChannel().equals(PAY_CHANNEL.WX_JSAPI)) {
-            order.setWxJSAPIMap(generateWXJSAPIMap(ret));
-        } else if (order.getChannel().equals(PAY_CHANNEL.ALI_WEB)
-                || order.getChannel().equals(PAY_CHANNEL.ALI_QRCODE)
-                || order.getChannel().equals(PAY_CHANNEL.ALI_WAP)) {
-            if (ret.containsKey("html") && null != ret.get("html")
-                    && ret.containsKey("url") && null != ret.get("url")) {
-                order.setHtml(ret.get("html").toString());
-                order.setUrl(ret.get("url").toString());
-            }
-        } else if (order.getChannel().equals(PAY_CHANNEL.UN_WEB)
-                || order.getChannel().equals(PAY_CHANNEL.JD_WAP)
-                || order.getChannel().equals(PAY_CHANNEL.JD_WEB)
-                || order.getChannel().equals(PAY_CHANNEL.KUAIQIAN_WAP)
-                || order.getChannel().equals(PAY_CHANNEL.KUAIQIAN_WEB)) {
-            if (ret.containsKey("html") && null != ret.get("html")) {
-                order.setHtml(ret.get("html").toString());
-            }
-        } else if (order.getChannel().equals(PAY_CHANNEL.YEE_WAP)
-                || order.getChannel().equals(PAY_CHANNEL.YEE_WEB)
-                || order.getChannel().equals(PAY_CHANNEL.BD_WEB)
-                || order.getChannel().equals(PAY_CHANNEL.BD_WAP)) {
-            if (ret.containsKey("url") && null != ret.get("url")) {
-                order.setUrl(ret.get("url").toString());
-            }
+        switch (order.getChannel()) {
+            case WX_NATIVE:
+                if (ret.containsKey("code_url") && null != ret.get("code_url")) {
+                    order.setCodeUrl(ret.get("code_url").toString());
+                }
+                break;
+            case WX_JSAPI:
+                order.setWxJSAPIMap(generateWXJSAPIMap(ret));
+                break;
+            case ALI_WEB:
+            case ALI_QRCODE:
+            case ALI_WAP:
+                if (ret.containsKey("html") && null != ret.get("html")
+                        && ret.containsKey("url") && null != ret.get("url")) {
+                    order.setHtml(ret.get("html").toString());
+                    order.setUrl(ret.get("url").toString());
+                }
+                break;
+            case UN_WEB:
+            case JD_WAP:
+            case JD_WEB:
+            case KUAIQIAN_WAP:
+            case KUAIQIAN_WEB:
+                if (ret.containsKey("html") && null != ret.get("html")) {
+                    order.setHtml(ret.get("html").toString());
+                }
+                break;
+            case YEE_WAP:
+            case YEE_WEB:
+            case BD_WEB:
+            case BD_WAP:
+                if (ret.containsKey("url") && null != ret.get("url")) {
+                    order.setUrl(ret.get("url").toString());
+                }
+            default:
+                break;
         }
     }
-
+    
+    /**
+     * 组建返回境外支付订单
+     */
     private static void placePayPalOrder(BCInternationlOrder order,
             Map<String, Object> ret) {
         order.setObjectId(StrUtil.toStr(ret.get("id")));
-        if (order.getChannel().equals(PAY_CHANNEL.PAYPAL_PAYPAL)) {
-            order.setUrl(StrUtil.toStr(ret.get("url")));
-        } else if (order.getChannel().equals(PAY_CHANNEL.PAYPAL_CREDITCARD)) {
-            order.setCreditCardId(StrUtil.toStr(ret.get("credit_card_id")));
+        switch (order.getChannel()) {
+            case PAYPAL_PAYPAL:
+                order.setUrl(StrUtil.toStr(ret.get("url")));
+                break;
+            case PAYPAL_CREDITCARD:
+                order.setCreditCardId(StrUtil.toStr(ret.get("credit_card_id")));
+                break;
+            default:
+                break;
         }
     }
 

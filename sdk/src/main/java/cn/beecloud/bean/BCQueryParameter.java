@@ -5,7 +5,7 @@ import java.util.Date;
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 
 /**
- * 查询参数类，封装了比可账单查询所需的参数
+ * 查询参数类，封装了BeeCloud账单查询所需的参数
  * @author Rui.Feng
  * @since 2015.9.24
  */

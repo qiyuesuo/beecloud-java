@@ -3,7 +3,7 @@ package cn.beecloud.bean;
 import cn.beecloud.BCEumeration.TRANSFER_CHANNEL;
 
 /**
- * 比可网络单笔打款参数类
+ * BeeCloud单笔打款参数类
  * @author Rui.Feng
  * @since 2015.11.25
  */

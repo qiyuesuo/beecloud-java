@@ -6,7 +6,7 @@ import java.util.List;
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 
 /**
- * 比可网络批量打款参数类
+ * BeeCloud批量打款参数类
  * @author Rui.Feng
  * @since 2015.11.23
  */

@@ -4,7 +4,7 @@ import cn.beecloud.BCEumeration.PAYPAL_CURRENCY;
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 
 /**
- * 境外支付订单类，封装了比可网络境外支付订单信息
+ * 境外支付订单类，封装了BeeCloud境外支付订单信息
  * 
  * @author Rui.Feng
  * @since 2015.11.24

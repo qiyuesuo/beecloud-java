@@ -149,8 +149,8 @@ public class ValidationUtil {
 
     private final static String PAYPAL_RETURN_URL_EMPTY = "PAYPAL直接支付returnUrl不能为空！";
 
-    static void validateQueryRefundStatus(PAY_CHANNEL channel,
-            String refundNo) throws BCException {
+    static void validateQueryRefundStatus(PAY_CHANNEL channel, String refundNo)
+            throws BCException {
         if (channel == null) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), CHANNEL_EMPTY);
@@ -167,8 +167,7 @@ public class ValidationUtil {
         }
     }
 
-    static void validateBCTransfers(TransfersParameter para)
-            throws BCException {
+    static void validateBCTransfers(TransfersParameter para) throws BCException {
         if (para == null) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), TRANSFERS_PARAM_EMPTY);
@@ -335,8 +334,7 @@ public class ValidationUtil {
         }
     }
 
-    static void validateQueryBill(BCQueryParameter para)
-            throws BCException {
+    static void validateQueryBill(BCQueryParameter para) throws BCException {
         if (para == null) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), QUERY_PARAM_EMPTY);
@@ -351,8 +349,7 @@ public class ValidationUtil {
         }
     }
 
-    static void validateQueryRefund(BCQueryParameter para)
-            throws BCException {
+    static void validateQueryRefund(BCQueryParameter para) throws BCException {
         if (para == null) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), QUERY_PARAM_EMPTY);
@@ -405,8 +402,7 @@ public class ValidationUtil {
         }
     }
 
-    static void validateBCTransfer(TransferParameter para)
-            throws BCException {
+    static void validateBCTransfer(TransferParameter para) throws BCException {
         if (para == null) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_PARAM_EMPTY);
