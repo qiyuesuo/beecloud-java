@@ -400,7 +400,7 @@ public class BCOrder {
 	}
 	
 	/**
-	 * @return 支付跳转html
+	 * @return 支付提交html
 	 */
 	public String getHtml() {
 		return html;

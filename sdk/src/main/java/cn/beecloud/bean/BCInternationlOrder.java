@@ -160,6 +160,7 @@ public class BCInternationlOrder {
     /**
      * @param creditCardId
      * （选填）信用卡id，当使用PAYPAL_CREDITCARD支付完成后会返回一个credit_card_id
+     * 当channel为PAYPAL_SAVED_CREDITCARD时必填
      */
     public void setCreditCardId(String creditCardId) {
         this.creditCardId = creditCardId;
@@ -174,7 +175,8 @@ public class BCInternationlOrder {
 
     /**
      * @param returnUrl
-     * （选填）同步返回页面，支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径不包含?及&
+     * （选填）同步返回页面，支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径不包含?及&，
+     * 当channel参数为PAYPAL_PAYPAL时为必填
      */
     public void setReturnUrl(String returnUrl) {
         this.returnUrl = returnUrl;

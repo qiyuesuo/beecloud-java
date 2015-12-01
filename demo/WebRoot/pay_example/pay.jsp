@@ -285,7 +285,9 @@
         	internationalOrder.setReturnUrl(paypalReturnUrl);
         	 try {
         		 internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
-                 response.sendRedirect(internationalOrder.getUrl());
+        		 out.println(internationalOrder.getObjectId());
+        		 Thread.sleep(3000);
+        		 response.sendRedirect(internationalOrder.getUrl());
              } catch (BCException e) {
                  log.error(e.getMessage(), e);
                  out.println(e.getMessage());
@@ -314,6 +316,7 @@
         	try {
        			internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
        			out.println("PAYPAL_CREDITCARD 支付成功！");
+       			out.println(internationalOrder.getObjectId());
        			out.println(internationalOrder.getCreditCardId());
        			request.getSession().setAttribute("creditCardId", internationalOrder.getCreditCardId());
             } catch (BCException e) {
@@ -335,6 +338,7 @@
 	        	internationalOrder.setBillNo(request.getSession().getAttribute("creditCardId").toString());
 	        	try {
 	       			internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
+	       			out.println(internationalOrder.getObjectId());
 	       			out.println("PAYPAL_SAVED_CREDITCARD 支付成功！");
 	            } catch (BCException e) {
 	                log.error(e.getMessage(), e);

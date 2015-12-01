@@ -27,6 +27,10 @@ public class CreditCardInfo {
 		return cardNo;
 	}
 	
+	/**
+	 * @param cardNo
+	 * （必填）卡号
+	 */
 	public void setCardNo(String cardNo) {
 		this.cardNo = cardNo;
 	}
@@ -34,7 +38,11 @@ public class CreditCardInfo {
 	public Integer getExpireMonth() {
 		return expireMonth;
 	}
-
+	
+	/**
+	 * @param expireMonth
+	 * （必填）过期时间中的月
+	 */
 	public void setExpireMonth(Integer expireMonth) {
 		this.expireMonth = expireMonth;
 	}
@@ -42,7 +50,11 @@ public class CreditCardInfo {
 	public Integer getExpireYear() {
 		return expireYear;
 	}
-
+	
+	/**
+	 * @param expireYear
+	 * （必填）过期时间中的年
+	 */
 	public void setExpireYear(Integer expireYear) {
 		this.expireYear = expireYear;
 	}
@@ -50,7 +62,11 @@ public class CreditCardInfo {
 	public Integer getCvv() {
 		return cvv;
 	}
-
+	
+	/**
+	 * @param cvv
+	 * （必填）信用卡的三位cvv码
+	 */
 	public void setCvv(Integer cvv) {
 		this.cvv = cvv;
 	}
@@ -58,7 +74,11 @@ public class CreditCardInfo {
 	public String getFirstName() {
 		return firstName;
 	}
-
+	
+	/**
+	 * @param firstName
+	 * （必填）用户名字
+	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
@@ -66,7 +86,11 @@ public class CreditCardInfo {
 	public String getLastName() {
 		return lastName;
 	}
-
+	
+	/**
+	 * @param lastName
+	 * （必填）用户的姓
+	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
@@ -74,7 +98,11 @@ public class CreditCardInfo {
 	public CARD_TYPE getCardType() {
 		return cardType;
 	}
-
+	
+	/**
+	 * @param cardType
+	 * （必填）卡类别 visa/mastercard/discover/amex
+	 */
 	public void setCardType(CARD_TYPE cardType) {
 		this.cardType = cardType;
 	}
