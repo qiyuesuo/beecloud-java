@@ -308,7 +308,7 @@ public class BCPay {
      * 
      * @param para
      * {@link TransferParameter} （必填）单笔打款参数
-     * @return 如果channel类型是PAYPAL_PAYPAL, 返回需要跳转支付的url, 否则返回空字符串
+     * @return 如果channel类型是TRANSFER_CHANNEL.ALI_TRANSFER, 返回需要跳转支付的url, 否则返回空字符串
      * @throws BCException
      */
     public static String startTransfer(TransferParameter para)
