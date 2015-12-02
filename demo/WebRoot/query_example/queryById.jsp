@@ -56,7 +56,6 @@
         } catch (BCException e) {
             out.println(e.getMessage());
         }
-
     } else {
         try {
             BCOrder result = BCPay.startQueryBillById(id);
@@ -65,7 +64,6 @@
         } catch (BCException e) {
             out.println(e.getMessage());
         }
-
     }
 %>
 

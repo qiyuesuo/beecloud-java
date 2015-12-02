@@ -9,12 +9,11 @@ import java.util.Map;
 
 import mockit.Deencapsulation;
 import mockit.Expectations;
-import mockit.StrictExpectations;
 
 import org.junit.Assert;
 
+import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
-import cn.beecloud.BCEumeration.TRANSFER_CHANNEL;
 import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.ALITransferData;
 import cn.beecloud.bean.TransfersParameter;
@@ -31,7 +30,7 @@ public class TransfersTest {
 	static String transferNote = TestConstant.TRANSFER_NOTE;
 	static List<ALITransferData> list = new ArrayList<ALITransferData>();
 	static String accountName = TestConstant.ALI_TRANSFER_ACCOUNT_NAME;
-	static TRANSFER_CHANNEL channel = TRANSFER_CHANNEL.ALI_TRANSFER;
+	static PAY_CHANNEL channel = PAY_CHANNEL.ALI;
 	static ALITransferData data1;
 	static ALITransferData data2;
 
@@ -106,7 +105,7 @@ public class TransfersTest {
 		param.setAccountName(accountName);
 		
 		try {
-			param.setChannel(TRANSFER_CHANNEL.WX_TRANSFER);
+			param.setChannel(PAY_CHANNEL.WX);
 			url = BCPay.startTransfers(param);
 			Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
 		} catch (Exception ex) {

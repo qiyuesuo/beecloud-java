@@ -40,11 +40,11 @@ public class BCCache {
         BCCache.masterKey = masterKey;
     }
     
-    static String getAppSecret() {
+    public static String getAppSecret() {
         return appSecret;
     }
     
-    static String getAppID() {
+    public static String getAppID() {
         return appID;
     }
     

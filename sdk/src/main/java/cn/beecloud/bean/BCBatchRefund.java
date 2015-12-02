@@ -73,7 +73,7 @@ public class BCBatchRefund {
     }
 
     /**
-     * @return 支付宝批量打款跳转支付url
+     * @return 支付宝批量退款跳转url，支付宝预退款批量同意处理成功后返回
      */
     public String getAliRefundUrl() {
         return aliRefundUrl;
@@ -87,7 +87,7 @@ public class BCBatchRefund {
     }
 
     /**
-     * @return 退款id、结果信息集合，当退款处理成功时，value值为"OK"；当退款处理失败时， value值为具体的错误信息
+     * @return 退款id、结果信息集合，当批量同意处理成功时，value值为"OK"；当批量同意处理失败时， value值为具体的错误信息
      */
     public Map<String, String> getIdResult() {
         return idResult;
