@@ -335,7 +335,6 @@ public class PayTest {
         returnMap.put("result_code", 0);
         returnMap.put("result_msg", "OK");
         returnMap.put("err_detail", "");
-        System.out.println("urllll:" + BCUtilPrivate.getkApiPay().substring(14));
 
         new Expectations(BCPay.class) {
             {
@@ -354,7 +353,6 @@ public class PayTest {
             Assert.assertEquals("", TestConstant.MOCK_CODE_URL, order.getCodeUrl());
             Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, order.getObjectId());
         } catch (BCException e) {
-            System.out.println(e.getMessage());
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
         }
 
