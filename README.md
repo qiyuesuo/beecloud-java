@@ -47,9 +47,10 @@
 
 国际支付接口接收BCInternationlOrder参数对象，该对象封装了发起国际支付所需的各个具体参数。  
 
-成功发起国际支付接口将会返回带objectId的BCInternationlOrder对象：
+成功发起国际支付接口将会返回带objectId的BCInternationlOrder对象。  
+
 若是跳转至paypal支付，返回的BCInternationlOrder对象包含跳转支付url，用户跳转至此url，登陆paypal便可完成支付。
-若是直接使用信用卡支付，直接支付成功，返回的BCInternationlOrder对象包含行用卡ID，此ID在快捷支付时需要。  
+若是直接使用信用卡支付，直接支付成功，返回的BCInternationlOrder对象包含信用卡ID，此ID在快捷支付时需要。  
 若是通过信用卡ID支付，直接支付成功。
   
 发起国际支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
@@ -58,7 +59,7 @@
 ```java
 BCInternationlOrder internationalOrder = new BCInternationlOrder();
 /*
- * PAYPAL直接支付
+ * PAYPAL内支付
  */
 internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_PAYPAL);
 internationalOrder.setBillNo(billNo);
@@ -74,28 +75,9 @@ internationalOrder.setReturnUrl(paypalReturnUrl);
      log.error(e.getMessage(), e);
      out.println(e.getMessage());
  }
-
-
-/*
- * 行用卡ID支付
- */
-internationalOrder.setBillNo(billNo);
-internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_SAVED_CREDITCARD);
-internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
-internationalOrder.setTitle("PAYPAL_SAVED_CREDITCARD test");
-internationalOrder.setTotalFee(1);
-internationalOrder.setBillNo(request.getSession().getAttribute("creditCardId").toString());//使用行用卡ID
-try {
-   	internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
-   	out.println(internationalOrder.getObjectId());
-   	out.println("PAYPAL_SAVED_CREDITCARD 支付成功！");
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
 ```
 
-#### <a name="paypal_credit_card">PAYPAL行用卡支付</a>
+#### <a name="paypal_credit_card">PAYPAL信用卡支付</a>
 
 ```java
 BCInternationlOrder internationalOrder = new BCInternationlOrder();
@@ -128,17 +110,17 @@ try {
 }
 ```
 
-#### <a name="paypal_save_credit_id">PAYPAL行用卡ID支付</a>
+#### <a name="paypal_save_credit_id">PAYPAL信用卡ID支付</a>
 ```java
 /*
- * 行用卡ID支付
+ * 信用卡ID支付
  */
 internationalOrder.setBillNo(billNo);
 internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_SAVED_CREDITCARD);
 internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
 internationalOrder.setTitle("PAYPAL_SAVED_CREDITCARD test");
 internationalOrder.setTotalFee(1);
-internationalOrder.setBillNo(request.getSession().getAttribute("creditCardId").toString());//使用行用卡ID
+internationalOrder.setBillNo(request.getSession().getAttribute("creditCardId").toString());//使用信用卡ID
 try {
    	internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
    	out.println(internationalOrder.getObjectId());
@@ -157,6 +139,7 @@ channel | 渠道类型， 根据不同场景选择不同的支付方式，包含
 totalFee | 订单总金额， 只能为整数，单位为分，例如 1，（必填）
 billNo | 商户订单号, 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如(201506101035040000001),（必填）
 title | 订单标题， 32个字节内，最长支持16个汉字，（必填）
+currency | 货币种类代码，包含：<br/>AUD<br/>BRL<br/>CAD<br/>CZK<br/>DKK<br/>EUR<br/>HKD<br/>HUF<br/>ILS<br/>JPY<br/>MYR<br/>MXN<br/>TWD<br/>NZD<br/>NOK<br/>PHP<br/>PLN<br/>GBP<br/>SGD<br/>SEK<br/>CHF<br/>THB<br/>TRY<br/>THB<br/>USD（必填）
 creditCardInfo | 信用卡信息， 当channel为PAYPAL_CREDITCARD必填， （选填）
 creditCardId | 信用卡id，当使用PAYPAL_CREDITCARD支付完成后会返回一个信用卡id， 当channel为PAYPAL_SAVED_CREDITCARD必填，（选填）
 returnUrl | 同步返回页面	， 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。当channel为PAYPAL_PAYPAL时为必填，（选填）
@@ -178,7 +161,7 @@ cardType | 卡类别 visa/mastercard/discover/amex，（必填）
 ### <a name="payment">国内支付</a>
 国内支付接口接收BCOrder参数对象，该对象封装了发起国内际支付所需的各个具体参数。  
 
-成功发起国际支付接口将会返回带objectId的BCOrder对象。
+成功发起国内支付接口将会返回带objectId的BCOrder对象。
   
 发起国内支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 
@@ -253,7 +236,7 @@ try {
 ```
 #### <a name="wx_jsapi">微信公众号调用</a>
 
-返回的BCOrder对象包含wxJSAPI map对象，获取openId，并使用wxJSAPIMap map对象完成支付。进一步实现参考demo
+返回的BCOrder对象包wxJSAPIMap对象；__获取openId，并使用wxJSAPIMap对象完成支付。进一步实现参考demo__
 ```java
 BCOrder bcOrder = new BCOrder(PAY_CHANNEL.WX_JSAPI, 1, billNo, title);
 bcOrder.setBillTimeout(360);
@@ -340,7 +323,7 @@ try {
 ```
 
 #### <a name="jd_wap">京东移动网页调用</a>
-正确状态调用getHtml()方法，getHtml()方法返回html,如将html输出至页面，即可开始京东移动网页支付。
+返回的BCOrder对象包含表单支付html，开发者提交支付表单即可完成支付。
 ```java
 BCOrder bcOrder = new BCOrder(PAY_CHANNEL.JD_WAP, 1, billNo, title);
 bcOrder.setReturnUrl(jdReturnUrl);
@@ -360,7 +343,6 @@ try {
 BCOrder bcOrder = new BCOrder(PAY_CHANNEL.YEE_WEB, 1, billNo, title);
 bcOrder.setReturnUrl(yeeWebReturnUrl);
 bcOrder.setBillTimeout(360);
-bcPayResult = BCPay.startBCPay(param);
 try {
     bcOrder = BCPay.startBCPay(bcOrder);
     out.println(bcOrder.getObjectId());
@@ -452,8 +434,8 @@ title | 订单标题， 32个字节内，最长支持16个汉字，（必填）
 optional | 附加数据， 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，（选填）
 returnUrl | 同步返回页面	， 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。当 channel 参数为 ALI_WEB 或 ALI_QRCODE 或 UN_WEB 或 JD_WEB 或 JD_WAP时为必填，（选填）
 openId | 微信公众号支付(WX_JSAPI)必填，（选填）
-showUrl | 商品展示地址，需以http://开头的完整路径，例如：http://www.商户网址.com/myorder，（选填）
-qrPayMode | 二维码类型，二维码类型含义MODE_BRIEF_FRONT： 订单码-简约前置模式, 对应 iframe 宽度不能小于 600px, 高度不能小于 300px<br>MODE_FRONT： 订单码-前置模式, 对应 iframe 宽度不能小于 300px, 高度不能小于 600px<br>MODE_MINI_FRONT： 订单码-迷你前置模式, 对应 iframe 宽度不能小于 75px, 高度不能小于 75px ，（选填）
+showUrl | 商品展示地址，当channel为ALI_WEB时选填，需以http://开头的完整路径，例如：http://www.商户网址.com/myorder，（选填）
+qrPayMode | 二维码类型，ALI_QRCODE的必填参数，二维码类型含义<br>MODE_BRIEF_FRONT： 订单码-简约前置模式, 对应 iframe 宽度不能小于 600px, 高度不能小于 300px<br>MODE_FRONT： 订单码-前置模式, 对应 iframe 宽度不能小于 300px, 高度不能小于 600px<br>MODE_MINI_FRONT： 订单码-迷你前置模式, 对应 iframe 宽度不能小于 75px, 高度不能小于 75px ，（选填）
 billTimeoutValue | 订单失效时间，单位秒，非零正整数，建议最短失效时间间隔必须大于360秒，快钱不支持此参数。例如：360（选填）
 cardNo | 点卡卡号，每种卡的要求不一样，例如易宝支持的QQ币卡号是9位的，江苏省内部的QQ币卡号是15位，易宝不支付，当channel 参数为YEE_NOBANKCARD时必填，（选填）
 cardPwd | 点卡密码，简称卡密当channel 参数为YEE_NOBANKCARD时必填，（选填）
@@ -462,7 +444,7 @@ objectId   |  支付订单唯一标识, 下单成功后返回
 codeUrl   |  微信扫码code url， 微信扫码支付下单成功时返回
 url   |  支付跳转url，当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或 YEE_WAP 或 YEE_WEB 或 BD_WEB 或 BD_WAP，并且下单成功时返回
 html   |  支付提交html， 当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或 UN_WEB 或 JD_WAP 或 JD_WEB 或 KUAIQIAN_WAP 或 KUAIQIAN_WEB，并且下单成功时返回
-wxJSAPIMap   |  微信公众号支付要素，微信公众号支付支付下单成功时返回
+wxJSAPIMap   |  微信公众号支付要素，微信公众号支付下单成功时返回
 
 查询返回字段：
 key | 说明
@@ -474,9 +456,9 @@ title   |  订单标题, 可通过查询获得
 channel   |  渠道类型, 可通过查询获得
 channelTradeNo   |  渠道交易号， 支付完成之后可通过查询获得
 resulted   |  是否支付， 可通过查询获得
-refundResult   |  是否支付， 可通过查询获得
+refundResult   |  是否退款， 可通过查询获得
 revertResult   |  订单是否撤销， 可通过查询获得
-messageDetail   |  渠道详细信息，默认为"不显示"， 当needDetail为true时，可通过查询获得
+messageDetail   |  渠道详细信息，默认为"不显示"， 当needDetail为true时，并于支付完成之后可通过查询获得
 dateTime   |  订单创建时间，yyyy-MM-dd HH:mm:ss格式，可通过查询获得
 optionalString   |  optional json字符串， 可通过查询获得
 
@@ -502,8 +484,8 @@ try {
     String url = BCPay.startTransfer(param);
     response.sendRedirect(url);
 } catch (BCException e) {
-        log.error(e.getMessage(), e);
-        out.println(e.getMessage());
+    log.error(e.getMessage(), e);
+    out.println(e.getMessage());
 }
 ```
 
@@ -536,15 +518,15 @@ try {
 TransferParameter param = new TransferParameter();
 param.setChannel(TRANSFER_CHANNEL.WX_TRANSFER);
 param.setChannelUserId(openId);
-param.setTransferNo(redpackTransferNo);
+param.setTransferNo(wxTransferNo);
 param.setTotalFee(200);
 param.setDescription("微信单笔打款！");
 try {
     String result = BCPay.startTransfer(param);
     out.println("微信单笔打款成功！");
 } catch (BCException e) {
-        log.error(e.getMessage(), e);
-        out.println(e.getMessage());
+    log.error(e.getMessage(), e);
+    out.println(e.getMessage());
 }
 ```
 
@@ -561,16 +543,12 @@ channelUserName | 用户名，支付渠道内收款人账户名，支付宝必�
 redpackInfo | 红包信息，微信红包的详细描述，微信红包必填，（选填）
 accountName | 打款方账号名称，打款方账号名全称，支付宝必填，例如：苏州比可网络科技有限公司，（选填）
 
-红包信息对象CreditCardInfo封装字段含义如下：
+红包信息对象redpackInfo封装字段含义如下：
 key | 说明
 ---- | -----
-cardNo | 卡号，（必填）
-expireMonth | 过期时间中的月，（必填）
-expireYear | 过期时间中的年，（必填）
-cvv | 信用卡的三位cvv码，（必填）
-firstName | 用户名字，（必填）
-lastName | 用户的姓，（必填）
-cardType | 卡类别 visa/mastercard/discover/amex，（必填）
+sendName | 红包发送者名称 32位，（必填）
+wishing | 红包祝福语 128 位，（必填）
+activityName | 红包活动名称 32位，（必填）
 
 
 ### <a name="transfer">批量打款</a>
@@ -578,7 +556,7 @@ cardType | 卡类别 visa/mastercard/discover/amex，（必填）
 
 成功发起批量打款将会返回批量打款跳转url。
   
-发起单笔打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起批量打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 ```java
 TransfersParameter para = new TransfersParameter();
 para.setBatchNo(batchNo);
@@ -593,8 +571,8 @@ try {
     String url = BCPay.startTransfers(para);
     response.sendRedirect(url);
 } catch (BCException e) {
-        log.error(e.getMessage(), e);
-        out.println(e.getMessage());
+    log.error(e.getMessage(), e);
+    out.println(e.getMessage());
 }
 ```
 
@@ -605,8 +583,16 @@ key | 说明
 channel | 渠道类型， 暂时只支持ALI，（必填）
 batchNo | 批量付款批号， 此次批量付款的唯一标示，11-32位数字字母组合，（必填）
 accountName | 付款方的支付宝账户名, 支付宝账户名称,例如:毛毛，（必填）  
-transferData |  付款的详细数据 {TransferData} 的 List集合，（必填）  
-return | BCPayResult, 根据type决定返回内容
+transferDataList |  付款的详细数据 {ALITransferData} 的 List集合，（必填）  
+
+付款详细数据对象ALITransferData封装字段含义如下：
+key | 说明
+---- | -----
+transferId | 付款流水号，32位以内数字字母，（必填）
+receiverAccount | 收款方账户，（必填）
+receiverName | 收款方账号姓名，（必填）
+transferFee | 打款金额，单位为分，（必填）
+transferNote | 打款备注，（必填）
 
 
 ### <a name="refund">退款</a>
@@ -632,8 +618,8 @@ try {
     	}
     }
 } catch (BCException e) {
-out.println(e.getMessage());
-e.printStackTrace();
+    out.println(e.getMessage());
+    e.printStackTrace();
 }
 ```
 
@@ -671,7 +657,8 @@ messageDetail | 渠道详细信息，默认为"不显示"， 当needDetail为tru
 预退款批量审核接口接收BCBatchRefund参数对象，该对象封装了发起预退款批量审核所需的各个具体参数。  
 
 成功发起预退款批量审核接口将会返回审核后的BCBatchRefund对象。
-预退款批量审核接口分为批量同意和批量否决，当BCBatchRefund的**agree**属性设置为**false**时，开启批量否决，当BCBatchRefund的**agree**属性为**true**, 开启批量同意，返回包含每笔预退款真正退款后结果消息的map（idResult）对象，并在channel为ALI时返回带支付宝退款跳转url的BCBatchRefund对象, 开发者跳转至url输入支付密码完成退款。
+
+预退款批量审核接口分为批量同意和批量否决，当BCBatchRefund的**agree**属性设置为**false**时，开启批量否决，当BCBatchRefund的**agree**属性为**true**, 开启批量同意，返回的BCBatchRefund对象包含每笔预退款真正退款后的结果消息的idResult（Map<String, String）对象，并在channel为ALI时返回带支付宝退款跳转url的BCBatchRefund对象, 开发者跳转至url输入支付密码完成退款。
 
 发起预退款批量审核异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 ```java
@@ -832,7 +819,7 @@ limit |  查询的条数， 默认为10，最大为50。设置为10，表示只�
 ```java
 BCQueryParameter param = new BCQueryParameter();
 try {
-    int count = BCPay.startQueryBillCount(param);
+    int count = BCPay.startQueryRefundCount(param);
     pageContext.setAttribute("count", count);
 } catch (BCException e) {
     out.println(e.getMessage());
@@ -918,10 +905,14 @@ channel | 渠道类型， 包含WX、YEE、KUAIQIAN和BD（必填）
 TODO
 
 ## 常见问题
-- 根据app_id找不到对应的APP/keyspace或者app_sign不正确,或者timestamp不是当前UTC，可能的原因：系统时间不准确 app_id和secret填写不正确，请以此排查如下：<br>
-1.appid和appSecret填写是否一致<br>
+- 根据app_id找不到对应的APP/keyspace或者app_sign不正确,或者timestamp不是当前UTC，可能的原因：系统时间不准确 app_id和secret填写不正确，请以此排查如下：
+1.appid和appSecret填写是否一致  
 2.校准系统时间
 - 支付宝吊起支付返回调试错误，请回到请求来源地，重新发起请求。错误代码ILLEGAL_PARTNER，可能的原因：使用了测试账号test@beecloud.cn的支付宝支付参数。请使用自己申请的支付账号。
+- SDK jar包导入项目时找不到依赖包或者报NoSuchMethodException异常等问题，可能的原因:相同jar包依赖不同导致的冲突，相同jar包版本不同导致的冲突，解决方法如下：  
+1.使用Maven配置依赖引入sdk, 删掉导致冲突的SDK的依赖包。
+2.若不使用Maven配置依赖，分开导入无依赖的sdk包和sdk依赖的包(可从[Release](https://github.com/beecloud/beecloud-java)部分下载)，删除导致冲突的sdk依赖包。  
+3.手动加入错误提示找不到的依赖包。
 
 
 
