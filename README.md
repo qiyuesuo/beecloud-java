@@ -149,11 +149,10 @@ try {
 }
 ```
 
-代码中的参数对象BCInternationlOrder封装字段显示如下：
+代码中的参数对象BCInternationlOrder封装字段含义如下：
 
 key | 说明
 ---- | -----
-objectId | 境外支付订单唯一标识, 下单成功后返回
 channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>PAYPAL_PAYPAL paypal内支付<br/>PAYPAL_CREDITCARD 使用信用卡支付<br/>PAYPAL_SAVED_CREDITCARD 使用存储的信用卡id支付（必填）
 totalFee | 订单总金额， 只能为整数，单位为分，例如 1，（必填）
 billNo | 商户订单号, 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如(201506101035040000001),（必填）
@@ -161,9 +160,10 @@ title | 订单标题， 32个字节内，最长支持16个汉字，（必填）
 creditCardInfo | 信用卡信息， 当channel为PAYPAL_CREDITCARD必填， （选填）
 creditCardId | 信用卡id，当使用PAYPAL_CREDITCARD支付完成后会返回一个信用卡id， 当channel为PAYPAL_SAVED_CREDITCARD必填，（选填）
 returnUrl | 同步返回页面	， 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。当channel为PAYPAL_PAYPAL时为必填，（选填）
+objectId | 境外支付订单唯一标识, 下单成功后返回
 url | 当channel 为PAYPAL_PAYPAL时返回，跳转支付的url
 
-信用卡信息对象CreditCardInfo封装字段如下：
+信用卡信息对象CreditCardInfo封装字段含义如下：
 key | 说明
 ---- | -----
 cardNo | 卡号，（必填）
@@ -441,7 +441,7 @@ try {
 ```
 
 
-代码中的参数对象BCOrder封装字段显示如下：
+代码中的参数对象BCOrder封装字段含义如下：
 请求参数及返回字段：
 key | 说明
 ---- | -----
@@ -467,6 +467,11 @@ wxJSAPIMap   |  微信公众号支付要素，微信公众号支付支付下单�
 查询返回字段：
 key | 说明
 ---- | -----
+objectId   |  支付订单唯一标识, 可通过查询获得
+billNo   |  商户订单号, 可通过查询获得
+totalFee   |  订单总金额, 可通过查询获得
+title   |  订单标题, 可通过查询获得
+channel   |  渠道类型, 可通过查询获得
 channelTradeNo   |  渠道交易号， 支付完成之后可通过查询获得
 resulted   |  是否支付， 可通过查询获得
 refundResult   |  是否支付， 可通过查询获得
@@ -478,7 +483,7 @@ optionalString   |  optional json字符串， 可通过查询获得
 ### <a name="transfer">单笔打款</a>
 单笔打款接口接收TransferParameter参数对象，该对象封装了发起单笔打款所需的各个具体参数。  
 
-成功发起单笔打款将会返回字支付跳转url或者空字符串。
+成功发起单笔打款将会返回单笔打款跳转url或者空字符串。
   
 发起单笔打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 
@@ -543,7 +548,7 @@ try {
 }
 ```
 
-代码中的参数对象TransferParameter封装字段显示如下：
+代码中的参数对象TransferParameter封装字段含义如下：
 
 key | 说明
 ---- | -----
@@ -556,7 +561,7 @@ channelUserName | 用户名，支付渠道内收款人账户名，支付宝必�
 redpackInfo | 红包信息，微信红包的详细描述，微信红包必填，（选填）
 accountName | 打款方账号名称，打款方账号名全称，支付宝必填，例如：苏州比可网络科技有限公司，（选填）
 
-红包信息对象CreditCardInfo封装字段如下：
+红包信息对象CreditCardInfo封装字段含义如下：
 key | 说明
 ---- | -----
 cardNo | 卡号，（必填）
@@ -569,28 +574,31 @@ cardType | 卡类别 visa/mastercard/discover/amex，（必填）
 
 
 ### <a name="transfer">批量打款</a>
-调用以下接口发起批量退款并将得到BCPayResult对象，BCPayResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。正确状态调用getUrl()方法，getUrl()方法返回跳转url,如跳转至此url页面，即可开始支付。
+批量打款接口接收TransfersParameter参数对象，该对象封装了发起批量打款所需的各个具体参数。  
 
+成功发起批量打款将会返回批量打款跳转url。
+  
+发起单笔打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 ```java
-List<TransferData> list = new ArrayList<TransferData>();
-TransferData data1 = new TransferData("transfertest11223", "13584809743", "袁某某", 1, "赏赐");
-TransferData data2 = new TransferData("transfertest11224", "13584809742", "张某某", 1, "赏赐");
+TransfersParameter para = new TransfersParameter();
+para.setBatchNo(batchNo);
+para.setAccountName(accountName);
+para.setTransferDataList(list);
+List<ALITransferData> list = new ArrayList<ALITransferData>();
+ALITransferData data1 = new ALITransferData("transfertest11223", "13584809743", "袁某某", 1, "赏赐");
+ALITransferData data2 = new ALITransferData("transfertest11224", "13584809742", "张某某", 1, "赏赐");
 list.add(data1);
 list.add(data2);
-
-
-bcPayResult = BCPay.startTransfer(PAY_CHANNEL.ALI, billNo, "苏州比可网络科技有限公司", list);
-if (bcPayResult.getType().ordinal() == 0) {
-	response.sendRedirect(bcPayResult.getUrl());
-}
-else {
-	//handle the error message as you wish！
-	out.println(bcPayResult.getErrMsg());
-	out.println(bcPayResult.getErrDetail());
+try {
+    String url = BCPay.startTransfers(para);
+    response.sendRedirect(url);
+} catch (BCException e) {
+        log.error(e.getMessage(), e);
+        out.println(e.getMessage());
 }
 ```
 
-代码中的各个参数含义如下：
+代码中的TransfersParameter封装字段含义如下：
 
 key | 说明
 ---- | -----
@@ -602,38 +610,71 @@ return | BCPayResult, 根据type决定返回内容
 
 
 ### <a name="refund">退款</a>
-退款接口接收BCRefundParameter参数对象，该对象封装了发起退款所需的各个具体参数。BCRefundParameter类提供了一个3个必填的具体退款参数作为参数的构造函数：
-```java
-public BCRefundParameter(String billNo, String refundNo, Integer refundFee)
-```
-发起退款将得到BCPayResult对象。BCPayResult对象包含两种状态，正确状态和错误状态，正确状态的BCPayResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。。
+退款接口接收BCRefund参数对象，该对象封装了发起退款所需的各个具体参数。  
 
-```java
-BCRefundParameter param = new BCRefundParameter(billNo, refundNo, 1);
-param.setOptional(optional);
+成功发起退款接口将会返回带objectId的BCRefund对象。
+退款接口分为直接退款和预退款功能，当BCRefund的**needApproval**属性设置为**true**时，开启预退款功能，当BCRefund的**needApproval**属性为**空**或者**false**, 开启直接退款功能，并在channel为ALI时返回带支付宝退款跳转url的BCRefund对象, 开发者跳转至url输入支付密码完成退款。
 
-BCPayResult result = BCPay.startBCRefund(param);
-if (bcPayResult.getType().ordinal() == 0) {
-    //返回"退款成功！" 
-	out.println(bcPayResult.getSucessMsg());
-} else {
-	//handle the error message as you wish！
-	out.println(bcPayResult.getResult());
-	out.println(bcPayResult.getErrDetail());
+发起退款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+```java
+BCRefund refund = new BCRefund(billNo, refundNo, 1);
+try {
+    BCRefund refund = BCPay.startBCRefund(refund);
+    if (refund.getAliRefundUrl() != null) {//直接退款（支付宝）
+        response.sendRedirect(refund.getAliRefundUrl());
+    } else {
+    	if (refund.isNeedApproval() != null && refund.isNeedApproval()) {//预退款
+    		out.println("预退款成功！");
+    		out.println(refund.getObjectId());
+    	} else {//直接退款
+        	out.println("退款成功！WX、易宝、百度、快钱渠道还需要定期查询退款结果！");
+        	out.println(refund.getObjectId());
+    	}
+    }
+} catch (BCException e) {
+out.println(e.getMessage());
+e.printStackTrace();
 }
 ```
 
-代码中的参数对象BCRefundParameter封装字段显示如下：
-
+代码中的参数对象BCRefund封装字段含义如下：
+请求参数及返回字段：
 key | 说明
 ---- | -----
 channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX  微信<br>ALI 支付宝<br>UN 银联<br>JD 京东<br>KUAIQIAN 快钱<br>YEE 易宝<br>BD 百度，（选填，可为NULL）
 refundNo | 商户退款单号	， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”，例如：201506101035040000001	（必填）
 billNo | 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一，（必填）  
+refundFee | 退款金额，只能为整数，单位为分，例如1，（必填）
+optional   |  附加数据 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，例如{"key1":"value1","key2":"value2",...}, （选填）
+needApproval | 标识该笔是预退款还是直接退款，true为预退款，false或者 null为直接退款，（选填）  
+objectId | 退款记录唯一标识，发起退款成功后返回
+aliRefundUrl | 阿里退款跳转url，支付宝发起直接退款成功后返回
+
+查询返回字段：
+key | 说明
+---- | -----
+objectId | 退款记录唯一标识，可通过查询返回
+billNo | 商户订单号，可通过查询返回
+refundNo | 商户退款单号，可通过查询返回
+totalFee | 订单总金额，可通过查询返回
+refundFee | 退款金额，可通过查询返回
+channel | 渠道类型，可通过查询返回
+optionalString | 附加数据json字符串，可通过查询返回
+title | 标题，可通过查询返回
+finished | 退款是否结束，可通过查询返回
+refunded | 退款是否成功，可通过查询返回
+dateTime   |  订单创建时间，yyyy-MM-dd HH:mm:ss格式，可通过查询获得
+messageDetail | 渠道详细信息，默认为"不显示"， 当needDetail为true时，可通过查询获得
+
+
+查询返回字段：
+key | 说明
+---- | -----
 refundFee | 退款金额，只能为整数，单位为分，例如1，（必填）  
 optional   |  附加数据 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，例如{"key1":"value1","key2":"value2",...}, （选填）
 needApproval | 标识该笔是预退款还是直接退款，true为预退款，false或者 null为直接退款，（选填）  
-return | BCPayResult, 根据type决定返回内容
+
+
 
 ### <a name="billQuery">订单查询</a>
 

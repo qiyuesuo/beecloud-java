@@ -726,8 +726,6 @@ public class BCPay {
         bcRefund.setTotalFee((Integer) refund.get("total_fee"));
         bcRefund.setRefundFee((Integer) refund.get("refund_fee"));
         bcRefund.setRefundNo(refund.get("refund_no").toString());
-        bcRefund.setDateTime(BCUtilPrivate
-                .transferDateFromLongToString((Long) refund.get("create_time")));
         if (refund.containsKey("message_detail")) {
             bcRefund.setMessageDetail(refund.get("message_detail").toString());
         }
@@ -948,8 +946,7 @@ public class BCPay {
     /**
      * 组建返回境外支付订单
      */
-    private static void placePayPalOrder(BCInternationlOrder order,
-            Map<String, Object> ret) {
+    private static void placePayPalOrder(BCInternationlOrder order, Map<String, Object> ret) {
         order.setObjectId(StrUtil.toStr(ret.get("id")));
         switch (order.getChannel()) {
             case PAYPAL_PAYPAL:
