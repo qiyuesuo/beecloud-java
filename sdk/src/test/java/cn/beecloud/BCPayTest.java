@@ -8,31 +8,35 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/**
+ * JAVA SDK 单元测试主类
+ * @author Rui
+ */
 @RunWith(JMockit.class)
 public class BCPayTest {
-	
-	protected Client client;
-	
-	@Before
-	public void setUp() throws Exception {
-		BeeCloud.registerApp(TestConstant.KTestAppID, TestConstant.kTestAppSecret, TestConstant.kTestMasterSecret);
-	}
 
-	@Test
-	public void javaSDKTest() {  
-		PayTest.testPay();
-		BillQueryTest.testQueryBillById();
-		BillQueryTest.testQueryBill();
-		BillQueryTest.testQueryBillCount();
-		RefundTest.testRefund();
-		RefundQueryTest.testQueryRefundById();
-		RefundQueryTest.testQueryRefund();
-		RefundQueryTest.testQueryRefundCount();
-		RefundTest.testRefundUpdate();
-		BatchHandleTest.testBatchRefund();
-		TransferTest.testTransfer();
-		TransfersTest.testTransfers();
-		InternationalPayTest.testInternationalPay();
-	}
+    protected Client client;
+
+    @Before
+    public void setUp() throws Exception {
+        BeeCloud.registerApp(TestConstant.KTestAppID, TestConstant.kTestAppSecret,
+                TestConstant.kTestMasterSecret);
+    }
+
+    @Test
+    public void javaSDKTest() {
+        PayTest.testPay();
+        BillQueryTest.testQueryBillById();
+        BillQueryTest.testQueryBill();
+        BillQueryTest.testQueryBillCount();
+        RefundTest.testRefund();
+        RefundQueryTest.testQueryRefundById();
+        RefundQueryTest.testQueryRefund();
+        RefundQueryTest.testQueryRefundCount();
+        RefundTest.testRefundUpdate();
+        BatchHandleTest.testBatchRefund();
+        TransferTest.testTransfer();
+        TransfersTest.testTransfers();
+        InternationalPayTest.testInternationalPay();
+    }
 }
-	

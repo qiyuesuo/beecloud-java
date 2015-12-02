@@ -1,10 +1,8 @@
-<%@page import="cn.beecloud.BCEumeration.PAY_CHANNEL" %>
-<%@page import="cn.beecloud.BCPay" %>
-<%@page import="cn.beecloud.bean.BCException" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ page import="cn.beecloud.bean.BCQueryParameter" %>
-<%@ page import="cn.beecloud.bean.BCRefund" %>
+<%@ page import="cn.beecloud.bean.*"%>
+<%@ page import="cn.beecloud.*"%>
+<%@ page import="cn.beecloud.BCEumeration.*" %>
 <%@ page import="java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -35,7 +33,6 @@
 <body>
     <%
 	String querytype = request.getParameter("channel");
-	System.out.println(querytype);
 	BCQueryParameter param = new BCQueryParameter();
 	boolean isWechat = false;
 	boolean isYeeWap = false;
@@ -51,8 +48,6 @@
             }
         }
 
-
-
         param.setNeedApproval(true);
         try {
             int count = BCPay.startQueryRefundCount(param);
@@ -60,12 +55,12 @@
         } catch (BCException e) {
             out.println(e.getMessage());
         }
-
         try {
             List<BCRefund> bcRefunds = BCPay.startQueryRefund(param);
             pageContext.setAttribute("refunds", bcRefunds);
-            pageContext.setAttribute("channel", param.getChannel().toString().split("_")[0]);
-            System.out.println("refundList:" + bcRefunds.size());
+            if (param.getChannel() != null) {
+            	pageContext.setAttribute("channel", param.getChannel().toString().split("_")[0]);
+            }
         } catch (BCException e) {
             out.println(e.getMessage());
         }

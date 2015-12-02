@@ -57,9 +57,6 @@
     BCRefund param = new BCRefund(billNo, refundNo, 1);
     param.setOptional(optional);
     param.setNeedApproval(prefund.equals("true")?true:false);
-    if (isYeeWap.equals("1")) {
-        BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0", "8427e3ae-7236-4272-a22f-8cb354d54268");
-    }
     try {
         BCRefund refund = BCPay.startBCRefund(param);
         if (refund.getAliRefundUrl() != null) {
@@ -78,8 +75,5 @@
         e.printStackTrace();
     }
     log.info("after start refund!");
-    if (isYeeWap.equals("1")) {
-        BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
-    }
 %>
 </body>

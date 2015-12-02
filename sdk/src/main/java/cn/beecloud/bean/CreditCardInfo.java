@@ -2,6 +2,7 @@ package cn.beecloud.bean;
 
 import cn.beecloud.BCEumeration.CARD_TYPE;
 
+
 /**
  * PAYPAL支付信用卡信息类
  * 

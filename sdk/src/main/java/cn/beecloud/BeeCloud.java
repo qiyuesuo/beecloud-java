@@ -24,8 +24,7 @@ public class BeeCloud {
      * @param masterSecret
      * （必填）用于退款、批量打款
      */
-    public static void registerApp(String appID, String appSecret,
-            String masterSecret) {
+    public static void registerApp(String appID, String appSecret, String masterSecret) {
 
         BCCache.setAppID(appID);
         BCCache.setAppSecret(appSecret);

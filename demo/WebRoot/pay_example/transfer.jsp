@@ -43,7 +43,6 @@
 	String aliTransferNo = BCUtil.generateRandomUUIDPure();
 	RedpackInfo redpackInfo = new RedpackInfo();
 	redpackInfo.setActivityName(activityName);
-	System.out.println(activityName);
 	redpackInfo.setSendName(sendName);
 	redpackInfo.setWishing(wishing);
 	TransferParameter param;
@@ -133,7 +132,7 @@
 		switch (channel) {
 			case ALI_TRANSFER:
 				TransfersParameter para = new TransfersParameter();
-				para.setChannel(TRANSFER_CHANNEL.ALI_TRANSFER);
+				para.setChannel(PAY_CHANNEL.ALI);
 				para.setBatchNo(batchNo);
 				para.setAccountName(accountName);
 				para.setTransferDataList(list);

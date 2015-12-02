@@ -173,9 +173,6 @@
             break;
 
         case YEE_WAP:
-            //真实环境可以不需要这句话
-            BeeCloud.registerApp("230b89e6-d7ff-46bb-b0b6-032f8de7c5d0", "191418f6-c0f5-4943-8171-d07bfeff46b0", "8427e3ae-7236-4272-a22f-8cb354d54268");
-            //真实环境可以不需要这句话end
             bcOrder.setReturnUrl(yeeWapReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);

@@ -3,6 +3,7 @@ package cn.beecloud.bean;
 import cn.beecloud.BCEumeration.PAYPAL_CURRENCY;
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 
+
 /**
  * 境外支付订单类，封装了BeeCloud境外支付订单信息
  * 
@@ -42,8 +43,7 @@ public class BCInternationlOrder {
      * @param channel
      * 渠道类型， 根据不同场景选择不同的支付方式，包含： {@link PAY_CHANNEL#PAYPAL_PAYPAL}: 微信公众号二维码支付
      * {@link PAY_CHANNEL#PAYPAL_CREDITCARD}: 微信公众号支付
-     * {@link PAY_CHANNEL#PAYPAL_SAVED_CREDITCARD}: 支付宝网页支付
-     * (必填)
+     * {@link PAY_CHANNEL#PAYPAL_SAVED_CREDITCARD}: 支付宝网页支付 (必填)
      */
     public void setChannel(PAY_CHANNEL channel) {
         this.channel = channel;
@@ -128,8 +128,7 @@ public class BCInternationlOrder {
 
     /**
      * @param title
-     * 订单标题， 32个字节内，最长支持16个汉字
-     * (必填)
+     * 订单标题， 32个字节内，最长支持16个汉字 (必填)
      */
     public void setTitle(String title) {
         this.title = title;

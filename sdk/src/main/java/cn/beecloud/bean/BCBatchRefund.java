@@ -6,6 +6,7 @@ import java.util.Map;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 
+
 /**
  * BeeCloud批量审核类，封装了待批量审核的记录id集合，以及审核的详细信息
  * 

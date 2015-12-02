@@ -10,6 +10,7 @@ import javax.ws.rs.client.ClientBuilder;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
+
 /**
  * BeeCloud REST API请求客户端
  * 
@@ -22,20 +23,18 @@ class BCAPIClient {
 
     public static void initClient() {
         ClientConfig configuration = new ClientConfig();
-        configuration = configuration.property(
-                ClientProperties.CONNECT_TIMEOUT, BCCache.getNetworkTimeout());
+        configuration = configuration.property(ClientProperties.CONNECT_TIMEOUT,
+                BCCache.getNetworkTimeout());
         configuration = configuration.property(ClientProperties.READ_TIMEOUT,
                 BCCache.getNetworkTimeout());
 
         try {
             TrustManager tm = new X509TrustManager() {
-                public void checkClientTrusted(X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
+                public void checkClientTrusted(X509Certificate[] chain, String authType)
+                        throws CertificateException {}
 
-                public void checkServerTrusted(X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
+                public void checkServerTrusted(X509Certificate[] chain, String authType)
+                        throws CertificateException {}
 
                 public X509Certificate[] getAcceptedIssuers() {
                     return null;
@@ -50,8 +49,8 @@ class BCAPIClient {
 
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[] { tm }, null);
-            client = ClientBuilder.newBuilder().withConfig(configuration)
-                    .sslContext(sslContext).hostnameVerifier(hv).build();
+            client = ClientBuilder.newBuilder().withConfig(configuration).sslContext(sslContext)
+                    .hostnameVerifier(hv).build();
         } catch (Exception e) {
             client = ClientBuilder.newClient(configuration);
             e.printStackTrace();

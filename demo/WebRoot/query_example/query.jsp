@@ -1,15 +1,9 @@
-<%@page import="cn.beecloud.BCEumeration.PAY_CHANNEL" %>
-<%@page import="cn.beecloud.BCPay" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ page import="cn.beecloud.BeeCloud" %>
-<%@ page import="cn.beecloud.bean.BCQueryParameter" %>
-<%@ page import="cn.beecloud.bean.BCRefund" %>
-<%@ page import="java.util.Calendar" %>
-<%@ page import="java.util.Date" %>
+<%@ page import="cn.beecloud.bean.*"%>
+<%@ page import="cn.beecloud.*"%>
+<%@ page import="cn.beecloud.BCEumeration.*" %>
 <%@ page import="java.util.List" %>
-<%@ page import="cn.beecloud.bean.BCException" %>
-<%@ page import="cn.beecloud.bean.BCOrder" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
@@ -81,7 +75,6 @@
             List<BCRefund> bcRefunds = BCPay.startQueryRefund(param);
             pageContext.setAttribute("refundList", bcRefunds);
             pageContext.setAttribute("refundSize", bcRefunds.size());
-            System.out.println("refundList:" + bcRefunds.size());
         } catch (BCException e) {
             e.printStackTrace();
             out.println(e.getMessage());
@@ -108,7 +101,6 @@
             List<BCOrder> bcOrders = BCPay.startQueryBill(param);
             pageContext.setAttribute("bills", bcOrders);
             pageContext.setAttribute("billSize", bcOrders.size());
-            System.out.println("billSize:" + bcOrders.size());
         } catch (BCException e) {
             out.println(e.getMessage());
         }

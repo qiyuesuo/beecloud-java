@@ -59,7 +59,6 @@
     } else {
         try {
             BCOrder result = BCPay.startQueryBillById(id);
-            out.println(result);
             pageContext.setAttribute("bill", result);
         } catch (BCException e) {
             out.println(e.getMessage());
