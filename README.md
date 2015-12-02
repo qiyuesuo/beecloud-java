@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=featur_unit_test_with_batch)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.0.0](https://img.shields.io/badge/Version-v2.3.0-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.0.0](https://img.shields.io/badge/Version-v3.0.0-blue.svg) 
 
 ## 简介
 
@@ -52,7 +52,7 @@
 若是直接使用信用卡支付，直接支付成功，返回的BCInternationlOrder对象包含行用卡ID，此ID在快捷支付时需要。  
 若是通过信用卡ID支付，直接支付成功。
   
-发起国际支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起国际支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 
 #### <a name="paypal_paypal">PAYPAL内支付</a>
 ```java
@@ -180,7 +180,7 @@ cardType | 卡类别 visa/mastercard/discover/amex，（必填）
 
 成功发起国际支付接口将会返回带objectId的BCOrder对象。
   
-发起国内支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起国内支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 
 #### <a name="ali_web">支付宝网页调用</a>
 返回的BCOrder对象包含表单支付html和跳转支付url,开发者提交支付表单或者跳转至url完成支付。
@@ -485,7 +485,7 @@ optionalString   |  optional json字符串， 可通过查询获得
 
 成功发起单笔打款将会返回单笔打款跳转url或者空字符串。
   
-发起单笔打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起单笔打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 
 #### <a name="ali_transfer">支付宝单笔打款</a>
 返回跳转打款url,开发者跳转至url完成打款。
@@ -578,7 +578,7 @@ cardType | 卡类别 visa/mastercard/discover/amex，（必填）
 
 成功发起批量打款将会返回批量打款跳转url。
   
-发起单笔打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起单笔打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 ```java
 TransfersParameter para = new TransfersParameter();
 para.setBatchNo(batchNo);
@@ -615,7 +615,7 @@ return | BCPayResult, 根据type决定返回内容
 成功发起退款接口将会返回带objectId的BCRefund对象。
 退款接口分为直接退款和预退款功能，当BCRefund的**needApproval**属性设置为**true**时，开启预退款功能，当BCRefund的**needApproval**属性为**空**或者**false**, 开启直接退款功能，并在channel为ALI时返回带支付宝退款跳转url的BCRefund对象, 开发者跳转至url输入支付密码完成退款。
 
-发起退款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起退款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 ```java
 BCRefund refund = new BCRefund(billNo, refundNo, 1);
 try {
@@ -667,36 +667,71 @@ dateTime   |  订单创建时间，yyyy-MM-dd HH:mm:ss格式，可通过查询�
 messageDetail | 渠道详细信息，默认为"不显示"， 当needDetail为true时，可通过查询获得
 
 
-查询返回字段：
+### <a name="refund">预退款批量审核</a>
+预退款批量审核接口接收BCBatchRefund参数对象，该对象封装了发起预退款批量审核所需的各个具体参数。  
+
+成功发起预退款批量审核接口将会返回审核后的BCBatchRefund对象。
+预退款批量审核接口分为批量同意和批量否决，当BCBatchRefund的**agree**属性设置为**false**时，开启批量否决，当BCBatchRefund的**agree**属性为**true**, 开启批量同意，返回包含每笔预退款真正退款后结果消息的map（idResult）对象，并在channel为ALI时返回带支付宝退款跳转url的BCBatchRefund对象, 开发者跳转至url输入支付密码完成退款。
+
+发起预退款批量审核异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+```java
+BCBatchRefund batchRefundAgree = new BCBatchRefund();
+batchRefundAgree.setIds(Arrays.asList(ids));
+batchRefundAgree.setChannel(channel);
+batchRefundAgree.setAgree(true);//批量同意
+try {
+	BCBatchRefund result = BCPay.startBatchRefund(batchRefundAgree);
+	out.println("<div>");
+    for (String key : result.getIdResult().keySet()) {
+        String info = result.getIdResult().get(key);
+        out.println(key + ":" + info + "<br/>");
+    }
+    if (channel.equals(PAY_CHANNEL.ALI))
+        response.sendRedirect(result.getAliRefundUrl());
+} catch(BCException ex) {
+	ex.printStackTrace();
+    out.println(ex.getMessage());
+}
+
+BCBatchRefund batchRefundDeny = new BCBatchRefund();
+batchRefundDeny.setIds(Arrays.asList(ids));
+batchRefundDeny.setChannel(channel);
+batchRefundDeny.setAgree(false);//批量否决
+try {
+	BCBatchRefund result = BCPay.startBatchRefund(batchRefundDeny);
+    out.println("<h3>批量驳回成功!</h3>");
+} catch(BCException ex) {
+	ex.printStackTrace();
+    out.println(ex.getMessage());
+}
+```
+代码中的参数对象BCRefund封装字段含义如下：
+请求参数及返回字段：
 key | 说明
 ---- | -----
-refundFee | 退款金额，只能为整数，单位为分，例如1，（必填）  
-optional   |  附加数据 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，例如{"key1":"value1","key2":"value2",...}, （选填）
-needApproval | 标识该笔是预退款还是直接退款，true为预退款，false或者 null为直接退款，（选填）  
-
+ids | 退款记录id列表，批量审核的退款记录的唯一标识符集合，（必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br/>WX、ALI、UN、YEE、JD、KUAIQIAN、BD（必填）
+agree | 同意或者驳回，批量驳回传false，批量同意传true，（必填）
+idResult | 退款id、结果信息集合，当批量同意处理成功时，value值为"OK"；当批量同意处理失败时， value值为具体的错误信息
+aliRefundUrl | 支付宝批量退款跳转url，支付宝预退款批量同意处理成功后返回
 
 
 ### <a name="billQuery">订单查询</a>
 
-订单查询接口接收BCQueryParameter对象，该对象提供了一个无参的构造函数。
+订单查询接收BCQueryParameter参数对象，该对象封装了发起订单查询所需的各个具体参数。  
+
+成功发起订单查询接口将会返回BCOrder对象的集合。
+
+发起订单查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 ```java
 BCQueryParameter param = new BCQueryParameter();
-```
-发起订单查询后返回BCQueryResult对象，BCQueryResult对象包含两种状态，正确状态和错误状态，正确状态的BCQueryResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。
-
-正确状态调用bcQueryResult.getBcOrders()方法返回订单(BCOrderBean)的list集合。调用者可任意遍历，显示这个订单的list对象。
-
-```java
-BCQueryParameter param = new BCQueryParameter();
-param.setChannel(PAY_CHANNEL.ALI);
-
-bcQueryResult = BCPay.startQueryBill(param);
-if (bcQueryResult.getType().ordinal() == 0) {
-    //handle the order list as you wish.
-	pageContext.setAttribute("bills", bcQueryResult.getBcOrders());
-} else {
-	out.println(bcQueryResult.getErrMsg());
-	out.println(bcQueryResult.getErrDetail());
+param.setNeedDetail(true);//设置返回messgeDetail
+param.setChannel(channel);//设置查询条件channel
+try {
+    List<BCOrder> bcOrders = BCPay.startQueryBill(param);
+    System.out.println("billSize:" + bcOrders.size());
+} catch (BCException e) {
+    out.println(e.getMessage());
 }
 ```
 
@@ -708,33 +743,70 @@ channel | 渠道类型， 根据不同场景选择不同的支付方式，包含
 billNo | 商户订单号，
 startTime | 起始时间， Date类型，（选填）  
 endTime | 结束时间， Date类型， （选填）  
+payResult |支付成功与否标识，（选填）
+needDetail | 是否需要返回渠道详细信息，不返回可减少网络开销，（选填）
 skip   |  查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	, （选填）
 limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
-return | BCQueryResult, 根据type决定返回内容
+返回的BCOrder集合包含字段参考国内支付部分的查询返回字段。
 
-### <a name="refundQuery">退款查询</a>
-退款查询接口接收BCRefundQueryParameter对象，该对象提供了一个无参的构造函数。
+### <a name="billCountQuery">订单总数查询</a>
+
+订单总数查接收BCQueryParameter参数对象，该对象封装了发起订单总数查所需的各个具体参数。  
+
+成功发起订单总数查询接口将会返回订单总数。
+
+发起订单总数查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 ```java
-BCRefundQueryParameter param = new BCRefundQueryParameter();
-```
-发起退款查询将得到BCQueryResult对象，BCQueryResult对象包含两种状态，正确状态和错误状态，正确状态的BCQueryResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。
-
-正确状态调用bcQueryResult.getBcRefundList()方法返回退款记录(BCRefundBean)的list集合。调用者可任意遍历，显示这个退款记录的list对象。
-
-```java
-BCRefundQueryParameter param = new BCRefundQueryParameter();
-param.setChannel(PAY_CHANNEL.ALI);
-
-bcQueryResult = BCPay.startQueryRefund(param);
-if (bcQueryResult.getType().ordinal() == 0) {
-	pageContext.setAttribute("refundList", bcQueryResult.getBcRefundList());
-} else {
-	out.println(bcQueryResult.getErrMsg());
-	out.println(bcQueryResult.getErrDetail());
+BCQueryParameter param = new BCQueryParameter();
+try {
+    int count = BCPay.startQueryBillCount(param);
+    pageContext.setAttribute("count", count);
+} catch (BCException e) {
+    out.println(e.getMessage());
 }
 ```
 
-代码中的参数对象BCRefundQueryParameter封装字段含义如下：
+代码中的参数对象BCQueryParameter可设置查询条件参考订单查询的参数含义部分，并排除**skip**, **limit**, **needDetail**三个参数。
+
+### <a name="billQueryById">单笔订单查询</a>
+
+单笔订单查询接收订单的唯一标识。
+
+成功发起单笔订单查询接口将会返回BCOrder对象。
+
+发起单笔订单查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+```java
+try {
+    BCOrder result = BCPay.startQueryBillById(id);
+    pageContext.setAttribute("bill", result);
+} catch (BCException e) {
+    out.println(e.getMessage());
+}
+```
+返回的BCOrder对象包含字段参考国内支付部分的查询返回字段。
+
+
+### <a name="refundQuery">退款查询</a>
+退款查询接收BCQueryParameter参数对象，该对象封装了发起退款查询所需的各个具体参数。  
+
+成功发起退款查询接口将会返回BCRefund对象的集合。
+
+发起退款查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+```java
+BCQueryParameter param = new BCQueryParameter();
+param.setChannel(channel);
+param.setNeedDetail(true);
+try {
+    List<BCRefund> bcRefunds = BCPay.startQueryRefund(param);
+    pageContext.setAttribute("refundList", bcRefunds);
+    System.out.println("refundList:" + bcRefunds.size());
+} catch (BCException e) {
+    e.printStackTrace();
+    out.println(e.getMessage());
+}
+```
+
+代码中的参数对象BCQueryParameter封装字段含义如下：
 
 key | 说明
 ---- | -----
@@ -743,25 +815,61 @@ billNo | 商户订单号， 32个字符内，数字和/或字母组合，确保�
 refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”	，（选填）
 startTime | 起始时间， Date类型，（选填）  
 endTime | 结束时间， Date类型， （选填）  
+needDetail | 是否需要返回渠道详细信息，不返回可减少网络开销，（选填）
+needApproval | 是否是预退款，（选填）
 skip   |  查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	, （选填）
 limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
-return | BCQueryResult, 根据type决定返回内容
+返回的BCRefund集合包含字段参考退款部分的查询返回字段。
 
 
+### <a name="refundCountQuery">退款总数查询</a>
 
-### <a name="RefundStatusQuery">退款状态查询</a>
-调用以下接口发起退款状态查询并将得到BCQueryStatusResult对象，BCQueryStatusResult对象包含两种状态，正确状态和错误状态，正确状态的BCQueryStatusResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。调用参数中，channel参数包含以下取值：
-WX、YEE、KUAIQIAN、BD。
+退款总数查询接收BCQueryParameter参数对象，该对象封装了发起退款总数查询所需的各个具体参数。  
 
-正确状态调用getRefundStatus()方法返回退款状态(Success, Processing, Fail ...)。调用者可任意处理这个值。
+成功发起退款总数查询接口将会返回订单总数。
 
+发起退款总数查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 ```java
-BCQueryStatusResult result = BCPay.startRefundUpdate(PAY_CHANNEL.YEE, refund_no);
-if (result.getType().ordinal() == 0 ) {
-	out.println(result.getRefundStatus());
-} else {
-	out.println(result.getErrMsg());
-	out.println(result.getErrDetail());
+BCQueryParameter param = new BCQueryParameter();
+try {
+    int count = BCPay.startQueryBillCount(param);
+    pageContext.setAttribute("count", count);
+} catch (BCException e) {
+    out.println(e.getMessage());
+}
+```
+代码中的参数对象BCQueryParameter可设置查询条件参考退款查询的参数含义部分，并排除**skip**, **limit**, **needDetail**三个参数。
+
+### <a name="refundQueryById">单笔退款查询</a>
+
+单笔退款查询接收订单的唯一标识。
+
+成功发起单笔退款查询接口将会返回BCRefund对象。
+
+发起单笔退款查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+```java
+try {
+    BCRefund result = BCPay.startQueryRefundById(id);
+    pageContext.setAttribute("refund", result);
+} catch (BCException e) {
+    out.println(e.getMessage());
+}
+```
+返回的BCRefund包含字段参考退款部分的查询返回字段。
+
+### <a name="RefundStatusQuery">退款状态更新</a>
+退款状态更新接收channel和refundNo参数，__调用参数中，只有当channel是WX、YEE、KUAIQIAN或BD时，才需要并且必须调用退款状态更新接口，其他渠道的退款已经在退款接口中完成__。
+
+成功发起退款状态更新接口将会返回退款状态字符串（SUCCESS, PROCESSING, FAIL ...）。
+
+发起退款状态更新异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+```java
+try {
+    String result = BCPay.startRefundUpdate(channel, refund_no);
+    out.println(result);
+} catch(BCException ex) {
+	out.println(ex.getMessage());
+	log.info(ex.getMessage());
 }
 ```
 代码中的各个参数含义如下：
@@ -770,53 +878,8 @@ key | 说明
 ---- | -----
 refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是退款发起当日日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。，（必填）
 channel | 渠道类型， 包含WX、YEE、KUAIQIAN和BD（必填）
-return | BCQueryStatusResult, 根据type决定返回内容
 
 
-
-### <a name="billQueryById">支付订单查询(指定ID)</a>
-调用以下接口发起支付订单查询（指定ID）并将得到BCQueryResult对象，BCQueryResult对象包含两种状态，正确状态和错误状态，正确状态的BCQueryResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。
-
-正确状态调用getOrder()方法返回该笔订单对象。
-
-```java
-BCQueryResult result = BCPay.startQueryBillById(id);
-	if (result.getType().ordinal() == 0) {
-		pageContext.setAttribute("bill", result.getOrder());
-	}else {
-		out.println(result.getErrMsg());
-		out.println(result.getErrDetail());
-	}
-```
-代码中的各个参数含义如下：
-
-key | 说明
----- | -----
-id | 待查询订单记录的唯一标识符，（必填）
-return | BCQueryResult, 根据type决定返回内容
-
-
-
-### <a name="refundQueryById">退款订单查询(指定ID)</a>
-调用以下接口发起支付订单查询（指定ID）并将得到BCQueryResult对象，BCQueryResult对象包含两种状态，正确状态和错误状态，正确状态的BCQueryResult的type类型字符串为OK, 对应值为0。错误状态调用getErrMsg()方法返回错误信息。调用getErrDetail()方法返回具体错误信息，开发者可任意显示，打印，或者进行日志。
-
-正确状态调用getRefund()方法返回该笔退款记录对象。
-
-```java
-BCQueryResult result = BCPay.startQueryRefundById(id);
-	if (result.getType().ordinal() == 0) {
-		pageContext.setAttribute("refund", result.getRefund());
-	}else {
-		out.println(result.getErrMsg());
-		out.println(result.getErrDetail());
-	}
-```
-代码中的各个参数含义如下：
-
-key | 说明
----- | -----
-id | 待查询订单记录的唯一标识符，（必填）
-return | BCQueryResult, 根据type决定返回内容
 
 
 ## Demo
@@ -845,8 +908,11 @@ return | BCQueryResult, 根据type决定返回内容
 •关于百度钱包的return_url  
 请参考demo中的 bdReturnUrl.jsp
 
+•关于PAYPAL内支付的return_url  
+请参考demo中的 paypalReturnUrl.jsp
+
 •关于weekhook的接收  
-请参考demo中的 notifyUrl.jsp  文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
+请参考demo中的 webhook_receiver.jsp  文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
 
 ## 测试
 TODO
