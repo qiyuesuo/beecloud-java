@@ -642,7 +642,9 @@ needApproval | 标识该笔是预退款还是直接退款，true为预退款，f
 objectId | 退款记录唯一标识，发起退款成功后返回
 aliRefundUrl | 阿里退款跳转url，支付宝发起直接退款成功后返回
 
-查询返回字段：<span id="refundQueryJump"></span>
+
+查询返回字段：
+<span id="refundQueryJump"></span>
 
 key | 说明
 ---- | -----
@@ -813,7 +815,8 @@ endTime | 结束时间， Date类型， （选填）
 needDetail | 是否需要返回渠道详细信息，不返回可减少网络开销，（选填）
 needApproval | 是否是预退款，（选填）
 skip   |  查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	, （选填）
-limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
+limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据  
+
 返回的BCRefund集合包含字段参考退款部分的[查询返回](#refundQueryJump)字段。
 
 
