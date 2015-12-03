@@ -446,7 +446,7 @@ url   |  支付跳转url，当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或 YE
 html   |  支付提交html， 当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或 UN_WEB 或 JD_WAP 或 JD_WEB 或 KUAIQIAN_WAP 或 KUAIQIAN_WEB，并且下单成功时返回
 wxJSAPIMap   |  微信公众号支付要素，微信公众号支付下单成功时返回
 
-查询返回字段：
+查询返回字段：<span id="billQueryJump"></span>
 key | 说明
 ---- | -----
 objectId   |  支付订单唯一标识, 可通过查询获得
@@ -636,7 +636,7 @@ needApproval | 标识该笔是预退款还是直接退款，true为预退款，f
 objectId | 退款记录唯一标识，发起退款成功后返回
 aliRefundUrl | 阿里退款跳转url，支付宝发起直接退款成功后返回
 
-查询返回字段：
+查询返回字段：<span id="refundQueryJump"></span>
 key | 说明
 ---- | -----
 objectId | 退款记录唯一标识，可通过查询返回
@@ -734,7 +734,7 @@ payResult |支付成功与否标识，（选填）
 needDetail | 是否需要返回渠道详细信息，不返回可减少网络开销，（选填）
 skip   |  查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	, （选填）
 limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
-返回的BCOrder集合包含字段参考国内支付部分的查询返回字段。
+返回的BCOrder集合包含字段参考国内支付部分的[查询返回](#billQueryJump)字段。
 
 ### <a name="billCountQuery">订单总数查询</a>
 
@@ -770,7 +770,7 @@ try {
     out.println(e.getMessage());
 }
 ```
-返回的BCOrder对象包含字段参考国内支付部分的查询返回字段。
+返回的BCOrder对象包含字段参考国内支付部分的[查询返回](#billQueryJump)字段。
 
 
 ### <a name="refundQuery">退款查询</a>
@@ -806,7 +806,7 @@ needDetail | 是否需要返回渠道详细信息，不返回可减少网络开�
 needApproval | 是否是预退款，（选填）
 skip   |  查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	, （选填）
 limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
-返回的BCRefund集合包含字段参考退款部分的查询返回字段。
+返回的BCRefund集合包含字段参考退款部分的[查询返回](#refundQueryJump)字段。
 
 
 ### <a name="refundCountQuery">退款总数查询</a>
@@ -842,7 +842,7 @@ try {
     out.println(e.getMessage());
 }
 ```
-返回的BCRefund包含字段参考退款部分的查询返回字段。
+返回的BCRefund包含字段参考退款部分的[查询返回](#refundQueryJump)字段。
 
 ### <a name="RefundStatusQuery">退款状态更新</a>
 退款状态更新接收channel和refundNo参数，__调用参数中，只有当channel是WX、YEE、KUAIQIAN或BD时，才需要并且必须调用退款状态更新接口，其他渠道的退款已经在退款接口中完成__。
