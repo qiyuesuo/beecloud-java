@@ -147,6 +147,7 @@ objectId | 境外支付订单唯一标识, 下单成功后返回
 url | 当channel 为PAYPAL_PAYPAL时返回，跳转支付的url
 
 信用卡信息对象CreditCardInfo封装字段含义如下：
+
 key | 说明
 ---- | -----
 cardNo | 卡号，（必填）
@@ -425,6 +426,7 @@ try {
 
 代码中的参数对象BCOrder封装字段含义如下：
 请求参数及返回字段：
+
 key | 说明
 ---- | -----
 channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX_NATIVE 微信公众号二维码支付<br/>WX_JSAPI 微信公众号支付<br/>ALI_WEB 支付宝网页支付<br/>ALI_QRCODE 支付宝内嵌二维码支付<br>ALI_WAP 支付宝移动网页支付 <br/>UN_WEB 银联网页支付<br>JD_WEB 京东网页支付<br/> JD_WAP 京东移动网页支付<br/> YEE_WEB 易宝网页支付<br/> YEE_WAP 易宝移动网页支付<br/> YEE_NOBANKCARD 易宝点卡支付<br> KUAIQIAN_WEB 快钱网页支付<br/> KUAIQIAN_WAP 快钱移动网页支付<br/>BD_WEB 百度网页支付<br>BD_WAP 百度移动网页支付（必填）
@@ -447,6 +449,7 @@ html   |  支付提交html， 当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或
 wxJSAPIMap   |  微信公众号支付要素，微信公众号支付下单成功时返回
 
 查询返回字段：<span id="billQueryJump"></span>
+
 key | 说明
 ---- | -----
 objectId   |  支付订单唯一标识, 可通过查询获得
@@ -544,6 +547,7 @@ redpackInfo | 红包信息，微信红包的详细描述，微信红包必填，
 accountName | 打款方账号名称，打款方账号名全称，支付宝必填，例如：苏州比可网络科技有限公司，（选填）
 
 红包信息对象redpackInfo封装字段含义如下：
+
 key | 说明
 ---- | -----
 sendName | 红包发送者名称 32位，（必填）
@@ -586,6 +590,7 @@ accountName | 付款方的支付宝账户名, 支付宝账户名称,例如:毛�
 transferDataList |  付款的详细数据 {ALITransferData} 的 List集合，（必填）  
 
 付款详细数据对象ALITransferData封装字段含义如下：
+
 key | 说明
 ---- | -----
 transferId | 付款流水号，32位以内数字字母，（必填）
@@ -625,6 +630,7 @@ try {
 
 代码中的参数对象BCRefund封装字段含义如下：
 请求参数及返回字段：
+
 key | 说明
 ---- | -----
 channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX  微信<br>ALI 支付宝<br>UN 银联<br>JD 京东<br>KUAIQIAN 快钱<br>YEE 易宝<br>BD 百度，（选填，可为NULL）
@@ -637,6 +643,7 @@ objectId | 退款记录唯一标识，发起退款成功后返回
 aliRefundUrl | 阿里退款跳转url，支付宝发起直接退款成功后返回
 
 查询返回字段：<span id="refundQueryJump"></span>
+
 key | 说明
 ---- | -----
 objectId | 退款记录唯一标识，可通过查询返回
@@ -694,6 +701,7 @@ try {
 ```
 代码中的参数对象BCRefund封装字段含义如下：
 请求参数及返回字段：
+
 key | 说明
 ---- | -----
 ids | 退款记录id列表，批量审核的退款记录的唯一标识符集合，（必填）
