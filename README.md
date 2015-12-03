@@ -643,8 +643,7 @@ objectId | 退款记录唯一标识，发起退款成功后返回
 aliRefundUrl | 阿里退款跳转url，支付宝发起直接退款成功后返回
 
 
-查询返回字段：
-<span id="refundQueryJump"></span>
+查询返回字段：<a name="refundQueryJump"/>
 
 key | 说明
 ---- | -----
@@ -732,7 +731,7 @@ try {
 }
 ```
 
-代码中的参数对象BCQueryParameter封装字段含义如下：
+代码中的参数对象BCQueryParameter封装字段含义如下：<a name="billQueryParam"/>
 
 key | 说明
 ---- | -----
@@ -744,7 +743,7 @@ payResult |支付成功与否标识，（选填）
 needDetail | 是否需要返回渠道详细信息，不返回可减少网络开销，（选填）
 skip   |  查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	, （选填）
 limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据	
-返回的BCOrder集合包含字段参考国内支付部分的[查询返回](#billQueryJump)字段。
+返回的BCOrder集合包含字段参考国内支付部分的[查询返回][#billQueryJump]字段。
 
 ### <a name="billCountQuery">订单总数查询</a>
 
@@ -763,7 +762,7 @@ try {
 }
 ```
 
-代码中的参数对象BCQueryParameter可设置查询条件参考订单查询的参数含义部分，并排除**skip**, **limit**, **needDetail**三个参数。
+代码中的参数对象BCQueryParameter可设置查询条件参考[订单查询的参数](#billQueryParam)含义部分，并排除**skip**, **limit**, **needDetail**三个参数。
 
 ### <a name="billQueryById">单笔订单查询</a>
 
@@ -803,7 +802,7 @@ try {
 }
 ```
 
-代码中的参数对象BCQueryParameter封装字段含义如下：
+代码中的参数对象BCQueryParameter封装字段含义如下：<a name="refundQueryParam"/>
 
 key | 说明
 ---- | -----
@@ -836,7 +835,7 @@ try {
     out.println(e.getMessage());
 }
 ```
-代码中的参数对象BCQueryParameter可设置查询条件参考退款查询的参数含义部分，并排除**skip**, **limit**, **needDetail**三个参数。
+代码中的参数对象BCQueryParameter可设置查询条件参考[退款查询的参数](#refundQueryParam)含义部分，并排除**skip**, **limit**, **needDetail**三个参数。
 
 ### <a name="refundQueryById">单笔退款查询</a>
 
