@@ -120,6 +120,12 @@ class BCUtilPrivate {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
                 + "/rest/international/bill";
     }
+    /*沙箱部分api*/
+
+    static String getkSandboxApiPay() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/sandbox/bill";
+    }
 
     static String transferDateFromLongToString(long millisecond) {
         Date date = new Date(millisecond);

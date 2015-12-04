@@ -16,6 +16,7 @@ public class BCCache {
     private static String appID = null;
     private static String appSecret = null;
     private static String masterKey = null;
+    private static boolean sandbox = false;
     private static int networkTimeout = 500000;
     static String[] apiHostArray = initApiHostArray();
 
@@ -39,7 +40,15 @@ public class BCCache {
     static void setMasterKey(String masterKey) {
         BCCache.masterKey = masterKey;
     }
-    
+
+    static void setSandbox(boolean sandbox) {
+        BCCache.sandbox = sandbox;
+    }
+
+    static boolean isSandbox() {
+        return sandbox;
+    }
+
     public static String getAppSecret() {
         return appSecret;
     }

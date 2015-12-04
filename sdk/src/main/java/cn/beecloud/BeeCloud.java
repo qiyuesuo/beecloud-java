@@ -41,4 +41,8 @@ public class BeeCloud {
     public static void setNetworkTimeout(int timeout) {
         BCCache.setNetworkTimeout(timeout);
     }
+
+    public static void setSandbox(boolean sandbox) {
+        BCCache.setSandbox(sandbox);
+    }
 }

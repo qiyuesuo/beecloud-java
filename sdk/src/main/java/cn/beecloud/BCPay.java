@@ -65,12 +65,23 @@ public class BCPay {
 
         buildPayParam(param, order);
 
+        if(BCCache.isSandbox()) {
+            Map<String, Object> ret = doPost(BCUtilPrivate.getkSandboxApiPay(), param);
+            return placeSandboxOrder(order, ret);
+        }
         Map<String, Object> ret = doPost(BCUtilPrivate.getkApiPay(), param);
 
         placeOrder(order, ret);
 
         return order;
     }
+
+    private static BCOrder placeSandboxOrder(BCOrder order, Map<String, Object> ret) {
+        order.setObjectId(StrUtil.toStr(ret.get("id")));
+        order.setSandboxUrl(StrUtil.toStr(ret.get("url")));
+        return order;
+    }
+
 
     /**
      * 退款接口

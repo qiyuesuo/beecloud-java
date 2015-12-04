@@ -89,6 +89,9 @@
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                }
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
