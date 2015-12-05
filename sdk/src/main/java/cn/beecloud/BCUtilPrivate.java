@@ -127,6 +127,15 @@ class BCUtilPrivate {
                 + "/rest/sandbox/bill";
     }
 
+    static String getkApiSandboxQueryBill() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/sandbox/bills?para=";
+    }
+
+    static String getkApiSandboxQueryBillById() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/sandbox/bill";
+    }
     static String transferDateFromLongToString(long millisecond) {
         Date date = new Date(millisecond);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

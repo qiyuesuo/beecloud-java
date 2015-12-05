@@ -88,7 +88,13 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
-                Thread.sleep(3000);
+                try {
+                    Thread.sleep(5000);
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                    out.println(e.getMessage());
+                }
+
                 if (bcOrder.getSandboxUrl() != null) {
                     response.sendRedirect( bcOrder.getSandboxUrl());
                 }
@@ -112,6 +118,10 @@
             }
             break;
 
+        case WX:
+            break;
+        case WX_APP:
+            break;
         case WX_NATIVE:
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
@@ -346,7 +356,37 @@
 	            }
             }
             break;
-            
+
+        case WX_SCAN:
+            break;
+        case ALI:
+            break;
+        case ALI_APP:
+            break;
+        case ALI_SCAN:
+            break;
+        case ALI_OFFLINE_QRCODE:
+            break;
+        case UN:
+            break;
+        case UN_APP:
+            break;
+        case YEE:
+            break;
+        case JD:
+            break;
+        case KUAIQIAN:
+            break;
+        case BD:
+            break;
+        case BD_APP:
+            break;
+        case PAYPAL:
+            break;
+        case PAYPAL_SANDBOX:
+            break;
+        case PAYPAL_LIVE:
+            break;
         default:
             break;
     }

@@ -126,6 +126,10 @@ public class BCPay {
 
         buildQueryParam(param, para);
 
+        if(BCCache.isSandbox()) {
+            Map<String, Object> ret = doGet(BCUtilPrivate.getkApiSandboxQueryBill(), param);
+            return generateBCOrderList((List<Map<String, Object>>) ret.get("bills"));
+        }
         Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBill(), param);
 
         return generateBCOrderList((List<Map<String, Object>>) ret.get("bills"));
@@ -150,7 +154,11 @@ public class BCPay {
         param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
 
         StringBuilder urlSb = new StringBuilder();
-        urlSb.append(BCUtilPrivate.getkApiQueryBillById());
+        if(BCCache.isSandbox()) {
+            urlSb.append(BCUtilPrivate.getkApiSandboxQueryBillById());
+        } else {
+            urlSb.append(BCUtilPrivate.getkApiQueryBillById());
+        }
         urlSb.append("/");
         urlSb.append(objectId);
         urlSb.append("?para=");
