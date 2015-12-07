@@ -50,6 +50,21 @@ public class TransferTest {
     static void testTransfer() {
         TransferParameter param = new TransferParameter();
         initTransferParam(param);
+
+        if (BCCache.isSandbox()) {
+            try {
+                BCPay.startTransfer(param);
+                Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+            } catch (Exception e) {
+                Assert.assertTrue(e.getMessage(), e instanceof BCException);
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(RESULT_TYPE.OTHER_ERROR.name()));
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(TestConstant.TEST_MODE_SUPPORT_ERROR));
+            }
+            return;
+        }
+
         String url = "";
         try {
             url = BCPay.startTransfer(null);

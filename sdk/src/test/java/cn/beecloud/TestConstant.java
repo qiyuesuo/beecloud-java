@@ -7,6 +7,7 @@ package cn.beecloud;
 public class TestConstant {
     public static String KTestAppID = "c5d1cba1-5e3f-4ba0-941d-9b0a371fe719";
     public static String kTestAppSecret = "39a7a518-9ac8-4a9e-87bc-7885f33cf18c";
+	public static String kTestTestSecret = "b2daeb99-5163-4d9f-94e3-d9b4a843b80d";
     public static String kTestMasterSecret = "e14ae2db-608c-4f8b-b863-c8c18953eef2";
     public static String kTestTable = "java_sdk_test";
     public static String outRefundNo = "2015062611111";
@@ -82,6 +83,7 @@ public class TestConstant {
 	public static String MOCK_APPROVE_IDLIST_ID2 = "abcdefg12345678";
 	public static String MOCK_APPROVE_ID1_RESULT = "OK";
 	public static String MOCK_APPROVE_ID2_RESULT = "渠道错误。。。";
+	public static String MOCK_SANDBOX_PAY_URL = "mocck.beecloud.cn";
 	
 	public static String MOCK_CREDIT_CARD_ID = "CARD_ADMJ324234DJLKJS";
 	
@@ -297,7 +299,10 @@ public class TestConstant {
 	
 	public final static String PAYPAL_RETURN_URL_EMPTY =
 			"PAYPAL直接支付returnUrl不能为空！";
-	
+
+    public final static String TEST_MODE_SUPPORT_ERROR = "测试模式仅支持国内支付、订单查询、订单总数查询、单笔订单查询";
+
+
 	public static enum CHANNEL_TYPE {
 		WX,
         WX_APP,

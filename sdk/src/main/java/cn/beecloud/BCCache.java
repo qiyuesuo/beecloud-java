@@ -15,6 +15,7 @@ public class BCCache {
 	
     private static String appID = null;
     private static String appSecret = null;
+    private static String testSecret = null;
     private static String masterKey = null;
     private static boolean sandbox = false;
     private static int networkTimeout = 500000;
@@ -45,15 +46,23 @@ public class BCCache {
         BCCache.sandbox = sandbox;
     }
 
+    static void setTestSecret(String testSecret) {
+        BCCache.testSecret = testSecret;
+    }
+
     static boolean isSandbox() {
         return sandbox;
     }
 
-    public static String getAppSecret() {
+    static String getAppSecret() {
         return appSecret;
     }
-    
-    public static String getAppID() {
+
+    static String getTestSecret() {
+        return testSecret;
+    }
+
+    static String getAppID() {
         return appID;
     }
     

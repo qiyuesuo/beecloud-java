@@ -50,7 +50,8 @@ public class PayTest {
             Assert.assertTrue(e.getMessage(), e instanceof BCException);
             Assert.assertTrue(e.getMessage(),
                     e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-            Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.PAY_PARAM_EMPTY));
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(TestConstant.PAY_PARAM_EMPTY));
         }
 
         try {
@@ -73,7 +74,8 @@ public class PayTest {
             Assert.assertTrue(e.getMessage(), e instanceof BCException);
             Assert.assertTrue(e.getMessage(),
                     e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-            Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.TOTAL_FEE_EMPTY));
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(TestConstant.TOTAL_FEE_EMPTY));
         }
         param.setTotalFee(1);
 
@@ -187,8 +189,8 @@ public class PayTest {
             Assert.assertTrue(e.getMessage(), e instanceof BCException);
             Assert.assertTrue(e.getMessage(),
                     e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-            Assert.assertTrue(e.getMessage(), e.getMessage()
-                    .contains(TestConstant.RETURN_URL_EMPTY));
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(TestConstant.RETURN_URL_EMPTY));
         }
 
         try {
@@ -200,8 +202,8 @@ public class PayTest {
             Assert.assertTrue(e.getMessage(), e instanceof BCException);
             Assert.assertTrue(e.getMessage(),
                     e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-            Assert.assertTrue(e.getMessage(), e.getMessage()
-                    .contains(TestConstant.RETURN_URL_EMPTY));
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(TestConstant.RETURN_URL_EMPTY));
         }
 
         try {
@@ -213,8 +215,8 @@ public class PayTest {
             Assert.assertTrue(e.getMessage(), e instanceof BCException);
             Assert.assertTrue(e.getMessage(),
                     e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-            Assert.assertTrue(e.getMessage(), e.getMessage()
-                    .contains(TestConstant.RETURN_URL_EMPTY));
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(TestConstant.RETURN_URL_EMPTY));
         }
 
         try {
@@ -226,8 +228,8 @@ public class PayTest {
             Assert.assertTrue(e.getMessage(), e instanceof BCException);
             Assert.assertTrue(e.getMessage(),
                     e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-            Assert.assertTrue(e.getMessage(), e.getMessage()
-                    .contains(TestConstant.RETURN_URL_EMPTY));
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(TestConstant.RETURN_URL_EMPTY));
         }
 
         try {
@@ -239,8 +241,8 @@ public class PayTest {
             Assert.assertTrue(e.getMessage(), e instanceof BCException);
             Assert.assertTrue(e.getMessage(),
                     e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-            Assert.assertTrue(e.getMessage(), e.getMessage()
-                    .contains(TestConstant.RETURN_URL_EMPTY));
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(TestConstant.RETURN_URL_EMPTY));
         }
         param.setReturnUrl(returnUrl);
         /*----------------------------------end return url empty test-------------------*/
@@ -315,6 +317,11 @@ public class PayTest {
                     e.getMessage().contains(TestConstant.YEE_NOBANCARD_FACTOR_EMPTY));
         }
         param.setFrqid(frqid);
+
+        if (BCCache.isSandbox()) {
+            mockSandboxPay(param);
+            return;
+        }
         /*--------------------------------------end mandatory param test---------------------*/
 
         /*--------------------------------------start mock network request and reponse handle-------------*/
@@ -328,6 +335,33 @@ public class PayTest {
         /*--------------------------------------end mock network request and reponse handle-------------*/
     }
 
+    private static void mockSandboxPay(BCOrder param) {
+        final Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
+        returnMap.put("result_code", 0);
+        returnMap.put("result_msg", "OK");
+        returnMap.put("err_detail", "");
+        returnMap.put("url", TestConstant.MOCK_SANDBOX_PAY_URL);
+
+        new Expectations(BCPay.class) {
+            {
+                Deencapsulation.invoke(BCPay.class, "doPost",
+                        withSubstring(BCUtilPrivate.getkSandboxApiPay().substring(14)),
+                        withAny(Map.class));
+                returns(returnMap);
+
+            }
+        };
+        BCOrder order;
+        try {
+            order = BCPay.startBCPay(param);
+            Assert.assertEquals("", TestConstant.MOCK_SANDBOX_PAY_URL, order.getSandboxUrl());
+            Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, order.getObjectId());
+        } catch (BCException e) {
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+        }
+    }
+
     private static void mockWxNativePay(BCOrder param) {
         final Map<String, Object> returnMap = new HashMap<String, Object>();
         returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
@@ -338,8 +372,9 @@ public class PayTest {
 
         new Expectations(BCPay.class) {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate
-                        .getkApiPay().substring(14)), withAny(Map.class));
+                Deencapsulation.invoke(BCPay.class, "doPost",
+                        withSubstring(BCUtilPrivate.getkApiPay().substring(14)),
+                        withAny(Map.class));
                 returns(returnMap);
                 result = new BCException(RESULT_TYPE.PAY_FACTOR_NOT_SET.ordinal(),
                         RESULT_TYPE.PAY_FACTOR_NOT_SET.name(),
@@ -374,8 +409,9 @@ public class PayTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate
-                        .getkApiPay().substring(14)), withAny(Map.class));
+                Deencapsulation.invoke(BCPay.class, "doPost",
+                        withSubstring(BCUtilPrivate.getkApiPay().substring(14)),
+                        withAny(Map.class));
                 returns(returnMap, returnMap, returnMap);
                 result = new BCException(RESULT_TYPE.RUNTIME_ERORR.ordinal(),
                         RESULT_TYPE.RUNTIME_ERORR.name(), RESULT_TYPE.RUNTIME_ERORR.name());
@@ -429,8 +465,9 @@ public class PayTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate
-                        .getkApiPay().substring(14)), withAny(Map.class));
+                Deencapsulation.invoke(BCPay.class, "doPost",
+                        withSubstring(BCUtilPrivate.getkApiPay().substring(14)),
+                        withAny(Map.class));
                 returns(returnMap, returnMap, returnMap, returnMap, returnMap);
                 times = 5;
                 result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
@@ -509,8 +546,9 @@ public class PayTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate
-                        .getkApiPay().substring(14)), withAny(Map.class));
+                Deencapsulation.invoke(BCPay.class, "doPost",
+                        withSubstring(BCUtilPrivate.getkApiPay().substring(14)),
+                        withAny(Map.class));
                 returns(returnMap);
                 result = new BCException(RESULT_TYPE.CHANNEL_INVALID.ordinal(),
                         RESULT_TYPE.CHANNEL_INVALID.name(), RESULT_TYPE.CHANNEL_INVALID.name());

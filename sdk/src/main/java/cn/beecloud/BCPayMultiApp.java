@@ -49,22 +49,24 @@ public class BCPayMultiApp {
     private final static String NOT_CORRECT_RESPONSE = "响应不正确";
 
     private final static String NETWORK_ERROR = "网络错误";
+    private final static String TEST_MODE_SUPPORT_ERROR = "测试模式仅支持国内支付、订单查询、单笔订单查询";
 
     private String appId;
     private String appSecret;
+    private String testSecret;
     private String masterSecret;
 
-    public BCPayMultiApp(String appId, String appSecret, String masterSecret) {
+    public BCPayMultiApp(String appId, String testSecret, String appSecret, String masterSecret) {
         this.appId = appId;
+        this.testSecret = testSecret;
         this.appSecret = appSecret;
         this.masterSecret = masterSecret;
     }
 
     /**
      * 支付接口
-     * 
-     * @param order
-     * {@link BCOrder} (必填) 支付参数
+     *
+     * @param order {@link BCOrder} (必填) 支付参数
      * @return 调起BeeCloud支付后的返回结果
      * @throws BCException
      */
@@ -76,6 +78,11 @@ public class BCPayMultiApp {
 
         buildPayParam(param, order);
 
+        if (BCCache.isSandbox()) {
+            Map<String, Object> ret = doPost(BCUtilPrivate.getkSandboxApiPay(), param);
+            placeSandboxOrder(order, ret);
+            return order;
+        }
         Map<String, Object> ret = doPost(BCUtilPrivate.getkApiPay(), param);
 
         placeOrder(order, ret);
@@ -85,13 +92,14 @@ public class BCPayMultiApp {
 
     /**
      * 退款接口
-     * 
-     * @param refund
-     * {@link BCRefund} （必填） 退款参数
+     *
+     * @param refund {@link BCRefund} （必填） 退款参数
      * @return 发起退款的返回结果
      * @throws BCException
      */
     public BCRefund startBCRefund(BCRefund refund) throws BCException {
+
+        checkTestModeSwitch();
 
         ValidationUtil.validateBCRefund(refund);
 
@@ -111,9 +119,8 @@ public class BCPayMultiApp {
 
     /**
      * 订单查询（批量）接口
-     * 
-     * @param para
-     * {@link BCQueryParameter} （必填） 订单查询参数
+     *
+     * @param para {@link BCQueryParameter} （必填） 订单查询参数
      * @return 订单查询返回的结果
      * @throws BCException
      */
@@ -125,6 +132,10 @@ public class BCPayMultiApp {
         Map<String, Object> param = new HashMap<String, Object>();
         buildQueryParam(param, para);
 
+        if (BCCache.isSandbox()) {
+            Map<String, Object> ret = doGet(BCUtilPrivate.getkApiSandboxQueryBill(), param);
+            return generateBCOrderList((List<Map<String, Object>>) ret.get("bills"));
+        }
         Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBill(), param);
 
         return generateBCOrderList((List<Map<String, Object>>) ret.get("bills"));
@@ -133,9 +144,8 @@ public class BCPayMultiApp {
 
     /**
      * 订单查询（单笔，根据id）接口
-     * 
-     * @param objectId
-     * （必填） 订单记录唯一标识
+     *
+     * @param objectId （必填） 订单记录唯一标识
      * @return id查询返回结果
      * @throws BCException
      */
@@ -144,10 +154,17 @@ public class BCPayMultiApp {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
-        param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
-
+        if (BCCache.isSandbox()) {
+            param.put("app_sign", this.getAppSignatureWithTestSecret(param.get("timestamp").toString()));
+        } else {
+            param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
+        }
         StringBuilder urlSb = new StringBuilder();
-        urlSb.append(BCUtilPrivate.getkApiQueryBillById());
+        if (BCCache.isSandbox()) {
+            urlSb.append(BCUtilPrivate.getkApiSandboxQueryBillById());
+        } else {
+            urlSb.append(BCUtilPrivate.getkApiQueryBillById());
+        }
         urlSb.append("/");
         urlSb.append(objectId);
         urlSb.append("?para=");
@@ -158,9 +175,8 @@ public class BCPayMultiApp {
 
     /**
      * 订单总数查询接口
-     * 
-     * @param para
-     * {@link BCQueryParameter} （必填）订单总数查询参数
+     *
+     * @param para {@link BCQueryParameter} （必填）订单总数查询参数
      * @return 订单总数查询返回的结果
      * @throws BCException
      */
@@ -171,6 +187,10 @@ public class BCPayMultiApp {
         Map<String, Object> param = new HashMap<String, Object>();
         buildQueryCountParam(param, para);
 
+        if (BCCache.isSandbox()) {
+            Map<String, Object> ret = doGet(BCUtilPrivate.getkApiSandboxQueryBillCount(), param);
+            return (Integer) ret.get("count");
+        }
         Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBillCount(), param);
 
         return (Integer) ret.get("count");
@@ -178,13 +198,14 @@ public class BCPayMultiApp {
 
     /**
      * 退款记录查询（批量）接口
-     * 
-     * @param para
-     * {@link BCQueryParameter} （必填）订单查询参数
+     *
+     * @param para {@link BCQueryParameter} （必填）订单查询参数
      * @return 退款查询返回的结果
      * @throws BCException
      */
     public List<BCRefund> startQueryRefund(BCQueryParameter para) throws BCException {
+
+        checkTestModeSwitch();
 
         ValidationUtil.validateQueryRefund(para);
 
@@ -199,14 +220,14 @@ public class BCPayMultiApp {
 
     /**
      * 退款查询接口（根据 id）
-     * 
-     * @param objectId
-     * (必填) 退款记录唯一标识
+     *
+     * @param objectId (必填) 退款记录唯一标识
      * @return 单笔退款记录查询返回结果
      * @throws BCException
      */
     public BCRefund startQueryRefundById(String objectId) throws BCException {
 
+        checkTestModeSwitch();
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
@@ -225,14 +246,13 @@ public class BCPayMultiApp {
 
     /**
      * 退款记录总数查询接口
-     * 
-     * @param para
-     * {@link BCQueryParameter} （必填） 退款总数查询参数
+     *
+     * @param para {@link BCQueryParameter} （必填） 退款总数查询参数
      * @return 退款总数查询返回的结果
      * @throws BCException
      */
     public Integer startQueryRefundCount(BCQueryParameter para) throws BCException {
-
+        checkTestModeSwitch();
         ValidationUtil.validateQueryRefund(para);
 
         Map<String, Object> param = new HashMap<String, Object>();
@@ -245,17 +265,15 @@ public class BCPayMultiApp {
 
     /**
      * 退款状态更新接口
-     * 
-     * @param refundNo
-     * （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24
-     * 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
-     * @param channel
-     * (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含： YEE 易宝 WX 微信 KUAIQIAN 快钱 BD 百度
+     *
+     * @param refundNo （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24
+     *                 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
+     * @param channel  (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含： YEE 易宝 WX 微信 KUAIQIAN 快钱 BD 百度
      * @return 退款状态更新返回结果，包括（SUCCESS， PROCESSING, FAIL...）
      * @throws BCException
      */
     public String startRefundUpdate(PAY_CHANNEL channel, String refundNo) throws BCException {
-
+        checkTestModeSwitch();
         ValidationUtil.validateQueryRefundStatus(channel, refundNo);
 
         Map<String, Object> param = new HashMap<String, Object>();
@@ -271,14 +289,13 @@ public class BCPayMultiApp {
 
     /**
      * 单笔打款接口
-     * 
-     * @param para
-     * {@link TransferParameter} （必填）单笔打款参数
+     *
+     * @param para {@link TransferParameter} （必填）单笔打款参数
      * @return 如果channel类型是TRANSFER_CHANNEL.ALI_TRANSFER, 返回需要跳转支付的url, 否则返回空字符串
      * @throws BCException
      */
     public String startTransfer(TransferParameter para) throws BCException {
-
+        checkTestModeSwitch();
         ValidationUtil.validateBCTransfer(para);
 
         Map<String, Object> param = new HashMap<String, Object>();
@@ -295,14 +312,13 @@ public class BCPayMultiApp {
 
     /**
      * 批量打款接口
-     * 
-     * @param para
-     * {@link TransfersParameter} （必填） 批量打款参数
+     *
+     * @param para {@link TransfersParameter} （必填） 批量打款参数
      * @return 批量打款跳转支付url
      * @throws BCException
      */
     public String startTransfers(TransfersParameter para) throws BCException {
-
+        checkTestModeSwitch();
         ValidationUtil.validateBCTransfers(para);
 
         Map<String, Object> param = new HashMap<String, Object>();
@@ -316,14 +332,13 @@ public class BCPayMultiApp {
 
     /**
      * 发起预退款审核，包括批量否决和批量同意
-     * 
-     * @param batchRefund
-     * （必填） 批量退款参数
+     *
+     * @param batchRefund （必填） 批量退款参数
      * @return BCBatchRefund
      * @throws BCException
      */
     public BCBatchRefund startBatchRefund(BCBatchRefund batchRefund) throws BCException {
-
+        checkTestModeSwitch();
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("channel", batchRefund.getChannel().toString());
         param.put("agree", batchRefund.getAgree());
@@ -346,14 +361,13 @@ public class BCPayMultiApp {
 
     /**
      * 境外支付（paypal）接口
-     * 
-     * @param order
-     * {@link BCInternationlOrder} （必填）
+     *
+     * @param order {@link BCInternationlOrder} （必填）
      * @return 支付后返回的order
      * @throws BCException
      */
     public BCInternationlOrder startBCInternatioalPay(BCInternationlOrder order) throws BCException {
-
+        checkTestModeSwitch();
         ValidationUtil.validateBCInternatioalPay(order);
 
         Map<String, Object> param = new HashMap<String, Object>();
@@ -368,10 +382,8 @@ public class BCPayMultiApp {
     }
 
     /**
-     * @param sign
-     * Webhook提供的签名
-     * @param timestamp
-     * Webhook提供的timestamp，注意是String格式
+     * @param sign      Webhook提供的签名
+     * @param timestamp Webhook提供的timestamp，注意是String格式
      * @return 签名是否正确
      */
     public static boolean verifySign(String sign, String timestamp) {
@@ -390,7 +402,11 @@ public class BCPayMultiApp {
 
         param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
-        param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
+        if (BCCache.isSandbox()) {
+            param.put("app_sign", this.getAppSignatureWithTestSecret(param.get("timestamp").toString()));
+        } else {
+            param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
+        }
         param.put("channel", para.getChannel().toString());
         param.put("total_fee", para.getTotalFee());
         param.put("bill_no", para.getBillNo());
@@ -425,6 +441,11 @@ public class BCPayMultiApp {
         }
     }
 
+    private Object getAppSignatureWithTestSecret(String timestamp) {
+        String str = appId + timestamp + testSecret;
+        return BCUtilPrivate.getMessageDigest(str);
+    }
+
     /**
      * 构建退款rest api参数
      */
@@ -454,7 +475,11 @@ public class BCPayMultiApp {
     private void buildQueryParam(Map<String, Object> param, BCQueryParameter para) {
         param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
-        param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
+        if (BCCache.isSandbox()) {
+            param.put("app_sign", this.getAppSignatureWithTestSecret(param.get("timestamp").toString()));
+        } else {
+            param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
+        }
         if (para.getChannel() != null) {
             param.put("channel", para.getChannel().toString());
         }
@@ -493,7 +518,11 @@ public class BCPayMultiApp {
     private void buildQueryCountParam(Map<String, Object> param, BCQueryParameter para) {
         param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
-        param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
+        if (BCCache.isSandbox()) {
+            param.put("app_sign", this.getAppSignatureWithTestSecret(param.get("timestamp").toString()));
+        } else {
+            param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
+        }
         if (para.getChannel() != null) {
             param.put("channel", para.getChannel().toString());
         }
@@ -703,11 +732,9 @@ public class BCPayMultiApp {
 
     /**
      * doPost方法，封装rest api POST方式请求
-     * 
-     * @param url
-     * 请求url
-     * @param param
-     * 请求参数
+     *
+     * @param url   请求url
+     * @param param 请求参数
      * @return rest api返回参数
      * @throws BCException
      */
@@ -745,11 +772,9 @@ public class BCPayMultiApp {
 
     /**
      * doPut方法，封装rest api PUT方式请求
-     * 
-     * @param url
-     * 请求url
-     * @param param
-     * 请求参数
+     *
+     * @param url   请求url
+     * @param param 请求参数
      * @return rest api返回参数
      * @throws BCException
      */
@@ -787,11 +812,9 @@ public class BCPayMultiApp {
 
     /**
      * doGet方法，封装rest api GET方式请求
-     * 
-     * @param url
-     * 请求url
-     * @param param
-     * 请求参数
+     *
+     * @param url   请求url
+     * @param param 请求参数
      * @return rest api返回参数
      * @throws BCException
      */
@@ -891,6 +914,23 @@ public class BCPayMultiApp {
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 组建返回沙箱支付订单
+     */
+    private static void placeSandboxOrder(BCOrder order, Map<String, Object> ret) {
+        order.setObjectId(StrUtil.toStr(ret.get("id")));
+        order.setSandboxUrl(StrUtil.toStr(ret.get("url")));
+    }
+
+    /**
+     * 检查某一借口是否支持测试模式
+     */
+    private static void checkTestModeSwitch() throws BCException {
+        if (BCCache.isSandbox()) {
+            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), TEST_MODE_SUPPORT_ERROR);
         }
     }
 

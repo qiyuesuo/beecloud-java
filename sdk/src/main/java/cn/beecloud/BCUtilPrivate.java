@@ -27,6 +27,11 @@ class BCUtilPrivate {
         return getMessageDigest(str);
     }
 
+    static String getAppSignatureWithTestSecret(String timeStamp) {
+        String str = BCCache.getAppID() + timeStamp + BCCache.getTestSecret();
+        return getMessageDigest(str);
+    }
+
     static String getMessageDigest(String s) {
         char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
                 'e', 'f' };
@@ -120,7 +125,7 @@ class BCUtilPrivate {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
                 + "/rest/international/bill";
     }
-    /*沙箱部分api*/
+    /* 沙箱部分api */
 
     static String getkSandboxApiPay() {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
@@ -136,6 +141,12 @@ class BCUtilPrivate {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
                 + "/rest/sandbox/bill";
     }
+
+    static String getkApiSandboxQueryBillCount() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/sandbox/bills/count?para=";
+    }
+
     static String transferDateFromLongToString(long millisecond) {
         Date date = new Date(millisecond);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
