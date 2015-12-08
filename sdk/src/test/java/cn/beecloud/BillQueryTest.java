@@ -475,7 +475,6 @@ public class BillQueryTest {
         } catch (BCException e) {
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
         }
-
         new StrictExpectations() {
             {
                 Deencapsulation.invoke(BCPay.class, "doGet",
