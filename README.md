@@ -911,7 +911,19 @@ response.sendRedirect( bcOrder.getSandboxUrl());
 ```
 代码中的参数对象BCOrder封装字段含义参考LIVE模式的[国内支付](#payParam)部分：
 
-具体使用请参考本目录下的demo项目
+### <a name="sandboxBillQuery">订单查询</a>
+订单查询接口完全参考[LIVE模式](#billQuery)订单查询
+
+### <a name="sandboxBillQuery">订单总数查询</a>
+订单总数查询接口完全参考[LIVE模式](#billCountQuery)订单总数查询
+
+### <a name="sandboxBillQueryById">单笔订单查询</a>
+单笔订单查询接口完全参考[LIVE模式](#billQueryById)单笔订单查询  
+
+  
+**其他接口暂不支持SANDBOX模式**  
+
+
 
 ## Demo
 项目文件夹demo为我们的样例项目，详细展示如何使用java sdk.  
