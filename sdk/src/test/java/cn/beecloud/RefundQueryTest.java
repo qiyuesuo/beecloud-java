@@ -138,31 +138,15 @@ public class RefundQueryTest {
         }
         param.setBillNo(billNo);
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, +1);
-        param.setStartTime(cal.getTime());
-        cal.add(Calendar.MONTH, -1);
-        param.setEndTime(cal.getTime());
-        try {
-            bcRefundList = BCPay.startQueryRefund(param);
-            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
-            Assert.assertTrue(ex.getMessage(),
-                    ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-        }
-        param.setStartTime(null);
-        param.setEndTime(null);
-
         try {
             param.setSkip(-1);
             bcRefundList = BCPay.startQueryRefund(param);
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
         } catch (Exception ex) {
-            Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
-            Assert.assertTrue(ex.getMessage(),
-                    ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+            org.junit.Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+            org.junit.Assert.assertTrue(ex.getMessage(),
+                    ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name())
+                            || ex.getMessage().contains(RESULT_TYPE.OTHER_ERROR.name()));// 服务端验证，可能存在网络问题，加上OTHER_ERROR判断
         }
 
         try {
@@ -202,8 +186,8 @@ public class RefundQueryTest {
         }
 
         try {
-            param.setRefundNo(refundNo.substring(0, 8)
-                    + TestConstant.REFUND_NO_SERIAL_NUMBER_LESSER_THAN_3);
+            param.setRefundNo(
+                    refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_LESSER_THAN_3);
             bcRefundList = BCPay.startQueryRefund(param);
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
         } catch (Exception ex) {
@@ -307,23 +291,6 @@ public class RefundQueryTest {
             Assert.assertTrue(ex.getMessage(),
                     ex.getMessage().contains(TestConstant.BILL_NO_FORMAT_INVALID));
         }
-
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, +1);
-        param.setStartTime(cal.getTime());
-        cal.add(Calendar.MONTH, -1);
-        param.setEndTime(cal.getTime());
-        try {
-            count = BCPay.startQueryRefundCount(param);
-            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
-        } catch (Exception ex) {
-            Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
-            Assert.assertTrue(ex.getMessage(),
-                    ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-        }
-
-        param.setStartTime(null);
-        param.setEndTime(null);
         param.setBillNo(null);
 
         try {
@@ -339,8 +306,8 @@ public class RefundQueryTest {
         }
 
         try {
-            param.setRefundNo(refundNo.substring(0, 8)
-                    + TestConstant.REFUND_NO_SERIAL_NUMBER_LESSER_THAN_3);
+            param.setRefundNo(
+                    refundNo.substring(0, 8) + TestConstant.REFUND_NO_SERIAL_NUMBER_LESSER_THAN_3);
             count = BCPay.startQueryRefundCount(param);
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
         } catch (Exception ex) {
@@ -391,8 +358,9 @@ public class RefundQueryTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet", withSubstring(BCUtilPrivate
-                        .getkApiQueryRefund().substring(14)), withAny(Map.class));
+                Deencapsulation.invoke(BCPay.class, "doGet",
+                        withSubstring(BCUtilPrivate.getkApiQueryRefund().substring(14)),
+                        withAny(Map.class));
                 returns(returnMap);
                 result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
                         RESULT_TYPE.APP_INVALID.name(), TestConstant.MOCK_APP_INVALID_ERRMSG);
@@ -410,19 +378,17 @@ public class RefundQueryTest {
                 Assert.assertEquals("",
                         TestUtil.transferDateFromLongToString(TestConstant.MOCK_CREATE_TIME),
                         refund.getDateTime());
-                Assert.assertEquals("", TestConstant.MOCK_CHANNEL, refund.getChannel().toString()
-                        .split("_")[0]);
-                Assert.assertEquals("", TestConstant.MOCK_SUB_CHANNEL, refund.getChannel()
-                        .toString());
+                Assert.assertEquals("", TestConstant.MOCK_CHANNEL,
+                        refund.getChannel().toString().split("_")[0]);
+                Assert.assertEquals("", TestConstant.MOCK_SUB_CHANNEL,
+                        refund.getChannel().toString());
                 Assert.assertEquals("", TestConstant.MOCK_REFUND_FEE, refund.getRefundFee());
-                Assert.assertTrue("", refund.getOptionalString().equals("")
-                        || refund.getOptionalString()
-                                .equals(TestConstant.MOCK_OPTIONAL_JSON_STRING));
+                Assert.assertTrue("", refund.getOptionalString().equals("") || refund
+                        .getOptionalString().equals(TestConstant.MOCK_OPTIONAL_JSON_STRING));
                 Assert.assertTrue("", refund.isFinished() || !refund.isFinished());
                 Assert.assertTrue("", refund.isRefunded() || !refund.isRefunded());
-                Assert.assertTrue("", refund.getMessageDetail().equals("不显示")
-                        || refund.getMessageDetail()
-                                .equals(TestConstant.MOCK_MESSAGE_DETAIL_STRING));
+                Assert.assertTrue("", refund.getMessageDetail().equals("不显示") || refund
+                        .getMessageDetail().equals(TestConstant.MOCK_MESSAGE_DETAIL_STRING));
                 Assert.assertEquals("", TestConstant.MOCK_TITLE, refund.getTitle());
                 Assert.assertEquals("", TestConstant.MOCK_REFUND_NO, refund.getRefundNo());
                 Assert.assertEquals("", TestConstant.MOCK_TOTAL_FEE, refund.getTotalFee());
@@ -452,8 +418,9 @@ public class RefundQueryTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet", withSubstring(BCUtilPrivate
-                        .getkApiQueryRefundCount().substring(14)), withAny(Map.class));
+                Deencapsulation.invoke(BCPay.class, "doGet",
+                        withSubstring(BCUtilPrivate.getkApiQueryRefundCount().substring(14)),
+                        withAny(Map.class));
                 returns(returnMap);
             }
         };
@@ -480,8 +447,9 @@ public class RefundQueryTest {
 
         new StrictExpectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet", withSubstring(BCUtilPrivate
-                        .getkApiQueryRefundById().substring(14)), withAny(Map.class));
+                Deencapsulation.invoke(BCPay.class, "doGet",
+                        withSubstring(BCUtilPrivate.getkApiQueryRefundById().substring(14)),
+                        withAny(Map.class));
                 returns(returnMap);
             }
         };
@@ -494,8 +462,8 @@ public class RefundQueryTest {
             Assert.assertEquals("", TestConstant.MOCK_REFUND_NO, refund.getRefundNo());
             Assert.assertEquals("", TestConstant.MOCK_REFUND_FEE, refund.getRefundFee());
             Assert.assertEquals("", TestConstant.MOCK_TOTAL_FEE, refund.getTotalFee());
-            Assert.assertEquals("", TestConstant.MOCK_CHANNEL, refund.getChannel().toString()
-                    .split("_")[0]);
+            Assert.assertEquals("", TestConstant.MOCK_CHANNEL,
+                    refund.getChannel().toString().split("_")[0]);
             Assert.assertEquals("", TestConstant.MOCK_SUB_CHANNEL, refund.getChannel().toString());
             Assert.assertEquals("", TestConstant.MOCK_MESSAGE_DETAIL_STRING,
                     refund.getMessageDetail());

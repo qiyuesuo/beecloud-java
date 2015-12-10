@@ -116,7 +116,6 @@ public class BCPay {
      */
     @SuppressWarnings("unchecked")
     public static List<BCOrder> startQueryBill(BCQueryParameter para) throws BCException {
-
         ValidationUtil.validateQueryBill(para);
 
         Map<String, Object> param = new HashMap<String, Object>();

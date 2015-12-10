@@ -1,3 +1,4 @@
 
 *.iml
 *.idea
+sdk/out/artifacts/beecloud_java_sdk_jar/beecloud-java-sdk.jar
