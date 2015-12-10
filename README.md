@@ -35,10 +35,14 @@
 
 3. 在代码中注册：
 
-  BeeCloud.registerApp(appId, appSecret, masterSecret);
+  BeeCloud.registerApp(appId, testSecret, appSecret, masterSecret);
 
 
-## 使用方法
+## LIVE模式使用方法
+BeeCloud.registerApp(appId, **testSecret**, appSecret, masterSecret);
+**LIVE**模式**testSecret**可为**null**  
+
+**默认开启LIVE模式**
 
 具体使用请参考本目录下的demo项目
 
@@ -881,7 +885,13 @@ refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 �
 channel | 渠道类型， 包含WX、YEE、KUAIQIAN和BD（必填）
 
 
+## SANDBOX模式使用方法
+BeeCloud.registerApp(appId, testSecret, **appSecret**, **masterSecret**);
+**SANDBOX**模式**testSecret**、**masterSecret**可为**null**  
 
+设置BeeCloud.setSandbox(**true**);**开启SANDBOX模式**
+
+具体使用请参考本目录下的demo项目
 
 ## Demo
 项目文件夹demo为我们的样例项目，详细展示如何使用java sdk.  
