@@ -127,7 +127,7 @@
             String wxJSAPISecret = prop.get("wxJSAPISecret").toString();
             String wxJSAPIRedirectUrl = "http://javademo.beexcloud.com/demo/pay_example/pay.jsp?paytype=WX_JSAPI";
             String encodedWSJSAPIRedirectUrl = URLEncoder.encode(wxJSAPIRedirectUrl);
-            if (request.getParameter("code") == null || request.getParameter("code") == "") {
+            if (request.getParameter("code") == null || request.getParameter("code").toString().equals("")) {
                 String redirectUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + wxJSAPIAppId + "&redirect_uri=" + encodedWSJSAPIRedirectUrl + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
                 log.info("wx jsapi redirct url:" + redirectUrl);
                 response.sendRedirect(redirectUrl);
