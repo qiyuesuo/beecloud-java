@@ -428,7 +428,7 @@ try {
 ```
 
 
-代码中的参数对象BCOrder封装字段含义如下：
+<a name="payParam"/>代码中的参数对象BCOrder封装字段含义如下：
 请求参数及返回字段：
 
 key | 说明
@@ -890,6 +890,26 @@ BeeCloud.registerApp(appId, testSecret, **appSecret**, **masterSecret**);
 **SANDBOX**模式**testSecret**、**masterSecret**可为**null**  
 
 设置BeeCloud.setSandbox(**true**);**开启SANDBOX模式**
+
+### <a name="sandboxPayment">国内支付</a>
+国内支付接口接收BCOrder参数对象，该对象封装了发起国内际支付所需的各个具体参数。  
+
+成功发起国内支付接口将会返回带objectId、sandboxUrl的BCOrder对象。
+  
+发起国内支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+
+返回的BCOrder对象包含沙箱支付跳转url, 显示BeeCloud 沙箱支付页面，用户点击"完成支付"完成支付成功模拟，点击"取消测试"完成支付未成功模拟。
+```java
+try {
+bcOrder = BCPay.startBCPay(bcOrder);
+out.println(bcOrder.getObjectId());
+response.sendRedirect( bcOrder.getSandboxUrl());
+} catch(BCException ex) {
+	out.println(ex.getMessage());
+	log.info(ex.getMessage());
+}
+```
+代码中的参数对象BCOrder封装字段含义参考LIVE模式的[国内支付](#payParam)部分：
 
 具体使用请参考本目录下的demo项目
 
