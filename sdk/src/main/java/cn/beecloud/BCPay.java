@@ -54,7 +54,8 @@ public class BCPay {
     /**
      * 支付接口
      *
-     * @param order {@link BCOrder} (必填) 支付参数
+     * @param order
+     * {@link BCOrder} (必填) 支付参数
      * @return 调起BeeCloud支付后的返回结果
      * @throws BCException
      */
@@ -78,11 +79,11 @@ public class BCPay {
         return order;
     }
 
-
     /**
      * 退款接口
      *
-     * @param refund {@link BCRefund} （必填） 退款参数
+     * @param refund
+     * {@link BCRefund} （必填） 退款参数
      * @return 发起退款的返回结果
      * @throws BCException
      */
@@ -106,11 +107,11 @@ public class BCPay {
         return refund;
     }
 
-
     /**
      * 订单查询（批量）接口
      *
-     * @param para {@link BCQueryParameter} （必填） 订单查询参数
+     * @param para
+     * {@link BCQueryParameter} （必填） 订单查询参数
      * @return 订单查询返回的结果
      * @throws BCException
      */
@@ -135,7 +136,8 @@ public class BCPay {
     /**
      * 订单查询（单笔，根据id）接口
      *
-     * @param objectId （必填） 订单记录唯一标识
+     * @param objectId
+     * （必填） 订单记录唯一标识
      * @return id查询返回结果
      * @throws BCException
      */
@@ -148,7 +150,8 @@ public class BCPay {
         param.put("timestamp", System.currentTimeMillis());
         StringBuilder urlSb = new StringBuilder();
         if (BCCache.isSandbox()) {
-            param.put("app_sign", BCUtilPrivate.getAppSignatureWithTestSecret(param.get("timestamp").toString()));
+            param.put("app_sign",
+                    BCUtilPrivate.getAppSignatureWithTestSecret(param.get("timestamp").toString()));
             urlSb.append(BCUtilPrivate.getkApiSandboxQueryBillById());
         } else {
             param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
@@ -166,7 +169,8 @@ public class BCPay {
     /**
      * 订单总数查询接口
      *
-     * @param para {@link BCQueryParameter} （必填）订单总数查询参数
+     * @param para
+     * {@link BCQueryParameter} （必填）订单总数查询参数
      * @return 订单总数查询返回的结果
      * @throws BCException
      */
@@ -190,7 +194,8 @@ public class BCPay {
     /**
      * 退款记录查询（批量）接口
      *
-     * @param para {@link BCQueryParameter} （必填）订单查询参数
+     * @param para
+     * {@link BCQueryParameter} （必填）订单查询参数
      * @return 退款查询返回的结果
      * @throws BCException
      */
@@ -212,7 +217,8 @@ public class BCPay {
     /**
      * 退款查询接口（根据 id）
      *
-     * @param objectId (必填) 退款记录唯一标识
+     * @param objectId
+     * (必填) 退款记录唯一标识
      * @return 单笔退款记录查询返回结果
      * @throws BCException
      */
@@ -241,7 +247,8 @@ public class BCPay {
     /**
      * 退款记录总数查询接口
      *
-     * @param para {@link BCQueryParameter} （必填） 退款总数查询参数
+     * @param para
+     * {@link BCQueryParameter} （必填） 退款总数查询参数
      * @return 退款总数查询返回的结果
      * @throws BCException
      */
@@ -262,13 +269,16 @@ public class BCPay {
     /**
      * 退款状态更新接口
      *
-     * @param refundNo （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24
-     *                 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
-     * @param channel  (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含： YEE 易宝 WX 微信 KUAIQIAN 快钱 BD 百度
+     * @param refundNo
+     * （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24
+     * 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
+     * @param channel
+     * (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含： YEE 易宝 WX 微信 KUAIQIAN 快钱 BD 百度
      * @return 退款状态更新返回结果，包括（SUCCESS， PROCESSING, FAIL...）
      * @throws BCException
      */
-    public static String startRefundUpdate(PAY_CHANNEL channel, String refundNo) throws BCException {
+    public static String startRefundUpdate(PAY_CHANNEL channel, String refundNo)
+            throws BCException {
 
         checkTestModeSwitch();
 
@@ -288,7 +298,8 @@ public class BCPay {
     /**
      * 境外支付（paypal）接口
      *
-     * @param order {@link BCInternationlOrder} （必填）
+     * @param order
+     * {@link BCInternationlOrder} （必填）
      * @return 支付后返回的order
      * @throws BCException
      */
@@ -313,7 +324,8 @@ public class BCPay {
     /**
      * 单笔打款接口
      *
-     * @param para {@link TransferParameter} （必填）单笔打款参数
+     * @param para
+     * {@link TransferParameter} （必填）单笔打款参数
      * @return 如果channel类型是TRANSFER_CHANNEL.ALI_TRANSFER, 返回需要跳转支付的url, 否则返回空字符串
      * @throws BCException
      */
@@ -338,7 +350,8 @@ public class BCPay {
     /**
      * 批量打款接口
      *
-     * @param para {@link TransfersParameter} （必填） 批量打款参数
+     * @param para
+     * {@link TransfersParameter} （必填） 批量打款参数
      * @return 批量打款跳转支付url
      * @throws BCException
      */
@@ -360,7 +373,8 @@ public class BCPay {
     /**
      * 预退款审核接口，包括批量否决和批量同意
      *
-     * @param batchRefund （必填） 预退款批量审核参数
+     * @param batchRefund
+     * （必填） 预退款批量审核参数
      * @return 批量审核结果
      * @throws BCException
      */
@@ -393,8 +407,10 @@ public class BCPay {
     /**
      * Webhook接收签名验证接口
      *
-     * @param sign      （必填） Webhook提供的签名
-     * @param timestamp （必填） Webhook提供的timestamp，注意是String格式
+     * @param sign
+     * （必填） Webhook提供的签名
+     * @param timestamp
+     * （必填） Webhook提供的timestamp，注意是String格式
      * @return 验签结果
      */
     public static boolean verifySign(String sign, String timestamp) {
@@ -414,7 +430,8 @@ public class BCPay {
         param.put("app_id", BCCache.getAppID());
         param.put("timestamp", System.currentTimeMillis());
         if (BCCache.isSandbox()) {
-            param.put("app_sign", BCUtilPrivate.getAppSignatureWithTestSecret(param.get("timestamp").toString()));
+            param.put("app_sign",
+                    BCUtilPrivate.getAppSignatureWithTestSecret(param.get("timestamp").toString()));
         } else {
             param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
         }
@@ -482,7 +499,8 @@ public class BCPay {
         param.put("app_id", BCCache.getAppID());
         param.put("timestamp", System.currentTimeMillis());
         if (BCCache.isSandbox()) {
-            param.put("app_sign", BCUtilPrivate.getAppSignatureWithTestSecret(param.get("timestamp").toString()));
+            param.put("app_sign",
+                    BCUtilPrivate.getAppSignatureWithTestSecret(param.get("timestamp").toString()));
         } else {
             param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
         }
@@ -526,7 +544,8 @@ public class BCPay {
         param.put("app_id", BCCache.getAppID());
         param.put("timestamp", System.currentTimeMillis());
         if (BCCache.isSandbox()) {
-            param.put("app_sign", BCUtilPrivate.getAppSignatureWithTestSecret(param.get("timestamp").toString()));
+            param.put("app_sign",
+                    BCUtilPrivate.getAppSignatureWithTestSecret(param.get("timestamp").toString()));
         } else {
             param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
         }
@@ -551,7 +570,7 @@ public class BCPay {
      * 构建境外支付rest api参数
      */
     private static void buildInternatioalPayParam(Map<String, Object> param,
-                                                  BCInternationlOrder order) {
+            BCInternationlOrder order) {
         param.put("app_id", BCCache.getAppID());
         param.put("timestamp", System.currentTimeMillis());
         param.put("app_sign", BCUtilPrivate.getAppSignature(param.get("timestamp").toString()));
@@ -691,8 +710,8 @@ public class BCPay {
             bcOrder.setChannelTradeNo(StrUtil.toStr(bill.get("trade_no")));
         }
         bcOrder.setOptionalString(StrUtil.toStr(bill.get("optional")));
-        bcOrder.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long) bill
-                .get("create_time")));
+        bcOrder.setDateTime(
+                BCUtilPrivate.transferDateFromLongToString((Long) bill.get("create_time")));
         if (bill.containsKey("message_detail")) {
             bcOrder.setMessageDetail(StrUtil.toStr(bill.get("message_detail")));
         }
@@ -708,8 +727,8 @@ public class BCPay {
         bcRefund.setBillNo(refund.get("bill_no").toString());
         bcRefund.setChannel(PAY_CHANNEL.valueOf(refund.get("sub_channel").toString()));
         bcRefund.setFinished((Boolean) refund.get("finish"));
-        bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long) refund
-                .get("create_time")));
+        bcRefund.setDateTime(
+                BCUtilPrivate.transferDateFromLongToString((Long) refund.get("create_time")));
         bcRefund.setOptionalString(refund.get("optional").toString());
         bcRefund.setRefunded((Boolean) refund.get("result"));
         bcRefund.setTitle(refund.get("title").toString());
@@ -739,8 +758,10 @@ public class BCPay {
     /**
      * doPost方法，封装rest api POST方式请求
      *
-     * @param url   请求url
-     * @param param 请求参数
+     * @param url
+     * 请求url
+     * @param param
+     * 请求参数
      * @return rest api返回参数
      * @throws BCException
      */
@@ -752,8 +773,8 @@ public class BCPay {
         }
         WebTarget target = client.target(url);
         try {
-            Response response = target.request().post(
-                    Entity.entity(param, MediaType.APPLICATION_JSON));
+            Response response = target.request()
+                    .post(Entity.entity(param, MediaType.APPLICATION_JSON));
             if (response.getStatus() == 200) {
                 Map<String, Object> ret = response.readEntity(Map.class);
 
@@ -775,16 +796,18 @@ public class BCPay {
             if (e instanceof BCException) {
                 throw (BCException) e;
             }
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + ","
-                    + e.getMessage());
+            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(),
+                    NETWORK_ERROR + "," + e.getMessage());
         }
     }
 
     /**
      * doPut方法，封装rest api PUT方式请求
      *
-     * @param url   请求url
-     * @param param 请求参数
+     * @param url
+     * 请求url
+     * @param param
+     * 请求参数
      * @return rest api返回参数
      * @throws BCException
      */
@@ -796,8 +819,8 @@ public class BCPay {
         }
         WebTarget target = client.target(url);
         try {
-            Response response = target.request().put(
-                    Entity.entity(param, MediaType.APPLICATION_JSON));
+            Response response = target.request()
+                    .put(Entity.entity(param, MediaType.APPLICATION_JSON));
             if (response.getStatus() == 200) {
                 Map<String, Object> ret = response.readEntity(Map.class);
 
@@ -826,8 +849,10 @@ public class BCPay {
     /**
      * doGet方法，封装rest api GET方式请求
      *
-     * @param url   请求url
-     * @param param 请求参数
+     * @param url
+     * 请求url
+     * @param param
+     * 请求参数
      * @return rest api返回参数
      * @throws BCException
      */
