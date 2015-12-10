@@ -2,11 +2,8 @@
          pageEncoding="UTF-8" %>
 <%@page import="net.sf.json.JSONObject" %>
 <%@page import="java.io.BufferedReader" %>
-<%@page import="java.io.InputStream" %>
-<%@page import="com.sun.org.apache.xpath.internal.operations.Bool" %>
 <%@page import="java.io.UnsupportedEncodingException" %>
 <%@page import="org.apache.commons.codec.digest.DigestUtils" %>
-<%@ page import="java.util.*" %>
 <%@ page import="cn.beecloud.*" %>
 <%@ page import="org.apache.log4j.*" %>
 <%
@@ -40,8 +37,11 @@
     boolean verifySign(String sign, String timestamp) {
         log.info("sign:" + sign);
         log.info("timestamp:" + timestamp);
+
+        if (BCCache.)
         return verify(sign, BCCache.getAppID() + BCCache.getAppSecret(),
                 timestamp, "UTF-8");
+
     }
 
     byte[] getContentBytes(String content, String charset) {

@@ -54,15 +54,15 @@ public class BCCache {
         return sandbox;
     }
 
-    static String getAppSecret() {
+    public static String getAppSecret() {
         return appSecret;
     }
 
-    static String getTestSecret() {
+    public static String getTestSecret() {
         return testSecret;
     }
 
-    static String getAppID() {
+    public static String getAppID() {
         return appID;
     }
     

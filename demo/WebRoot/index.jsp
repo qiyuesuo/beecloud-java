@@ -125,8 +125,7 @@ input {
 </head>
 <body>
 <%
-    BeeCloud.registerApp("c37d661d-7e61-49ea-96a5-68c34e83db3b", "b2daeb99-5163-4d9f-94e3-d9b4a843b80d", "c37d661d-7e61-49ea-96a5-68c34e83db3b", "c37d661d-7e61-49ea-96a5-68c34e83db3b");
-    BeeCloud.setSandbox(false);
+    BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "4bfdd244-574d-4bf3-b034-0c751ed34fee", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2");
 %>
 <div>
     <h2>应付总额： ¥0.01</h2>
