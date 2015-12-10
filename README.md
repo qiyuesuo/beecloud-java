@@ -39,7 +39,8 @@
 
 
 ## LIVE模式使用方法
-BeeCloud.registerApp(appId, **testSecret**, appSecret, masterSecret);
+BeeCloud.registerApp(appId, **testSecret**, appSecret, masterSecret);  
+
 **LIVE**模式**testSecret**可为**null**  
 
 **默认开启LIVE模式**
@@ -886,8 +887,9 @@ channel | 渠道类型， 包含WX、YEE、KUAIQIAN和BD（必填）
 
 
 ## SANDBOX模式使用方法
-BeeCloud.registerApp(appId, testSecret, **appSecret**, **masterSecret**);
-**SANDBOX**模式**testSecret**、**masterSecret**可为**null**  
+BeeCloud.registerApp(appId, testSecret, **appSecret**, **masterSecret**);  
+
+**SANDBOX**模式**appSecret**、**masterSecret**可为**null**  
 
 设置BeeCloud.setSandbox(**true**);**开启SANDBOX模式**
 
