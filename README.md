@@ -700,7 +700,7 @@ try {
     out.println(ex.getMessage());
 }
 ```
-代码中的参数对象BCRefund封装字段含义如下：
+代码中的参数对象BCBatchRefund封装字段含义如下：
 请求参数及返回字段：
 
 key | 说明
@@ -708,7 +708,7 @@ key | 说明
 ids | 退款记录id列表，批量审核的退款记录的唯一标识符集合，（必填）
 channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br/>WX、ALI、UN、YEE、JD、KUAIQIAN、BD（必填）
 agree | 同意或者驳回，批量驳回传false，批量同意传true，（必填）
-idResult | 退款id、结果信息集合，当批量同意处理成功时，value值为"OK"；当批量同意处理失败时， value值为具体的错误信息
+idResult | 退款id、结果信息集合，Map类型，key为退款记录id,当退款成功时，value值为"OK"；当退款失败时， value值为具体的错误信息
 aliRefundUrl | 支付宝批量退款跳转url，支付宝预退款批量同意处理成功后返回
 
 
