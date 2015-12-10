@@ -10,459 +10,253 @@
 package cn.beecloud;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
-import cn.beecloud.BCEumeration.QR_PAY_MODE;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
-import cn.beecloud.bean.BCOrderBean;
-import cn.beecloud.bean.BCRefundBean;
-import cn.beecloud.bean.TransferData;
+import cn.beecloud.bean.BCBatchRefund;
+import cn.beecloud.bean.BCException;
+import cn.beecloud.bean.BCInternationlOrder;
+import cn.beecloud.bean.BCOrder;
+import cn.beecloud.bean.BCQueryParameter;
+import cn.beecloud.bean.BCRefund;
+import cn.beecloud.bean.ALITransferData;
+import cn.beecloud.bean.TransferParameter;
+import cn.beecloud.bean.TransfersParameter;
+
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import net.sf.json.JSONObject;
 
+
 /**
- *
  * 主要为了一个商户下有多个收款APP使用，参考@BCPay
- *
  *
  * @author Gao
  * @since 2015/9/18
  */
 public class BCPayMultiApp {
 
+    private final static String NOT_REGISTER = "未注册";
+
+    private final static String NOT_CORRECT_RESPONSE = "响应不正确";
+
+    private final static String NETWORK_ERROR = "网络错误";
+
     private String appId;
     private String appSecret;
+    private String masterSecret;
 
-    private String getAppSignature(String timeStamp) {
-        String str = appId + timeStamp + appSecret;
-        return BCUtilPrivate.getMessageDigest(str);
-    }
-
-    public BCPayMultiApp(String appId, String appSecret) {
+    public BCPayMultiApp(String appId, String appSecret, String masterSecret) {
         this.appId = appId;
         this.appSecret = appSecret;
+        this.masterSecret = masterSecret;
     }
 
     /**
-     * @param channel   （必填）渠道类型， 根据不同场景选择不同的支付方式，包含：
-     *                  WX_NATIVE 微信公众号二维码支付
-     *                  WX_JSAPI 微信公众号支付
-     *                  ALI_WEB 支付宝网页支付
-     *                  ALI_QRCODE 支付宝内嵌二维码支付
-     *                  ALI_WAP: 支付宝移动网页支付
-     *                  UN_WEB 银联网页支付
-     *                  JD_WAP: 京东移动网页支付
-     *                  JD_WEB: 京东PC网页支付
-     *                  YEE_WAP: 易宝移动网页支付
-     *                  YEE_WEB: 易宝PC网页支付
-     *                  KUAIQIAN_WAP: 快钱移动网页支付
-     *                  KUAIQIAN_WEB: 快钱PC网页支付
-     * @param totalFee  （必填）订单总金额， 只能为整数，单位为分，例如 1
-     * @param billNo    （必填）商户订单号, 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如（201506101035040000001）
-     * @param title     （必填）订单标题， 32个字节内，最长支持16个汉字
-     * @param optional  （选填）附加数据， 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据
-     * @param returnUrl （选填）同步返回页面	， 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。当 channel 参数为 ALI_WEB 或 ALI_QRCODE 或 UN_WEB时为必填
-     * @param openId    （选填）  微信公众号支付(WX_JSAPI)必填
-     * @param showUrl   （选填）商品展示地址，需以http://开头的完整路径，例如：http://www.商户网址.com/myorder.
-     * @param qrPayMode （选填）二维码类型，二维码类型含义
-     *                  MODE_BRIEF_FRONT： 订单码-简约前置模式, 对应 iframe 宽度不能小于 600px, 高度不能小于 300px
-     *                  MODE_FRONT： 订单码-前置模式, 对应 iframe 宽度不能小于 300px, 高度不能小于 600px
-     *                  MODE_MINI_FRONT： 订单码-迷你前置模式, 对应 iframe 宽度不能小于 75px, 高度不能小于 75px
-     * @return BCPayResult
+     * 支付接口
+     * 
+     * @param order
+     * {@link BCOrder} (必填) 支付参数
+     * @return 调起BeeCloud支付后的返回结果
+     * @throws BCException
      */
-    public BCPayResult startBCPay(PAY_CHANNEL channel, int totalFee,
-                                  String billNo, String title,
-                                  Map<String, String> optional, String returnUrl, String openId, String showUrl, QR_PAY_MODE qrPayMode) {
+    public BCOrder startBCPay(BCOrder order) throws BCException {
 
-        BCPayResult result;
-        result = ValidationUtil.validateBCPay(channel, billNo, title, returnUrl, openId);
+        ValidationUtil.validateBCPay(order);
 
-        if (result.getType().ordinal() != 0) {
-            return result;
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildPayParam(param, order);
+
+        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiPay(), param);
+
+        placeOrder(order, ret);
+
+        return order;
+    }
+
+    /**
+     * 退款接口
+     * 
+     * @param refund
+     * {@link BCRefund} （必填） 退款参数
+     * @return 发起退款的返回结果
+     * @throws BCException
+     */
+    public BCRefund startBCRefund(BCRefund refund) throws BCException {
+
+        ValidationUtil.validateBCRefund(refund);
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildRefundParam(param, refund);
+
+        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiRefund(), param);
+
+        refund.setObjectId(ret.get("id").toString());
+        if (ret.containsKey("url")) {
+            refund.setAliRefundUrl(ret.get("url").toString());
         }
+
+        return refund;
+    }
+
+    /**
+     * 订单查询（批量）接口
+     * 
+     * @param para
+     * {@link BCQueryParameter} （必填） 订单查询参数
+     * @return 订单查询返回的结果
+     * @throws BCException
+     */
+    @SuppressWarnings("unchecked")
+    public List<BCOrder> startQueryBill(BCQueryParameter para) throws BCException {
+
+        ValidationUtil.validateQueryBill(para);
+
+        Map<String, Object> param = new HashMap<String, Object>();
+        buildQueryParam(param, para);
+
+        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBill(), param);
+
+        return generateBCOrderList((List<Map<String, Object>>) ret.get("bills"));
+
+    }
+
+    /**
+     * 订单查询（单笔，根据id）接口
+     * 
+     * @param objectId
+     * （必填） 订单记录唯一标识
+     * @return id查询返回结果
+     * @throws BCException
+     */
+    public BCOrder startQueryBillById(String objectId) throws BCException {
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
         param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
-        param.put("channel", channel.toString());
-        param.put("total_fee", totalFee);
-        param.put("bill_no", billNo);
-        param.put("title", title);
-        if (optional != null && optional.size() > 0)
-            param.put("optional", optional);
-        if (!StrUtil.empty(returnUrl))
-            param.put("return_url", returnUrl);
-        if (!StrUtil.empty(openId))
-            param.put("openid", openId);
-        if (!StrUtil.empty(showUrl))
-            param.put("show_url", showUrl);
-        if (qrPayMode != null) {
-            if (qrPayMode.ordinal() == 2) {
-                param.put("qr_pay_mode", String.valueOf(qrPayMode.ordinal() + 1));
-            } else {
-                param.put("qr_pay_mode", String.valueOf(qrPayMode.ordinal()));
-            }
-        }
 
-        result = new BCPayResult();
+        StringBuilder urlSb = new StringBuilder();
+        urlSb.append(BCUtilPrivate.getkApiQueryBillById());
+        urlSb.append("/");
+        urlSb.append(objectId);
+        urlSb.append("?para=");
+        Map<String, Object> ret = doGet(urlSb.toString(), param);
 
-        Client client = BCAPIClient.client;
-        WebTarget target = client.target(BCUtilPrivate.getkApiPay());
-        try {
-            Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                        .toStr(ret.get("result_code")).equals("0"));
-                if (isSuccess) {
-                    if (channel.equals(PAY_CHANNEL.WX_NATIVE)) {
-                        if (ret.containsKey("code_url") && null != ret.get("code_url")) {
-                            result.setCodeUrl(ret.get("code_url").toString());
-                            result.setType(RESULT_TYPE.OK);
-                        }
-                    } else if (channel.equals(PAY_CHANNEL.WX_JSAPI)) {
-                        result.setType(RESULT_TYPE.OK);
-                        result.setWxJSAPIMap(generateWXJSAPIMap(ret));
-                    } else if (channel.equals(PAY_CHANNEL.ALI_WEB) || channel.equals(PAY_CHANNEL.ALI_QRCODE) || channel.equals(PAY_CHANNEL.ALI_WAP)) {
-                        if (ret.containsKey("html") && null != ret.get("html") &&
-                                ret.containsKey("url") && null != ret.get("url")) {
-                            result.setHtml(ret.get("html").toString());
-                            result.setUrl(ret.get("url").toString());
-                            result.setType(RESULT_TYPE.OK);
-                        }
-                    } else if (channel.equals(PAY_CHANNEL.UN_WEB) || channel.equals(PAY_CHANNEL.JD_WAP)
-                            || channel.equals(PAY_CHANNEL.JD_WEB) || channel.equals(PAY_CHANNEL.KUAIQIAN_WAP)
-                            || channel.equals(PAY_CHANNEL.KUAIQIAN_WEB)) {
-                        if (ret.containsKey("html") && null != ret.get("html")) {
-                            result.setHtml(ret.get("html").toString());
-                            result.setType(RESULT_TYPE.OK);
-                        }
-                    } else if (channel.equals(PAY_CHANNEL.YEE_WAP) || channel.equals(PAY_CHANNEL.YEE_WEB)) {
-                        if (ret.containsKey("url") && null != ret.get("url")) {
-                            result.setUrl(ret.get("url").toString());
-                            result.setType(RESULT_TYPE.OK);
-                        }
-                    }
-                } else {
-                    result.setErrMsg(ret.get("result_msg").toString());
-                    result.setErrDetail(ret.get("err_detail").toString());
-                    result.setType(RESULT_TYPE.RUNTIME_ERROR);
-                }
-            } else {
-                result.setErrMsg("Not correct response!");
-                result.setErrDetail("Not correct response!");
-                result.setType(RESULT_TYPE.RUNTIME_ERROR);
-            }
-        } catch (Exception e) {
-            result.setErrMsg("Network error!");
-            result.setErrDetail(e.getMessage());
-            result.setType(RESULT_TYPE.RUNTIME_ERROR);
-        }
-        return result;
+        return generateBCOrder((Map<String, Object>) ret.get("pay"));
     }
 
     /**
-     * @param channel   （选填）渠道类型， 根据不同场景选择不同的支付方式，包含：
-     *                  WX  微信
-     *                  ALI 支付宝
-     *                  UN 银联
-     *                  YEE 易宝
-     *                  JD 京东
-     *                  KUAIQIAN 快钱
-     * @param refundNo  （必填）商户退款单号	， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
-     *                  例如：201506101035040000001
-     * @param billNo    （必填）商户订单号， 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一
-     * @param refundFee （必填）退款金额， 只能为整数，单位为分，例如1
-     * @param optional  （选填）附加数据 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，例如{"key1":"value1","key2":"value2",...}
-     * @return BCPayResult
+     * 订单总数查询接口
+     * 
+     * @param para
+     * {@link BCQueryParameter} （必填）订单总数查询参数
+     * @return 订单总数查询返回的结果
+     * @throws BCException
      */
-    public BCPayResult startBCRefund(PAY_CHANNEL channel, String refundNo, String billNo, int refundFee, Map optional) {
+    public Integer startQueryBillCount(BCQueryParameter para) throws BCException {
 
-        BCPayResult result;
-        result = ValidationUtil.validateBCRefund(channel, refundNo, billNo);
+        ValidationUtil.validateQueryBill(para);
 
-        if (result.getType().ordinal() != 0) {
-            return result;
-        }
+        Map<String, Object> param = new HashMap<String, Object>();
+        buildQueryCountParam(param, para);
+
+        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBillCount(), param);
+
+        return (Integer) ret.get("count");
+    }
+
+    /**
+     * 退款记录查询（批量）接口
+     * 
+     * @param para
+     * {@link BCQueryParameter} （必填）订单查询参数
+     * @return 退款查询返回的结果
+     * @throws BCException
+     */
+    public List<BCRefund> startQueryRefund(BCQueryParameter para) throws BCException {
+
+        ValidationUtil.validateQueryRefund(para);
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildQueryParam(param, para);
+
+        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryRefund(), param);
+
+        return generateBCRefundList((List<Map<String, Object>>) ret.get("refunds"));
+    }
+
+    /**
+     * 退款查询接口（根据 id）
+     * 
+     * @param objectId
+     * (必填) 退款记录唯一标识
+     * @return 单笔退款记录查询返回结果
+     * @throws BCException
+     */
+    public BCRefund startQueryRefundById(String objectId) throws BCException {
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
         param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
-        if (channel != null) {
-            param.put("channel", channel.toString());
-        }
-        param.put("refund_no", refundNo);
-        param.put("bill_no", billNo);
-        param.put("refund_fee", refundFee);
-        if (optional != null && optional.size() > 0)
-            param.put("optional", optional);
 
-        result = new BCPayResult();
+        StringBuilder urlSb = new StringBuilder();
+        urlSb.append(BCUtilPrivate.getkApiQueryRefundById());
+        urlSb.append("/");
+        urlSb.append(objectId);
+        urlSb.append("?para=");
+        Map<String, Object> ret = doGet(urlSb.toString(), param);
 
-        Client client = BCAPIClient.client;
+        return generateBCRefund((Map<String, Object>) ret.get("refund"));
 
-        WebTarget target = client.target(BCUtilPrivate.getkApiRefund());
-        try {
-            Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                        .toStr(ret.get("result_code")).equals("0"));
-
-                if (isSuccess) {
-                    if (ret.containsKey("url")) {
-                        result.setUrl(ret.get("url").toString());
-                    }
-                    result.setType(RESULT_TYPE.OK);
-                    result.setSucessMsg(ValidationUtil.REFUND_SUCCESS);
-                } else {
-                    result.setErrMsg(ret.get("result_msg").toString());
-                    result.setErrDetail(ret.get("err_detail").toString());
-                    result.setType(RESULT_TYPE.RUNTIME_ERROR);
-                }
-            } else {
-                result.setErrMsg("Not correct response!");
-                result.setType(RESULT_TYPE.RUNTIME_ERROR);
-            }
-        } catch (Exception e) {
-            result.setErrMsg("Network error!");
-            result.setType(RESULT_TYPE.RUNTIME_ERROR);
-        }
-        return result;
     }
 
     /**
-     * @param channel   （选填）渠道类型， 根据不同场景选择不同的支付方式，包含：
-     *                  WX
-     *                  WX_APP 微信手机APP支付
-     *                  WX_NATIVE 微信公众号二维码支付
-     *                  WX_JSAPI 微信公众号支付
-     *                  ALI
-     *                  ALI_APP 支付宝APP支付
-     *                  ALI_WEB 支付宝网页支付
-     *                  ALI_WAP: 支付宝移动网页支付
-     *                  ALI_QRCODE 支付宝内嵌二维码支付
-     *                  UN
-     *                  UN_APP 银联APP支付
-     *                  UN_WEB 银联网页支付
-     *                  JD
-     *                  JD_WAP: 京东移动网页支付
-     *                  JD_WEB: 京东PC网页支付
-     *                  YEE
-     *                  YEE_WAP: 易宝移动网页支付
-     *                  YEE_WEB: 易宝PC网页支付
-     *                  KUAIQIAN
-     *                  KUAIQIAN_WAP: 快钱移动网页支付
-     *                  KUAIQIAN_WEB: 快钱PC网页支付
-     *                  PAYPAL
-     *                  PAYPAL_SANDBOX: paypal 沙箱环境订单
-     *                  PAYPAL_LIVE: paypal 生产环境订单
-     * @param billNo    （选填） 商户订单号， 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一
-     * @param startTime （选填） 起始时间， Date类型
-     * @param endTime   （选填） 结束时间，Date类型
-     * @param skip      （选填） 查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据
-     * @param limit     （选填） 查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据
-     * @return BCQueryResult
+     * 退款记录总数查询接口
+     * 
+     * @param para
+     * {@link BCQueryParameter} （必填） 退款总数查询参数
+     * @return 退款总数查询返回的结果
+     * @throws BCException
      */
-    public BCQueryResult startQueryBill(PAY_CHANNEL channel, String billNo, Date startTime, Date endTime, Integer skip, Integer limit) {
+    public Integer startQueryRefundCount(BCQueryParameter para) throws BCException {
 
-        BCQueryResult result;
-
-        result = ValidationUtil.validateQueryBill(billNo, limit);
-
-        if (result.getType().ordinal() != 0) {
-            return result;
-        }
+        ValidationUtil.validateQueryRefund(para);
 
         Map<String, Object> param = new HashMap<String, Object>();
-        param.put("app_id", this.appId);
-        param.put("timestamp", System.currentTimeMillis());
-        param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
-        if (channel != null) {
-            param.put("channel", channel.toString());
-        }
-        param.put("bill_no", billNo);
-        param.put("skip", skip);
-        param.put("limit", limit);
-        if (startTime != null) {
-            param.put("start_time", startTime.getTime());
-        }
-        if (endTime != null) {
-            param.put("end_time", endTime.getTime());
-        }
+        buildQueryCountParam(param, para);
 
-        result = new BCQueryResult();
+        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBillCount(), param);
 
-        Client client = BCAPIClient.client;
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(BCUtilPrivate.getkApiQueryBill());
-
-        try {
-            sb.append(URLEncoder.encode(
-                    JSONObject.fromObject(param).toString(), "UTF-8"));
-
-            WebTarget target = client.target(sb.toString());
-            Response response = target.request().get();
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                        .toStr(ret.get("result_code")).equals("0"));
-
-                if (isSuccess) {
-                    result.setType(RESULT_TYPE.OK);
-                    if (ret.containsKey("bills")
-                            && !StrUtil.empty(ret.get("bills"))) {
-                        result.setBcOrders(generateBCOrderList((List<Map<String, Object>>) ret.get("bills")));
-                    }
-                } else {
-                    result.setErrMsg(ret.get("result_msg").toString());
-                    result.setErrDetail(ret.get("err_detail").toString());
-                    result.setType(RESULT_TYPE.RUNTIME_ERROR);
-                }
-            } else {
-                result.setErrMsg("Not correct response!");
-                result.setErrDetail("Not correct response!");
-                result.setType(RESULT_TYPE.RUNTIME_ERROR);
-            }
-        } catch (Exception e) {
-            result.setErrMsg("Network error!");
-            result.setErrDetail(e.getMessage());
-            result.setType(RESULT_TYPE.RUNTIME_ERROR);
-        }
-
-        return result;
+        return (Integer) ret.get("count");
     }
 
     /**
-     * @param channel   （选填）渠道类型， 根据不同场景选择不同的支付方式，包含：
-     *                  WX
-     *                  WX_APP 微信手机APP支付
-     *                  WX_NATIVE 微信公众号二维码支付
-     *                  WX_JSAPI 微信公众号支付
-     *                  ALI
-     *                  ALI_APP 支付宝APP支付
-     *                  ALI_WEB 支付宝网页支付
-     *                  ALI_WAP: 支付宝移动网页支付
-     *                  ALI_QRCODE 支付宝内嵌二维码支付
-     *                  UN
-     *                  UN_APP 银联APP支付
-     *                  UN_WEB 银联网页支付
-     *                  JD
-     *                  JD_WAP: 京东移动网页支付
-     *                  JD_WEB: 京东PC网页支付
-     *                  YEE
-     *                  YEE_WAP: 易宝移动网页支付
-     *                  YEE_WEB: 易宝PC网页支付
-     *                  KUAIQIAN
-     *                  KUAIQIAN_WAP: 快钱移动网页支付
-     *                  KUAIQIAN_WEB: 快钱PC网页支付
-     * @param billNo    （选填） 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一
-     * @param refundNo  （选填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
-     * @param startTime （选填） 起始时间， Date类型
-     * @param endTime   （选填） 结束时间， Date类型
-     * @param skip      （选填） 查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据
-     * @param limit     （选填） 查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据
-     * @return BCQueryResult
+     * 退款状态更新接口
+     * 
+     * @param refundNo
+     * （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24
+     * 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
+     * @param channel
+     * (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含： YEE 易宝 WX 微信 KUAIQIAN 快钱 BD 百度
+     * @return 退款状态更新返回结果，包括（SUCCESS， PROCESSING, FAIL...）
+     * @throws BCException
      */
-    public BCQueryResult startQueryRefund(PAY_CHANNEL channel, String billNo, String refundNo, Date startTime, Date endTime, Integer skip, Integer limit) {
+    public String startRefundUpdate(PAY_CHANNEL channel, String refundNo) throws BCException {
 
-        BCQueryResult result;
-        result = ValidationUtil.validateQueryRefund(billNo, refundNo, limit);
-        if (result.getType().ordinal() != 0) {
-            return result;
-        }
-
-        result = new BCQueryResult();
-
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put("app_id", this.appId);
-        param.put("timestamp", System.currentTimeMillis());
-        param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
-        if (channel != null) {
-            param.put("channel", channel.toString());
-        }
-        param.put("bill_no", billNo);
-        param.put("refund_no", refundNo);
-        if (startTime != null) {
-            param.put("start_time", startTime.getTime());
-        }
-        if (endTime != null) {
-            param.put("end_time", endTime.getTime());
-        }
-        param.put("skip", skip);
-        param.put("limit", limit);
-        Client client = BCAPIClient.client;
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(BCUtilPrivate.getkApiQueryRefund());
-
-        try {
-            sb.append(URLEncoder.encode(
-                    JSONObject.fromObject(param).toString(), "UTF-8"));
-
-            WebTarget target = client.target(sb.toString());
-            Response response = target.request().get();
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                        .toStr(ret.get("result_code")).equals("0"));
-
-                if (isSuccess) {
-                    result.setType(RESULT_TYPE.OK);
-                    if (ret.containsKey("refunds")
-                            && ret.get("refunds") != null) {
-                        result.setBcRefundList(generateBCRefundList((List<Map<String, Object>>) ret.get("refunds")));
-                    }
-                } else {
-                    result.setErrMsg(ret.get("result_msg").toString());
-                    result.setErrDetail(ret.get("err_detail").toString());
-                    result.setType(RESULT_TYPE.RUNTIME_ERROR);
-                }
-            } else {
-                result.setErrMsg("Not correct response!");
-                result.setErrDetail("Not correct response!");
-                result.setType(RESULT_TYPE.RUNTIME_ERROR);
-            }
-        } catch (Exception e) {
-            result.setErrMsg("Network error!");
-            result.setErrDetail(e.getMessage());
-            result.setType(RESULT_TYPE.RUNTIME_ERROR);
-        }
-
-        return result;
-    }
-
-    /**
-     * @param refundNo （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
-     * @param channel  (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含：
-     *                 YEE 易宝
-     *                 WX 微信
-     *                 KUAIQIAN 快钱
-     * @return BCQueryStatusResult
-     */
-    public BCQueryStatusResult startRefundUpdate(PAY_CHANNEL channel, String refundNo) {
-
-        BCQueryStatusResult result;
-        result = ValidationUtil.validateQueryRefundStatus(refundNo);
-
-        if (result.getType().ordinal() != 0) {
-            return result;
-        }
+        ValidationUtil.validateQueryRefundStatus(channel, refundNo);
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("app_id", this.appId);
@@ -471,69 +265,324 @@ public class BCPayMultiApp {
         param.put("channel", channel.toString());
         param.put("refund_no", refundNo);
 
-        result = new BCQueryStatusResult();
-        StringBuilder sb = new StringBuilder();
-        sb.append(BCUtilPrivate.getkApiRefundUpdate());
-
-        Client client = BCAPIClient.client;
-
-        try {
-            sb.append(URLEncoder.encode(
-                    JSONObject.fromObject(param).toString(), "UTF-8"));
-            WebTarget target = client.target(sb.toString());
-            Response response = target.request().get();
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                        .toStr(ret.get("result_code")).equals("0"));
-
-                if (isSuccess) {
-                    result.setRefundStatus(ret.get("refund_status").toString());
-                    result.setType(RESULT_TYPE.OK);
-                } else {
-                    result.setErrMsg(ret.get("result_msg").toString());
-                    result.setErrDetail(ret.get("err_detail").toString());
-                    result.setType(RESULT_TYPE.RUNTIME_ERROR);
-                }
-            } else {
-                result.setErrMsg("Not correct response!");
-                result.setErrDetail("Not correct response!");
-                result.setType(RESULT_TYPE.RUNTIME_ERROR);
-            }
-        } catch (Exception e) {
-            result.setErrMsg("Network error!");
-            result.setErrDetail(e.getMessage());
-            result.setType(RESULT_TYPE.RUNTIME_ERROR);
-        }
-        return result;
-
+        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiRefundUpdate(), param);
+        return ret.get("refund_status").toString();
     }
 
     /**
-     * @param channel      （必填）渠道类型， 暂时只支持ALI
-     * @param batchNo      （必填） 批量付款批号， 此次批量付款的唯一标示，11-32位数字字母组合
-     * @param accountName  （必填） 付款方的支付宝账户名, 支付宝账户名称,例如:毛毛
-     * @param transferData （必填） 付款的详细数据 {TransferData} 的 List集合。
-     * @return BCPayResult
+     * 单笔打款接口
+     * 
+     * @param para
+     * {@link TransferParameter} （必填）单笔打款参数
+     * @return 如果channel类型是TRANSFER_CHANNEL.ALI_TRANSFER, 返回需要跳转支付的url, 否则返回空字符串
+     * @throws BCException
      */
-    public BCPayResult startTransfer(PAY_CHANNEL channel, String batchNo, String accountName, List<TransferData> transferData) {
-        BCPayResult result;
-        result = ValidationUtil.validateBCTransfer(channel, batchNo, accountName, transferData);
+    public String startTransfer(TransferParameter para) throws BCException {
 
-        if (result.getType().ordinal() != 0) {
-            return result;
-        }
+        ValidationUtil.validateBCTransfer(para);
 
         Map<String, Object> param = new HashMap<String, Object>();
+
+        buildTransferParam(param, para);
+
+        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfer(), param);
+
+        if (ret.containsKey("url")) {
+            return ret.get("url").toString();
+        }
+        return "";
+    }
+
+    /**
+     * 批量打款接口
+     * 
+     * @param para
+     * {@link TransfersParameter} （必填） 批量打款参数
+     * @return 批量打款跳转支付url
+     * @throws BCException
+     */
+    public String startTransfers(TransfersParameter para) throws BCException {
+
+        ValidationUtil.validateBCTransfers(para);
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildTransfersParam(param, para);
+
+        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfers(), param);
+
+        return ret.get("url").toString();
+    }
+
+    /**
+     * 发起预退款审核，包括批量否决和批量同意
+     * 
+     * @param batchRefund
+     * （必填） 批量退款参数
+     * @return BCBatchRefund
+     * @throws BCException
+     */
+    public BCBatchRefund startBatchRefund(BCBatchRefund batchRefund) throws BCException {
+
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("channel", batchRefund.getChannel().toString());
+        param.put("agree", batchRefund.getAgree());
+        param.put("ids", batchRefund.getIds());
         param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
         param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
-        param.put("channel", channel.toString());
-        param.put("batch_no", batchNo);
-        param.put("account_name", accountName);
+
+        Map<String, Object> ret = doPut(BCUtilPrivate.getApiBatchRefund(), param);
+
+        if (ret.containsKey("result_map")) {
+            batchRefund.setIdResult((Map<String, String>) ret.get("result_map"));
+            if (ret.containsKey("url")) {
+                batchRefund.setAliRefundUrl(ret.get("url").toString());
+            }
+        }
+
+        return batchRefund;
+    }
+
+    /**
+     * 境外支付（paypal）接口
+     * 
+     * @param order
+     * {@link BCInternationlOrder} （必填）
+     * @return 支付后返回的order
+     * @throws BCException
+     */
+    public BCInternationlOrder startBCInternatioalPay(BCInternationlOrder order) throws BCException {
+
+        ValidationUtil.validateBCInternatioalPay(order);
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildInternatioalPayParam(param, order);
+
+        Map<String, Object> ret = doPost(BCUtilPrivate.getApiInternationalPay(), param);
+
+        placePayPalOrder(order, ret);
+
+        return order;
+    }
+
+    /**
+     * @param sign
+     * Webhook提供的签名
+     * @param timestamp
+     * Webhook提供的timestamp，注意是String格式
+     * @return 签名是否正确
+     */
+    public static boolean verifySign(String sign, String timestamp) {
+        String mySign = MD5.sign(BCCache.getAppID() + BCCache.getAppSecret(), timestamp, "UTF-8");
+
+        if (sign.equals(mySign))
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * 构建支付rest api参数
+     */
+    private void buildPayParam(Map<String, Object> param, BCOrder para) {
+
+        param.put("app_id", this.appId);
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
+        param.put("channel", para.getChannel().toString());
+        param.put("total_fee", para.getTotalFee());
+        param.put("bill_no", para.getBillNo());
+        param.put("title", para.getTitle());
+
+        if (para.getReturnUrl() != null) {
+            param.put("return_url", para.getReturnUrl());
+        }
+        if (para.getOptional() != null && para.getOptional().size() > 0) {
+            param.put("optional", para.getOptional());
+        }
+        if (para.getOpenId() != null) {
+            param.put("openid", para.getOpenId());
+        }
+        if (para.getShowUrl() != null) {
+            param.put("show_url", para.getShowUrl());
+        }
+        if (para.getQrPayMode() != null) {
+            if (para.getQrPayMode().ordinal() == 2) {
+                param.put("qr_pay_mode", String.valueOf(para.getQrPayMode().ordinal() + 1));
+            } else {
+                param.put("qr_pay_mode", String.valueOf(para.getQrPayMode().ordinal()));
+            }
+        }
+        if (para.getBillTimeout() != null) {
+            param.put("bill_timeout", para.getBillTimeout());
+        }
+        if (para.getChannel().equals(PAY_CHANNEL.YEE_NOBANKCARD)) {
+            param.put("cardno", para.getCardNo());
+            param.put("cardpwd", para.getCardPwd());
+            param.put("frqid", para.getFrqid());
+        }
+    }
+
+    /**
+     * 构建退款rest api参数
+     */
+    private void buildRefundParam(Map<String, Object> param, BCRefund para) {
+
+        param.put("app_id", this.appId);
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign",
+                this.getAppSignatureWithMasterSecret(param.get("timestamp").toString()));
+        param.put("refund_no", para.getRefundNo());
+        param.put("bill_no", para.getBillNo());
+        param.put("refund_fee", para.getRefundFee());
+
+        if (para.getChannel() != null) {
+            param.put("channel", para.getChannel().toString());
+        }
+        if (para.isNeedApproval() != null) {
+            param.put("need_approval", para.isNeedApproval());
+        }
+        if (para.getOptional() != null && para.getOptional().size() > 0)
+            param.put("optional", para.getOptional());
+    }
+
+    /**
+     * 构建查询rest api参数
+     */
+    private void buildQueryParam(Map<String, Object> param, BCQueryParameter para) {
+        param.put("app_id", this.appId);
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
+        if (para.getChannel() != null) {
+            param.put("channel", para.getChannel().toString());
+        }
+        if (para.getBillNo() != null) {
+            param.put("bill_no", para.getBillNo());
+        }
+        if (para.getRefundNo() != null) {
+            param.put("refund_no", para.getRefundNo());
+        }
+        if (para.getSkip() != null) {
+            param.put("skip", para.getSkip());
+        }
+        if (para.getLimit() != null) {
+            param.put("limit", para.getLimit());
+        }
+        if (para.getStartTime() != null) {
+            param.put("start_time", para.getStartTime().getTime());
+        }
+        if (para.getEndTime() != null) {
+            param.put("end_time", para.getEndTime().getTime());
+        }
+        if (para.getPayResult() != null) {
+            param.put("spay_result", para.getPayResult());
+        }
+        if (para.getNeedDetail() != null && para.getNeedDetail()) {
+            param.put("need_detail", para.getNeedDetail());
+        }
+        if (para.getNeedApproval() != null && para.getNeedApproval()) {
+            param.put("need_approval", para.getNeedApproval());
+        }
+    }
+
+    /**
+     * 构建订单总数查询rest api参数
+     */
+    private void buildQueryCountParam(Map<String, Object> param, BCQueryParameter para) {
+        param.put("app_id", this.appId);
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
+        if (para.getChannel() != null) {
+            param.put("channel", para.getChannel().toString());
+        }
+        if (para.getBillNo() != null) {
+            param.put("bill_no", para.getBillNo());
+        }
+        if (para.getRefundNo() != null) {
+            param.put("refund_no", para.getRefundNo());
+        }
+        if (para.getStartTime() != null) {
+            param.put("start_time", para.getStartTime().getTime());
+        }
+        if (para.getEndTime() != null) {
+            param.put("end_time", para.getEndTime().getTime());
+        }
+    }
+
+    /**
+     * 构建境外支付rest api参数
+     */
+    private void buildInternatioalPayParam(Map<String, Object> param, BCInternationlOrder order) {
+        param.put("app_id", this.appId);
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign", this.getAppSignature(param.get("timestamp").toString()));
+        param.put("channel", StrUtil.toStr(order.getChannel()));
+        param.put("currency", StrUtil.toStr(order.getCurrency()));
+        param.put("bill_no", order.getBillNo());
+        param.put("title", order.getTitle());
+        param.put("total_fee", order.getTotalFee());
+        if (order.getCreditCardInfo() != null) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            param.put("credit_card_info", map);
+            map.put("card_number", order.getCreditCardInfo().getCardNo());
+            map.put("expire_month", order.getCreditCardInfo().getExpireMonth());
+            map.put("expire_year", order.getCreditCardInfo().getExpireYear());
+            map.put("cvv", order.getCreditCardInfo().getCvv());
+            map.put("first_name", order.getCreditCardInfo().getFirstName());
+            map.put("last_name", order.getCreditCardInfo().getLastName());
+            map.put("card_type", StrUtil.toStr(order.getCreditCardInfo().getCardType()));
+        }
+        if (order.getCreditCardId() != null) {
+            param.put("credit_card_id", order.getCreditCardId());
+        }
+        if (order.getReturnUrl() != null) {
+            param.put("return_url", order.getReturnUrl());
+        }
+    }
+
+    /**
+     * 构建单笔打款rest api参数
+     */
+    private void buildTransferParam(Map<String, Object> param, TransferParameter para) {
+        param.put("app_id", this.appId);
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign",
+                this.getAppSignatureWithMasterSecret(param.get("timestamp").toString()));
+        param.put("channel", para.getChannel().toString());
+        param.put("transfer_no", para.getTransferNo());
+        param.put("total_fee", para.getTotalFee());
+        param.put("desc", para.getDescription());
+        param.put("channel_user_id", para.getChannelUserId());
+        if (para.getChannelUserName() != null) {
+            param.put("channel_user_name", para.getChannelUserName());
+        }
+        if (para.getRedpackInfo() != null) {
+            Map<String, Object> redpackInfo = new HashMap<String, Object>();
+            redpackInfo.put("send_name", para.getRedpackInfo().getSendName());
+            redpackInfo.put("wishing", para.getRedpackInfo().getWishing());
+            redpackInfo.put("act_name", para.getRedpackInfo().getActivityName());
+            param.put("redpack_info", redpackInfo);
+        }
+        if (para.getAccountName() != null) {
+            param.put("account_name", para.getAccountName());
+        }
+    }
+
+    /**
+     * 构建批量打款rest api参数
+     */
+    private void buildTransfersParam(Map<String, Object> param, TransfersParameter para) {
+        param.put("app_id", this.appId);
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign",
+                this.getAppSignatureWithMasterSecret(param.get("timestamp").toString()));
+        param.put("channel", "ALI");
+        param.put("batch_no", para.getBatchNo());
+        param.put("account_name", para.getAccountName());
         List<Map<String, Object>> transferList = new ArrayList<Map<String, Object>>();
-        for (TransferData data : transferData) {
+        for (ALITransferData data : para.getTransferDataList()) {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("transfer_id", data.getTransferId());
             map.put("receiver_account", data.getReceiverAccount());
@@ -543,110 +592,104 @@ public class BCPayMultiApp {
             transferList.add(map);
         }
         param.put("transfer_data", transferList);
-
-        result = new BCPayResult();
-
-        Client client = BCAPIClient.client;
-
-        WebTarget target = client.target(BCUtilPrivate.getkApiTransfer());
-        try {
-            Response response = target.request().post(Entity.entity(param, MediaType.APPLICATION_JSON));
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                boolean isSuccess = (ret.containsKey("result_code") && StrUtil
-                        .toStr(ret.get("result_code")).equals("0"));
-
-                if (isSuccess) {
-                    result.setUrl(ret.get("url").toString());
-                    result.setType(RESULT_TYPE.OK);
-
-                } else {
-                    result.setErrMsg(ret.get("result_msg").toString());
-                    result.setErrDetail(ret.get("err_detail").toString());
-                    result.setType(RESULT_TYPE.RUNTIME_ERROR);
-                }
-            } else {
-                result.setErrMsg("Not correct response!");
-                result.setType(RESULT_TYPE.RUNTIME_ERROR);
-            }
-        } catch (Exception e) {
-            result.setErrMsg("Network error!");
-            result.setType(RESULT_TYPE.RUNTIME_ERROR);
-        }
-        return result;
     }
 
     /**
-     * @param sign      Webhook提供的签名
-     * @param timestamp Webhook提供的timestamp，注意是String格式
-     * @return 签名是否正确
+     * 生成返回BCOrder list
      */
-    public boolean verifySign(String sign, String timestamp) {
-        String mySign = MD5.sign(BCCache.getAppID() + BCCache.getAppSecret(),
-                timestamp, "UTF-8");
+    private static List<BCOrder> generateBCOrderList(List<Map<String, Object>> bills) {
 
-        if (sign.equals(mySign))
-            return true;
-        else
-            return false;
-    }
-
-    /**
-     * The method is used to generate Order list by query.
-     *
-     * @param bills
-     * @return list of BCOrderBean
-     */
-    private List<BCOrderBean> generateBCOrderList(List<Map<String, Object>> bills) {
-
-        List<BCOrderBean> bcOrderList = new ArrayList<BCOrderBean>();
-        for (Map bill : bills) {
-            BCOrderBean bcOrder = new BCOrderBean();
-            bcOrder.setBillNo(bill.get("bill_no").toString());
-            bcOrder.setTotalFee(bill.get("total_fee").toString());
-            bcOrder.setTitle(bill.get("title").toString());
-            bcOrder.setChannel(bill.get("channel").toString());
-            bcOrder.setSpayResult(((Boolean) bill.get("spay_result")));
-            bcOrder.setCreatedTime((Long) bill.get("created_time"));
-            bcOrder.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long) bill.get("created_time")));
+        List<BCOrder> bcOrderList = new ArrayList<BCOrder>();
+        for (Map<String, Object> bill : bills) {
+            BCOrder bcOrder = new BCOrder();
+            generateBCOrderBean(bill, bcOrder);
             bcOrderList.add(bcOrder);
         }
         return bcOrderList;
     }
 
     /**
-     * The method is used to generate Refund list by query.
-     *
-     * @param refundList
-     * @return list of refund
+     * 生成返回BCOrder
      */
-    private List<BCRefundBean> generateBCRefundList(List<Map<String, Object>> refundList) {
+    private static BCOrder generateBCOrder(Map<String, Object> bill) {
+        BCOrder bcOrder = new BCOrder();
+        generateBCOrderBean(bill, bcOrder);
+        return bcOrder;
+    }
 
-        List<BCRefundBean> bcRefundList = new ArrayList<BCRefundBean>();
-        for (Map refund : refundList) {
-            BCRefundBean bcRefund = new BCRefundBean();
-            bcRefund.setBillNo(refund.get("bill_no").toString());
-            bcRefund.setRefundNo(refund.get("refund_no").toString());
-            bcRefund.setTotalFee(refund.get("total_fee").toString());
-            bcRefund.setRefundFee(refund.get("refund_fee").toString());
-            bcRefund.setChannel(refund.get("channel").toString());
-            bcRefund.setFinished((Boolean) refund.get("finish"));
-            bcRefund.setRefunded((Boolean) refund.get("result"));
-            bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long) refund.get("created_time")));
+    /**
+     * 生成返回BCRefund list
+     */
+    private static List<BCRefund> generateBCRefundList(List<Map<String, Object>> refundList) {
+
+        List<BCRefund> bcRefundList = new ArrayList<BCRefund>();
+        for (Map<String, Object> refund : refundList) {
+            BCRefund bcRefund = new BCRefund();
+            generateBCRefundBean(refund, bcRefund);
             bcRefundList.add(bcRefund);
         }
         return bcRefundList;
     }
 
     /**
-     * Generate a map for JSAPI payment to receive.
-     *
-     * @param ret
-     * @return
+     * 生成返回BCRefund
      */
-    private static Map<String, Object> generateWXJSAPIMap(
-            Map<String, Object> ret) {
+    private static BCRefund generateBCRefund(Map<String, Object> refund) {
+        BCRefund bcRefund = new BCRefund();
+        generateBCRefundBean(refund, bcRefund);
+        return bcRefund;
+    }
+
+    /**
+     * 构建返回BCOrder bean
+     */
+    private static void generateBCOrderBean(Map<String, Object> bill, BCOrder bcOrder) {
+        bcOrder.setObjectId(bill.get("id").toString());
+        bcOrder.setBillNo(bill.get("bill_no").toString());
+        bcOrder.setTotalFee((Integer) bill.get("total_fee"));
+        bcOrder.setTitle(bill.get("title").toString());
+        bcOrder.setChannel(PAY_CHANNEL.valueOf(bill.get("sub_channel").toString()));
+        bcOrder.setResulted(((Boolean) bill.get("spay_result")));
+        if (bill.containsKey("trade_no") && bill.get("trade_no") != null) {
+            bcOrder.setChannelTradeNo(bill.get("trade_no").toString());
+        }
+        bcOrder.setOptionalString((bill.get("optional").toString()));
+        bcOrder.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long) bill
+                .get("create_time")));
+        if (bill.containsKey("message_detail")) {
+            bcOrder.setMessageDetail(bill.get("message_detail").toString());
+        }
+        bcOrder.setRefundResult((Boolean) bill.get("refund_result"));
+        bcOrder.setRevertResult((Boolean) bill.get("revert_result"));
+    }
+
+    /**
+     * 构建返回BCRefund bean
+     */
+    private static void generateBCRefundBean(Map<String, Object> refund, BCRefund bcRefund) {
+        bcRefund.setObjectId(refund.get("id").toString());
+        bcRefund.setBillNo(refund.get("bill_no").toString());
+        bcRefund.setChannel(PAY_CHANNEL.valueOf(refund.get("sub_channel").toString()));
+        bcRefund.setFinished((Boolean) refund.get("finish"));
+        bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long) refund
+                .get("create_time")));
+        bcRefund.setOptionalString(refund.get("optional").toString());
+        bcRefund.setRefunded((Boolean) refund.get("result"));
+        bcRefund.setTitle(refund.get("title").toString());
+        bcRefund.setTotalFee((Integer) refund.get("total_fee"));
+        bcRefund.setRefundFee((Integer) refund.get("refund_fee"));
+        bcRefund.setRefundNo(refund.get("refund_no").toString());
+        bcRefund.setDateTime(BCUtilPrivate.transferDateFromLongToString((Long) refund
+                .get("create_time")));
+        if (refund.containsKey("message_detail")) {
+            bcRefund.setMessageDetail(refund.get("message_detail").toString());
+        }
+    }
+
+    /**
+     * 构建WXJSAPI返回Map
+     */
+    private static Map<String, String> generateWXJSAPIMap(Map<String, Object> ret) {
         HashMap map = new HashMap<String, Object>();
         map.put("appId", ret.get("app_id"));
         map.put("package", ret.get("package"));
@@ -658,4 +701,206 @@ public class BCPayMultiApp {
         return map;
     }
 
+    /**
+     * doPost方法，封装rest api POST方式请求
+     * 
+     * @param url
+     * 请求url
+     * @param param
+     * 请求参数
+     * @return rest api返回参数
+     * @throws BCException
+     */
+    private static Map<String, Object> doPost(String url, Map<String, Object> param)
+            throws BCException {
+        Client client = BCAPIClient.client;
+        if (client == null) {
+            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
+        }
+        WebTarget target = client.target(url);
+        try {
+            Response response = target.request().post(
+                    Entity.entity(param, MediaType.APPLICATION_JSON));
+            if (response.getStatus() == 200) {
+                Map<String, Object> ret = response.readEntity(Map.class);
+
+                Integer resultCode = (Integer) ret.get("result_code");
+                String resultMessage = ret.get("result_msg").toString();
+                String errorDetail = ret.get("err_detail").toString();
+
+                boolean isSuccess = (resultCode == 0);
+                if (isSuccess) {
+                    return ret;
+                } else {
+                    throw new BCException(resultCode, resultMessage, errorDetail);
+                }
+            } else {
+                throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(),
+                        NOT_CORRECT_RESPONSE);
+            }
+        } catch (Exception e) {
+            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
+        }
+    }
+
+    /**
+     * doPut方法，封装rest api PUT方式请求
+     * 
+     * @param url
+     * 请求url
+     * @param param
+     * 请求参数
+     * @return rest api返回参数
+     * @throws BCException
+     */
+    private static Map<String, Object> doPut(String url, Map<String, Object> param)
+            throws BCException {
+        Client client = BCAPIClient.client;
+        if (client == null) {
+            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
+        }
+        WebTarget target = client.target(url);
+        try {
+            Response response = target.request().put(
+                    Entity.entity(param, MediaType.APPLICATION_JSON));
+            if (response.getStatus() == 200) {
+                Map<String, Object> ret = response.readEntity(Map.class);
+
+                Integer resultCode = (Integer) ret.get("result_code");
+                String resultMessage = ret.get("result_msg").toString();
+                String errorDetail = ret.get("err_detail").toString();
+
+                boolean isSuccess = (resultCode == 0);
+                if (isSuccess) {
+                    return ret;
+                } else {
+                    throw new BCException(resultCode, resultMessage, errorDetail);
+                }
+            } else {
+                throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(),
+                        NOT_CORRECT_RESPONSE);
+            }
+        } catch (Exception e) {
+            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
+        }
+    }
+
+    /**
+     * doGet方法，封装rest api GET方式请求
+     * 
+     * @param url
+     * 请求url
+     * @param param
+     * 请求参数
+     * @return rest api返回参数
+     * @throws BCException
+     */
+    private static Map<String, Object> doGet(String url, Map<String, Object> param)
+            throws BCException {
+        Client client = BCAPIClient.client;
+        if (client == null) {
+            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        try {
+            sb.append(URLEncoder.encode(url, "UTF-8"));
+            sb.append(URLEncoder.encode(JSONObject.fromObject(param).toString(), "UTF-8"));
+
+            WebTarget target = client.target(sb.toString());
+            Response response = target.request().get();
+            if (response.getStatus() == 200) {
+                Map<String, Object> ret = response.readEntity(Map.class);
+
+                Integer resultCode = (Integer) ret.get("result_code");
+                String resultMessage = ret.get("result_msg").toString();
+                String errorDetail = ret.get("err_detail").toString();
+
+                boolean isSuccess = (resultCode == 0);
+
+                if (isSuccess) {
+                    return ret;
+                } else {
+                    throw new BCException(resultCode, resultMessage, errorDetail);
+                }
+            } else {
+                throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(),
+                        NOT_CORRECT_RESPONSE);
+            }
+        } catch (Exception e) {
+            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
+        }
+    }
+
+    /**
+     * 组建返回订单
+     */
+    private static void placeOrder(BCOrder order, Map<String, Object> ret) {
+        order.setObjectId(ret.get("id").toString());
+        switch (order.getChannel()) {
+            case WX_NATIVE:
+                if (ret.containsKey("code_url") && null != ret.get("code_url")) {
+                    order.setCodeUrl(ret.get("code_url").toString());
+                }
+                break;
+            case WX_JSAPI:
+                order.setWxJSAPIMap(generateWXJSAPIMap(ret));
+                break;
+            case ALI_WEB:
+            case ALI_QRCODE:
+            case ALI_WAP:
+                if (ret.containsKey("html") && null != ret.get("html") && ret.containsKey("url")
+                        && null != ret.get("url")) {
+                    order.setHtml(ret.get("html").toString());
+                    order.setUrl(ret.get("url").toString());
+                }
+                break;
+            case UN_WEB:
+            case JD_WAP:
+            case JD_WEB:
+            case KUAIQIAN_WAP:
+            case KUAIQIAN_WEB:
+                if (ret.containsKey("html") && null != ret.get("html")) {
+                    order.setHtml(ret.get("html").toString());
+                }
+                break;
+            case YEE_WAP:
+            case YEE_WEB:
+            case BD_WEB:
+            case BD_WAP:
+                if (ret.containsKey("url") && null != ret.get("url")) {
+                    order.setUrl(ret.get("url").toString());
+                }
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 组建返回境外支付订单
+     */
+    private static void placePayPalOrder(BCInternationlOrder order, Map<String, Object> ret) {
+        order.setObjectId(StrUtil.toStr(ret.get("id")));
+        switch (order.getChannel()) {
+            case PAYPAL_PAYPAL:
+                order.setUrl(StrUtil.toStr(ret.get("url")));
+                break;
+            case PAYPAL_CREDITCARD:
+                order.setCreditCardId(StrUtil.toStr(ret.get("credit_card_id")));
+                break;
+            default:
+                break;
+        }
+    }
+
+    private String getAppSignature(String timeStamp) {
+        String str = appId + timeStamp + appSecret;
+        return BCUtilPrivate.getMessageDigest(str);
+    }
+
+    private String getAppSignatureWithMasterSecret(String timeStamp) {
+        String str = appId + timeStamp + masterSecret;
+        return BCUtilPrivate.getMessageDigest(str);
+    }
 }
