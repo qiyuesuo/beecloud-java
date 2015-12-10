@@ -109,23 +109,6 @@ public class RefundQueryTest {
         }
         param.setBillNo(billNo);
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, +1);
-        param.setStartTime(cal.getTime());
-        cal.add(Calendar.MONTH, -1);
-        param.setEndTime(cal.getTime());
-        try {
-            bcRefundList = BCPay.startQueryRefund(param);
-            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
-            Assert.assertTrue(ex.getMessage(),
-                    ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-        }
-        param.setStartTime(null);
-        param.setEndTime(null);
-
         try {
             param.setSkip(-1);
             bcRefundList = BCPay.startQueryRefund(param);
@@ -263,23 +246,6 @@ public class RefundQueryTest {
             Assert.assertTrue(ex.getMessage(),
                     ex.getMessage().contains(TestConstant.BILL_NO_FORMAT_INVALID));
         }
-
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, +1);
-        param.setStartTime(cal.getTime());
-        cal.add(Calendar.MONTH, -1);
-        param.setEndTime(cal.getTime());
-        try {
-            count = BCPay.startQueryRefundCount(param);
-            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
-        } catch (Exception ex) {
-            Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
-            Assert.assertTrue(ex.getMessage(),
-                    ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-        }
-
-        param.setStartTime(null);
-        param.setEndTime(null);
         param.setBillNo(null);
 
         try {

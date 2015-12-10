@@ -85,7 +85,6 @@ public class BillQueryTest {
             bcOrderList = BCPay.startQueryBill(param);
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
         } catch (Exception ex) {
-            System.out.println("ggggggg" + ex.getMessage());
             Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
             Assert.assertTrue(ex.getMessage(),
                     ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
@@ -195,23 +194,6 @@ public class BillQueryTest {
                     ex.getMessage().contains(TestConstant.BILL_NO_FORMAT_INVALID));
         }
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, +1);
-        param.setStartTime(cal.getTime());
-        cal.add(Calendar.MONTH, -1);
-        param.setEndTime(cal.getTime());
-        try {
-            count = BCPay.startQueryBillCount(param);
-            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
-        } catch (Exception ex) {
-            Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
-            Assert.assertTrue(ex.getMessage(),
-                    ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-        }
-
-        param.setStartTime(null);
-        param.setEndTime(null);
-        param.setBillNo(null);
         //mock网络请求
         mockBillCount();
     }
