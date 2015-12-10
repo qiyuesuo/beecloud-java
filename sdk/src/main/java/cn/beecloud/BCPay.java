@@ -108,9 +108,8 @@ public class BCPay {
      */
     @SuppressWarnings("unchecked")
     public static List<BCOrder> startQueryBill(BCQueryParameter para) throws BCException {
-        System.out.println("before validation");
         ValidationUtil.validateQueryBill(para);
-        System.out.println("after validation");
+
         Map<String, Object> param = new HashMap<String, Object>();
 
         buildQueryParam(param, para);
