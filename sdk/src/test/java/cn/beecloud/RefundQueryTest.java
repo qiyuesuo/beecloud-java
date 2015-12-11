@@ -33,6 +33,20 @@ public class RefundQueryTest {
 
     static void testQueryRefundById() {
 
+        if (BCCache.isSandbox()) {
+            try {
+                BCPay.startQueryRefundById(TestConstant.INVALID_OBJECT_ID);
+                Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+            } catch (Exception e) {
+                Assert.assertTrue(e.getMessage(), e instanceof BCException);
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(RESULT_TYPE.OTHER_ERROR.name()));
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(TestConstant.TEST_MODE_SUPPORT_ERROR));
+            }
+            return;
+        }
+
         try {
             BCPay.startQueryRefundById(null);
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
@@ -60,6 +74,21 @@ public class RefundQueryTest {
 
     static void testQueryRefund() {
         BCQueryParameter param = new BCQueryParameter();
+
+        if (BCCache.isSandbox()) {
+            try {
+                BCPay.startQueryRefund(param);
+                Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+            } catch (Exception e) {
+                Assert.assertTrue(e.getMessage(), e instanceof BCException);
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(RESULT_TYPE.OTHER_ERROR.name()));
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(TestConstant.TEST_MODE_SUPPORT_ERROR));
+            }
+            return;
+        }
+
         List<BCRefund> bcRefundList = new LinkedList<BCRefund>();
         try {
             bcRefundList = BCPay.startQueryRefund(null);
@@ -201,6 +230,21 @@ public class RefundQueryTest {
     static void testQueryRefundCount() {
         BCQueryParameter param = new BCQueryParameter();
         Integer count;
+
+        if (BCCache.isSandbox()) {
+            try {
+                BCPay.startQueryRefundCount(param);
+                Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+            } catch (Exception e) {
+                Assert.assertTrue(e.getMessage(), e instanceof BCException);
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(RESULT_TYPE.OTHER_ERROR.name()));
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(TestConstant.TEST_MODE_SUPPORT_ERROR));
+            }
+            return;
+        }
+
         try {
             count = BCPay.startQueryRefundCount(null);
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);

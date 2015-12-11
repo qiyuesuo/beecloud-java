@@ -38,6 +38,20 @@ public class BatchHandleTest {
         BCBatchRefund batchRefund = new BCBatchRefund();
         initBatchRefundPara(batchRefund);
 
+        if (BCCache.isSandbox()) {
+            try {
+                BCPay.startBatchRefund(batchRefund);
+                Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+            } catch (Exception e) {
+                Assert.assertTrue(e.getMessage(), e instanceof BCException);
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(RESULT_TYPE.OTHER_ERROR.name()));
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(TestConstant.TEST_MODE_SUPPORT_ERROR));
+            }
+            return;
+        }
+
         try {
             batchRefund = BCPay.startBatchRefund(null);
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);

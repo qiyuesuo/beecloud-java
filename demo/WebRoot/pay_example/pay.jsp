@@ -11,6 +11,7 @@
 <%@ page import="java.util.Properties" %>
 <%@ page import="net.sf.json.JSONObject" %>
 <%@ page import="org.apache.log4j.Logger" %>
+<%@ page import="java.lang.Thread" %>
 <%@ include file="loadProperty.jsp" %>
 <%
    /*
@@ -87,8 +88,10 @@
             bcOrder.setReturnUrl(aliReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                out.println(bcOrder.getObjectId());
-                Thread.sleep(3000);
+                System.out.print(bcOrder.getObjectId());
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                }
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -101,7 +104,10 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
-                Thread.sleep(3000);
+                System.out.print(bcOrder.getObjectId());
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                }
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -109,10 +115,18 @@
             }
             break;
 
+        case WX:
+            break;
+        case WX_APP:
+            break;
         case WX_NATIVE:
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
+                System.out.print(bcOrder.getObjectId());
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                }
                 success = true;
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -145,6 +159,10 @@
                     try {
                         bcOrder = BCPay.startBCPay(bcOrder);
                         out.println(bcOrder.getObjectId());
+                        System.out.print(bcOrder.getObjectId());
+                        if (bcOrder.getSandboxUrl() != null) {
+                            response.sendRedirect( bcOrder.getSandboxUrl());
+                        }
                         Map<String, String> map = bcOrder.getWxJSAPIMap();
                         jsapiAppid = map.get("appId").toString();
                         timeStamp = map.get("timeStamp").toString();
@@ -165,6 +183,10 @@
             bcOrder.setReturnUrl(unReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
+                System.out.print(bcOrder.getObjectId());
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                }
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -176,7 +198,12 @@
             bcOrder.setReturnUrl(yeeWapReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                response.sendRedirect(bcOrder.getUrl());
+                System.out.print(bcOrder.getObjectId());
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                } else {
+                    response.sendRedirect(bcOrder.getUrl());
+                }
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
                 out.println(e.getMessage());
@@ -186,7 +213,13 @@
             bcOrder.setReturnUrl(yeeWebReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                response.sendRedirect(bcOrder.getUrl());
+                System.out.print(bcOrder.getObjectId());
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                } else {
+                    response.sendRedirect(bcOrder.getUrl());
+                }
+
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
                 out.println(e.getMessage());
@@ -203,6 +236,10 @@
             bcOrder.setFrqid(frqid);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
+                System.out.print(bcOrder.getObjectId());
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                }
                 out.println("点卡支付成功！");
                 out.println(bcOrder.getObjectId());
             } catch (BCException e) {
@@ -214,6 +251,10 @@
             bcOrder.setReturnUrl(jdWapReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
+                System.out.print(bcOrder.getObjectId());
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                }
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -224,6 +265,10 @@
             bcOrder.setReturnUrl(jdWebReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
+                System.out.print(bcOrder.getObjectId());
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                }
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -234,6 +279,10 @@
         	bcOrder.setReturnUrl(kqReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
+                System.out.print(bcOrder.getObjectId());
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                }
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -245,6 +294,10 @@
             bcOrder.setReturnUrl(kqReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
+                System.out.print(bcOrder.getObjectId());
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                }
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -255,7 +308,12 @@
             bcOrder.setReturnUrl(bdReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                response.sendRedirect(bcOrder.getUrl());
+                System.out.print(bcOrder.getObjectId());
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                } else {
+                    response.sendRedirect(bcOrder.getUrl());
+                }
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
                 out.println(e.getMessage());
@@ -266,7 +324,12 @@
             bcOrder.setReturnUrl(bdReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                response.sendRedirect(bcOrder.getUrl());
+                System.out.print(bcOrder.getObjectId());
+                if (bcOrder.getSandboxUrl() != null) {
+                    response.sendRedirect( bcOrder.getSandboxUrl());
+                } else {
+                    response.sendRedirect(bcOrder.getUrl());
+                }
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
                 out.println(e.getMessage());
@@ -343,7 +406,37 @@
 	            }
             }
             break;
-            
+
+        case WX_SCAN:
+            break;
+        case ALI:
+            break;
+        case ALI_APP:
+            break;
+        case ALI_SCAN:
+            break;
+        case ALI_OFFLINE_QRCODE:
+            break;
+        case UN:
+            break;
+        case UN_APP:
+            break;
+        case YEE:
+            break;
+        case JD:
+            break;
+        case KUAIQIAN:
+            break;
+        case BD:
+            break;
+        case BD_APP:
+            break;
+        case PAYPAL:
+            break;
+        case PAYPAL_SANDBOX:
+            break;
+        case PAYPAL_LIVE:
+            break;
         default:
             break;
     }

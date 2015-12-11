@@ -64,6 +64,8 @@ public class BCOrder {
 
     private String dateTime;
 
+    private String sandboxUrl;
+
     public BCOrder() {}
 
     /**
@@ -465,5 +467,13 @@ public class BCOrder {
      */
     public void setOptionalString(String optionalString) {
         this.optionalString = optionalString;
+    }
+
+    public String getSandboxUrl() {
+        return sandboxUrl;
+    }
+
+    public void setSandboxUrl(String sandboxUrl) {
+        this.sandboxUrl = sandboxUrl;
     }
 }

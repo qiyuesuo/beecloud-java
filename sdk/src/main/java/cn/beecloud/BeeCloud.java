@@ -24,11 +24,13 @@ public class BeeCloud {
      * @param masterSecret
      * （必填）用于退款、批量打款
      */
-    public static void registerApp(String appID, String appSecret, String masterSecret) {
+    public static void registerApp(String appID, String testSecret, String appSecret,
+            String masterSecret) {
 
         BCCache.setAppID(appID);
         BCCache.setAppSecret(appSecret);
         BCCache.setMasterKey(masterSecret);
+        BCCache.setTestSecret(testSecret);
         BCAPIClient.initClient();
     }
 
@@ -40,5 +42,9 @@ public class BeeCloud {
      */
     public static void setNetworkTimeout(int timeout) {
         BCCache.setNetworkTimeout(timeout);
+    }
+
+    public static void setSandbox(boolean sandbox) {
+        BCCache.setSandbox(sandbox);
     }
 }

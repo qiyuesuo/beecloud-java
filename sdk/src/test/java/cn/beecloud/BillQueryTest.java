@@ -87,7 +87,8 @@ public class BillQueryTest {
             Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
             Assert.assertTrue(ex.getMessage(),
                     ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name())
-                            || ex.getMessage().contains(RESULT_TYPE.OTHER_ERROR.name()));// 服务端验证，可能存在网络问题，加上OTHER_ERROR判断
+                            || ex.getMessage().contains(RESULT_TYPE.OTHER_ERROR.name())
+                            || ex.getMessage().contains(RESULT_TYPE.NOT_CORRECT_RESPONSE.name()));// 服务端验证，可能存在网络问题或者响应错误问题，加上OTHER_ERROR判断
         }
 
         try {
@@ -113,7 +114,12 @@ public class BillQueryTest {
             Assert.assertTrue(ex.getMessage(),
                     ex.getMessage().contains(TestConstant.LIMIT_FORMAT_INVALID));
         }
+
         // mock网络请求
+        if (BCCache.isSandbox()) {
+            mockSandboxQueryBill();
+            return;
+        }
         mockQueryBill();
     }
 
@@ -141,6 +147,11 @@ public class BillQueryTest {
                     ex.getMessage().contains(TestConstant.OBJECT_ID_INVALID));
         }
         // mock网络请求
+        if (BCCache.isSandbox()) {
+            mockSandboxQueryBillById();
+            return;
+        }
+
         mockQueryBillById();
     }
 
@@ -194,7 +205,12 @@ public class BillQueryTest {
                     ex.getMessage().contains(TestConstant.BILL_NO_FORMAT_INVALID));
         }
 
+        param.setBillNo(null);
         // mock网络请求
+        if (BCCache.isSandbox()) {
+            mockSandboxQueryBillCount();
+            return;
+        }
         mockBillCount();
     }
 
@@ -211,6 +227,69 @@ public class BillQueryTest {
             {
                 Deencapsulation.invoke(BCPay.class, "doGet",
                         withSubstring(BCUtilPrivate.getkApiQueryBill().substring(14)),
+                        withAny(Map.class));
+                returns(returnMap);
+                result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
+                        RESULT_TYPE.APP_INVALID.name(), TestConstant.MOCK_APP_INVALID_ERRMSG);
+            }
+        };
+
+        BCQueryParameter param = new BCQueryParameter();
+        param.setBillNo(billNo);
+        try {
+            bcOrderList = BCPay.startQueryBill(param);
+            Assert.assertEquals("", 2, bcOrderList.size());
+            for (BCOrder order : bcOrderList) {
+                Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, order.getObjectId());
+                Assert.assertEquals("", TestConstant.MOCK_BILL_NO, order.getBillNo());
+                Assert.assertEquals("",
+                        TestUtil.transferDateFromLongToString(TestConstant.MOCK_CREATE_TIME),
+                        order.getDateTime());
+                Assert.assertEquals("", TestConstant.MOCK_CHANNEL,
+                        order.getChannel().toString().split("_")[0]);
+                Assert.assertEquals("", TestConstant.MOCK_SUB_CHANNEL,
+                        order.getChannel().toString());
+                Assert.assertEquals("", TestConstant.MOCK_PAY_RESULT, order.isResulted());
+                Assert.assertTrue("", order.getOptionalString().equals("") || order
+                        .getOptionalString().equals(TestConstant.MOCK_OPTIONAL_JSON_STRING));
+                Assert.assertEquals("", true, order.isRevertResult());
+                Assert.assertEquals("", true, order.isRefundResult());
+                Assert.assertTrue("", order.getMessageDetail().equals("不显示") || order
+                        .getMessageDetail().equals(TestConstant.MOCK_MESSAGE_DETAIL_STRING));
+                Assert.assertEquals("", TestConstant.MOCK_TITLE, order.getTitle());
+                Assert.assertEquals("", TestConstant.MOCK_TOTAL_FEE, order.getTotalFee());
+                Assert.assertTrue("", order.getChannelTradeNo().equals(TestConstant.MOCK_TRADE_NO)
+                        || order.getChannelTradeNo().equals(""));
+            }
+        } catch (BCException ex) {
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+        }
+
+        try {
+            bcOrderList = BCPay.startQueryBill(param);
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+        } catch (Exception ex) {
+            Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+            Assert.assertTrue(ex.getMessage(),
+                    ex.getMessage().contains(RESULT_TYPE.APP_INVALID.name()));
+            Assert.assertTrue(ex.getMessage(),
+                    ex.getMessage().contains(TestConstant.MOCK_APP_INVALID_ERRMSG));
+        }
+    }
+
+    private static void mockSandboxQueryBill() {
+        final Map<String, Object> returnMap = new HashMap<String, Object>();
+        List<BCOrder> bcOrderList = new LinkedList<BCOrder>();
+        returnMap.put("result_code", 0);
+        returnMap.put("result_msg", "OK");
+        returnMap.put("err_detail", "");
+        returnMap.put("bills", generateMockBills());
+        returnMap.put("count", generateMockBills().size());
+
+        new Expectations() {
+            {
+                Deencapsulation.invoke(BCPay.class, "doGet",
+                        withSubstring(BCUtilPrivate.getkApiSandboxQueryBill().substring(14)),
                         withAny(Map.class));
                 returns(returnMap);
                 result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
@@ -323,6 +402,67 @@ public class BillQueryTest {
         }
     }
 
+    private static void mockSandboxQueryBillById() {
+        final Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("result_code", 0);
+        returnMap.put("result_msg", "OK");
+        returnMap.put("err_detail", "");
+        Map<String, Object> payMap = new HashMap<String, Object>();
+        buildMockBill(payMap);
+        returnMap.put("pay", payMap);
+
+        new Expectations() {
+            {
+                Deencapsulation.invoke(BCPay.class, "doGet",
+                        withSubstring(BCUtilPrivate.getkApiSandboxQueryBillById().substring(14)),
+                        withAny(Map.class));
+                returns(returnMap);
+            }
+        };
+        BCOrder order;
+        try {
+            order = BCPay.startQueryBillById(TestConstant.MOCK_OBJECT_ID);
+            Assert.assertEquals("", TestConstant.MOCK_BILL_NO, order.getBillNo());
+            Assert.assertEquals("", TestConstant.MOCK_TRADE_NO, order.getChannelTradeNo());
+            Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, order.getObjectId());
+            Assert.assertEquals("", TestConstant.MOCK_PAY_RESULT, order.isResulted());
+            Assert.assertEquals("",
+                    TestUtil.transferDateFromLongToString(TestConstant.MOCK_CREATE_TIME),
+                    order.getDateTime());
+            Assert.assertEquals("", TestConstant.MOCK_TOTAL_FEE, order.getTotalFee());
+            Assert.assertEquals("", TestConstant.MOCK_CHANNEL,
+                    order.getChannel().toString().split("_")[0]);
+            Assert.assertEquals("", TestConstant.MOCK_SUB_CHANNEL, order.getChannel().toString());
+            Assert.assertEquals("", TestConstant.MOCK_OPTIONAL_JSON_STRING,
+                    order.getOptionalString());
+            Assert.assertEquals("", true, order.isRevertResult());
+            Assert.assertEquals("", true, order.isRefundResult());
+            Assert.assertEquals("", TestConstant.MOCK_MESSAGE_DETAIL_STRING,
+                    order.getMessageDetail());
+            Assert.assertEquals("", TestConstant.MOCK_TITLE, order.getTitle());
+        } catch (BCException e) {
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+        }
+        new StrictExpectations() {
+            {
+                Deencapsulation.invoke(BCPay.class, "doGet",
+                        withSubstring(BCUtilPrivate.getkApiSandboxQueryBillById().substring(14)),
+                        withAny(Map.class));
+                result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
+                        RESULT_TYPE.APP_INVALID.name(), RESULT_TYPE.APP_INVALID.name());
+            }
+        };
+
+        try {
+            order = BCPay.startQueryBillById(TestConstant.MOCK_OBJECT_ID);
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+        } catch (Exception ex) {
+            Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+            Assert.assertTrue(ex.getMessage(),
+                    ex.getMessage().contains(RESULT_TYPE.APP_INVALID.name()));
+        }
+    }
+
     private static void mockBillCount() {
         final Map<String, Object> returnMap = new HashMap<String, Object>();
         returnMap.put("result_code", 0);
@@ -348,6 +488,34 @@ public class BillQueryTest {
         } catch (BCException ex) {
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
         }
+    }
+
+    private static void mockSandboxQueryBillCount() {
+        final Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("result_code", 0);
+        returnMap.put("result_msg", "OK");
+        returnMap.put("err_detail", "");
+        returnMap.put("count", 10);
+
+        new Expectations() {
+            {
+                Deencapsulation.invoke(BCPay.class, "doGet",
+                        withSubstring(BCUtilPrivate.getkApiSandboxQueryBillCount().substring(14)),
+                        withAny(Map.class));
+                returns(returnMap);
+            }
+        };
+
+        BCQueryParameter param = new BCQueryParameter();
+        param.setBillNo(billNo);
+
+        try {
+            Integer count = BCPay.startQueryBillCount(param);
+            Assert.assertEquals("", 10, (int) count);
+        } catch (BCException ex) {
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+        }
+
     }
 
     private static List<Map<String, Object>> generateMockBills() {

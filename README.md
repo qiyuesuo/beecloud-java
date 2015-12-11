@@ -1,5 +1,5 @@
 ## BeeCloud Java SDK (Open Source)
-[![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-java)
+[![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=testmode)](https://travis-ci.org/beecloud/beecloud-java)
 ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.0.0](https://img.shields.io/badge/Version-v3.0.0-blue.svg) 
 
 ## 简介
@@ -35,10 +35,15 @@
 
 3. 在代码中注册：
 
-  BeeCloud.registerApp(appId, appSecret, masterSecret);
+  BeeCloud.registerApp(appId, testSecret, appSecret, masterSecret);
 
 
-## 使用方法
+## LIVE模式使用方法
+BeeCloud.registerApp(appId, **testSecret**, appSecret, masterSecret);  
+
+**LIVE**模式**testSecret**可为**null**  
+
+**默认开启LIVE模式**
 
 具体使用请参考本目录下的demo项目
 
@@ -423,7 +428,7 @@ try {
 ```
 
 
-代码中的参数对象BCOrder封装字段含义如下：
+<a name="payParam"/>代码中的参数对象BCOrder封装字段含义如下：
 请求参数及返回字段：
 
 key | 说明
@@ -880,6 +885,45 @@ key | 说明
 refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是退款发起当日日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。，（必填）
 channel | 渠道类型， 包含WX、YEE、KUAIQIAN和BD（必填）
 
+
+## SANDBOX模式使用方法
+BeeCloud.registerApp(appId, testSecret, **appSecret**, **masterSecret**);  
+
+**SANDBOX**模式**appSecret**、**masterSecret**可为**null**  
+
+设置BeeCloud.setSandbox(**true**);**开启SANDBOX模式**
+
+### <a name="sandboxPayment">国内支付</a>
+国内支付接口接收BCOrder参数对象，该对象封装了发起国内际支付所需的各个具体参数。  
+
+成功发起国内支付接口将会返回带objectId、sandboxUrl的BCOrder对象。
+  
+发起国内支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+
+返回的BCOrder对象包含沙箱支付跳转url, 显示BeeCloud 沙箱支付页面，用户点击"完成支付"完成支付成功模拟，点击"取消测试"完成支付未成功模拟。
+```java
+try {
+bcOrder = BCPay.startBCPay(bcOrder);
+out.println(bcOrder.getObjectId());
+response.sendRedirect( bcOrder.getSandboxUrl());
+} catch(BCException ex) {
+	out.println(ex.getMessage());
+	log.info(ex.getMessage());
+}
+```
+代码中的参数对象BCOrder封装字段含义参考LIVE模式的[国内支付](#payParam)部分：
+
+### <a name="sandboxBillQuery">订单查询</a>
+订单查询接口完全参考[LIVE模式](#billQuery)订单查询
+
+### <a name="sandboxBillQuery">订单总数查询</a>
+订单总数查询接口完全参考[LIVE模式](#billCountQuery)订单总数查询
+
+### <a name="sandboxBillQueryById">单笔订单查询</a>
+单笔订单查询接口完全参考[LIVE模式](#billQueryById)单笔订单查询  
+
+  
+**其他接口暂不支持SANDBOX模式**  
 
 
 

@@ -37,6 +37,20 @@ public class RefundTest {
         BCRefund param = new BCRefund();
         initRefundPara(param);
 
+        if (BCCache.isSandbox()) {
+            try {
+                BCPay.startBCRefund(param);
+                Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+            } catch (Exception e) {
+                Assert.assertTrue(e.getMessage(), e instanceof BCException);
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(RESULT_TYPE.OTHER_ERROR.name()));
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(TestConstant.TEST_MODE_SUPPORT_ERROR));
+            }
+            return;
+        }
+
         try {
             BCPay.startBCRefund(null);
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
@@ -198,6 +212,21 @@ public class RefundTest {
 
     static void testRefundUpdate() {
         String message;
+
+        if (BCCache.isSandbox()) {
+            try {
+                BCPay.startRefundUpdate(null, refundNo);
+                Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+            } catch (Exception e) {
+                Assert.assertTrue(e.getMessage(), e instanceof BCException);
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(RESULT_TYPE.OTHER_ERROR.name()));
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(TestConstant.TEST_MODE_SUPPORT_ERROR));
+            }
+            return;
+        }
+
         try {
             message = BCPay.startRefundUpdate(null, refundNo);
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
