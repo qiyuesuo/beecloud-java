@@ -1,5 +1,5 @@
 ## BeeCloud Java SDK (Open Source)
-[![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=testmode)](https://travis-ci.org/beecloud/beecloud-java)
+[![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
 ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.0.0](https://img.shields.io/badge/Version-v3.0.0-blue.svg) 
 
 ## 简介
@@ -451,6 +451,7 @@ codeUrl   |  微信扫码code url， 微信扫码支付下单成功时返回
 url   |  支付跳转url，当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或 YEE_WAP 或 YEE_WEB 或 BD_WEB 或 BD_WAP，并且下单成功时返回
 html   |  支付提交html， 当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或 UN_WEB 或 JD_WAP 或 JD_WEB 或 KUAIQIAN_WAP 或 KUAIQIAN_WEB，并且下单成功时返回
 wxJSAPIMap   |  微信公众号支付要素，微信公众号支付下单成功时返回
+sandboxUrl   |  沙箱支付跳转url，沙箱模式时返回
 
 <a name="billQueryJump"/>查询返回字段：
 
@@ -903,8 +904,8 @@ BeeCloud.registerApp(appId, testSecret, **appSecret**, **masterSecret**);
 返回的BCOrder对象包含沙箱支付跳转url, 显示BeeCloud 沙箱支付页面，用户点击"完成支付"完成支付成功模拟，点击"取消测试"完成支付未成功模拟。
 ```java
 try {
-bcOrder = BCPay.startBCPay(bcOrder);
-out.println(bcOrder.getObjectId());
+    bcOrder = BCPay.startBCPay(bcOrder);
+    out.println(bcOrder.getObjectId());
 response.sendRedirect( bcOrder.getSandboxUrl());
 } catch(BCException ex) {
 	out.println(ex.getMessage());
@@ -957,7 +958,8 @@ response.sendRedirect( bcOrder.getSandboxUrl());
 请参考demo中的 paypalReturnUrl.jsp
 
 •关于weekhook的接收  
-请参考demo中的 webhook_receiver.jsp  文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
+请参考demo中的 webhook_receiver.jsp以及webhook_sandbox_receiver.jsp  
+文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
 
 ## 测试
 TODO

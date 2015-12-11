@@ -62,7 +62,6 @@
     bcOrder.setOptional(optional);
 
     //以下是WX_JSAPI（公众号内支付）用到的返回参数，需要在页面的js用到
-    String jsapiString = "";
     String jsapiAppid = "";
     String timeStamp = "";
     String nonceStr = "";
@@ -139,7 +138,7 @@
             Properties prop = loadProperty();
             String wxJSAPIAppId = prop.get("wxJSAPIAppId").toString();
             String wxJSAPISecret = prop.get("wxJSAPISecret").toString();
-            String wxJSAPIRedirectUrl = "http://javademo.beexcloud.com/demo/pay_example/pay.jsp?paytype=WX_JSAPI";
+            String wxJSAPIRedirectUrl = "http://javademo.beecloud.cn/demo/pay_example/pay.jsp?paytype=WX_JSAPI";
             String encodedWSJSAPIRedirectUrl = URLEncoder.encode(wxJSAPIRedirectUrl);
             if (request.getParameter("code") == null || request.getParameter("code").toString().equals("")) {
                 String redirectUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + wxJSAPIAppId + "&redirect_uri=" + encodedWSJSAPIRedirectUrl + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";

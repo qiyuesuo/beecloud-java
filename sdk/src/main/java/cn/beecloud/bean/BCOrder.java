@@ -469,10 +469,16 @@ public class BCOrder {
         this.optionalString = optionalString;
     }
 
+    /**
+     * @return 沙箱支付跳转url，沙箱模式时返回
+     */
     public String getSandboxUrl() {
         return sandboxUrl;
     }
 
+    /**
+     * 设置字段 {@link #sandboxUrl}
+     */
     public void setSandboxUrl(String sandboxUrl) {
         this.sandboxUrl = sandboxUrl;
     }
