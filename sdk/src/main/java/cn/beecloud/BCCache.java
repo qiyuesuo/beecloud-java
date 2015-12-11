@@ -4,57 +4,86 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
 
 /**
+ * BeeCloud JAVA SDK缓存类
+ * 
  * @author Ray
  * Date: 15/7/08
  */
 public class BCCache {
 	
-	private static Logger logger = Logger.getLogger(BCCache.class);
-	
     private static String appID = null;
     private static String appSecret = null;
+    private static String testSecret = null;
     private static String masterKey = null;
-    private static boolean needLocalCache = true;
+    private static boolean sandbox = false;
     private static int networkTimeout = 500000;
-    public static String[] apiHostArray = initApiHostArray();
+    static String[] apiHostArray = initApiHostArray();
 
-
+    /**
+     * 缓存 appSecret
+     */
     static void setAppSecret(String appSecret) {
         BCCache.appSecret = appSecret;
     }
-
+    
+    /**
+     * 缓存 appID
+     */
     static void setAppID(String appID) {
         BCCache.appID = appID;
     }
-
-    static String getMasterKey() {
-        return masterKey;
-    }
-
+    
+    /**
+     * 缓存 masterKey
+     */
     static void setMasterKey(String masterKey) {
         BCCache.masterKey = masterKey;
     }
 
-    static boolean isNeedLocalCache() {
-        return needLocalCache;
+    static void setSandbox(boolean sandbox) {
+        BCCache.sandbox = sandbox;
     }
 
-    static void setNeedLocalCache(boolean needLocalCache) {
-        BCCache.needLocalCache = needLocalCache;
+    static void setTestSecret(String testSecret) {
+        BCCache.testSecret = testSecret;
+    }
+
+    static boolean isSandbox() {
+        return sandbox;
+    }
+
+    public static String getAppSecret() {
+        return appSecret;
+    }
+
+    public static String getTestSecret() {
+        return testSecret;
+    }
+
+    public static String getAppID() {
+        return appID;
+    }
+    
+    static String getMasterKey() {
+        return masterKey;
     }
 
     static int getNetworkTimeout() {
         return networkTimeout;
     }
-
+    
+    /**
+     * 缓存 networkTimeout
+     */
     static void setNetworkTimeout(int networkTimeout) {
         BCCache.networkTimeout = networkTimeout;
     }
     
+    /**
+     * 初始化rest api服务器
+     */
     static String[] initApiHostArray()
     {
     	apiHostArray = new String[4];
@@ -64,13 +93,15 @@ public class BCCache {
     	apiHostArray[2] = "https://apibj.beecloud.cn";
     	apiHostArray[3] = "https://apihz.beecloud.cn";
     	InputStream inputStream;
+    	/*
+    	 * 如果类路径下存在配置文件conf.properties，读取其中的backend属性，作为后端连接服务器
+    	 */
     	inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("conf.properties");
     	if (inputStream != null) {
     		Properties prop = new Properties();
     		try {
 				prop.load(inputStream);
 				String host = prop.getProperty("backend");
-				logger.info("host:" + host);
 				if (!host.trim().equals("")) {
 					apiHostArray[0] = "http://" + host + ":8080";
 					apiHostArray[1] = "http://" + host + ":8080";
@@ -78,22 +109,9 @@ public class BCCache {
 					apiHostArray[3] = "http://" + host + ":8080";
 				}
 			} catch (IOException e) {
-				logger.info(e.getMessage());
 				e.printStackTrace();
 			}
-    		
     	}
-    	logger.info("hosts:" + apiHostArray);
     	return apiHostArray;
-    	
-    	
-    }
-    
-    public static String getAppSecret() {
-        return appSecret;
-    }
-    
-    public static String getAppID() {
-        return appID;
     }
 }

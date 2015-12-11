@@ -8,9 +8,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
+
 /**
- * @author Ray
- * Date: 15/7/11
+ * @author Ray Date: 15/7/11
  */
 class StrUtil {
 
@@ -117,16 +117,14 @@ class StrUtil {
     }
 
     static String decode(String bytes, String code) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(
-                bytes.length() / 2);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(bytes.length() / 2);
         for (int i = 0; i < bytes.length(); i += 2)
-            baos.write((hexString.indexOf(bytes.charAt(i)) << 4 | hexString
-                    .indexOf(bytes.charAt(i + 1))));
+            baos.write((hexString.indexOf(bytes.charAt(i)) << 4 | hexString.indexOf(bytes
+                    .charAt(i + 1))));
         String s = "";
         try {
             s = new String(baos.toByteArray(), code);
-        } catch (UnsupportedEncodingException e) {
-        }
+        } catch (UnsupportedEncodingException e) {}
         return s;
     }
 
@@ -186,7 +184,7 @@ class StrUtil {
             return 0;
         }
 
-        return (parseLong(ips[0]) << 24) + (parseLong(ips[1]) << 16)
-                + (parseLong(ips[2]) << 8) + parseLong(ips[3]);
+        return (parseLong(ips[0]) << 24) + (parseLong(ips[1]) << 16) + (parseLong(ips[2]) << 8)
+                + parseLong(ips[3]);
     }
 }
