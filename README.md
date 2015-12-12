@@ -962,7 +962,8 @@ response.sendRedirect( bcOrder.getSandboxUrl());
 文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
 
 ## 测试
-TODO
+- 下载安装maven后，进入sdk文件夹，执行mvn test。
+- 导入sdk至eclipse或者IDEA, 在src/test/java包下找到BCPayTest类，运行javaSDKTest()方法。
 
 ## 常见问题
 - 根据app_id找不到对应的APP/keyspace或者app_sign不正确,或者timestamp不是当前UTC，可能的原因：系统时间不准确 app_id和secret填写不正确，请以此排查如下：
