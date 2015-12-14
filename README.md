@@ -45,8 +45,18 @@ BeeCloud.registerApp(appId, **testSecret**, appSecret, masterSecret);
 
 **默认开启LIVE模式**
 
-具体使用请参考本目录下的demo项目
+  
 
+## SANDBOX模式使用方法
+BeeCloud.registerApp(appId, testSecret, **appSecret**, **masterSecret**);    
+BeeCloud.setSandbox(**true**);
+
+**SANDBOX**模式**appSecret**、**masterSecret**可为**null**  
+
+**设置sandbox属性为true，开启SANDBOX模式** 
+
+
+## LIVE模式部分
 
 ### <a name="INPayment">国际支付</a>
 
@@ -887,12 +897,7 @@ refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 �
 channel | 渠道类型， 包含WX、YEE、KUAIQIAN和BD（必填）
 
 
-## SANDBOX模式使用方法
-BeeCloud.registerApp(appId, testSecret, **appSecret**, **masterSecret**);  
-
-**SANDBOX**模式**appSecret**、**masterSecret**可为**null**  
-
-设置BeeCloud.setSandbox(**true**);**开启SANDBOX模式**
+## SANDBOX模式部分
 
 ### <a name="sandboxPayment">国内支付</a>
 国内支付接口接收BCOrder参数对象，该对象封装了发起国内际支付所需的各个具体参数。  
