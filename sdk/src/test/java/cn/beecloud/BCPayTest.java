@@ -50,6 +50,7 @@ public class BCPayTest {
          */
         BeeCloud.registerApp(TestConstant.KTestAppID, TestConstant.kTestTestSecret, null, null);
         BCCache.setSandbox(true);
+        PayTest.testPay();
         BillQueryTest.testQueryBillById();
         BillQueryTest.testQueryBill();
         BillQueryTest.testQueryBillCount();

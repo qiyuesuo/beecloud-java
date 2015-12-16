@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.0.0](https://img.shields.io/badge/Version-v3.0.0-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.0](https://img.shields.io/badge/Version-v3.1.0-blue.svg) 
 
 ## 简介
 
@@ -19,7 +19,7 @@
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
@@ -460,7 +460,7 @@ codeUrl   |  微信扫码code url， 微信扫码支付下单成功时返回
 url   |  支付跳转url，当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或 YEE_WAP 或 YEE_WEB 或 BD_WEB 或 BD_WAP，并且下单成功时返回
 html   |  支付提交html， 当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或 UN_WEB 或 JD_WAP 或 JD_WEB 或 KUAIQIAN_WAP 或 KUAIQIAN_WEB，并且下单成功时返回
 wxJSAPIMap   |  微信公众号支付要素，微信公众号支付下单成功时返回
-sandboxUrl   |  沙箱支付跳转url，沙箱模式时返回
+
 
 <a name="billQueryJump"/>查询返回字段：
 
@@ -899,24 +899,8 @@ channel | 渠道类型， 包含WX、YEE、KUAIQIAN和BD（必填）
 ## SANDBOX模式部分
 
 ### <a name="sandboxPayment">国内支付</a>
-国内支付接口接收BCOrder参数对象，该对象封装了发起国内际支付所需的各个具体参数。  
-
-成功发起国内支付接口将会返回带objectId、sandboxUrl的BCOrder对象。
-  
-发起国内支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
-
-返回的BCOrder对象包含沙箱支付跳转url, 显示BeeCloud 沙箱支付页面，用户点击"完成支付"完成支付成功模拟，点击"取消测试"完成支付未成功模拟。
-```java
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-response.sendRedirect( bcOrder.getSandboxUrl());
-} catch(BCException ex) {
-	out.println(ex.getMessage());
-	log.info(ex.getMessage());
-}
-```
-代码中的参数对象BCOrder封装字段含义参考LIVE模式的[国内支付](#payParam)部分：
+国内支付接口完全参考[LIVE模式](#payment)订单查询, **暂不支持WX_JSAPI**
+沙箱模式掉起支付返回的支付要素(html、url、codeUrl)为BeeCloud提供的模拟返回要素
 
 ### <a name="sandboxBillQuery">订单查询</a>
 订单查询接口完全参考[LIVE模式](#billQuery)订单查询

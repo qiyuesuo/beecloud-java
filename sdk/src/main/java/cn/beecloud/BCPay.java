@@ -49,7 +49,7 @@ public class BCPay {
 
     private final static String NETWORK_ERROR = "网络错误";
 
-    private final static String TEST_MODE_SUPPORT_ERROR = "测试模式仅支持国内支付、订单查询、订单总数查询、单笔订单查询";
+    private final static String TEST_MODE_SUPPORT_ERROR = "测试模式仅支持国内支付(WX_JSAPI暂不支持)、订单查询、订单总数查询、单笔订单查询";
 
     /**
      * 支付接口
@@ -68,8 +68,16 @@ public class BCPay {
         buildPayParam(param, order);
 
         if (BCCache.isSandbox()) {
+            if (order.getChannel().equals(PAY_CHANNEL.WX_JSAPI)) {
+                throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), TEST_MODE_SUPPORT_ERROR);
+            }
             Map<String, Object> ret = doPost(BCUtilPrivate.getkSandboxApiPay(), param);
             placeSandboxOrder(order, ret);
+            // 易宝点卡支付代码调用回调
+            if (order.getChannel().equals(PAY_CHANNEL.YEE_NOBANKCARD)) {
+                doGet(BCUtilPrivate.getkApiSandboxNotify() + "/" + BCCache.getAppID() + "/"
+                        + order.getObjectId() + "?para=", new HashMap<String, Object>());
+            }
             return order;
         }
         Map<String, Object> ret = doPost(BCUtilPrivate.getkApiPay(), param);
@@ -888,6 +896,7 @@ public class BCPay {
                     throw new BCException(resultCode, resultMessage, errorDetail);
                 }
             } else {
+                System.out.println(sb.toString());
                 throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(),
                         NOT_CORRECT_RESPONSE);
             }
@@ -965,7 +974,42 @@ public class BCPay {
      */
     private static void placeSandboxOrder(BCOrder order, Map<String, Object> ret) {
         order.setObjectId(StrUtil.toStr(ret.get("id")));
-        order.setSandboxUrl(StrUtil.toStr(ret.get("url")));
+        switch (order.getChannel()) {
+            case WX_NATIVE:
+                if (ret.containsKey("url") && null != ret.get("url")) {
+                    order.setCodeUrl(StrUtil.toStr(ret.get("url")));
+                }
+                break;
+            case WX_JSAPI:
+                order.setWxJSAPIMap(generateWXJSAPIMap(ret));
+                break;
+            case ALI_WEB:
+            case ALI_QRCODE:
+            case ALI_WAP:
+                if (ret.containsKey("url") && null != ret.get("url")) {
+                    order.setHtml(BCUtil.generateSandboxHtmlWithUrl(StrUtil.toStr(ret.get("url"))));
+                    order.setUrl(StrUtil.toStr(ret.get("url")));
+                }
+                break;
+            case UN_WEB:
+            case JD_WAP:
+            case JD_WEB:
+            case KUAIQIAN_WAP:
+            case KUAIQIAN_WEB:
+                if (ret.containsKey("url") && null != ret.get("url")) {
+                    order.setHtml(BCUtil.generateSandboxHtmlWithUrl(StrUtil.toStr(ret.get("url"))));
+                }
+                break;
+            case YEE_WAP:
+            case YEE_WEB:
+            case BD_WEB:
+            case BD_WAP:
+                if (ret.containsKey("url") && null != ret.get("url")) {
+                    order.setUrl(StrUtil.toStr(ret.get("url")));
+                }
+            default:
+                break;
+        }
     }
 
     /**
