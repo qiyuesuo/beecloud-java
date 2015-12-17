@@ -900,7 +900,7 @@ channel | 渠道类型， 包含WX、YEE、KUAIQIAN和BD（必填）
 
 ### <a name="sandboxPayment">国内支付</a>
 国内支付接口完全参考[LIVE模式](#payment)订单查询, **暂不支持WX_JSAPI**
-沙箱模式掉起支付返回的支付要素(html、url、codeUrl)为BeeCloud提供的模拟返回要素
+沙箱模式调起支付返回的支付要素(html、url、codeUrl)为BeeCloud提供的模拟支付要素
 
 ### <a name="sandboxBillQuery">订单查询</a>
 订单查询接口完全参考[LIVE模式](#billQuery)订单查询
