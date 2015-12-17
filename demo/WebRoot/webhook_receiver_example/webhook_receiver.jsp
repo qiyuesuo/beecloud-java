@@ -38,7 +38,6 @@
         log.info("sign:" + sign);
         log.info("timestamp:" + timestamp);
 
-        if (BCCache.)
         return verify(sign, BCCache.getAppID() + BCCache.getAppSecret(),
                 timestamp, "UTF-8");
 

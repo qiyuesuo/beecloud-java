@@ -80,7 +80,7 @@ public class TestConstant {
     public static String MOCK_APPROVE_IDLIST_ID2 = "abcdefg12345678";
     public static String MOCK_APPROVE_ID1_RESULT = "OK";
     public static String MOCK_APPROVE_ID2_RESULT = "渠道错误。。。";
-    public static String MOCK_SANDBOX_PAY_URL = "mocck.beecloud.cn";
+    public static String MOCK_SANDBOX_PAY_URL = "http://mock.beecloud.cn/testcase/?appid=c5d1cba1-5e3f-4ba0-941d-9b0a371fe719&channel=ALI_WEB&objectid=56f05148-f84d-461b-934a-996abe22e72e&title=demo%E6%B5%8B%E8%AF%95&fee=1&bill_no=d520c0237c9643eb9440a8cd0b094c55";
 
     public static String MOCK_CREDIT_CARD_ID = "CARD_ADMJ324234DJLKJS";
 
@@ -226,7 +226,7 @@ public class TestConstant {
 
     public final static String PAYPAL_RETURN_URL_EMPTY = "PAYPAL直接支付returnUrl不能为空！";
 
-    public final static String TEST_MODE_SUPPORT_ERROR = "测试模式仅支持国内支付、订单查询、订单总数查询、单笔订单查询";
+    public final static String TEST_MODE_SUPPORT_ERROR = "测试模式仅支持国内支付(WX_JSAPI暂不支持)、订单查询、订单总数查询、单笔订单查询";
 
     public static enum CHANNEL_TYPE {
         WX,

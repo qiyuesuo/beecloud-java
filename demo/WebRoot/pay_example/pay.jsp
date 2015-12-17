@@ -88,9 +88,9 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());
-                if (bcOrder.getSandboxUrl() != null) {
-                    response.sendRedirect( bcOrder.getSandboxUrl());
-                }
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
+                System.out.println(bcOrder.getHtml());
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -104,9 +104,7 @@
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
                 System.out.print(bcOrder.getObjectId());
-                if (bcOrder.getSandboxUrl() != null) {
-                    response.sendRedirect( bcOrder.getSandboxUrl());
-                }
+                Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -123,9 +121,8 @@
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
                 System.out.print(bcOrder.getObjectId());
-                if (bcOrder.getSandboxUrl() != null) {
-                    response.sendRedirect( bcOrder.getSandboxUrl());
-                }
+                System.out.println(bcOrder.getCodeUrl());
+                Thread.sleep(3000);
                 success = true;
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -159,9 +156,7 @@
                         bcOrder = BCPay.startBCPay(bcOrder);
                         out.println(bcOrder.getObjectId());
                         System.out.print(bcOrder.getObjectId());
-                        if (bcOrder.getSandboxUrl() != null) {
-                            response.sendRedirect( bcOrder.getSandboxUrl());
-                        }
+
                         Map<String, String> map = bcOrder.getWxJSAPIMap();
                         jsapiAppid = map.get("appId").toString();
                         timeStamp = map.get("timeStamp").toString();
@@ -183,9 +178,8 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());
-                if (bcOrder.getSandboxUrl() != null) {
-                    response.sendRedirect( bcOrder.getSandboxUrl());
-                }
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -198,11 +192,9 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());
-                if (bcOrder.getSandboxUrl() != null) {
-                    response.sendRedirect( bcOrder.getSandboxUrl());
-                } else {
-                    response.sendRedirect(bcOrder.getUrl());
-                }
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
+                response.sendRedirect(bcOrder.getUrl());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
                 out.println(e.getMessage());
@@ -213,12 +205,9 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());
-                if (bcOrder.getSandboxUrl() != null) {
-                    response.sendRedirect( bcOrder.getSandboxUrl());
-                } else {
-                    response.sendRedirect(bcOrder.getUrl());
-                }
-
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
+                response.sendRedirect(bcOrder.getUrl());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
                 out.println(e.getMessage());
@@ -236,11 +225,8 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());
-                if (bcOrder.getSandboxUrl() != null) {
-                    response.sendRedirect( bcOrder.getSandboxUrl());
-                }
-                out.println("点卡支付成功！");
                 out.println(bcOrder.getObjectId());
+                out.println("点卡支付成功！");
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
                 out.println(e.getMessage());
@@ -251,9 +237,8 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());
-                if (bcOrder.getSandboxUrl() != null) {
-                    response.sendRedirect( bcOrder.getSandboxUrl());
-                }
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -265,9 +250,8 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());
-                if (bcOrder.getSandboxUrl() != null) {
-                    response.sendRedirect( bcOrder.getSandboxUrl());
-                }
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -279,9 +263,8 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());
-                if (bcOrder.getSandboxUrl() != null) {
-                    response.sendRedirect( bcOrder.getSandboxUrl());
-                }
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -294,9 +277,8 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());
-                if (bcOrder.getSandboxUrl() != null) {
-                    response.sendRedirect( bcOrder.getSandboxUrl());
-                }
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
@@ -308,11 +290,9 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());
-                if (bcOrder.getSandboxUrl() != null) {
-                    response.sendRedirect( bcOrder.getSandboxUrl());
-                } else {
-                    response.sendRedirect(bcOrder.getUrl());
-                }
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
+                response.sendRedirect(bcOrder.getUrl());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
                 out.println(e.getMessage());
@@ -324,11 +304,9 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());
-                if (bcOrder.getSandboxUrl() != null) {
-                    response.sendRedirect( bcOrder.getSandboxUrl());
-                } else {
-                    response.sendRedirect(bcOrder.getUrl());
-                }
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
+                response.sendRedirect(bcOrder.getUrl());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
                 out.println(e.getMessage());
@@ -467,7 +445,7 @@
 <script src="../js/qrcode.js"></script>
 <script type="text/javascript">
     function makeqrcode() {
-        var qr = qrcode(10, 'M');
+        var qr = qrcode(10, 'L');
         qr.addData(codeUrl);
         qr.make();
         var wording = document.createElement('p');

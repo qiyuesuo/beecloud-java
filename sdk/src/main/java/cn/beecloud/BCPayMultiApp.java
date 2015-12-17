@@ -50,7 +50,7 @@ public class BCPayMultiApp {
 
     private final static String NETWORK_ERROR = "网络错误";
 
-    private final static String TEST_MODE_SUPPORT_ERROR = "测试模式仅支持国内支付、订单查询、订单总数查询、单笔订单查询";
+    private final static String TEST_MODE_SUPPORT_ERROR = "测试模式仅支持国内支付(WX_JSAPI暂不支持)、订单查询、订单总数查询、单笔订单查询";
 
     private String appId;
     private String appSecret;
@@ -67,8 +67,7 @@ public class BCPayMultiApp {
     /**
      * 支付接口
      *
-     * @param order
-     * {@link BCOrder} (必填) 支付参数
+     * @param order {@link BCOrder} (必填) 支付参数
      * @return 调起BeeCloud支付后的返回结果
      * @throws BCException
      */
@@ -81,8 +80,15 @@ public class BCPayMultiApp {
         buildPayParam(param, order);
 
         if (BCCache.isSandbox()) {
+            if (order.getChannel().equals(PAY_CHANNEL.WX_JSAPI)) {
+                throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), TEST_MODE_SUPPORT_ERROR);
+            }
             Map<String, Object> ret = doPost(BCUtilPrivate.getkSandboxApiPay(), param);
             placeSandboxOrder(order, ret);
+            // 易宝点卡支付代码调用回调
+            if (order.getChannel().equals(PAY_CHANNEL.YEE_NOBANKCARD)) {
+                doGet(BCUtilPrivate.getkApiSandboxNotify() + "/" + this.appId + "/" + order.getObjectId() + "?para=", new HashMap<String, Object>());
+            }
             return order;
         }
         Map<String, Object> ret = doPost(BCUtilPrivate.getkApiPay(), param);
@@ -95,8 +101,7 @@ public class BCPayMultiApp {
     /**
      * 退款接口
      *
-     * @param refund
-     * {@link BCRefund} （必填） 退款参数
+     * @param refund {@link BCRefund} （必填） 退款参数
      * @return 发起退款的返回结果
      * @throws BCException
      */
@@ -123,8 +128,7 @@ public class BCPayMultiApp {
     /**
      * 订单查询（批量）接口
      *
-     * @param para
-     * {@link BCQueryParameter} （必填） 订单查询参数
+     * @param para {@link BCQueryParameter} （必填） 订单查询参数
      * @return 订单查询返回的结果
      * @throws BCException
      */
@@ -149,8 +153,7 @@ public class BCPayMultiApp {
     /**
      * 订单查询（单笔，根据id）接口
      *
-     * @param objectId
-     * （必填） 订单记录唯一标识
+     * @param objectId （必填） 订单记录唯一标识
      * @return id查询返回结果
      * @throws BCException
      */
@@ -182,8 +185,7 @@ public class BCPayMultiApp {
     /**
      * 订单总数查询接口
      *
-     * @param para
-     * {@link BCQueryParameter} （必填）订单总数查询参数
+     * @param para {@link BCQueryParameter} （必填）订单总数查询参数
      * @return 订单总数查询返回的结果
      * @throws BCException
      */
@@ -206,8 +208,7 @@ public class BCPayMultiApp {
     /**
      * 退款记录查询（批量）接口
      *
-     * @param para
-     * {@link BCQueryParameter} （必填）订单查询参数
+     * @param para {@link BCQueryParameter} （必填）订单查询参数
      * @return 退款查询返回的结果
      * @throws BCException
      */
@@ -229,8 +230,7 @@ public class BCPayMultiApp {
     /**
      * 退款查询接口（根据 id）
      *
-     * @param objectId
-     * (必填) 退款记录唯一标识
+     * @param objectId (必填) 退款记录唯一标识
      * @return 单笔退款记录查询返回结果
      * @throws BCException
      */
@@ -256,8 +256,7 @@ public class BCPayMultiApp {
     /**
      * 退款记录总数查询接口
      *
-     * @param para
-     * {@link BCQueryParameter} （必填） 退款总数查询参数
+     * @param para {@link BCQueryParameter} （必填） 退款总数查询参数
      * @return 退款总数查询返回的结果
      * @throws BCException
      */
@@ -276,11 +275,9 @@ public class BCPayMultiApp {
     /**
      * 退款状态更新接口
      *
-     * @param refundNo
-     * （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24
-     * 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
-     * @param channel
-     * (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含： YEE 易宝 WX 微信 KUAIQIAN 快钱 BD 百度
+     * @param refundNo （必填）商户退款单号， 格式为:退款日期(8位) + 流水号(3~24
+     *                 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
+     * @param channel  (必填) 渠道类型， 根据不同场景选择不同的支付方式，包含： YEE 易宝 WX 微信 KUAIQIAN 快钱 BD 百度
      * @return 退款状态更新返回结果，包括（SUCCESS， PROCESSING, FAIL...）
      * @throws BCException
      */
@@ -302,8 +299,7 @@ public class BCPayMultiApp {
     /**
      * 单笔打款接口
      *
-     * @param para
-     * {@link TransferParameter} （必填）单笔打款参数
+     * @param para {@link TransferParameter} （必填）单笔打款参数
      * @return 如果channel类型是TRANSFER_CHANNEL.ALI_TRANSFER, 返回需要跳转支付的url, 否则返回空字符串
      * @throws BCException
      */
@@ -327,8 +323,7 @@ public class BCPayMultiApp {
     /**
      * 批量打款接口
      *
-     * @param para
-     * {@link TransfersParameter} （必填） 批量打款参数
+     * @param para {@link TransfersParameter} （必填） 批量打款参数
      * @return 批量打款跳转支付url
      * @throws BCException
      */
@@ -349,8 +344,7 @@ public class BCPayMultiApp {
     /**
      * 发起预退款审核，包括批量否决和批量同意
      *
-     * @param batchRefund
-     * （必填） 批量退款参数
+     * @param batchRefund （必填） 批量退款参数
      * @return BCBatchRefund
      * @throws BCException
      */
@@ -380,8 +374,7 @@ public class BCPayMultiApp {
     /**
      * 境外支付（paypal）接口
      *
-     * @param order
-     * {@link BCInternationlOrder} （必填）
+     * @param order {@link BCInternationlOrder} （必填）
      * @return 支付后返回的order
      * @throws BCException
      */
@@ -403,10 +396,8 @@ public class BCPayMultiApp {
     }
 
     /**
-     * @param sign
-     * Webhook提供的签名
-     * @param timestamp
-     * Webhook提供的timestamp，注意是String格式
+     * @param sign      Webhook提供的签名
+     * @param timestamp Webhook提供的timestamp，注意是String格式
      * @return 签名是否正确
      */
     public static boolean verifySign(String sign, String timestamp) {
@@ -759,10 +750,8 @@ public class BCPayMultiApp {
     /**
      * doPost方法，封装rest api POST方式请求
      *
-     * @param url
-     * 请求url
-     * @param param
-     * 请求参数
+     * @param url   请求url
+     * @param param 请求参数
      * @return rest api返回参数
      * @throws BCException
      */
@@ -801,10 +790,8 @@ public class BCPayMultiApp {
     /**
      * doPut方法，封装rest api PUT方式请求
      *
-     * @param url
-     * 请求url
-     * @param param
-     * 请求参数
+     * @param url   请求url
+     * @param param 请求参数
      * @return rest api返回参数
      * @throws BCException
      */
@@ -843,10 +830,8 @@ public class BCPayMultiApp {
     /**
      * doGet方法，封装rest api GET方式请求
      *
-     * @param url
-     * 请求url
-     * @param param
-     * 请求参数
+     * @param url   请求url
+     * @param param 请求参数
      * @return rest api返回参数
      * @throws BCException
      */
@@ -954,7 +939,43 @@ public class BCPayMultiApp {
      */
     private static void placeSandboxOrder(BCOrder order, Map<String, Object> ret) {
         order.setObjectId(StrUtil.toStr(ret.get("id")));
-        order.setSandboxUrl(StrUtil.toStr(ret.get("url")));
+        switch (order.getChannel()) {
+            case WX_NATIVE:
+                if (ret.containsKey("url") && null != ret.get("url")) {
+                    order.setCodeUrl(StrUtil.toStr(ret.get("url")));
+                }
+                break;
+            case WX_JSAPI:
+                order.setWxJSAPIMap(generateWXJSAPIMap(ret));
+                break;
+            case ALI_WEB:
+            case ALI_QRCODE:
+            case ALI_WAP:
+                if (ret.containsKey("url")
+                        && null != ret.get("url")) {
+                    order.setHtml(BCUtil.generateSandboxHtmlWithUrl(StrUtil.toStr(ret.get("url"))));
+                    order.setUrl(StrUtil.toStr(ret.get("url")));
+                }
+                break;
+            case UN_WEB:
+            case JD_WAP:
+            case JD_WEB:
+            case KUAIQIAN_WAP:
+            case KUAIQIAN_WEB:
+                if (ret.containsKey("url") && null != ret.get("url")) {
+                    order.setHtml(BCUtil.generateSandboxHtmlWithUrl(StrUtil.toStr(ret.get("url"))));
+                }
+                break;
+            case YEE_WAP:
+            case YEE_WEB:
+            case BD_WEB:
+            case BD_WAP:
+                if (ret.containsKey("url") && null != ret.get("url")) {
+                    order.setUrl(StrUtil.toStr(ret.get("url")));
+                }
+            default:
+                break;
+        }
     }
 
     /**

@@ -319,7 +319,27 @@ public class PayTest {
         param.setFrqid(frqid);
 
         if (BCCache.isSandbox()) {
-            mockSandboxPay(param);
+
+            try {
+                param.setChannel(PAY_CHANNEL.WX_JSAPI);
+                BCPay.startBCPay(param);
+                Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+            } catch (Exception e) {
+                Assert.assertTrue(e.getMessage(), e instanceof BCException);
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(RESULT_TYPE.OTHER_ERROR.name()));
+                Assert.assertTrue(e.getMessage(),
+                        e.getMessage().contains(TestConstant.TEST_MODE_SUPPORT_ERROR));
+            }
+
+            mockSandboxWxNativePay(param);
+
+            mockSandboxUrlAndHtmlPay(param);
+
+            mockSandboxHtmlPay(param);
+
+            mockSandboxYeeNoBankCard(param);
+
             return;
         }
         /*--------------------------------------end mandatory param test---------------------*/
@@ -335,27 +355,198 @@ public class PayTest {
         /*--------------------------------------end mock network request and reponse handle-------------*/
     }
 
-    private static void mockSandboxPay(BCOrder param) {
+    private static void mockSandboxYeeNoBankCard(BCOrder param) {
         final Map<String, Object> returnMap = new HashMap<String, Object>();
-        returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
         returnMap.put("result_code", 0);
         returnMap.put("result_msg", "OK");
         returnMap.put("err_detail", "");
-        returnMap.put("url", TestConstant.MOCK_SANDBOX_PAY_URL);
 
-        new Expectations(BCPay.class) {
+        new Expectations() {
             {
                 Deencapsulation.invoke(BCPay.class, "doPost",
                         withSubstring(BCUtilPrivate.getkSandboxApiPay().substring(14)),
                         withAny(Map.class));
                 returns(returnMap);
 
+                Deencapsulation.invoke(BCPay.class, "doGet",
+                        withSubstring(BCUtilPrivate.getkApiSandboxNotify().substring(14)),
+                        withAny(Map.class));
+                returns(returnMap);
+            }
+        };
+
+        param.setChannel(PAY_CHANNEL.YEE_NOBANKCARD);
+        param.setCardNo(cardNo);
+        param.setFrqid(frqid);
+        param.setCardPwd(cardPwd);
+        try {
+            BCPay.startBCPay(param);
+        } catch (BCException e) {
+            e.printStackTrace();
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+        }
+    }
+
+    private static void mockSandboxHtmlPay(BCOrder param) {
+        final Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
+        returnMap.put("url", TestConstant.MOCK_SANDBOX_PAY_URL);
+
+        new Expectations() {
+            {
+                Deencapsulation.invoke(BCPay.class, "doPost",
+                        withSubstring(BCUtilPrivate.getkSandboxApiPay().substring(14)),
+                        withAny(Map.class));
+                returns(returnMap, returnMap, returnMap, returnMap, returnMap);
+                times = 5;
+                result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
+                        RESULT_TYPE.APP_INVALID.name(), RESULT_TYPE.APP_INVALID.name());
             }
         };
         BCOrder order;
         try {
+            param.setChannel(PAY_CHANNEL.UN_WEB);
             order = BCPay.startBCPay(param);
-            Assert.assertEquals("", TestConstant.MOCK_SANDBOX_PAY_URL, order.getSandboxUrl());
+            Assert.assertEquals("",
+                    TestUtil.generateSandboxHtmlWithUrl(TestConstant.MOCK_SANDBOX_PAY_URL),
+                    order.getHtml());
+            Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, order.getObjectId());
+        } catch (BCException e) {
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+        }
+
+        try {
+            param.setChannel(PAY_CHANNEL.JD_WAP);
+            order = BCPay.startBCPay(param);
+            Assert.assertEquals("",
+                    TestUtil.generateSandboxHtmlWithUrl(TestConstant.MOCK_SANDBOX_PAY_URL),
+                    order.getHtml());
+            Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, order.getObjectId());
+        } catch (BCException e) {
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+        }
+
+        try {
+            param.setChannel(PAY_CHANNEL.JD_WEB);
+            order = BCPay.startBCPay(param);
+            Assert.assertEquals("",
+                    TestUtil.generateSandboxHtmlWithUrl(TestConstant.MOCK_SANDBOX_PAY_URL),
+                    order.getHtml());
+            Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, order.getObjectId());
+        } catch (BCException e) {
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+        }
+
+        try {
+            param.setChannel(PAY_CHANNEL.KUAIQIAN_WEB);
+            order = BCPay.startBCPay(param);
+            Assert.assertEquals("",
+                    TestUtil.generateSandboxHtmlWithUrl(TestConstant.MOCK_SANDBOX_PAY_URL),
+                    order.getHtml());
+            Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, order.getObjectId());
+        } catch (BCException e) {
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+        }
+
+        try {
+            param.setChannel(PAY_CHANNEL.KUAIQIAN_WAP);
+            order = BCPay.startBCPay(param);
+            Assert.assertEquals("",
+                    TestUtil.generateSandboxHtmlWithUrl(TestConstant.MOCK_SANDBOX_PAY_URL),
+                    order.getHtml());
+            Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, order.getObjectId());
+        } catch (BCException e) {
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+        }
+
+        try {
+            order = BCPay.startBCPay(param);
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+        } catch (Exception ex) {
+            Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+            Assert.assertTrue(ex.getMessage(),
+                    ex.getMessage().contains(RESULT_TYPE.APP_INVALID.name()));
+        }
+    }
+
+    private static void mockSandboxUrlAndHtmlPay(BCOrder param) {
+        final Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
+        returnMap.put("url", TestConstant.MOCK_SANDBOX_PAY_URL);
+
+        new Expectations() {
+            {
+                Deencapsulation.invoke(BCPay.class, "doPost",
+                        withSubstring(BCUtilPrivate.getkSandboxApiPay().substring(14)),
+                        withAny(Map.class));
+                returns(returnMap, returnMap, returnMap);
+                result = new BCException(RESULT_TYPE.RUNTIME_ERORR.ordinal(),
+                        RESULT_TYPE.RUNTIME_ERORR.name(), RESULT_TYPE.RUNTIME_ERORR.name());
+            }
+        };
+
+        BCOrder order;
+        param.setChannel(PAY_CHANNEL.ALI_WEB);
+        try {
+            order = BCPay.startBCPay(param);
+            Assert.assertEquals("", TestConstant.MOCK_SANDBOX_PAY_URL, order.getUrl());
+            Assert.assertEquals("", TestUtil.generateSandboxHtmlWithUrl(order.getUrl()),
+                    order.getHtml());
+        } catch (BCException e) {
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+        }
+
+        param.setChannel(PAY_CHANNEL.ALI_WAP);
+        try {
+            order = BCPay.startBCPay(param);
+            Assert.assertEquals("", TestConstant.MOCK_SANDBOX_PAY_URL, order.getUrl());
+            Assert.assertEquals("", TestUtil.generateSandboxHtmlWithUrl(order.getUrl()),
+                    order.getHtml());
+        } catch (BCException e) {
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+        }
+
+        param.setChannel(PAY_CHANNEL.ALI_QRCODE);
+        try {
+            order = BCPay.startBCPay(param);
+            Assert.assertEquals("", TestConstant.MOCK_SANDBOX_PAY_URL, order.getUrl());
+            Assert.assertEquals("", TestUtil.generateSandboxHtmlWithUrl(order.getUrl()),
+                    order.getHtml());
+        } catch (BCException e) {
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);
+        }
+
+        try {
+            order = BCPay.startBCPay(param);
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+        } catch (Exception ex) {
+            Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
+            Assert.assertTrue(ex.getMessage(),
+                    ex.getMessage().contains(RESULT_TYPE.RUNTIME_ERORR.name()));
+        }
+    }
+
+    private static void mockSandboxWxNativePay(BCOrder param) {
+        final Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("id", TestConstant.MOCK_OBJECT_ID);
+        returnMap.put("url", TestConstant.MOCK_SANDBOX_PAY_URL);
+        returnMap.put("result_code", 0);
+        returnMap.put("result_msg", "OK");
+        returnMap.put("err_detail", "");
+
+        new Expectations() {
+            {
+                Deencapsulation.invoke(BCPay.class, "doPost",
+                        withSubstring(BCUtilPrivate.getkSandboxApiPay().substring(14)),
+                        withAny(Map.class));
+                returns(returnMap);
+            }
+        };
+        BCOrder order;
+        param.setChannel(PAY_CHANNEL.WX_NATIVE);
+        try {
+            order = BCPay.startBCPay(param);
+            Assert.assertEquals("", TestConstant.MOCK_SANDBOX_PAY_URL, order.getCodeUrl());
             Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, order.getObjectId());
         } catch (BCException e) {
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_THROWN);

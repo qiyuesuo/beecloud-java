@@ -147,6 +147,11 @@ class BCUtilPrivate {
                 + "/rest/sandbox/bills/count?para=";
     }
 
+    static String getkApiSandboxNotify() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/sandbox/notify";
+    }
+
     static String transferDateFromLongToString(long millisecond) {
         Date date = new Date(millisecond);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
