@@ -1,16 +1,5 @@
-<%@page import="com.sun.org.apache.xalan.internal.xsltc.compiler.sym" %>
-<%@page import="cn.beecloud.BeeCloud" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ page import="cn.beecloud.*" %>
-<%@ page import="cn.beecloud.BCEumeration.PAY_CHANNEL" %>
-<%@ page import="cn.beecloud.BCEumeration.*" %>
-<%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="net.sf.json.JSONObject" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.Enumeration" %>
 <%
   /* 
@@ -47,10 +36,10 @@
             //成功逻辑
             out.println("<h3>支付宝网页支付成功，商户应自行实现成功逻辑！</h3>");
         } else {
-            out.println("<h3>支付宝网支付未成功，商户应自行实现失败逻辑！</h3>");
+            out.println("<h3>支付宝网页支付未成功，商户应自行实现失败逻辑！</h3>");
         }
     } else {
-        out.println("<h3>支付宝网支付未收到同步通知，商户应自行实现逻辑！</h3>");
+        out.println("<h3>支付宝网页支付未收到同步通知，商户应自行实现逻辑！</h3>");
     }
 
 %>
