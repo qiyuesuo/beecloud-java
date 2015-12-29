@@ -580,6 +580,7 @@ TransfersParameter para = new TransfersParameter();
 para.setBatchNo(batchNo);
 para.setAccountName(accountName);
 para.setTransferDataList(list);
+para.setChannel(PAY_CHANNEL.ALI);
 List<ALITransferData> list = new ArrayList<ALITransferData>();
 ALITransferData data1 = new ALITransferData("transfertest11223", "13584809743", "袁某某", 1, "赏赐");
 ALITransferData data2 = new ALITransferData("transfertest11224", "13584809742", "张某某", 1, "赏赐");
