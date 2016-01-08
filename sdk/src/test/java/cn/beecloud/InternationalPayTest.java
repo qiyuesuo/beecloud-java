@@ -203,7 +203,6 @@ public class InternationalPayTest {
             BCPay.startBCInternatioalPay(order);
             Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
         } catch (BCException ex) {
-            ex.printStackTrace();
             Assert.assertTrue(ex.getMessage(), ex instanceof BCException);
             Assert.assertTrue(ex.getMessage(),
                     ex.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
