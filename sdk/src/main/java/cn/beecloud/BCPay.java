@@ -96,6 +96,13 @@ public class BCPay {
         buildBCTransferParam(param, bcTransferParameter);
         Map<String, Object> ret = doPost(BCUtilPrivate.getkApiBCTransfer(), param);
 
+        if (StrUtil.toStr(ret.get("result_code")).equals("0")) {
+            bcTransferParameter.setResultType(0);
+        } else {
+            bcTransferParameter.setResultType(StrUtil.parseInt(StrUtil.toStr(ret.get("result_code"))));
+            bcTransferParameter.setErrDetailMsg(StrUtil.toStr(ret.get("err_detail")));
+        }
+
         return bcTransferParameter;
     }
 

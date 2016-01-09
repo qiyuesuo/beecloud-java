@@ -31,6 +31,10 @@ public class BCTransferParameter {
 
     private String mobile;
 
+    private int resultType;
+
+    private String errDetailMsg;
+
     private Map<String, Object> optional;
 
     public BCTransferParameter(Integer totalFee, String billNo, String title, String tradeSource,
@@ -152,5 +156,21 @@ public class BCTransferParameter {
 
     public void setOptional(Map<String, Object> optional) {
         this.optional = optional;
+    }
+
+    public int getResultType() {
+        return resultType;
+    }
+
+    public void setResultType(int resultType) {
+        this.resultType = resultType;
+    }
+
+    public String getErrDetailMsg() {
+        return errDetailMsg;
+    }
+
+    public void setErrDetailMsg(String errDetailMsg) {
+        this.errDetailMsg = errDetailMsg;
     }
 }
