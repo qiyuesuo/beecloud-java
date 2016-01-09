@@ -328,11 +328,7 @@ public class ValidationUtil {
         } else if (StrUtil.empty(para.getAccountName())) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), ACCOUNT_NAME_EMPTY);
-        } else if (StrUtil.empty(para.getOptional()) || para.getOptional().size() < 1) {
-            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
-                    RESULT_TYPE.PARAM_INVALID.name(), OPTIONAL_EMPTY);
         }
-
 
     }
 

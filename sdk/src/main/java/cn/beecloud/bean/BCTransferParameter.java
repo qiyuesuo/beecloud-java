@@ -37,6 +37,8 @@ public class BCTransferParameter {
 
     private Map<String, Object> optional;
 
+    public BCTransferParameter() {};
+
     public BCTransferParameter(Integer totalFee, String billNo, String title, String tradeSource,
             String bankCode, String bankAssociatedCode, String bankFullName, String cardType,
             String accountType, String accountNo, String accountName, Map<String, Object> optional) {
