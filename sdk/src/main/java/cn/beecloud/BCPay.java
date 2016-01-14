@@ -23,15 +23,7 @@ import javax.ws.rs.core.Response;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
-import cn.beecloud.bean.BCBatchRefund;
-import cn.beecloud.bean.BCException;
-import cn.beecloud.bean.BCInternationlOrder;
-import cn.beecloud.bean.BCOrder;
-import cn.beecloud.bean.BCQueryParameter;
-import cn.beecloud.bean.BCRefund;
-import cn.beecloud.bean.ALITransferData;
-import cn.beecloud.bean.TransferParameter;
-import cn.beecloud.bean.TransfersParameter;
+import cn.beecloud.bean.*;
 import net.sf.json.JSONObject;
 
 
@@ -85,6 +77,33 @@ public class BCPay {
         placeOrder(order, ret);
 
         return order;
+    }
+
+    /**
+     * 支付接口
+     *
+     * @param bcTransferParameter
+     * {@link BCTransferParameter} (必填) 支付参数
+     * @return 调起BeeCloud代付后的返回结果
+     * @throws BCException
+     */
+    public static BCTransferParameter startBCTransfer(BCTransferParameter bcTransferParameter) throws BCException {
+
+        ValidationUtil.validateBCTransfer(bcTransferParameter);
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildBCTransferParam(param, bcTransferParameter);
+        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiBCTransfer(), param);
+
+        if (StrUtil.toStr(ret.get("result_code")).equals("0")) {
+            bcTransferParameter.setResultType(0);
+        } else {
+            bcTransferParameter.setResultType(StrUtil.parseInt(StrUtil.toStr(ret.get("result_code"))));
+            bcTransferParameter.setErrDetailMsg(StrUtil.toStr(ret.get("err_detail")));
+        }
+
+        return bcTransferParameter;
     }
 
     /**
@@ -477,6 +496,38 @@ public class BCPay {
             param.put("cardpwd", para.getCardPwd());
             param.put("frqid", para.getFrqid());
         }
+    }
+
+    /**
+     * 构建BC代付rest api参数
+     */
+    private static void buildBCTransferParam(Map<String, Object> param, BCTransferParameter para) {
+
+        param.put("app_id", BCCache.getAppID());
+        param.put("timestamp", System.currentTimeMillis());
+        if (BCCache.isSandbox()) {
+            param.put("app_sign", BCUtilPrivate
+                    .getAppSignatureWithTestSecret(StrUtil.toStr(param.get("timestamp"))));
+        } else {
+            param.put("app_sign",
+                    BCUtilPrivate.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
+        }
+        param.put("total_fee", para.getTotalFee());
+        param.put("bill_no", para.getBillNo());
+        param.put("title", para.getTitle());
+        param.put("trade_source", para.getTradeSource());
+        param.put("bank_code", para.getBankCode());
+        param.put("bank_associated_code",para.getBankAssociatedCode());
+        param.put("bank_fullname", para.getBankFullName());
+        param.put("card_type", para.getCardType());
+        param.put("account_type", para.getAccountType());
+        param.put("account_no", para.getAccountNo());
+        param.put("account_name", para.getAccountName());
+        if (!StrUtil.empty(para.getMobile()))
+            param.put("mobile", para.getBankFullName());
+        param.put("optional", para.getOptional());
+
+
     }
 
     /**
