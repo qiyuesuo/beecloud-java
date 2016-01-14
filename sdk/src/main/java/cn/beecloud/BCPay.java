@@ -84,7 +84,7 @@ public class BCPay {
      *
      * @param bcTransferParameter
      * {@link BCTransferParameter} (必填) 支付参数
-     * @return 调起BeeClou代付后的返回结果
+     * @return 调起BeeCloud代付后的返回结果
      * @throws BCException
      */
     public static BCTransferParameter startBCTransfer(BCTransferParameter bcTransferParameter) throws BCException {
