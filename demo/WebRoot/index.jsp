@@ -249,6 +249,16 @@ input {
     </div>
 </form>
 <hr/>
+
+<div>
+    <h2>BC代付</h2>
+</div>
+<form action="pay_example/BCtransfer.jsp" method="POST" >
+    <tr><input type="input" name="email" size=10 value ="test@beecloud.cn" /></tr>
+    <input type="submit" class="button" value="确认BC代付">
+</form>
+<hr/>
+
 <div>
     <h2>订单查询及发起退款，退款查询，退款状态查询</h2>
 
