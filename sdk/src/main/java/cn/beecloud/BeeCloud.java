@@ -11,7 +11,7 @@ public class BeeCloud {
     /**
      * BeeCloud JAVA SDK release version.
      */
-    public static final String kBeeCloudVersionString = "3.1.0";
+    public static final String kBeeCloudVersionString = "3.1.1";
     public static final double kBeeCloudVersionNumber = 3.10;
 
     /**
