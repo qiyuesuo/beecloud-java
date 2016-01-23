@@ -914,10 +914,9 @@ param.setAccountNo("123456789");//收款方的银行卡号
 param.setAccountName("beecloud");//收款方的姓名或者单位名
 try {
 	BCPay.startBCTransfer(param);
-}
- catch (Exception e) {
+}catch (Exception e) {
 	out.println(ex.getMessage());
-	og.info(ex.getMessage());
+	log.info(ex.getMessage());
 }		
 ```
 
