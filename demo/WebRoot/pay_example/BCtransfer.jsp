@@ -44,8 +44,9 @@
     bCTransferParameter.setBankFullName("中国银行");
     bCTransferParameter.setCardType("DE");
     bCTransferParameter.setAccountType("C");
-    bCTransferParameter.setAccountNo("1530065239604");
-    bCTransferParameter.setAccountName("苏州比可网络科技有限公司");
+    //测试时，请填写真实号码和姓名
+    bCTransferParameter.setAccountNo("12345678666");
+    bCTransferParameter.setAccountName("大宇宙银河系地球集团");
     try {
         BCPay.startBCTransfer(bCTransferParameter);
         out.println("success");
