@@ -252,7 +252,6 @@ input {
 
 <div>
     <h2>BC代付</h2>
-    <p>请选择渠道进行操作</p>
 </div>
 <form action="pay_example/BCtransfer.jsp" method="POST" >
     <tr><input type="input" name="email" size=10 value ="test@beecloud.cn" /></tr>

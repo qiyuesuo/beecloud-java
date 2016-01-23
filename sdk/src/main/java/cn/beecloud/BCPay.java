@@ -512,7 +512,8 @@ public class BCPay {
         param.put("account_name", para.getAccountName());
         if (!StrUtil.empty(para.getMobile()))
             param.put("mobile", para.getBankFullName());
-        param.put("optional", para.getOptional());
+        if (!StrUtil.empty(para.getOptional()))
+            param.put("optional", para.getOptional());
 
     }
 

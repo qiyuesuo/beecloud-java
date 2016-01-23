@@ -44,14 +44,12 @@
     bCTransferParameter.setBankFullName("中国银行");
     bCTransferParameter.setCardType("DE");
     bCTransferParameter.setAccountType("C");
-    bCTransferParameter.setAccountNo("530065239604");
-    bCTransferParameter.setAccountName("苏州比可网络科技有限公司");
-    Map<String, Object> map = new HashMap<String, Object>();
-    map.put("email","jackybian@beecloud.cn");
-    bCTransferParameter.setOptional(map);
+    //测试时，请填写真实号码和姓名
+    bCTransferParameter.setAccountNo("12345678666");
+    bCTransferParameter.setAccountName("大宇宙银河系地球集团");
     try {
         BCPay.startBCTransfer(bCTransferParameter);
-        out.println(bCTransferParameter.getResultType());
+        out.println("success");
     } catch (BCException e) {
         log.error(e.getMessage(), e);
         out.println(e.getMessage());
