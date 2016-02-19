@@ -3,16 +3,23 @@ package cn.beecloud;
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
 import cn.beecloud.BCEumeration.TRANSFER_CHANNEL;
-import cn.beecloud.bean.*;
-
+import cn.beecloud.bean.ALITransferData;
+import cn.beecloud.bean.BCBatchRefund;
+import cn.beecloud.bean.BCException;
+import cn.beecloud.bean.BCInternationlOrder;
+import cn.beecloud.bean.BCOrder;
+import cn.beecloud.bean.BCQueryParameter;
+import cn.beecloud.bean.BCRefund;
+import cn.beecloud.bean.BCTransferParameter;
+import cn.beecloud.bean.TransferParameter;
+import cn.beecloud.bean.TransfersParameter;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 /**
  * 接口参数验证类
- * 
+ *
  * @author Ray
  * @version 0.1
  * @since 2015/6/11
@@ -115,6 +122,10 @@ public class ValidationUtil {
     private final static String LIMIT_FORMAT_INVALID = "limit 的最大长度为50！ 并且不能小于10！";
 
     private final static String OPENID_EMPTY = "openid 不能为空！";
+
+    private final static String IDENTITY_ID_EMPTY = "identityId 不能为空！";
+
+    private final static String IDENTITY_ID_INVALID = "identityId 最大长度为50！";
 
     private final static String CHANNEL_INVALID_FOR_REFUND = "退款只支持WX, UN, ALI !";
 
@@ -254,16 +265,20 @@ public class ValidationUtil {
                     RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_FORMAT_INVALID);
         } else if (StrUtil.empty(para.getReturnUrl())
                 && (para.getChannel().equals(PAY_CHANNEL.ALI_WEB)
-                        || para.getChannel().equals(PAY_CHANNEL.ALI_QRCODE)
-                        || para.getChannel().equals(PAY_CHANNEL.UN_WEB)
-                        || para.getChannel().equals(PAY_CHANNEL.JD_WEB) || para.getChannel()
-                        .equals(PAY_CHANNEL.JD_WAP))) {
+                || para.getChannel().equals(PAY_CHANNEL.ALI_QRCODE)
+                || para.getChannel().equals(PAY_CHANNEL.UN_WEB)
+                || para.getChannel().equals(PAY_CHANNEL.JD_WEB) || para.getChannel()
+                .equals(PAY_CHANNEL.JD_WAP))) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), RETURN_URL_EMPTY);
         } else if (para.getChannel().equals(PAY_CHANNEL.WX_JSAPI)
                 && StrUtil.empty(para.getOpenId())) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), OPENID_EMPTY);
+        } else if (para.getChannel().equals(PAY_CHANNEL.YEE_WAP) && StrUtil.empty(para.getIdentityId())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), IDENTITY_ID_EMPTY);
+        } else if (para.getChannel().equals(PAY_CHANNEL.YEE_WAP) && StrUtil.empty(para.getIdentityId().length() > 50)) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), IDENTITY_ID_INVALID);
         } else if (para.getChannel().equals(PAY_CHANNEL.ALI_QRCODE)
                 && StrUtil.empty(para.getQrPayMode())) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
@@ -396,8 +411,8 @@ public class ValidationUtil {
                     RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_FORMAT_INVALID);
         } else if (!StrUtil.empty(para.getRefundNo())
                 && (!para.getRefundNo().substring(8, para.getRefundNo().length())
-                        .matches("[0-9A-Za-z]{3,24}") || para.getRefundNo()
-                        .substring(8, para.getRefundNo().length()).matches("000"))) {
+                .matches("[0-9A-Za-z]{3,24}") || para.getRefundNo()
+                .substring(8, para.getRefundNo().length()).matches("000"))) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), REFUND_NO_FORMAT_INVALID);
         } else if (para.getLimit() != null && (para.getLimit() > 50 || para.getLimit() < 10)) {
@@ -482,8 +497,8 @@ public class ValidationUtil {
         } else if (para.getChannel().equals(TRANSFER_CHANNEL.WX_REDPACK)
                 && (para.getRedpackInfo() != null)
                 && (para.getRedpackInfo().getSendName() == null
-                        || para.getRedpackInfo().getWishing() == null || para.getRedpackInfo()
-                        .getActivityName() == null)) {
+                || para.getRedpackInfo().getWishing() == null || para.getRedpackInfo()
+                .getActivityName() == null)) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_REDPACK_INFO_FIELD_EMPTY);
         } else if (para.getChannel().equals(TRANSFER_CHANNEL.ALI_TRANSFER)

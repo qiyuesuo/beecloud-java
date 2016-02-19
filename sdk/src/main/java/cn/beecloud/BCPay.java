@@ -465,6 +465,9 @@ public class BCPay {
         if (para.getOpenId() != null) {
             param.put("openid", para.getOpenId());
         }
+        if (para.getIdentityId() != null) {
+            param.put("identity_id", para.getIdentityId());
+        }
         if (para.getShowUrl() != null) {
             param.put("show_url", para.getShowUrl());
         }

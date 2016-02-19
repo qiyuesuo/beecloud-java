@@ -189,6 +189,7 @@
 
         case YEE_WAP:
             bcOrder.setReturnUrl(yeeWapReturnUrl);
+            bcOrder
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());
