@@ -249,7 +249,7 @@ public class BillQueryTest {
                         order.getChannel().toString().split("_")[0]);
                 Assert.assertEquals("", TestConstant.MOCK_SUB_CHANNEL,
                         order.getChannel().toString());
-                Assert.assertEquals("", TestConstant.MOCK_PAY_RESULT, order.isResulted());
+                Assert.assertEquals("", TestConstant.MOCK_PAY_RESULT, order.isResult());
                 Assert.assertTrue("", order.getOptionalString().equals("") || order
                         .getOptionalString().equals(TestConstant.MOCK_OPTIONAL_JSON_STRING));
                 Assert.assertEquals("", true, order.isRevertResult());
@@ -312,7 +312,7 @@ public class BillQueryTest {
                         order.getChannel().toString().split("_")[0]);
                 Assert.assertEquals("", TestConstant.MOCK_SUB_CHANNEL,
                         order.getChannel().toString());
-                Assert.assertEquals("", TestConstant.MOCK_PAY_RESULT, order.isResulted());
+                Assert.assertEquals("", TestConstant.MOCK_PAY_RESULT, order.isResult());
                 Assert.assertTrue("", order.getOptionalString().equals("") || order
                         .getOptionalString().equals(TestConstant.MOCK_OPTIONAL_JSON_STRING));
                 Assert.assertEquals("", true, order.isRevertResult());
@@ -363,7 +363,7 @@ public class BillQueryTest {
             Assert.assertEquals("", TestConstant.MOCK_BILL_NO, order.getBillNo());
             Assert.assertEquals("", TestConstant.MOCK_TRADE_NO, order.getChannelTradeNo());
             Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, order.getObjectId());
-            Assert.assertEquals("", TestConstant.MOCK_PAY_RESULT, order.isResulted());
+            Assert.assertEquals("", TestConstant.MOCK_PAY_RESULT, order.isResult());
             Assert.assertEquals("",
                     TestUtil.transferDateFromLongToString(TestConstant.MOCK_CREATE_TIME),
                     order.getDateTime());
@@ -425,7 +425,7 @@ public class BillQueryTest {
             Assert.assertEquals("", TestConstant.MOCK_BILL_NO, order.getBillNo());
             Assert.assertEquals("", TestConstant.MOCK_TRADE_NO, order.getChannelTradeNo());
             Assert.assertEquals("", TestConstant.MOCK_OBJECT_ID, order.getObjectId());
-            Assert.assertEquals("", TestConstant.MOCK_PAY_RESULT, order.isResulted());
+            Assert.assertEquals("", TestConstant.MOCK_PAY_RESULT, order.isResult());
             Assert.assertEquals("",
                     TestUtil.transferDateFromLongToString(TestConstant.MOCK_CREATE_TIME),
                     order.getDateTime());
