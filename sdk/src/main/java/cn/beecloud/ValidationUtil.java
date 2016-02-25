@@ -125,7 +125,7 @@ public class ValidationUtil {
 
     private final static String IDENTITY_ID_EMPTY = "identityId 不能为空！";
 
-    private final static String IDENTITY_ID_INVALID = "identityId 最大长度为50！";
+    private final static String IDENTITY_ID_INVALID = "identityId 是一个长度不超过50个字符的数字字母字符串！";
 
     private final static String CHANNEL_INVALID_FOR_REFUND = "退款只支持WX, UN, ALI !";
 
@@ -277,7 +277,7 @@ public class ValidationUtil {
                     RESULT_TYPE.PARAM_INVALID.name(), OPENID_EMPTY);
         } else if (para.getChannel().equals(PAY_CHANNEL.YEE_WAP) && StrUtil.empty(para.getIdentityId())) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), IDENTITY_ID_EMPTY);
-        } else if (para.getChannel().equals(PAY_CHANNEL.YEE_WAP) && StrUtil.empty(para.getIdentityId().length() > 50)) {
+        } else if (para.getChannel().equals(PAY_CHANNEL.YEE_WAP) && !para.getIdentityId().matches("[a-zA-Z0-9]{1,50}")) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(), RESULT_TYPE.PARAM_INVALID.name(), IDENTITY_ID_INVALID);
         } else if (para.getChannel().equals(PAY_CHANNEL.ALI_QRCODE)
                 && StrUtil.empty(para.getQrPayMode())) {

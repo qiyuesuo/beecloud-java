@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.Test;
 import mockit.Deencapsulation;
 import mockit.Expectations;
 
@@ -36,6 +37,7 @@ public class PayTest {
     static String frqid = TestConstant.YEE_NOBANKCARD_FRQID;
     static String openId = TestConstant.WXJSAPI_OPEN_ID;
     static QR_PAY_MODE qrPayMode = QR_PAY_MODE.MODE_BRIEF_FRONT;
+    static String identityId = TestConstant.YEE_WAP_IDENTITY_ID;
 
     static void testPay() {
 
@@ -260,6 +262,44 @@ public class PayTest {
             Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.OPENID_EMPTY));
         }
         param.setOpenId(openId);
+
+        try {
+            param.setIdentityId(null);
+            param.setChannel(PAY_CHANNEL.YEE_WAP);
+            BCPay.startBCPay(param);
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+        } catch (Exception e) {
+            Assert.assertTrue(e.getMessage(), e instanceof BCException);
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+            Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.IDENTITY_ID_EMPTY));
+        }
+
+        try {
+            param.setIdentityId(TestConstant.YEE_WAP_IDENTITY_ID_MORE_THAN_50);
+            param.setChannel(PAY_CHANNEL.YEE_WAP);
+            BCPay.startBCPay(param);
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+        } catch (Exception e) {
+            Assert.assertTrue(e.getMessage(), e instanceof BCException);
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+            Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.IDENTITY_ID_INVALID));
+        }
+
+        try {
+            param.setIdentityId(TestConstant.YEE_WAP_IDENTITY_ID_WITH_SPECIAL_CHARACTER);
+            param.setChannel(PAY_CHANNEL.YEE_WAP);
+            BCPay.startBCPay(param);
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+        } catch (Exception e) {
+            Assert.assertTrue(e.getMessage(), e instanceof BCException);
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+            Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.IDENTITY_ID_INVALID));
+        }
+        param.setIdentityId(TestConstant.YEE_WAP_IDENTITY_ID);
+
 
         try {
             param.setChannel(PAY_CHANNEL.ALI_QRCODE);
@@ -783,5 +823,6 @@ public class PayTest {
         param.setChannel(channel);
         param.setOpenId(openId);
         param.setQrPayMode(qrPayMode);
+        param.setIdentityId(identityId);
     }
 }
