@@ -551,7 +551,7 @@ try {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX_TRANSFER 支付宝单笔打款<br/>WX_REDPACK 微信红包<br/>WX_TRANSFER 微信单笔打款，（必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>ALI_TRANSFER 支付宝单笔打款<br/>WX_REDPACK 微信红包<br/>WX_TRANSFER 微信单笔打款，（必填）
 transferNo | 打款单号，支付宝为11-32位数字字母组合， 微信为10位数字，（必填）
 totalFee | 打款金额，此次打款的金额,单位分,正整数(微信红包1.00-200元，微信打款>=1元)，（必填）
 description | 打款说明，此次打款的说明，（必填）
