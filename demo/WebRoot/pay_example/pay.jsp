@@ -191,7 +191,8 @@
             bcOrder.setReturnUrl(yeeWapReturnUrl);
             Object identityId = session.getAttribute("identityId");
             if (identityId == null) {
-                identityId = UUID.randomUUID().toString();
+                identityId = UUID.randomUUID().toString().replace("-","");
+                System.out.println("identity_id:" + identityId);
                 session.setAttribute("identityId", identityId);
             }
             bcOrder.setIdentityId(identityId.toString());
