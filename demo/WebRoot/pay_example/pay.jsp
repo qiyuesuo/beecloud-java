@@ -76,6 +76,7 @@
     String yeeWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/yeeWebReturnUrl.jsp";
     String jdWapReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/jdWapReturnUrl.jsp";
     String jdWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/jdWebReturnUrl.jsp";
+    String jdB2BReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/jdB2BReturnUrl.jsp";
     String kqReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/kqReturnUrl.jsp";
     String bdReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/bdReturnUrl.jsp";
 	String paypalReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/paypalReturnUrl.jsp";
@@ -254,6 +255,19 @@
             break;
         case JD_WEB:
             bcOrder.setReturnUrl(jdWebReturnUrl);
+            try {
+                bcOrder = BCPay.startBCPay(bcOrder);
+                System.out.print(bcOrder.getObjectId());
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
+                out.println(bcOrder.getHtml());
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
+            break;
+        case JD_B2B:
+            bcOrder.setReturnUrl(jdB2BReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());

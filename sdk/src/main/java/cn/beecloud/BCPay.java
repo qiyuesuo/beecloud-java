@@ -975,6 +975,7 @@ public class BCPay {
             case UN_WEB:
             case JD_WAP:
             case JD_WEB:
+            case JD_B2B:
             case KUAIQIAN_WAP:
             case KUAIQIAN_WEB:
                 if (ret.containsKey("html") && null != ret.get("html")) {
@@ -1035,6 +1036,7 @@ public class BCPay {
             case UN_WEB:
             case JD_WAP:
             case JD_WEB:
+            case JD_B2B:
             case KUAIQIAN_WAP:
             case KUAIQIAN_WEB:
                 if (ret.containsKey("url") && null != ret.get("url")) {

@@ -53,6 +53,7 @@ public class BCEumeration {
         JD,
         JD_WEB,
         JD_WAP,
+        JD_B2B,
         KUAIQIAN,
         KUAIQIAN_WAP,
         KUAIQIAN_WEB,
