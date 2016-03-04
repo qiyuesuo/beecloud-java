@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.1](https://img.shields.io/badge/Version-v3.1.1-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.2](https://img.shields.io/badge/Version-v3.1.2-blue.svg) 
 
 ## 简介
 
@@ -472,7 +472,7 @@ totalFee   |  订单总金额, 可通过查询获得
 title   |  订单标题, 可通过查询获得
 channel   |  渠道类型, 可通过查询获得
 channelTradeNo   |  渠道交易号， 支付完成之后可通过查询获得
-resulted   |  是否支付， 可通过查询获得
+result   |  是否支付， 可通过查询获得
 refundResult   |  是否退款， 可通过查询获得
 revertResult   |  订单是否撤销， 可通过查询获得
 messageDetail   |  渠道详细信息，默认为"不显示"， 当needDetail为true时，并于支付完成之后可通过查询获得

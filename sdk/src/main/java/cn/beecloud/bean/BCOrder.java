@@ -52,9 +52,11 @@ public class BCOrder {
 
     private String frqid;
 
+    private String identityId;
+
     private String channelTradeNo;
 
-    private boolean resulted;
+    private boolean result;
 
     private boolean refundResult;
 
@@ -167,11 +169,26 @@ public class BCOrder {
     }
 
     /**
+     * 访问字段 {@link #identityId}
+     */
+    public String getIdentityId() {
+        return identityId;
+    }
+
+    /**
      * @param openId
      * 微信公众号支付(WX_JSAPI)必填 (选填)
      */
     public void setOpenId(String openId) {
         this.openId = openId;
+    }
+
+    /**
+     * @param identityId
+     * 易宝快捷支付(YEE_WAP)必填 (选填)
+     */
+    public void setIdentityId(String identityId) {
+        this.identityId = identityId;
     }
 
     /**
@@ -316,15 +333,15 @@ public class BCOrder {
     /**
      * @return 是否支付
      */
-    public boolean isResulted() {
-        return resulted;
+    public boolean isResult() {
+        return result;
     }
 
     /**
-     * 设置字段 {@link #resulted}
+     * 设置字段 {@link #result}
      */
-    public void setResulted(boolean resulted) {
-        this.resulted = resulted;
+    public void setResult(boolean result) {
+        this.result = result;
     }
 
     /**

@@ -189,6 +189,13 @@
 
         case YEE_WAP:
             bcOrder.setReturnUrl(yeeWapReturnUrl);
+            Object identityId = session.getAttribute("identityId");
+            if (identityId == null) {
+                identityId = UUID.randomUUID().toString().replace("-","");
+                System.out.println("identity_id:" + identityId);
+                session.setAttribute("identityId", identityId);
+            }
+            bcOrder.setIdentityId(identityId.toString());
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 System.out.print(bcOrder.getObjectId());

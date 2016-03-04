@@ -130,7 +130,7 @@
                 <td>${bill.title}</td>
                 <td>${bill.channelTradeNo}</td>
                 <td>${bill.channel}</td>
-                <td>${bill.resulted}</td>
+                <td>${bill.result}</td>
                 <td>${bill.revertResult}</td>
                 <td>${bill.refundResult}</td>
                 <td>${bill.optionalString}</td>
@@ -138,12 +138,12 @@
                 <td>${bill.dateTime}</td>
 
                 <td align="center">
-                    <c:if test="${bill.resulted == true && bill.refundResult == false && nochannel == null}">
+                    <c:if test="${bill.result == true && bill.refundResult == false && nochannel == null}">
                         <input class="button" type="button"
                                onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${bill.channel}', false, ${isYeeWap eq '1' ? '1':'0'})"
                                value="退款"/>
                     </c:if>
-                    <c:if test="${bill.resulted == true && bill.refundResult == false && nochannel != null}">
+                    <c:if test="${bill.result == true && bill.refundResult == false && nochannel != null}">
                         <input class="button" type="button"
                                onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${channel}')" value="无渠道退款"/>
                     </c:if>
@@ -151,7 +151,7 @@
 
 
                 <td align="center">
-                    <c:if test="${bill.resulted == true && bill.refundResult == false && nochannel == null}">
+                    <c:if test="${bill.result == true && bill.refundResult == false && nochannel == null}">
                     <input class="button" type="button"
                            onclick="startRefund('${bill.billNo}', ${bill.totalFee}, '${bill.channel}', true, ${isYeeWap eq '1' ? '1':'0'})"
                            value="预退款"/>
