@@ -36,6 +36,9 @@ public class TestConstant {
     public static String YEE_NOBANKCARD_FRQID = "SZX";
 
     public static String WXJSAPI_OPEN_ID = "ofEy7uL6p-pgwF7SoPrzD8GqvZ0";
+    public static String YEE_WAP_IDENTITY_ID = "aabbbccddee11122334455";
+    public static String YEE_WAP_IDENTITY_ID_MORE_THAN_50 = "123456789012345678901234567890123456789012345678901";
+    public static String YEE_WAP_IDENTITY_ID_WITH_SPECIAL_CHARACTER = "111@$ffsaagg中文";
 
     public static String TRANSFER_NO_WITH_SPECIAL_CHARACTER = "billno123!@#";
     public static String WX_TRANSFER_NO_WITH_INVALID_LENGTH = "123456789";
@@ -94,6 +97,10 @@ public class TestConstant {
     public final static String PAY_PARAM_EMPTY = "支付参数不能为空！";
 
     public final static String REFUND_PARAM_EMPTY = "退款参数不能为空！";
+
+    public final static String IDENTITY_ID_EMPTY = "identityId 不能为空！";
+
+    public final static String IDENTITY_ID_INVALID = "identityId 是一个长度不超过50个字符的数字字母字符串！";
 
     public final static String QUERY_PARAM_EMPTY = "查询参数不能为空！";
 

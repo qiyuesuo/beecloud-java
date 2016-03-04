@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.0](https://img.shields.io/badge/Version-v3.1.0-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.2](https://img.shields.io/badge/Version-v3.1.2-blue.svg) 
 
 ## 简介
 
@@ -19,7 +19,7 @@
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.1.0</version>
+    <version>3.1.1</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
@@ -472,7 +472,7 @@ totalFee   |  订单总金额, 可通过查询获得
 title   |  订单标题, 可通过查询获得
 channel   |  渠道类型, 可通过查询获得
 channelTradeNo   |  渠道交易号， 支付完成之后可通过查询获得
-resulted   |  是否支付， 可通过查询获得
+result   |  是否支付， 可通过查询获得
 refundResult   |  是否退款， 可通过查询获得
 revertResult   |  订单是否撤销， 可通过查询获得
 messageDetail   |  渠道详细信息，默认为"不显示"， 当needDetail为true时，并于支付完成之后可通过查询获得
@@ -580,6 +580,7 @@ TransfersParameter para = new TransfersParameter();
 para.setBatchNo(batchNo);
 para.setAccountName(accountName);
 para.setTransferDataList(list);
+para.setChannel(PAY_CHANNEL.ALI);
 List<ALITransferData> list = new ArrayList<ALITransferData>();
 ALITransferData data1 = new ALITransferData("transfertest11223", "13584809743", "袁某某", 1, "赏赐");
 ALITransferData data2 = new ALITransferData("transfertest11224", "13584809742", "张某某", 1, "赏赐");

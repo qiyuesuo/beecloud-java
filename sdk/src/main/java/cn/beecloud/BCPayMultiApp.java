@@ -436,6 +436,9 @@ public class BCPayMultiApp {
         if (para.getOpenId() != null) {
             param.put("openid", para.getOpenId());
         }
+        if (para.getIdentityId() != null) {
+            param.put("identity_id", para.getIdentityId());
+        }
         if (para.getShowUrl() != null) {
             param.put("show_url", para.getShowUrl());
         }
@@ -695,7 +698,7 @@ public class BCPayMultiApp {
         bcOrder.setTotalFee((Integer) bill.get("total_fee"));
         bcOrder.setTitle(StrUtil.toStr(bill.get("title")));
         bcOrder.setChannel(PAY_CHANNEL.valueOf(StrUtil.toStr(bill.get("sub_channel"))));
-        bcOrder.setResulted(((Boolean) bill.get("spay_result")));
+        bcOrder.setResult(((Boolean) bill.get("spay_result")));
         if (bill.containsKey("trade_no") && bill.get("trade_no") != null) {
             bcOrder.setChannelTradeNo(StrUtil.toStr(bill.get("trade_no")));
         }
