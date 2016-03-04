@@ -183,10 +183,6 @@ input {
                 <img src="http://beeclouddoc.qiniudn.com/jd.png" alt="JD　WEB">
             </li>
             <li onclick="paySwitch(this)">
-                <input type="radio" value="JD_B2B" name="paytype">
-                <img src="http://7xavqo.com1.z0.glb.clouddn.com/icon_jingdongpay_b2b.png" alt="JD　B2B">
-            </li>
-            <li onclick="paySwitch(this)">
                 <input type="radio" value="KUAIQIAN_WAP" name="paytype">
                 <img src="http://beeclouddoc.qiniudn.com/kqwap.png" alt="KUAIQIAN WAP">
             </li>
