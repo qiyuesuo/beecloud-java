@@ -1,6 +1,10 @@
 ﻿BeeCloud Java Changelog
 ============================
 
+v3.1.2 发布日期：2016年03月04日
++ 修改resulted为result
++ 增加易宝一键支付identityId字段
+
 v3.1.1 发布日期：2016年01月23日
 + 新增BC代付。
 
