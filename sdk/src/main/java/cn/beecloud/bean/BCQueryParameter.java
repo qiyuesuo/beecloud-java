@@ -29,6 +29,8 @@ public class BCQueryParameter {
 
     private Boolean payResult;
 
+    private Boolean refundResult;
+
     private Boolean needApproval;
 
     private String refundNo;
@@ -197,5 +199,20 @@ public class BCQueryParameter {
      */
     public void setNeedApproval(Boolean needApproval) {
         this.needApproval = needApproval;
+    }
+
+    /**
+     * 访问字段{@link #refundResult}
+     */
+    public Boolean getRefundResult() {
+        return refundResult;
+    }
+
+    /**
+     * @param refundResult
+     * 退款成功与否标识。 (选填)
+     */
+    public void setRefundResult(Boolean refundResult) {
+        this.refundResult = refundResult;
     }
 }

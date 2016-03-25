@@ -151,7 +151,6 @@
                 } else {
                     String openId = resultObject.get("openid").toString();
                     bcOrder.setOpenId(openId);
-                    bcOrder = BCPay.startBCPay(bcOrder);
                     try {
                         bcOrder = BCPay.startBCPay(bcOrder);
                         out.println(bcOrder.getObjectId());
