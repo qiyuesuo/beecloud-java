@@ -523,6 +523,9 @@ public class BCPayMultiApp {
         if (para.getPayResult() != null) {
             param.put("spay_result", para.getPayResult());
         }
+        if (para.getRefundResult() != null) {
+            param.put("refund_result", para.getRefundResult());
+        }
         if (para.getNeedDetail() != null && para.getNeedDetail()) {
             param.put("need_detail", para.getNeedDetail());
         }
@@ -557,6 +560,15 @@ public class BCPayMultiApp {
         }
         if (para.getEndTime() != null) {
             param.put("end_time", para.getEndTime().getTime());
+        }
+        if (para.getPayResult() != null) {
+            param.put("spay_result", para.getPayResult());
+        }
+        if (para.getRefundResult() != null) {
+            param.put("refund_result", para.getRefundResult());
+        }
+        if (para.getNeedApproval() != null && para.getNeedApproval()) {
+            param.put("need_approval", para.getNeedApproval());
         }
     }
 

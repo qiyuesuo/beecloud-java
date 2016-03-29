@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.2](https://img.shields.io/badge/Version-v3.1.2-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.3](https://img.shields.io/badge/Version-v3.1.3-blue.svg) 
 
 ## 简介
 
@@ -756,6 +756,7 @@ billNo | 商户订单号，String类型，（选填）
 startTime | 起始时间， Date类型，（选填）  
 endTime | 结束时间， Date类型， （选填）  
 payResult |支付成功与否标识，（选填）
+refundResult | 退款成功与否标识，（选填）
 needDetail | 是否需要返回渠道详细信息，不返回可减少网络开销，（选填）
 skip   |  查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	, （选填）
 limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据

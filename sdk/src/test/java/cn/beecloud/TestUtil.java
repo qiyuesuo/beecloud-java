@@ -1,5 +1,7 @@
 package cn.beecloud;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -34,8 +36,12 @@ public class TestUtil {
             String name = paraSection[i].split("=")[0];
             String value = paraSection[i].split("=")[1];
 
-            mockHtml.append(
-                    "<input type=\"hidden\" name=\"" + name + "\" value=\"" + value + "\"/>");
+            try {
+                mockHtml.append(
+                        "<input type=\"hidden\" name=\"" + name + "\" value=\"" + URLDecoder.decode(value, "UTF-8") + "\"/>");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
 
         // submit按钮控件请不要含有name属性
