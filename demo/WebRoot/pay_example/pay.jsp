@@ -79,7 +79,8 @@
     String kqReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/kqReturnUrl.jsp";
     String bdReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/bdReturnUrl.jsp";
 	String paypalReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/paypalReturnUrl.jsp";
-    	
+	String bcGatewayReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/bcGatewayReturnUrl.jsp";
+
     switch (channel) {
 
         case ALI_WEB:
@@ -113,6 +114,7 @@
             break;
         case BC_GATEWAY:
             try {
+                bcOrder.setReturnUrl(bcGatewayReturnUrl);
                 bcOrder.setGatewayBank(GATEWAY_BANK.ABC);
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
