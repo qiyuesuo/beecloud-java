@@ -210,6 +210,10 @@ input {
                 <input type="radio" value="PAYPAL_SAVED_CREDITCARD" name="paytype">
                 <img src="http://beeclouddoc.qiniudn.com/icon_paypal_kuaijiezhifu.png" alt="PAYPAL SAVED CREDITCARD">
             </li>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="BC_GATEWAY" name="paytype">
+                <img src="http://7xavqo.com1.z0.glb.clouddn.com/icon_gateway.png" alt="BC GATEWAY">
+            </li>
         </ul>
     </div>
     <div style="clear: both;">
