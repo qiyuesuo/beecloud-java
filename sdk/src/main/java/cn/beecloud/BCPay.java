@@ -989,6 +989,7 @@ public class BCPay {
             case JD_WEB:
             case KUAIQIAN_WAP:
             case KUAIQIAN_WEB:
+            case BC_GATEWAY:
                 if (ret.containsKey("html") && null != ret.get("html")) {
                     order.setHtml(StrUtil.toStr(ret.get("html")));
                 }
@@ -1049,6 +1050,7 @@ public class BCPay {
             case JD_WEB:
             case KUAIQIAN_WAP:
             case KUAIQIAN_WEB:
+            case BC_GATEWAY:
                 if (ret.containsKey("url") && null != ret.get("url")) {
                     order.setHtml(BCUtil.generateSandboxHtmlWithUrl(StrUtil.toStr(ret.get("url"))));
                 }

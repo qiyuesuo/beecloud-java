@@ -111,6 +111,19 @@
                 out.println(e.getMessage());
             }
             break;
+        case BC_GATEWAY:
+            try {
+                bcOrder.setGatewayBank(GATEWAY_BANK.ABC);
+                bcOrder = BCPay.startBCPay(bcOrder);
+                out.println(bcOrder.getObjectId());
+                System.out.print(bcOrder.getObjectId());
+                Thread.sleep(3000);
+                out.println(bcOrder.getHtml());
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
+            break;
 
         case WX:
             break;

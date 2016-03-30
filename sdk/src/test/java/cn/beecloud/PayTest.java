@@ -14,6 +14,7 @@ import org.junit.Assert;
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.QR_PAY_MODE;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
+import cn.beecloud.BCEumeration.GATEWAY_BANK;
 import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.BCOrder;
 
@@ -357,6 +358,22 @@ public class PayTest {
                     e.getMessage().contains(TestConstant.YEE_NOBANCARD_FACTOR_EMPTY));
         }
         param.setFrqid(frqid);
+
+        BCEumeration.GATEWAY_BANK gatewayBank = param.getGatewayBank();
+        try {
+            param.setGatewayBank(null);
+            param.setChannel(PAY_CHANNEL.BC_GATEWAY);
+            BCPay.startBCPay(param);
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+        } catch (Exception e) {
+            Assert.assertTrue(e.getMessage(), e instanceof BCException);
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(TestConstant.GATEWAY_BANK_EMPTY));
+        }
+        param.setGatewayBank(gatewayBank);
+
 
         if (BCCache.isSandbox()) {
 
@@ -824,5 +841,6 @@ public class PayTest {
         param.setOpenId(openId);
         param.setQrPayMode(qrPayMode);
         param.setIdentityId(identityId);
+        param.setGatewayBank(BCEumeration.GATEWAY_BANK.ABC);
     }
 }

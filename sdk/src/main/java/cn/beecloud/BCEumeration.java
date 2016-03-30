@@ -65,7 +65,8 @@ public class BCEumeration {
         PAYPAL_LIVE,
         PAYPAL_PAYPAL,
         PAYPAL_CREDITCARD,
-        PAYPAL_SAVED_CREDITCARD
+        PAYPAL_SAVED_CREDITCARD,
+        BC_GATEWAY
     }
 
     public enum TRANSFER_CHANNEL {
@@ -105,6 +106,23 @@ public class BCEumeration {
         THB,
         TRY,
         USD
+    }
+
+    public enum GATEWAY_BANK {
+        CMB,
+        ICBC,
+        CCB,
+        BOC,
+        ABC,
+        BOCM,
+        SPDB,
+        GDB,
+        CITIC,
+        CEB,
+        CIB,
+        SDB,
+        CMBC
+
     }
 
     public enum CARD_TYPE {
