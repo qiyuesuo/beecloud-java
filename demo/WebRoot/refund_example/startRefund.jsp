@@ -43,6 +43,8 @@
     String channelString = request.getParameter("channel");
     String prefund = request.getParameter("prefund");
     Integer refundFee = Integer.parseInt(request.getParameter("total_fee"));
+
+    System.out.println("oooo:" + channelString);
     
     PAY_CHANNEL channel = null;
     if (channelString != null && !channelString.equals("")) {

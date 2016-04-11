@@ -457,6 +457,9 @@ public class BCPayMultiApp {
             param.put("cardpwd", para.getCardPwd());
             param.put("frqid", para.getFrqid());
         }
+        if (para.getGatewayBank() != null) {
+            param.put("bank", StrUtil.toStr(para.getGatewayBank()));
+        }
     }
 
     private Object getAppSignatureWithTestSecret(String timestamp) {
