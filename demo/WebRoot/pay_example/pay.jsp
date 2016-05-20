@@ -89,7 +89,6 @@
             bcOrder.setReturnUrl(aliReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                System.out.print(bcOrder.getObjectId());
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
                 System.out.println(bcOrder.getHtml());
@@ -105,7 +104,6 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
-                System.out.print(bcOrder.getObjectId());
                 Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
@@ -119,7 +117,6 @@
                 bcOrder.setGatewayBank(GATEWAY_BANK.CMB);
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
-                System.out.print(bcOrder.getObjectId());
                 Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
             } catch (BCException e) {
@@ -132,7 +129,6 @@
                 bcOrder.setReturnUrl(bcExpressReturnUrl);
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
-                System.out.print(bcOrder.getObjectId());
                 Thread.sleep(3000);
                 response.sendRedirect(bcOrder.getUrl());
             } catch (BCException e) {
@@ -148,8 +144,6 @@
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
-                System.out.print(bcOrder.getObjectId());
-                System.out.println(bcOrder.getCodeUrl());
                 Thread.sleep(3000);
                 success = true;
             } catch (BCException e) {
@@ -204,7 +198,6 @@
             bcOrder.setReturnUrl(unReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                System.out.print(bcOrder.getObjectId());
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
@@ -219,13 +212,11 @@
             Object identityId = session.getAttribute("identityId");
             if (identityId == null) {
                 identityId = UUID.randomUUID().toString().replace("-","");
-                System.out.println("identity_id:" + identityId);
                 session.setAttribute("identityId", identityId);
             }
             bcOrder.setIdentityId(identityId.toString());
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                System.out.print(bcOrder.getObjectId());
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
                 response.sendRedirect(bcOrder.getUrl());
@@ -238,7 +229,6 @@
             bcOrder.setReturnUrl(yeeWebReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                System.out.print(bcOrder.getObjectId());
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
                 response.sendRedirect(bcOrder.getUrl());
@@ -270,7 +260,6 @@
             bcOrder.setReturnUrl(jdWapReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                System.out.print(bcOrder.getObjectId());
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
@@ -283,7 +272,6 @@
             bcOrder.setReturnUrl(jdWebReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                System.out.print(bcOrder.getObjectId());
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
@@ -296,7 +284,6 @@
         	bcOrder.setReturnUrl(kqReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                System.out.print(bcOrder.getObjectId());
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
@@ -310,7 +297,6 @@
             bcOrder.setReturnUrl(kqReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                System.out.print(bcOrder.getObjectId());
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
                 out.println(bcOrder.getHtml());
@@ -323,7 +309,6 @@
             bcOrder.setReturnUrl(bdReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                System.out.print(bcOrder.getObjectId());
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
                 response.sendRedirect(bcOrder.getUrl());
@@ -337,7 +322,6 @@
             bcOrder.setReturnUrl(bdReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
-                System.out.print(bcOrder.getObjectId());
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
                 response.sendRedirect(bcOrder.getUrl());
