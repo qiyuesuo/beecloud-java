@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.Test;
 import mockit.Deencapsulation;
 import mockit.Expectations;
 
@@ -14,7 +13,6 @@ import org.junit.Assert;
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.QR_PAY_MODE;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
-import cn.beecloud.BCEumeration.GATEWAY_BANK;
 import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.BCOrder;
 
