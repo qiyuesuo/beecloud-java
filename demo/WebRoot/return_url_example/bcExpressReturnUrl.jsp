@@ -3,7 +3,7 @@
 <%@ page import="java.util.Enumeration" %>
 <%
   /* 
-         功能：BC网关
+         功能：BC快捷
          版本：1.0
          日期：2016-05-20
          说明：
@@ -16,7 +16,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; UTF-8">
-    <title>BeeCloud Gateway Return Url</title>
+    <title>BeeCloud Express Return Url</title>
 </head>
 <body>
 <%

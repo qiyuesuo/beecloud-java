@@ -80,6 +80,7 @@
     String bdReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/bdReturnUrl.jsp";
 	String paypalReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/paypalReturnUrl.jsp";
 	String bcGatewayReturnUrl = "http://localhost:8081/return_url_example/bcGatewayReturnUrl.jsp";
+    String bcExpressReturnUrl = "http://localhost:8081/return_url_example/bcExpressReturnUrl.jsp";
 
     switch (channel) {
 
@@ -126,7 +127,19 @@
                 out.println(e.getMessage());
             }
             break;
-
+        case BC_EXPRESS:
+            try {
+                bcOrder.setReturnUrl(bcExpressReturnUrl);
+                bcOrder = BCPay.startBCPay(bcOrder);
+                out.println(bcOrder.getObjectId());
+                System.out.print(bcOrder.getObjectId());
+                Thread.sleep(3000);
+                response.sendRedirect(bcOrder.getUrl());
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
+            break;
         case WX:
             break;
         case WX_APP:

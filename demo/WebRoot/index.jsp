@@ -214,6 +214,10 @@ input {
                 <input type="radio" value="BC_GATEWAY" name="paytype">
                 <img src="http://7xavqo.com1.z0.glb.clouddn.com/icon_gateway.png" alt="BC GATEWAY">
             </li>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="BC_EXPRESS" name="paytype">
+                <img src="http://beeclouddoc.qiniudn.com/icon_BcExpress.png" alt="BC EXPRESS">
+            </li>
         </ul>
     </div>
     <div style="clear: both;">
