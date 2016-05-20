@@ -121,6 +121,8 @@ public class ValidationUtil {
 
     private final static String LIMIT_FORMAT_INVALID = "limit 的最大长度为50！ 并且不能小于10！";
 
+    private final static String GATEWAY_BANK_EMPTY = "bank 不能为空！";
+
     private final static String OPENID_EMPTY = "openid 不能为空！";
 
     private final static String IDENTITY_ID_EMPTY = "identityId 不能为空！";
@@ -287,6 +289,14 @@ public class ValidationUtil {
                 && (para.getCardNo() == null || para.getCardPwd() == null || para.getFrqid() == null)) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), YEE_NOBANCARD_FACTOR_EMPTY);
+        } else if (para.getChannel().equals(PAY_CHANNEL.BC_GATEWAY)
+                && para.getGatewayBank() == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), GATEWAY_BANK_EMPTY);
+        } else if (para.getChannel().equals(PAY_CHANNEL.BC_GATEWAY)
+                && para.getGatewayBank() == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), GATEWAY_BANK_EMPTY);
         } else
             try {
                 if (para.getTitle().getBytes("GBK").length > 32) {
@@ -369,7 +379,8 @@ public class ValidationUtil {
                 && !para.getChannel().equals(PAY_CHANNEL.YEE)
                 && !para.getChannel().equals(PAY_CHANNEL.JD)
                 && !para.getChannel().equals(PAY_CHANNEL.KUAIQIAN)
-                && !para.getChannel().equals(PAY_CHANNEL.BD)) {
+                && !para.getChannel().equals(PAY_CHANNEL.BD)
+                && !para.getChannel().equals(PAY_CHANNEL.BC_GATEWAY)) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), CHANNEL_INVALID_FOR_REFUND);
         } else if (!para.getRefundNo().startsWith(

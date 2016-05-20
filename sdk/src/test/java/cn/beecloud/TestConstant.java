@@ -142,6 +142,8 @@ public class TestConstant {
 
     public final static String YEE_NOBANCARD_FACTOR_EMPTY = "cardNo, cardPwd, frqid 不能为空！";
 
+    public final static String GATEWAY_BANK_EMPTY = "bank 不能为空！";
+
     public final static String REFUND_NO_FORMAT_INVALID = "refundNo 是格式为当前日期加3-24位数字字母（不能为000）流水号的字符串！ ";
 
     public final static String TITLE_FORMAT_INVALID = "title 是一个长度不超过32字节的字符串！";
