@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.3](https://img.shields.io/badge/Version-v3.1.3-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.4](https://img.shields.io/badge/Version-v3.1.4-blue.svg) 
 
 ## 简介
 
@@ -19,7 +19,7 @@
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.1.3</version>
+    <version>3.1.4</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
@@ -436,13 +436,40 @@ try {
     out.println(e.getMessage());
 ```
 
+#### <a name="bc_gateway">BeeCloud网关支付</a>
+返回的BCOrder对象包含表单支付html，开发者提交支付表单即可完成支付。
+```java
+BCOrder bcOrder = new BCOrder(PAY_CHANNEL.BC_GATEWAY, 1, billNo, title);
+try {
+    bcOrder = BCPay.startBCPay(bcOrder);
+    out.println(bcOrder.getObjectId());
+    out.println(bcOrder.getHtml());
+} catch (BCException e) {
+    log.error(e.getMessage(), e);
+    out.println(e.getMessage());
+}
+```
+
+#### <a name="bc_express">BeeCloud快捷支付</a>
+返回的BCOrder对象包含跳转支付url,开发者跳转至url完成支付。
+```java
+BCOrder bcOrder = new BCOrder(PAY_CHANNEL.BC_EXPRESS, 1, billNo, title);
+try {
+    bcOrder = BCPay.startBCPay(bcOrder);
+    out.println(bcOrder.getObjectId());
+    response.sendRedirect(bcOrder.getUrl());
+} catch (BCException e) {
+    log.error(e.getMessage(), e);
+    out.println(e.getMessage());
+```
+
 
 <a name="payParam"/>代码中的参数对象BCOrder封装字段含义如下：
 请求参数及返回字段：
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX_NATIVE 微信公众号二维码支付<br/>WX_JSAPI 微信公众号支付<br/>ALI_WEB 支付宝网页支付<br/>ALI_QRCODE 支付宝内嵌二维码支付<br>ALI_WAP 支付宝移动网页支付 <br/>UN_WEB 银联网页支付<br>JD_WEB 京东网页支付<br/> JD_WAP 京东移动网页支付<br/> YEE_WEB 易宝网页支付<br/> YEE_WAP 易宝移动网页支付<br/> YEE_NOBANKCARD 易宝点卡支付<br> KUAIQIAN_WEB 快钱网页支付<br/> KUAIQIAN_WAP 快钱移动网页支付<br/>BD_WEB 百度网页支付<br>BD_WAP 百度移动网页支付（必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX_NATIVE 微信公众号二维码支付<br/>WX_JSAPI 微信公众号支付<br/>ALI_WEB 支付宝网页支付<br/>ALI_QRCODE 支付宝内嵌二维码支付<br>ALI_WAP 支付宝移动网页支付 <br/>UN_WEB 银联网页支付<br>JD_WEB 京东网页支付<br/> JD_WAP 京东移动网页支付<br/> YEE_WEB 易宝网页支付<br/> YEE_WAP 易宝移动网页支付<br/> YEE_NOBANKCARD 易宝点卡支付<br> KUAIQIAN_WEB 快钱网页支付<br/> KUAIQIAN_WAP 快钱移动网页支付<br/>BD_WEB 百度网页支付<br>BD_WAP 百度移动网页支付<br>BC_GATEWAY BeeCloud网关支付<br>BC_EXPRESS BeeCloud快捷支付，（必填）
 totalFee | 订单总金额， 只能为整数，单位为分，例如 1，（必填）
 billNo | 商户订单号, 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如(201506101035040000001),（必填）
 title | 订单标题， 32个字节内，最长支持16个汉字，（必填）
@@ -622,6 +649,8 @@ transferNote | 打款备注，（必填）
 成功发起退款接口将会返回带objectId的BCRefund对象。
 退款接口分为直接退款和预退款功能，当BCRefund的**needApproval**属性设置为**true**时，开启预退款功能，当BCRefund的**needApproval**属性为**空**或者**false**, 开启直接退款功能，并在channel为ALI时返回带支付宝退款跳转url的BCRefund对象, 开发者跳转至url输入支付密码完成退款。
 
+BC_GATEWAY暂不支持预退款。
+
 发起退款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 ```java
 BCRefund refund = new BCRefund(billNo, refundNo, 1);
@@ -649,7 +678,7 @@ try {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX  微信<br>ALI 支付宝<br>UN 银联<br>JD 京东<br>KUAIQIAN 快钱<br>YEE 易宝<br>BD 百度，（选填，可为NULL）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX  微信<br>ALI 支付宝<br>UN 银联<br>JD 京东<br>KUAIQIAN 快钱<br>YEE 易宝<br>BD 百度<br>BC_GATEWAY BeeCloud网关，（选填，可为NULL）
 refundNo | 商户退款单号	， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”，例如：201506101035040000001	（必填）
 billNo | 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一，（必填）  
 refundFee | 退款金额，只能为整数，单位为分，例如1，（必填）
