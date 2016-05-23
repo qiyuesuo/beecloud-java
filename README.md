@@ -16,7 +16,7 @@ SDK支持以下支付渠道：
 百度web/wap
 paypal
 BeeCloud网关支付
-提供（国内/国际）支付、（预）退款、 查询、 打款、 代付功能
+提供（国内/国际）支付、（预）退款、 查询、 打款、 BeeCloud企业打款功能
 
 本SDK的是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api)开发的Java SDK，适用于JRE 1.6及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
@@ -635,9 +635,9 @@ refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 �
 channel | 渠道类型， 包含WX、YEE、KUAIQIAN和BD（必填）
 <br>
 
-### <a name="BCTransfer">BC代付</a>
-发起代付请求。BCTransferParameter对象包含了发起BC代付所需要的所有参数。
-发起BC代付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+### <a name="BCTransfer">BC企业打款</a>
+发起BC企业打款请求。BCTransferParameter对象包含了发起BC企业打款所需要的所有参数。
+发起BC企业打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 ```java
 BCTransferParameter param = new BCTransferParameter();
 param.setBillNo("1111111111");//设置订单号 8到32位数字和/或字母组合，请自行确保在商户系统中唯一，同一订单号不可重复提交，否则会造成订单重复
