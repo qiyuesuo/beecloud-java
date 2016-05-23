@@ -61,6 +61,7 @@ BeeCloud网关支付
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
 
 3.SDK jar包导入项目时报找不到依赖包或者报NoSuchMethodException异常等问题，可能的原因:相同jar包依赖不同导致的冲突，相同jar包版本不同导致的冲突，解决方法如下：
+1).使用Maven配置依赖引入sdk, 删掉导致冲突的SDK的依赖包。例如
 ```
 <dependency>   
     <groupId>cn.beecloud</groupId>
@@ -81,6 +82,8 @@ BeeCloud网关支付
 </dependency>
 ```
 
+2).若不使用Maven配置依赖，分开导入无依赖的sdk包(**original-beecloud-java-sdk-x.x.x.jar**)和需要的依赖(**dependency.zip**)(可从Release部分下载)。
+3).手动加入错误提示找不到的依赖包。例如加入
 ```
 <dependency>
 	<groupId>org.hibernate</groupId>
