@@ -6,11 +6,47 @@
 
 本项目的官方GitHub地址是 [https://github.com/beecloud/beecloud-java](https://github.com/beecloud/beecloud-java)
 
+SDK支持以下支付渠道：
+
+支付宝web/wap
+微信扫码/微信内JSAPI
+银联web/wap
+京东web/wap
+易宝web/wap
+百度web/wap
+paypal
+BeeCloud网关支付
+提供（国内/国际）支付、（预）退款、 查询、 打款、 BeeCloud企业打款功能
+
 本SDK的是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api)开发的Java SDK，适用于JRE 1.6及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
+
+
+## 流程
+
+下图为整个支付的流程:
+![pic](http://7xavqo.com1.z0.glb.clouddn.com/img-beecloud%20sdk.png)
+
+
+步骤①：**（从网页服务器端）发送订单信息**  
+步骤②：**收到BeeCloud返回的渠道支付地址（比如支付宝的收银台）**  
+>*特别注意：
+微信扫码返回的内容不是和支付宝一样的一个有二维码的页面，而是直接给出了微信的二维码的内容，需要用户自己将微信二维码输出成二维码的图片展示出来*
+
+步骤③：**将支付地址展示给用户进行支付**  
+步骤④：**用户支付完成后通过一开始发送的订单信息中的return_url来返回商户页面**
+>*特别注意：
+微信没有自己的页面，二维码展示在商户自己的页面上，所以没有return url的概念，需要商户自行使用一些方法去完成这个支付完成后的跳转（比如后台轮询查支付结果）*
+
+此时商户的网页需要做相应界面展示的更新（比如告诉用户"支付成功"或"支付失败")。**不允许**使用同步回调的结果来作为最终的支付结果，因为同步回调有极大的可能性出现丢失的情况（即用户支付完没有执行return url，直接关掉了网站等等），最终支付结果应以下面的异步回调为准。
+
+步骤⑤：**（在商户后端服务端）处理异步回调结果（[Webhook](https://beecloud.cn/doc/?index=webhook)）**
+ 
+付款完成之后，根据客户在BeeCloud后台的设置，BeeCloud会向客户服务端发送一个Webhook请求，里面包括了数字签名，订单号，订单金额等一系列信息。客户需要在服务端依据规则要验证**数字签名是否正确，购买的产品与订单金额是否匹配，这两个验证缺一不可**。验证结束后即可开始走支付完成后的逻辑。
+
 
 ## 安装
 
-1.从[github](https://github.com/beecloud/beecloud-java/releases)下载带依赖的jar文件,然后导入到自己的工程依赖包中
+1.从[github](https://github.com/beecloud/beecloud-java/releases)或者[demo](https://github.com/beecloud/beecloud-java/tree/master/demo/WebRoot/WEB-INF/lib)中下载带依赖的jar文件,然后导入到自己的工程依赖包中
 
 
 2.若是工程采用maven进行依赖配置，可在自己工程的pom.xml文件里加入以下配置
@@ -23,6 +59,32 @@
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
+
+3.SDK jar包导入项目时报找不到依赖包或者报NoSuchMethodException异常等问题，可能的原因:相同jar包依赖不同导致的冲突，相同jar包版本不同导致的冲突，解决方法如下：
+
+
+1).使用Maven配置依赖引入sdk, 删掉导致冲突的SDK的依赖包。例如
+```
+<dependency>   
+    <groupId>cn.beecloud</groupId>
+    <artifactId>beecloud-java-sdk</artifactId>
+    <version>3.1.4</version>
+    <exclusions>  //删除beecloud java sdk依赖的包
+         <exclusion>  
+             <groupId>org.hibernate</groupId>  
+             <artifactId>hibernate-validator</artifactId>  
+         </exclusion>  
+     </exclusions>  
+</dependency>
+
+<dependency>   //加上项目想要的jar包
+    <groupId>org.hibernate</groupId>
+    <artifactId>hibernate-validator</artifactId>
+    <version>5.2.4.Final</version>
+</dependency>
+```
+
+2).若不使用Maven配置依赖，分开导入无依赖的sdk包(**original-beecloud-java-sdk-x.x.x.jar**)和需要的依赖(**dependency.zip**)(可从Release部分下载)。
 
 
 ## 注册
@@ -91,60 +153,6 @@ internationalOrder.setReturnUrl(paypalReturnUrl);
  }
 ```
 
-#### <a name="paypal_credit_card">PAYPAL信用卡支付</a>
-
-```java
-BCInternationlOrder internationalOrder = new BCInternationlOrder();
-/*
- * 信用卡支付
- */
-CreditCardInfo creditCardInfo = new CreditCardInfo();
-creditCardInfo.setCardNo("5183182005528540");
-creditCardInfo.setExpireMonth(11);
-creditCardInfo.setExpireYear(19);
-creditCardInfo.setCvv(350);
-creditCardInfo.setFirstName("SAN");
-creditCardInfo.setLastName("ZHANG");
-creditCardInfo.setCardType(CARD_TYPE.mastercard);
-internationalOrder.setBillNo(billNo);
-internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_CREDITCARD);
-internationalOrder.setCreditCardInfo(creditCardInfo);
-internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
-internationalOrder.setTitle("paypal credit card test");
-internationalOrder.setTotalFee(1);
-try {
-   	internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
-   	out.println(internationalOrder.getObjectId());
-   	out.println("PAYPAL_CREDITCARD 支付成功！");
-   	out.println(internationalOrder.getCreditCardId());
-   	request.getSession().setAttribute("creditCardId", internationalOrder.getCreditCardId());//存储信用卡ID
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="paypal_save_credit_id">PAYPAL信用卡ID支付</a>
-```java
-/*
- * 信用卡ID支付
- */
-internationalOrder.setBillNo(billNo);
-internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_SAVED_CREDITCARD);
-internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
-internationalOrder.setTitle("PAYPAL_SAVED_CREDITCARD test");
-internationalOrder.setTotalFee(1);
-internationalOrder.setBillNo(request.getSession().getAttribute("creditCardId").toString());//使用信用卡ID
-try {
-   	internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
-   	out.println(internationalOrder.getObjectId());
-   	out.println("PAYPAL_SAVED_CREDITCARD 支付成功！");
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
 代码中的参数对象BCInternationlOrder封装字段含义如下：
 
 key | 说明
@@ -196,273 +204,6 @@ try {
     out.println(e.getMessage());
 }
 ```
-
-#### <a name="ali_wap">支付宝移动网页调用</a>
-返回的BCOrder对象包含表单支付html和跳转支付url,开发者提交支付表单或者跳转至url完成支付。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.ALI_WAP, 1, billNo, title);
-bcOrder.setBillTimeout(360);
-bcOrder.setReturnUrl(aliReturnUrl);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    Thread.sleep(3000);
-    out.println(bcOrder.getHtml());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="ali_qrcode">支付宝扫码调用</a>
-返回的BCOrder对象包含表单支付html和跳转支付url,开发者提交支付表单或者跳转至url完成支付。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.ALI_QRCODE, 1, billNo, title);
-bcOrder.setBillTimeout(360);
-bcOrder.setReturnUrl(aliReturnUrl);
-bcOrder.setQrPayMode(QR_PAY_MODE.MODE_FRONT);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    Thread.sleep(3000);
-    out.println(bcOrder.getHtml());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="wx_native">微信扫码调用</a>
-
-返回的BCOrder对象包含code url,格式为：weixin://wxpay/bizpayurl?sr=XXXXX。
-调用第三方库将返回的code url生成二维码图片。
-该模式链接较短，生成的二维码打印到结账小票上的识别率较高。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.WX_NATIVE, 1, billNo, title);
-bcOrder.setBillTimeout(360);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    out.println(bcOrder.getCodeUrl());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-#### <a name="wx_jsapi">微信公众号调用</a>
-
-返回的BCOrder对象包wxJSAPIMap对象；__获取openId，并使用wxJSAPIMap对象完成支付。进一步实现参考demo__
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.WX_JSAPI, 1, billNo, title);
-bcOrder.setBillTimeout(360);
-String openId = resultObject.get("openid").toString();//获取openId
-bcOrder.setOpenId(openId);
-bcOrder = BCPay.startBCPay(bcOrder);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    Map<String, String> map = bcOrder.getWxJSAPIMap();
-    jsapiAppid = map.get("appId").toString();
-    timeStamp = map.get("timeStamp").toString();
-    nonceStr = map.get("nonceStr").toString();
-    jsapipackage = map.get("package").toString();
-    signType = map.get("signType").toString();
-    paySign = map.get("paySign").toString();
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="un_web">银联网页调用</a>
-返回的BCOrder对象包含表单支付html，开发者提交支付表单即可完成支付。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.UN_WEB, 1, billNo, title);
-bcOrder.setReturnUrl(unReturnUrl);
-bcOrder.setBillTimeout(360);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    out.println(bcOrder.getHtml());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="kuaiqian_web">快钱网页调用</a>
-返回的BCOrder对象包含表单支付html，开发者提交支付表单即可完成支付。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.KUAIQIAN_WEB, 1, billNo, title);
-bcOrder.setReturnUrl(kqReturnUrl);
-bcOrder.setBillTimeout(360);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    out.println(bcOrder.getHtml());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="kuaiqian_wap">快钱移动网页调用</a>
-返回的BCOrder对象包含表单支付html，开发者提交支付表单即可完成支付。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.KUAIQIAN_WAP, 1, billNo, title);
-bcOrder.setReturnUrl(kqReturnUrl);
-bcOrder.setBillTimeout(360);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    out.println(bcOrder.getHtml());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="jd_web">京东网页调用</a>
-返回的BCOrder对象包含表单支付html，开发者提交支付表单即可完成支付。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.JD_WEB, 1, billNo, title);
-bcOrder.setReturnUrl(jdReturnUrl);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    out.println(bcOrder.getHtml());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="jd_wap">京东移动网页调用</a>
-返回的BCOrder对象包含表单支付html，开发者提交支付表单即可完成支付。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.JD_WAP, 1, billNo, title);
-bcOrder.setReturnUrl(jdReturnUrl);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    out.println(bcOrder.getHtml());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="yee_web">易宝网页调用</a>
-返回的BCOrder对象包含跳转支付url,开发者跳转至url完成支付。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.YEE_WEB, 1, billNo, title);
-bcOrder.setReturnUrl(yeeWebReturnUrl);
-bcOrder.setBillTimeout(360);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    response.sendRedirect(bcOrder.getUrl());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="yee_wap">易宝移动网页调用</a>
-返回的BCOrder对象包含跳转支付url,开发者跳转至url完成支付。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.YEE_WAP, 1, billNo, title);
-bcOrder.setBillTimeout(360);
-bcOrder.setReturnUrl(yeeWapReturnUrl);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    response.sendRedirect(bcOrder.getUrl());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="yee_nobankcard">易宝点卡支付调用</a>
-返回的BCOrder对象包含objectId, 支付完成。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.YEE_NOBANKCARD, 1, billNo, title);
-String cardNo = "15078120125091678";
-String cardPwd = "121684730734269992";
-String frqid = "SZX";
-bcOrder.setTotalFee(10);
-bcOrder.setCardNo(cardNo);
-bcOrder.setCardPwd(cardPwd);
-bcOrder.setFrqid(frqid);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println("点卡支付成功！");
-    out.println(bcOrder.getObjectId());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="bd_wap">百度移动网页调用</a>
-返回的BCOrder对象包含跳转支付url,开发者跳转至url完成支付。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.BD_WAP, 1, billNo, title);
-bcOrder.setReturnUrl(bdReturnUrl);
-bcOrder.setBillTimeout(360);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    response.sendRedirect(bcOrder.getUrl());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="bd_web">百度网页调用</a>
-返回的BCOrder对象包含跳转支付url,开发者跳转至url完成支付。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.BD_WEB, 1, billNo, title);
-bcOrder.setReturnUrl(bdReturnUrl);
-bcOrder.setBillTimeout(360);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    response.sendRedirect(bcOrder.getUrl());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-```
-
-#### <a name="bc_gateway">BeeCloud网关支付</a>
-返回的BCOrder对象包含表单支付html，开发者提交支付表单即可完成支付。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.BC_GATEWAY, 1, billNo, title);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    out.println(bcOrder.getHtml());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="bc_express">BeeCloud快捷支付</a>
-返回的BCOrder对象包含跳转支付url,开发者跳转至url完成支付。
-```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.BC_EXPRESS, 1, billNo, title);
-try {
-    bcOrder = BCPay.startBCPay(bcOrder);
-    out.println(bcOrder.getObjectId());
-    response.sendRedirect(bcOrder.getUrl());
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-```
-
 
 <a name="payParam"/>代码中的参数对象BCOrder封装字段含义如下：
 请求参数及返回字段：
@@ -527,47 +268,6 @@ param.setTransferNo(aliTransferNo);
 try {
     String url = BCPay.startTransfer(param);
     response.sendRedirect(url);
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="wx_redpack">微信红包</a>
-返回空字符串，完成打款。
-```java
-TransferParameter param = new TransferParameter();
-param.setChannel(TRANSFER_CHANNEL.WX_REDPACK);
-param.setChannelUserId(openId);
-param.setTransferNo(redpackTransferNo);
-param.setTotalFee(200);
-RedpackInfo redpackInfo = new RedpackInfo();
-redpackInfo.setActivityName(activityName);
-redpackInfo.setSendName(sendName);
-redpackInfo.setWishing(wishing);
-param.setRedpackInfo(redpackInfo);
-param.setDescription("发红包");
-try {
-    String result = BCPay.startTransfer(param);
-    out.println("微信红包发送成功！");
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
-
-#### <a name="ali_transfer">微信单笔打款</a>
-返回空字符串，完成打款。
-```java
-TransferParameter param = new TransferParameter();
-param.setChannel(TRANSFER_CHANNEL.WX_TRANSFER);
-param.setChannelUserId(openId);
-param.setTransferNo(wxTransferNo);
-param.setTotalFee(200);
-param.setDescription("微信单笔打款！");
-try {
-    String result = BCPay.startTransfer(param);
-    out.println("微信单笔打款成功！");
 } catch (BCException e) {
     log.error(e.getMessage(), e);
     out.println(e.getMessage());
@@ -927,9 +627,9 @@ refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 �
 channel | 渠道类型， 包含WX、YEE、KUAIQIAN和BD（必填）
 <br>
 
-### <a name="BCTransfer">BC代付</a>
-发起代付请求。BCTransferParameter对象包含了发起BC代付所需要的所有参数。
-发起BC代付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+### <a name="BCTransfer">BC企业打款</a>
+发起BC企业打款请求。BCTransferParameter对象包含了发起BC企业打款所需要的所有参数。
+发起BC企业打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
 ```java
 BCTransferParameter param = new BCTransferParameter();
 param.setBillNo("1111111111");//设置订单号 8到32位数字和/或字母组合，请自行确保在商户系统中唯一，同一订单号不可重复提交，否则会造成订单重复
@@ -1013,10 +713,6 @@ try {
 1.appid和appSecret填写是否一致  
 2.校准系统时间
 - 支付宝吊起支付返回调试错误，请回到请求来源地，重新发起请求。错误代码ILLEGAL_PARTNER，可能的原因：使用了测试账号test@beecloud.cn的支付宝支付参数。请使用自己申请的支付账号。
-- SDK jar包导入项目时找不到依赖包或者报NoSuchMethodException异常等问题，可能的原因:相同jar包依赖不同导致的冲突，相同jar包版本不同导致的冲突，解决方法如下：  
-1.使用Maven配置依赖引入sdk, 删掉导致冲突的SDK的依赖包。
-2.若不使用Maven配置依赖，分开导入无依赖的sdk包和sdk依赖的包(可从[Release](https://github.com/beecloud/beecloud-java)部分下载)，删除导致冲突的sdk依赖包。  
-3.手动加入错误提示找不到的依赖包。
 
 ## 代码许可
 The MIT License (MIT).
