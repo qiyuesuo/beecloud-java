@@ -259,11 +259,11 @@ input {
 <hr/>
 
 <div>
-    <h2>BC代付</h2>
+    <h2>BC企业打款</h2>
 </div>
 <form action="pay_example/BCtransfer.jsp" method="POST" >
     <tr><input type="input" name="email" size=10 value ="test@beecloud.cn" /></tr>
-    <input type="submit" class="button" value="确认BC代付">
+    <input type="submit" class="button" value="确认BC企业打款">
 </form>
 <hr/>
 
