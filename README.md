@@ -71,29 +71,21 @@ BeeCloud网关支付
     <version>3.1.4</version>
     <exclusions>  //删除beecloud java sdk依赖的包
          <exclusion>  
-             <groupId>xxx.xxxxxx</groupId>  
-             <artifactId>yyyy</artifactId>  
+             <groupId>org.hibernate</groupId>  
+             <artifactId>hibernate-validator</artifactId>  
          </exclusion>  
      </exclusions>  
 </dependency>
 
 <dependency>   //加上项目想要的jar包
-    <groupId>zzz.zzzzz</groupId>
-    <artifactId>yyyy</artifactId>
-    <version>x.x.x</version>
+    <groupId>org.hibernate</groupId>
+    <artifactId>hibernate-validator</artifactId>
+    <version>5.2.4.Final</version>
 </dependency>
 ```
 
 2).若不使用Maven配置依赖，分开导入无依赖的sdk包(**original-beecloud-java-sdk-x.x.x.jar**)和需要的依赖(**dependency.zip**)(可从Release部分下载)。
 
-3).手动加入错误提示找不到的依赖包。例如加入
-```
-<dependency>
-	<groupId>org.hibernate</groupId>
-	<artifactId>hibernate-validator</artifactId>
-	<version>5.2.4.Final</version>
-</dependency>
-```
 
 ## 注册
 
