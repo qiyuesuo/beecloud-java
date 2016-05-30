@@ -993,6 +993,7 @@ public class BCPay {
             case KUAIQIAN_WAP:
             case KUAIQIAN_WEB:
             case BC_GATEWAY:
+            case CP_WEB:
                 if (ret.containsKey("html") && null != ret.get("html")) {
                     order.setHtml(StrUtil.toStr(ret.get("html")));
                 }

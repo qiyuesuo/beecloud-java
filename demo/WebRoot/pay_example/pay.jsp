@@ -81,6 +81,8 @@
 	String paypalReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/paypalReturnUrl.jsp";
 	String bcGatewayReturnUrl = "http://localhost:8081/return_url_example/bcGatewayReturnUrl.jsp";
     String bcExpressReturnUrl = "http://localhost:8081/return_url_example/bcExpressReturnUrl.jsp";
+    String cpReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/cpReturnUrl.jsp";
+
 
     switch (channel) {
 
@@ -206,6 +208,20 @@
                 out.println(e.getMessage());
             }
             break;
+
+        case CP_WEB:
+            bcOrder.setReturnUrl(cpReturnUrl);
+            try {
+                bcOrder = BCPay.startBCPay(bcOrder);
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
+                out.println(bcOrder.getHtml());
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
+            break;
+
 
         case YEE_WAP:
             bcOrder.setReturnUrl(yeeWapReturnUrl);

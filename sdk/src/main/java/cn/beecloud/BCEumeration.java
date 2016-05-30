@@ -67,7 +67,8 @@ public class BCEumeration {
         PAYPAL_CREDITCARD,
         PAYPAL_SAVED_CREDITCARD,
         BC_GATEWAY,
-        BC_EXPRESS
+        BC_EXPRESS,
+        CP_WEB
     }
 
     public enum TRANSFER_CHANNEL {
