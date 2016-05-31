@@ -363,7 +363,7 @@ try {
     		out.println("预退款成功！");
     		out.println(refund.getObjectId());
     	} else {//直接退款
-        	out.println("退款成功！WX、易宝、百度、快钱渠道还需要定期查询退款结果！");
+        	out.println("退款成功！易宝、百度、快钱渠道还需要定期查询退款结果！");
         	out.println(refund.getObjectId());
     	}
     }
