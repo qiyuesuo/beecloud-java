@@ -80,6 +80,27 @@ public class BCPay {
     }
 
     /**
+     * 鉴权接口
+     *
+     * @param auth
+     * {@link BCAuth} (必填) 鉴权参数
+     * @return 调起BeeCloud鉴权后的返回结果
+     * @throws BCException
+     */
+    public static BCAuth startBCAuth(BCAuth auth) throws BCException {
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildAuthParam(param, auth);
+
+        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiAuth(), param);
+
+        placeAuth(auth, ret);
+
+        return auth;
+    }
+
+    /**
      * 代付接口
      *
      * @param bcTransferParameter
@@ -719,6 +740,24 @@ public class BCPay {
     }
 
     /**
+     * 构建鉴权rest api参数
+     */
+    private static void buildAuthParam(Map<String, Object> param, BCAuth auth) {
+
+        param.put("app_id", BCCache.getAppID());
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign",
+                    BCUtilPrivate.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
+        param.put("name", StrUtil.toStr(auth.getName()));
+        param.put("id_no", StrUtil.toStr(auth.getIdNo()));
+        param.put("card_no", StrUtil.toStr(auth.getCardNo()));
+
+        if (auth.getMobile() != null) {
+            param.put("mobile", StrUtil.toStr(auth.getMobile()));
+        }
+    }
+
+    /**
      * 生成返回BCOrder list
      */
     private static List<BCOrder> generateBCOrderList(List<Map<String, Object>> bills) {
@@ -1068,6 +1107,18 @@ public class BCPay {
                 }
             default:
                 break;
+        }
+    }
+
+    /**
+     * 组建返回鉴权
+     */
+    private static void placeAuth(BCAuth auth, Map<String, Object> ret) {
+        if (ret.containsKey("auth_result") && null != ret.get("auth_result")) {
+            auth.setAuthResult((Boolean)ret.get("auth_result"));
+        }
+        if (ret.containsKey("auth_msg") && null != ret.get("auth_msg")) {
+            auth.setAuthMsg(StrUtil.toStr(ret.get("auth_msg")));
         }
     }
 

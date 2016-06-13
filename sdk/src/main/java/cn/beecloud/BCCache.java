@@ -88,10 +88,10 @@ public class BCCache {
     {
     	apiHostArray = new String[4];
     	
-    	apiHostArray[0] = "https://apisz.beecloud.cn";
-    	apiHostArray[1] = "https://apiqd.beecloud.cn";
-    	apiHostArray[2] = "https://apibj.beecloud.cn";
-    	apiHostArray[3] = "https://apihz.beecloud.cn";
+    	apiHostArray[0] = "https://apibj.beecloud.cn";
+    	apiHostArray[1] = "https://apibj2.beecloud.cn";
+    	apiHostArray[2] = "https://apibj3.beecloud.cn";
+    	apiHostArray[3] = "https://apibj4.beecloud.cn";
     	InputStream inputStream;
     	/*
     	 * 如果类路径下存在配置文件conf.properties，读取其中的backend属性，作为后端连接服务器

@@ -71,6 +71,11 @@ class BCUtilPrivate {
                 + "/rest/bill";
     }
 
+    static String getkApiAuth() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/auth";
+    }
+
     static String getkApiRefund() {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
                 + "/rest/refund";
