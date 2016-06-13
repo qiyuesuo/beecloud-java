@@ -46,6 +46,7 @@ public class BCEumeration {
         UN,
         UN_APP,
         UN_WEB,
+        UN_WAP,
         YEE,
         YEE_WEB,
         YEE_WAP,

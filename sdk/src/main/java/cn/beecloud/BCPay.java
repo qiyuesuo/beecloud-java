@@ -988,6 +988,7 @@ public class BCPay {
                 }
                 break;
             case UN_WEB:
+            case UN_WAP:
             case JD_WAP:
             case JD_WEB:
             case KUAIQIAN_WAP:
@@ -1051,6 +1052,7 @@ public class BCPay {
                 }
                 break;
             case UN_WEB:
+            case UN_WAP:
             case JD_WAP:
             case JD_WEB:
             case KUAIQIAN_WAP:
