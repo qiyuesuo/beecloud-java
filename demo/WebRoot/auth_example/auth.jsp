@@ -26,6 +26,10 @@
 <body>
 
 <%
+	String name = "冯晓波";
+	String idNo = "320504192306171022";
+	String cardNo = "6114335124826228";
+	String mobile = "13761231321";
 	BCAuth auth = new BCAuth(name, idNo, cardNo);
 	auth.setMobile(mobile);
 
