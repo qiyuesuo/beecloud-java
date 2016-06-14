@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.4](https://img.shields.io/badge/Version-v3.1.4-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.5](https://img.shields.io/badge/Version-v3.1.5-blue.svg) 
 
 ## 简介
 
@@ -55,7 +55,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.1.4</version>
+    <version>3.1.5</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
@@ -68,7 +68,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.1.4</version>
+    <version>3.1.5</version>
     <exclusions>  //删除beecloud java sdk依赖的包
          <exclusion>  
              <groupId>org.hibernate</groupId>  
@@ -363,7 +363,7 @@ try {
     		out.println("预退款成功！");
     		out.println(refund.getObjectId());
     	} else {//直接退款
-        	out.println("退款成功！WX、易宝、百度、快钱渠道还需要定期查询退款结果！");
+        	out.println("退款成功！易宝、百度、快钱渠道还需要定期查询退款结果！");
         	out.println(refund.getObjectId());
     	}
     }
@@ -650,6 +650,38 @@ try {
 	log.info(ex.getMessage());
 }		
 ```
+
+### <a name="BCAuth">BC鉴权</a>
+发起BC鉴权请求。BCAuth对象包含了发起BC鉴权所需要的所有参数。
+发起BC鉴权异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+```java
+    String name = "冯晓波";
+	String idNo = "320504192306171022";
+	String cardNo = "6114335124826228";
+	String mobile = "13761231321";
+	BCAuth auth = new BCAuth(name, idNo, cardNo);
+	auth.setMobile(mobile);
+	
+	try {
+		auth = BCPay.startBCAuth(auth);
+		out.println("鉴权成功！");
+		out.println(auth.getAuthMsg());
+		out.println(auth.getCardId());
+		out.println(auth.isAuthResult());
+
+	} catch (BCException e) {
+			out.println(e.getMessage());
+	}
+```
+代码中的参数对象BCAuth封装字段含义如下：
+
+key | 说明
+---- | -----
+name | 身份证姓名， （必填） 
+idNo | 身份证号， （必填） 
+cardNo | 用户银行卡卡号 ， （必填） 
+mobile | 手机号， （选填）  
+
 
 ## 测试模式部分
 
