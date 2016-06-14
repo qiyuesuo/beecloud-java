@@ -651,6 +651,38 @@ try {
 }		
 ```
 
+### <a name="BCAuth">BC鉴权</a>
+发起BC鉴权请求。BCAuth对象包含了发起BC鉴权所需要的所有参数。
+发起BC鉴权异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+```java
+    String name = "冯晓波";
+	String idNo = "320504192306171022";
+	String cardNo = "6114335124826228";
+	String mobile = "13761231321";
+	BCAuth auth = new BCAuth(name, idNo, cardNo);
+	auth.setMobile(mobile);
+	
+	try {
+		auth = BCPay.startBCAuth(auth);
+		out.println("鉴权成功！");
+		out.println(auth.getAuthMsg());
+		out.println(auth.getCardId());
+		out.println(auth.isAuthResult());
+
+	} catch (BCException e) {
+			out.println(e.getMessage());
+	}
+```
+代码中的参数对象BCAuth封装字段含义如下：
+
+key | 说明
+---- | -----
+name | 身份证姓名， （必填） 
+idNo | 身份证号， （必填） 
+cardNo | 用户银行卡卡号 ， （必填） 
+mobile | 手机号， （选填）  
+
+
 ## 测试模式部分
 
 ### <a name="sandboxPayment">国内支付</a>
