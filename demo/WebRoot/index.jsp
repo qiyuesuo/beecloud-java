@@ -226,6 +226,25 @@ input {
 </form>
 <hr/>
 <div>
+    <h2>BC鉴权</h2>
+</div>
+<form action="auth_example/auth.jsp" method="POST" target="_blank">
+    <div>
+        <ul>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="" name="auth">
+                <img src="http://beeclouddoc.qiniudn.com/icon-jianquan.png" alt="鉴权">
+            </li>
+        </ul>
+    </div>
+    <br/><br/>
+    <div style="clear: both;">
+        <input type="submit" class="button" value="确认鉴权">
+    </div>
+</form>
+<hr/>
+
+<div>
     <h2>微信、支付宝企业打款</h2>
 
     <p>请选择渠道进行操作</p>
