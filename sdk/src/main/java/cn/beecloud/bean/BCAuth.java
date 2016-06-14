@@ -19,6 +19,8 @@ public class BCAuth {
 
     private String authMsg;
 
+    private String cardId;
+
     public BCAuth() {}
 
     /**
@@ -123,5 +125,19 @@ public class BCAuth {
      */
     public void setAuthMsg(String authMsg) {
         this.authMsg = authMsg;
+    }
+
+    /**
+     * @return 卡唯一标识符， 鉴权完成之后获得
+     */
+    public String getCardId() {
+        return cardId;
+    }
+
+    /**
+     * 设置字段 {@link #cardId}
+     */
+    public void setCardId(String cardId) {
+        this.cardId = cardId;
     }
 }

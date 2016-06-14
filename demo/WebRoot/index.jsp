@@ -233,7 +233,7 @@ input {
         <ul>
             <li onclick="paySwitch(this)">
                 <input type="radio" value="" name="auth">
-                <img src="http://beeclouddoc.qiniudn.com/auth.png" alt="鉴权">
+                <img src="http://beeclouddoc.qiniudn.com/icon-jianquan.png" alt="鉴权">
             </li>
         </ul>
     </div>

@@ -37,6 +37,7 @@
 		auth = BCPay.startBCAuth(auth);
 		out.println("鉴权成功！");
 		out.println(auth.getAuthMsg());
+		out.println(auth.getCardId());
 		out.println(auth.isAuthResult());
 
 	} catch (BCException e) {

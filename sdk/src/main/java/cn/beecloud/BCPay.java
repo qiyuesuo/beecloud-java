@@ -1120,6 +1120,9 @@ public class BCPay {
         if (ret.containsKey("auth_msg") && null != ret.get("auth_msg")) {
             auth.setAuthMsg(StrUtil.toStr(ret.get("auth_msg")));
         }
+        if (ret.containsKey("card_id") && null != ret.get("card_id")) {
+            auth.setCardId(StrUtil.toStr(ret.get("card_id")));
+        }
     }
 
     /**
