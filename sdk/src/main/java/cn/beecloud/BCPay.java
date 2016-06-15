@@ -1027,11 +1027,13 @@ public class BCPay {
                 }
                 break;
             case UN_WEB:
+            case UN_WAP:
             case JD_WAP:
             case JD_WEB:
             case KUAIQIAN_WAP:
             case KUAIQIAN_WEB:
             case BC_GATEWAY:
+            case CP_WEB:
                 if (ret.containsKey("html") && null != ret.get("html")) {
                     order.setHtml(StrUtil.toStr(ret.get("html")));
                 }
@@ -1089,6 +1091,7 @@ public class BCPay {
                 }
                 break;
             case UN_WEB:
+            case UN_WAP:
             case JD_WAP:
             case JD_WEB:
             case KUAIQIAN_WAP:
