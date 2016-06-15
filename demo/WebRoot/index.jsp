@@ -159,10 +159,6 @@ input {
                 <img src="http://beeclouddoc.qiniudn.com/icon-unwap.png" alt="">
             </li>
             <li onclick="paySwitch(this)">
-                <input type="radio" value="CP_WEB" name="paytype">
-                <img src="http://beeclouddoc.qiniudn.com/icon-chinapay.png" alt="">
-            </li>
-            <li onclick="paySwitch(this)">
                 <input type="radio" value="ALI_QRCODE" name="paytype">
                 <img src="http://beeclouddoc.qiniudn.com/alis.png" alt="">
             </li>
