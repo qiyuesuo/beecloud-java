@@ -60,6 +60,7 @@
     String line = null;
 
     try {
+        request.setCharacterEncoding("utf-8");
         BufferedReader reader = request.getReader();
         while ((line = reader.readLine()) != null) {
             json.append(line);

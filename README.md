@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.4](https://img.shields.io/badge/Version-v3.1.4-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.5](https://img.shields.io/badge/Version-v3.1.5-blue.svg) 
 
 ## 简介
 
@@ -55,7 +55,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.1.4</version>
+    <version>3.1.5</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
@@ -68,7 +68,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.1.4</version>
+    <version>3.1.5</version>
     <exclusions>  //删除beecloud java sdk依赖的包
          <exclusion>  
              <groupId>org.hibernate</groupId>  
@@ -84,7 +84,7 @@ BeeCloud网关支付
 </dependency>
 ```
 
-2).若不使用Maven配置依赖，分开导入无依赖的sdk包(**original-beecloud-java-sdk-x.x.x.jar**)和需要的依赖(**dependency.zip**)(可从Release部分下载)。
+2).若不使用Maven配置依赖，分开导入无依赖的sdk包(**original-beecloud-java-sdk-x.x.x.jar**)和需要的依赖(**dependency.zip**)(可从[Release](https://github.com/beecloud/beecloud-java/releases)部分下载)。
 
 
 ## 注册
@@ -108,78 +108,16 @@ BeeCloud.registerApp(appId, **testSecret**, appSecret, masterSecret);
 **默认开启LIVE模式**
 
 
-## SANDBOX模式使用方法
+## 测试模式使用方法
 BeeCloud.registerApp(appId, testSecret, **appSecret**, **masterSecret**);    
 BeeCloud.setSandbox(**true**);
 
-**SANDBOX**模式**appSecret**、**masterSecret**可为**null**  
+**测试**模式**appSecret**、**masterSecret**可为**null**  
 
-**设置sandbox属性为true，开启SANDBOX模式** <br><br>    
+**设置sandbox属性为true，开启测试模式** <br><br>    
 
   
 ## LIVE模式部分
-
-### <a name="INPayment">国际支付</a>
-
-国际支付接口接收BCInternationlOrder参数对象，该对象封装了发起国际支付所需的各个具体参数。  
-
-成功发起国际支付接口将会返回带objectId的BCInternationlOrder对象。  
-
-若是跳转至paypal支付，返回的BCInternationlOrder对象包含跳转支付url，用户跳转至此url，登陆paypal便可完成支付。
-若是直接使用信用卡支付，直接支付成功，返回的BCInternationlOrder对象包含信用卡ID，此ID在快捷支付时需要。  
-若是通过信用卡ID支付，直接支付成功。
-  
-发起国际支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
-
-#### <a name="paypal_paypal">PAYPAL内支付</a>
-```java
-BCInternationlOrder internationalOrder = new BCInternationlOrder();
-/*
- * PAYPAL内支付
- */
-internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_PAYPAL);
-internationalOrder.setBillNo(billNo);
-internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
-internationalOrder.setTitle("paypal test");
-internationalOrder.setTotalFee(1);
-internationalOrder.setReturnUrl(paypalReturnUrl);
- try {
-	 internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
-	 out.println(internationalOrder.getObjectId());
-     response.sendRedirect(internationalOrder.getUrl());
- } catch (BCException e) {
-     log.error(e.getMessage(), e);
-     out.println(e.getMessage());
- }
-```
-
-代码中的参数对象BCInternationlOrder封装字段含义如下：
-
-key | 说明
----- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>PAYPAL_PAYPAL paypal内支付<br/>PAYPAL_CREDITCARD 使用信用卡支付<br/>PAYPAL_SAVED_CREDITCARD 使用存储的信用卡id支付（必填）
-totalFee | 订单总金额， 只能为整数，单位为分，例如 1，（必填）
-billNo | 商户订单号, 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如(201506101035040000001),（必填）
-title | 订单标题， 32个字节内，最长支持16个汉字，（必填）
-currency | 货币种类代码，包含：<br/>AUD<br/>BRL<br/>CAD<br/>CZK<br/>DKK<br/>EUR<br/>HKD<br/>HUF<br/>ILS<br/>JPY<br/>MYR<br/>MXN<br/>TWD<br/>NZD<br/>NOK<br/>PHP<br/>PLN<br/>GBP<br/>SGD<br/>SEK<br/>CHF<br/>THB<br/>TRY<br/>THB<br/>USD（必填）
-creditCardInfo | 信用卡信息， 当channel为PAYPAL_CREDITCARD必填， （选填）
-creditCardId | 信用卡id，当使用PAYPAL_CREDITCARD支付完成后会返回一个信用卡id， 当channel为PAYPAL_SAVED_CREDITCARD必填，（选填）
-returnUrl | 同步返回页面	， 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。当channel为PAYPAL_PAYPAL时为必填，（选填）
-objectId | 境外支付订单唯一标识, 下单成功后返回
-url | 当channel 为PAYPAL_PAYPAL时返回，跳转支付的url
-
-信用卡信息对象CreditCardInfo封装字段含义如下：
-
-key | 说明
----- | -----
-cardNo | 卡号，（必填）
-expireMonth | 过期时间中的月，（必填）
-expireYear | 过期时间中的年，（必填）
-cvv | 信用卡的三位cvv码，（必填）
-firstName | 用户名字，（必填）
-lastName | 用户的姓，（必填）
-cardType | 卡类别 visa/mastercard/discover/amex，（必填）
-
 
 ### <a name="payment">国内支付</a>
 国内支付接口接收BCOrder参数对象，该对象封装了发起国内际支付所需的各个具体参数。  
@@ -296,6 +234,68 @@ wishing | 红包祝福语 128 位，（必填）
 activityName | 红包活动名称 32位，（必填）
 
 
+### <a name="INPayment">国际支付</a>
+
+国际支付接口接收BCInternationlOrder参数对象，该对象封装了发起国际支付所需的各个具体参数。  
+
+成功发起国际支付接口将会返回带objectId的BCInternationlOrder对象。  
+
+若是跳转至paypal支付，返回的BCInternationlOrder对象包含跳转支付url，用户跳转至此url，登陆paypal便可完成支付。
+若是直接使用信用卡支付，直接支付成功，返回的BCInternationlOrder对象包含信用卡ID，此ID在快捷支付时需要。  
+若是通过信用卡ID支付，直接支付成功。
+  
+发起国际支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+
+#### <a name="paypal_paypal">PAYPAL内支付</a>
+```java
+BCInternationlOrder internationalOrder = new BCInternationlOrder();
+/*
+ * PAYPAL内支付
+ */
+internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_PAYPAL);
+internationalOrder.setBillNo(billNo);
+internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
+internationalOrder.setTitle("paypal test");
+internationalOrder.setTotalFee(1);
+internationalOrder.setReturnUrl(paypalReturnUrl);
+ try {
+	 internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
+	 out.println(internationalOrder.getObjectId());
+     response.sendRedirect(internationalOrder.getUrl());
+ } catch (BCException e) {
+     log.error(e.getMessage(), e);
+     out.println(e.getMessage());
+ }
+```
+
+代码中的参数对象BCInternationlOrder封装字段含义如下：
+
+key | 说明
+---- | -----
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>PAYPAL_PAYPAL paypal内支付<br/>PAYPAL_CREDITCARD 使用信用卡支付<br/>PAYPAL_SAVED_CREDITCARD 使用存储的信用卡id支付（必填）
+totalFee | 订单总金额， 只能为整数，单位为分，例如 1，（必填）
+billNo | 商户订单号, 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如(201506101035040000001),（必填）
+title | 订单标题， 32个字节内，最长支持16个汉字，（必填）
+currency | 货币种类代码，包含：<br/>AUD<br/>BRL<br/>CAD<br/>CZK<br/>DKK<br/>EUR<br/>HKD<br/>HUF<br/>ILS<br/>JPY<br/>MYR<br/>MXN<br/>TWD<br/>NZD<br/>NOK<br/>PHP<br/>PLN<br/>GBP<br/>SGD<br/>SEK<br/>CHF<br/>THB<br/>TRY<br/>THB<br/>USD（必填）
+creditCardInfo | 信用卡信息， 当channel为PAYPAL_CREDITCARD必填， （选填）
+creditCardId | 信用卡id，当使用PAYPAL_CREDITCARD支付完成后会返回一个信用卡id， 当channel为PAYPAL_SAVED_CREDITCARD必填，（选填）
+returnUrl | 同步返回页面	， 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。当channel为PAYPAL_PAYPAL时为必填，（选填）
+objectId | 境外支付订单唯一标识, 下单成功后返回
+url | 当channel 为PAYPAL_PAYPAL时返回，跳转支付的url
+
+信用卡信息对象CreditCardInfo封装字段含义如下：
+
+key | 说明
+---- | -----
+cardNo | 卡号，（必填）
+expireMonth | 过期时间中的月，（必填）
+expireYear | 过期时间中的年，（必填）
+cvv | 信用卡的三位cvv码，（必填）
+firstName | 用户名字，（必填）
+lastName | 用户的姓，（必填）
+cardType | 卡类别 visa/mastercard/discover/amex，（必填）
+
+
 ### <a name="transfer">批量打款</a>
 批量打款接口接收TransfersParameter参数对象，该对象封装了发起批量打款所需的各个具体参数。  
 
@@ -363,7 +363,7 @@ try {
     		out.println("预退款成功！");
     		out.println(refund.getObjectId());
     	} else {//直接退款
-        	out.println("退款成功！WX、易宝、百度、快钱渠道还需要定期查询退款结果！");
+        	out.println("退款成功！易宝、百度、快钱渠道还需要定期查询退款结果！");
         	out.println(refund.getObjectId());
     	}
     }
@@ -651,7 +651,39 @@ try {
 }		
 ```
 
-## SANDBOX模式部分
+### <a name="BCAuth">BC鉴权</a>
+发起BC鉴权请求。BCAuth对象包含了发起BC鉴权所需要的所有参数。
+发起BC鉴权异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+```java
+    String name = "冯晓波";
+	String idNo = "320504192306171022";
+	String cardNo = "6114335124826228";
+	String mobile = "13761231321";
+	BCAuth auth = new BCAuth(name, idNo, cardNo);
+	auth.setMobile(mobile);
+	
+	try {
+		auth = BCPay.startBCAuth(auth);
+		out.println("鉴权成功！");
+		out.println(auth.getAuthMsg());
+		out.println(auth.getCardId());
+		out.println(auth.isAuthResult());
+
+	} catch (BCException e) {
+			out.println(e.getMessage());
+	}
+```
+代码中的参数对象BCAuth封装字段含义如下：
+
+key | 说明
+---- | -----
+name | 身份证姓名， （必填） 
+idNo | 身份证号， （必填） 
+cardNo | 用户银行卡卡号 ， （必填） 
+mobile | 手机号， （选填）  
+
+
+## 测试模式部分
 
 ### <a name="sandboxPayment">国内支付</a>
 国内支付接口完全参考[LIVE模式](#payment)订单查询, **暂不支持WX_JSAPI**
@@ -667,7 +699,7 @@ try {
 单笔订单查询接口完全参考[LIVE模式](#billQueryById)单笔订单查询  
 
   
-**其他接口暂不支持SANDBOX模式**  
+**其他接口暂不支持测试模式**  
 
 
 
