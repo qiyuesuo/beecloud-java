@@ -197,6 +197,7 @@
             break;
 
         case UN_WEB:
+        case UN_WAP:
             bcOrder.setReturnUrl(unReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
