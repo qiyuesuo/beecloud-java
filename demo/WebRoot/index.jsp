@@ -155,6 +155,10 @@ input {
                 <img src="http://beeclouddoc.qiniudn.com/unionpay.png" alt="">
             </li>
             <li onclick="paySwitch(this)">
+                <input type="radio" value="UN_WAP" name="paytype">
+                <img src="http://beeclouddoc.qiniudn.com/icon-unwap.png" alt="">
+            </li>
+            <li onclick="paySwitch(this)">
                 <input type="radio" value="ALI_QRCODE" name="paytype">
                 <img src="http://beeclouddoc.qiniudn.com/alis.png" alt="">
             </li>
