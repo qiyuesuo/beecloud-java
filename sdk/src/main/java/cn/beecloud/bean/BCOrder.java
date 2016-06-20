@@ -70,6 +70,8 @@ public class BCOrder {
 
     private GATEWAY_BANK gatewayBank;
 
+    private String bcExpressCardNo;
+
 
     public BCOrder() {}
 
@@ -510,5 +512,20 @@ public class BCOrder {
      */
     public void setGatewayBank(GATEWAY_BANK gatewayBank) {
         this.gatewayBank = gatewayBank;
+    }
+
+    /**
+     * 访问字段 {@link #bcExpressCardNo}
+     */
+    public String getBcExpressCardNo() {
+        return bcExpressCardNo;
+    }
+
+    /**
+     * @param bcExpressCardNo
+     * BC_EXPRESS指定卡号， 字符串 (选填)
+     */
+    public void setBcExpressCardNo(String bcExpressCardNo) {
+        this.bcExpressCardNo = bcExpressCardNo;
     }
 }
