@@ -510,6 +510,9 @@ public class BCPay {
         if (para.getGatewayBank() != null) {
             param.put("bank", StrUtil.toStr(para.getGatewayBank()));
         }
+        if (para.getBcExpressCardNo() != null) {
+            param.put("card_no", StrUtil.toStr(para.getBcExpressCardNo()));
+        }
     }
 
     /**
