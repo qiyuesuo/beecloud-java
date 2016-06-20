@@ -128,7 +128,9 @@
             break;
         case BC_EXPRESS:
             try {
+                bcOrder.setTotalFee(100);
                 bcOrder.setReturnUrl(bcExpressReturnUrl);
+                bcOrder.setBcExpressCardNo("3221620240019686366");
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);

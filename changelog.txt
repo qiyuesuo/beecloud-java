@@ -1,6 +1,9 @@
 ﻿BeeCloud Java Changelog
 ============================
 
+v3.1.7 发布日期：2016年06月20日
++ 增加BC_EXPRESS card_no选填参数
+
 v3.1.6 发布日期：2016年06月16日
 + 增加UN_WAP
 
