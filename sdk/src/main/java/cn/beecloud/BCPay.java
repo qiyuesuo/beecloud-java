@@ -906,6 +906,7 @@ public class BCPay {
             if (e instanceof BCException) {
                 throw (BCException) e;
             }
+            e.printStackTrace();
             throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + ","
                     + e.getMessage());
         }
