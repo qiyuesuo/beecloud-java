@@ -903,7 +903,6 @@ public class BCPay {
                         NOT_CORRECT_RESPONSE);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             if (e instanceof BCException) {
                 throw (BCException) e;
             }
