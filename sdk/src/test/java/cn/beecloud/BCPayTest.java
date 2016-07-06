@@ -2,7 +2,6 @@ package cn.beecloud;
 
 import mockit.integration.junit4.JMockit;
 
-import javax.ws.rs.client.Client;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +15,6 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JMockit.class)
 public class BCPayTest {
-
-    protected Client client;
 
     @Before
     public void setUp() throws Exception {

@@ -332,12 +332,6 @@ public class ValidationUtil {
         } else if (StrUtil.empty(para.getTradeSource())) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), TRADE_SOURCE_EMPTY);
-        } else if (StrUtil.empty(para.getBankCode())) {
-            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
-                    RESULT_TYPE.PARAM_INVALID.name(), BANK_CODE_EMPTY);
-        } else if (StrUtil.empty(para.getBankAssociatedCode())) {
-            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
-                    RESULT_TYPE.PARAM_INVALID.name(), BANK_ASSOCIATED_CODE_EMPTY);
         } else if (StrUtil.empty(para.getBankFullName())) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), BANK_FULL_NAME_EMPTY);

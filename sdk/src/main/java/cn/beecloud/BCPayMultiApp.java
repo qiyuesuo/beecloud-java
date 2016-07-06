@@ -21,17 +21,16 @@ import cn.beecloud.bean.ALITransferData;
 import cn.beecloud.bean.TransferParameter;
 import cn.beecloud.bean.TransfersParameter;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import net.sf.json.JSONObject;
 
@@ -768,126 +767,205 @@ public class BCPayMultiApp {
     /**
      * doPost方法，封装rest api POST方式请求
      *
-     * @param url   请求url
+     * @param requestUrl   请求url
      * @param param 请求参数
      * @return rest api返回参数
      * @throws BCException
      */
-    private static Map<String, Object> doPost(String url, Map<String, Object> param)
+    private static Map<String, Object> doPost(String requestUrl, Map<String, Object> param)
             throws BCException {
-        Client client = BCAPIClient.client;
-        if (client == null) {
+        HttpURLConnection connection = null;
+        if (BCCache.getAppID() == null) {
             throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
         }
-        WebTarget target = client.target(url);
+
+        PrintWriter out = null;
+        BufferedReader in = null;
+        String result = "";
+        Integer reponseStatus;
         try {
-            Response response = target.request()
-                    .post(Entity.entity(param, MediaType.APPLICATION_JSON));
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
+            URL url = new URL(requestUrl);
+            connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
 
-                Integer resultCode = (Integer) ret.get("result_code");
-                String resultMessage = ret.get("result_msg").toString();
-                String errorDetail = ret.get("err_detail").toString();
+            connection.setReadTimeout(5000);
+            connection.setConnectTimeout(5000);
+            // 发送POST请求必须设置如下两行
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
 
-                boolean isSuccess = (resultCode == 0);
-                if (isSuccess) {
-                    return ret;
-                } else {
-                    throw new BCException(resultCode, resultMessage, errorDetail);
-                }
-            } else {
-                throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(),
-                        NOT_CORRECT_RESPONSE);
+            //Send request
+            // 获取URLConnection对象对应的输出流
+            out = new PrintWriter(connection.getOutputStream());
+            // 发送请求参数
+            out.print(StrUtil.toStr(JSONObject.fromObject(param)));
+            // flush输出流的缓冲
+            out.flush();
+
+            reponseStatus = connection.getResponseCode();
+
+            // 定义BufferedReader输入流来读取URL的响应
+            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result += line;
             }
+
+            JSONObject jsonObject = JSONObject.fromObject(result);
+            Integer resultCode = jsonObject.getInt("result_code");
+            String resultMessage = jsonObject.getString("result_msg");
+            String errorDetail = jsonObject.getString("err_detail");
+            if (resultCode == 0) {
+                return jsonToMap(jsonObject);
+            } else {
+                throw new BCException(resultCode, resultMessage, errorDetail, reponseStatus);
+            }
+
         } catch (Exception e) {
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
+            if (e instanceof BCException) {
+                throw (BCException) e;
+            }
+            e.printStackTrace();
+            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + ","
+                    + e.getMessage());
+        } finally {
+            if(connection != null) {
+                connection.disconnect();
+            }
         }
     }
 
     /**
      * doPut方法，封装rest api PUT方式请求
      *
-     * @param url   请求url
+     * @param requestUrl   请求url
      * @param param 请求参数
      * @return rest api返回参数
      * @throws BCException
      */
-    private static Map<String, Object> doPut(String url, Map<String, Object> param)
+    private static Map<String, Object> doPut(String requestUrl, Map<String, Object> param)
             throws BCException {
-        Client client = BCAPIClient.client;
-        if (client == null) {
+        HttpURLConnection connection = null;
+        if (BCCache.getAppID() == null) {
             throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
         }
-        WebTarget target = client.target(url);
+        PrintWriter out = null;
+        BufferedReader in = null;
+        String result = "";
+        Integer reponseStatus;
         try {
-            Response response = target.request()
-                    .put(Entity.entity(param, MediaType.APPLICATION_JSON));
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
+            URL url = new URL(requestUrl);
+            connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("PUT");
+            connection.setRequestProperty("Content-Type", "application/json");
 
-                Integer resultCode = (Integer) ret.get("result_code");
-                String resultMessage = ret.get("result_msg").toString();
-                String errorDetail = ret.get("err_detail").toString();
+            connection.setReadTimeout(5000);
+            connection.setConnectTimeout(5000);
+            // 发送POST请求必须设置如下两行
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
 
-                boolean isSuccess = (resultCode == 0);
-                if (isSuccess) {
-                    return ret;
-                } else {
-                    throw new BCException(resultCode, resultMessage, errorDetail);
-                }
-            } else {
-                throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(),
-                        NOT_CORRECT_RESPONSE);
+            //Send request
+            // 获取URLConnection对象对应的输出流
+            out = new PrintWriter(connection.getOutputStream());
+            // 发送请求参数
+            out.print(StrUtil.toStr(JSONObject.fromObject(param)));
+            // flush输出流的缓冲
+            out.flush();
+
+            reponseStatus = connection.getResponseCode();
+
+            // 定义BufferedReader输入流来读取URL的响应
+            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result += line;
             }
+
+            JSONObject jsonObject = JSONObject.fromObject(result);
+            Integer resultCode = jsonObject.getInt("result_code");
+            String resultMessage = jsonObject.getString("result_msg");
+            String errorDetail = jsonObject.getString("err_detail");
+            if (resultCode == 0) {
+                return jsonToMap(jsonObject);
+            } else {
+                throw new BCException(resultCode, resultMessage, errorDetail, reponseStatus);
+            }
+
         } catch (Exception e) {
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
+            if (e instanceof BCException) {
+                throw (BCException) e;
+            }
+            e.printStackTrace();
+            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + ","
+                    + e.getMessage());
+        } finally {
+            if(connection != null) {
+                connection.disconnect();
+            }
         }
     }
 
     /**
      * doGet方法，封装rest api GET方式请求
      *
-     * @param url   请求url
+     * @param requestUrl   请求url
      * @param param 请求参数
      * @return rest api返回参数
      * @throws BCException
      */
-    private static Map<String, Object> doGet(String url, Map<String, Object> param)
+    private static Map<String, Object> doGet(String requestUrl, Map<String, Object> param)
             throws BCException {
-        Client client = BCAPIClient.client;
-        if (client == null) {
+        HttpURLConnection connection = null;
+        if (BCCache.getAppID() == null) {
             throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
         }
 
-        StringBuilder sb = new StringBuilder();
-
+        BufferedReader in = null;
+        String result = "";
+        Integer reponseStatus;
         try {
-            sb.append(URLEncoder.encode(url, "UTF-8"));
-            sb.append(URLEncoder.encode(JSONObject.fromObject(param).toString(), "UTF-8"));
+            URL url = new URL(requestUrl + URLEncoder.encode(JSONObject.fromObject(param).toString(), "UTF-8"));
+            connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/json");
 
-            WebTarget target = client.target(sb.toString());
-            Response response = target.request().get();
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
+            connection.setReadTimeout(5000);
+            connection.setConnectTimeout(5000);
+            // 发送POST请求必须设置如下两行
 
-                Integer resultCode = (Integer) ret.get("result_code");
-                String resultMessage = ret.get("result_msg").toString();
-                String errorDetail = ret.get("err_detail").toString();
+            reponseStatus = connection.getResponseCode();
 
-                boolean isSuccess = (resultCode == 0);
-
-                if (isSuccess) {
-                    return ret;
-                } else {
-                    throw new BCException(resultCode, resultMessage, errorDetail);
-                }
-            } else {
-                throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(),
-                        NOT_CORRECT_RESPONSE);
+            //Send request
+            // 获取URLConnection对象对应的输出流
+            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result += line;
             }
+
+            JSONObject jsonObject = JSONObject.fromObject(result);
+            Integer resultCode = jsonObject.getInt("result_code");
+            String resultMessage = jsonObject.getString("result_msg");
+            String errorDetail = jsonObject.getString("err_detail");
+            if (resultCode == 0) {
+                return jsonToMap(jsonObject);
+            } else {
+                throw new BCException(resultCode, resultMessage, errorDetail, reponseStatus);
+            }
+
         } catch (Exception e) {
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR);
+            if (e instanceof BCException) {
+                throw (BCException) e;
+            }
+            e.printStackTrace();
+            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + ","
+                    + e.getMessage());
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
     }
 
@@ -1013,5 +1091,13 @@ public class BCPayMultiApp {
     private String getAppSignatureWithMasterSecret(String timeStamp) {
         String str = appId + timeStamp + masterSecret;
         return BCUtilPrivate.getMessageDigest(str);
+    }
+
+    private static Map<String, Object> jsonToMap(JSONObject json) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        for (Object key : json.keySet()) {
+            resultMap.put(StrUtil.toStr(key), json.get(key));
+        }
+        return resultMap;
     }
 }

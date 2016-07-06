@@ -531,33 +531,8 @@ public class TransferTest {
             Assert.assertTrue(e.getMessage(),
                     e.getMessage().contains(TestConstant.TRADE_SOURCE_EMPTY));
         }
-
         param.setTradeSource("OUT_PC");
 
-        try {
-            param.setBankCode(null);
-            BCPay.startBCTransfer(param);
-            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
-        } catch (Exception e) {
-            Assert.assertTrue(e.getMessage(), e instanceof BCException);
-            Assert.assertTrue(e.getMessage(),
-                    e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-            Assert.assertTrue(e.getMessage(), e.getMessage().contains(TestConstant.BANK_CODE_EMPTY));
-        }
-        param.setBankCode("BOC");
-
-        try {
-            param.setBankAssociatedCode(null);
-            BCPay.startBCTransfer(param);
-            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
-        } catch (Exception e) {
-            Assert.assertTrue(e.getMessage(), e instanceof BCException);
-            Assert.assertTrue(e.getMessage(),
-                    e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
-            Assert.assertTrue(e.getMessage(),
-                    e.getMessage().contains(TestConstant.BANK_ASSOCIATED_CODE_EMPTY));
-        }
-        param.setBankAssociatedCode("111111");
 
         try {
             param.setBankFullName(null);
