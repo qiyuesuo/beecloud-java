@@ -43,12 +43,6 @@ import net.sf.json.JSONObject;
  */
 public class BCPayMultiApp {
 
-    private final static String NOT_REGISTER = "未注册";
-
-    private final static String NOT_CORRECT_RESPONSE = "响应不正确";
-
-    private final static String NETWORK_ERROR = "网络错误";
-
     private final static String TEST_MODE_SUPPORT_ERROR = "测试模式仅支持国内支付(WX_JSAPI暂不支持)、订单查询、订单总数查询、单笔订单查询";
 
     private String appId;
@@ -82,15 +76,15 @@ public class BCPayMultiApp {
             if (order.getChannel().equals(PAY_CHANNEL.WX_JSAPI)) {
                 throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), TEST_MODE_SUPPORT_ERROR);
             }
-            Map<String, Object> ret = doPost(BCUtilPrivate.getkSandboxApiPay(), param);
+            Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkSandboxApiPay(), param);
             placeSandboxOrder(order, ret);
             // 易宝点卡支付代码调用回调
             if (order.getChannel().equals(PAY_CHANNEL.YEE_NOBANKCARD)) {
-                doGet(BCUtilPrivate.getkApiSandboxNotify() + "/" + this.appId + "/" + order.getObjectId() + "?para=", new HashMap<String, Object>());
+                RequestUtil.doGet(BCUtilPrivate.getkApiSandboxNotify() + "/" + this.appId + "/" + order.getObjectId() + "?para=", new HashMap<String, Object>());
             }
             return order;
         }
-        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiPay(), param);
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiPay(), param);
 
         placeOrder(order, ret);
 
@@ -114,7 +108,7 @@ public class BCPayMultiApp {
 
         buildRefundParam(param, refund);
 
-        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiRefund(), param);
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiRefund(), param);
 
         refund.setObjectId(StrUtil.toStr(ret.get("id")));
         if (ret.containsKey("url")) {
@@ -140,10 +134,10 @@ public class BCPayMultiApp {
         buildQueryParam(param, para);
 
         if (BCCache.isSandbox()) {
-            Map<String, Object> ret = doGet(BCUtilPrivate.getkApiSandboxQueryBill(), param);
+            Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiSandboxQueryBill(), param);
             return generateBCOrderList((List<Map<String, Object>>) ret.get("bills"));
         }
-        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBill(), param);
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiQueryBill(), param);
 
         return generateBCOrderList((List<Map<String, Object>>) ret.get("bills"));
 
@@ -176,7 +170,7 @@ public class BCPayMultiApp {
         urlSb.append("/");
         urlSb.append(objectId);
         urlSb.append("?para=");
-        Map<String, Object> ret = doGet(urlSb.toString(), param);
+        Map<String, Object> ret = RequestUtil.doGet(urlSb.toString(), param);
 
         return generateBCOrder((Map<String, Object>) ret.get("pay"));
     }
@@ -196,10 +190,10 @@ public class BCPayMultiApp {
         buildQueryCountParam(param, para);
 
         if (BCCache.isSandbox()) {
-            Map<String, Object> ret = doGet(BCUtilPrivate.getkApiSandboxQueryBillCount(), param);
+            Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiSandboxQueryBillCount(), param);
             return (Integer) ret.get("count");
         }
-        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBillCount(), param);
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiQueryBillCount(), param);
 
         return (Integer) ret.get("count");
     }
@@ -221,7 +215,7 @@ public class BCPayMultiApp {
 
         buildQueryParam(param, para);
 
-        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryRefund(), param);
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiQueryRefund(), param);
 
         return generateBCRefundList((List<Map<String, Object>>) ret.get("refunds"));
     }
@@ -246,7 +240,7 @@ public class BCPayMultiApp {
         urlSb.append("/");
         urlSb.append(objectId);
         urlSb.append("?para=");
-        Map<String, Object> ret = doGet(urlSb.toString(), param);
+        Map<String, Object> ret = RequestUtil.doGet(urlSb.toString(), param);
 
         return generateBCRefund((Map<String, Object>) ret.get("refund"));
 
@@ -266,7 +260,7 @@ public class BCPayMultiApp {
         Map<String, Object> param = new HashMap<String, Object>();
         buildQueryCountParam(param, para);
 
-        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBillCount(), param);
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiQueryBillCount(), param);
 
         return (Integer) ret.get("count");
     }
@@ -291,7 +285,7 @@ public class BCPayMultiApp {
         param.put("channel", StrUtil.toStr(channel));
         param.put("refund_no", refundNo);
 
-        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiRefundUpdate(), param);
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiRefundUpdate(), param);
         return StrUtil.toStr(ret.get("refund_status"));
     }
 
@@ -311,7 +305,7 @@ public class BCPayMultiApp {
 
         buildTransferParam(param, para);
 
-        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfer(), param);
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiTransfer(), param);
 
         if (ret.containsKey("url")) {
             return StrUtil.toStr(ret.get("url"));
@@ -335,7 +329,7 @@ public class BCPayMultiApp {
 
         buildTransfersParam(param, para);
 
-        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfers(), param);
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiTransfers(), param);
 
         return StrUtil.toStr(ret.get("url"));
     }
@@ -358,7 +352,7 @@ public class BCPayMultiApp {
         param.put("timestamp", System.currentTimeMillis());
         param.put("app_sign", this.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
 
-        Map<String, Object> ret = doPut(BCUtilPrivate.getApiBatchRefund(), param);
+        Map<String, Object> ret = RequestUtil.doPut(BCUtilPrivate.getApiBatchRefund(), param);
 
         if (ret.containsKey("result_map")) {
             batchRefund.setIdResult((Map<String, String>) ret.get("result_map"));
@@ -387,7 +381,7 @@ public class BCPayMultiApp {
 
         buildInternatioalPayParam(param, order);
 
-        Map<String, Object> ret = doPost(BCUtilPrivate.getApiInternationalPay(), param);
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getApiInternationalPay(), param);
 
         placePayPalOrder(order, ret);
 
@@ -764,210 +758,6 @@ public class BCPayMultiApp {
         return map;
     }
 
-    /**
-     * doPost方法，封装rest api POST方式请求
-     *
-     * @param requestUrl   请求url
-     * @param param 请求参数
-     * @return rest api返回参数
-     * @throws BCException
-     */
-    private static Map<String, Object> doPost(String requestUrl, Map<String, Object> param)
-            throws BCException {
-        HttpURLConnection connection = null;
-        if (BCCache.getAppID() == null) {
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
-        }
-
-        PrintWriter out = null;
-        BufferedReader in = null;
-        String result = "";
-        Integer reponseStatus;
-        try {
-            URL url = new URL(requestUrl);
-            connection = (HttpURLConnection)url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            connection.setReadTimeout(5000);
-            connection.setConnectTimeout(5000);
-            // 发送POST请求必须设置如下两行
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-
-            //Send request
-            // 获取URLConnection对象对应的输出流
-            out = new PrintWriter(connection.getOutputStream());
-            // 发送请求参数
-            out.print(StrUtil.toStr(JSONObject.fromObject(param)));
-            // flush输出流的缓冲
-            out.flush();
-
-            reponseStatus = connection.getResponseCode();
-
-            // 定义BufferedReader输入流来读取URL的响应
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line;
-            while ((line = in.readLine()) != null) {
-                result += line;
-            }
-
-            JSONObject jsonObject = JSONObject.fromObject(result);
-            Integer resultCode = jsonObject.getInt("result_code");
-            String resultMessage = jsonObject.getString("result_msg");
-            String errorDetail = jsonObject.getString("err_detail");
-            if (resultCode == 0) {
-                return jsonToMap(jsonObject);
-            } else {
-                throw new BCException(resultCode, resultMessage, errorDetail, reponseStatus);
-            }
-
-        } catch (Exception e) {
-            if (e instanceof BCException) {
-                throw (BCException) e;
-            }
-            e.printStackTrace();
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + ","
-                    + e.getMessage());
-        } finally {
-            if(connection != null) {
-                connection.disconnect();
-            }
-        }
-    }
-
-    /**
-     * doPut方法，封装rest api PUT方式请求
-     *
-     * @param requestUrl   请求url
-     * @param param 请求参数
-     * @return rest api返回参数
-     * @throws BCException
-     */
-    private static Map<String, Object> doPut(String requestUrl, Map<String, Object> param)
-            throws BCException {
-        HttpURLConnection connection = null;
-        if (BCCache.getAppID() == null) {
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
-        }
-        PrintWriter out = null;
-        BufferedReader in = null;
-        String result = "";
-        Integer reponseStatus;
-        try {
-            URL url = new URL(requestUrl);
-            connection = (HttpURLConnection)url.openConnection();
-            connection.setRequestMethod("PUT");
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            connection.setReadTimeout(5000);
-            connection.setConnectTimeout(5000);
-            // 发送POST请求必须设置如下两行
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-
-            //Send request
-            // 获取URLConnection对象对应的输出流
-            out = new PrintWriter(connection.getOutputStream());
-            // 发送请求参数
-            out.print(StrUtil.toStr(JSONObject.fromObject(param)));
-            // flush输出流的缓冲
-            out.flush();
-
-            reponseStatus = connection.getResponseCode();
-
-            // 定义BufferedReader输入流来读取URL的响应
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line;
-            while ((line = in.readLine()) != null) {
-                result += line;
-            }
-
-            JSONObject jsonObject = JSONObject.fromObject(result);
-            Integer resultCode = jsonObject.getInt("result_code");
-            String resultMessage = jsonObject.getString("result_msg");
-            String errorDetail = jsonObject.getString("err_detail");
-            if (resultCode == 0) {
-                return jsonToMap(jsonObject);
-            } else {
-                throw new BCException(resultCode, resultMessage, errorDetail, reponseStatus);
-            }
-
-        } catch (Exception e) {
-            if (e instanceof BCException) {
-                throw (BCException) e;
-            }
-            e.printStackTrace();
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + ","
-                    + e.getMessage());
-        } finally {
-            if(connection != null) {
-                connection.disconnect();
-            }
-        }
-    }
-
-    /**
-     * doGet方法，封装rest api GET方式请求
-     *
-     * @param requestUrl   请求url
-     * @param param 请求参数
-     * @return rest api返回参数
-     * @throws BCException
-     */
-    private static Map<String, Object> doGet(String requestUrl, Map<String, Object> param)
-            throws BCException {
-        HttpURLConnection connection = null;
-        if (BCCache.getAppID() == null) {
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
-        }
-
-        BufferedReader in = null;
-        String result = "";
-        Integer reponseStatus;
-        try {
-            URL url = new URL(requestUrl + URLEncoder.encode(JSONObject.fromObject(param).toString(), "UTF-8"));
-            connection = (HttpURLConnection)url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            connection.setReadTimeout(5000);
-            connection.setConnectTimeout(5000);
-            // 发送POST请求必须设置如下两行
-
-            reponseStatus = connection.getResponseCode();
-
-            //Send request
-            // 获取URLConnection对象对应的输出流
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line;
-            while ((line = in.readLine()) != null) {
-                result += line;
-            }
-
-            JSONObject jsonObject = JSONObject.fromObject(result);
-            Integer resultCode = jsonObject.getInt("result_code");
-            String resultMessage = jsonObject.getString("result_msg");
-            String errorDetail = jsonObject.getString("err_detail");
-            if (resultCode == 0) {
-                return jsonToMap(jsonObject);
-            } else {
-                throw new BCException(resultCode, resultMessage, errorDetail, reponseStatus);
-            }
-
-        } catch (Exception e) {
-            if (e instanceof BCException) {
-                throw (BCException) e;
-            }
-            e.printStackTrace();
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + ","
-                    + e.getMessage());
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
-    }
 
     /**
      * 组建返回订单
@@ -1093,11 +883,4 @@ public class BCPayMultiApp {
         return BCUtilPrivate.getMessageDigest(str);
     }
 
-    private static Map<String, Object> jsonToMap(JSONObject json) {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        for (Object key : json.keySet()) {
-            resultMap.put(StrUtil.toStr(key), json.get(key));
-        }
-        return resultMap;
-    }
 }
