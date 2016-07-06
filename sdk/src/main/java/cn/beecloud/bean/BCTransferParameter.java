@@ -15,10 +15,6 @@ public class BCTransferParameter {
     private String title;
     // 交易源 UTF8编码格式，目前只能填写OUT_PC
     private String tradeSource;
-    // 银行缩写编码
-    private String bankCode;
-    // 银行联行行号 需要向银行咨询
-    private String bankAssociatedCode;
     // 银行全名
     private String bankFullName;
     // 银行卡类型 区分借记卡和信用卡 DE代表借记卡，CR代表信用卡，其他值为非法
@@ -37,14 +33,12 @@ public class BCTransferParameter {
     public BCTransferParameter() {};
 
     public BCTransferParameter(Integer totalFee, String billNo, String title, String tradeSource,
-            String bankCode, String bankAssociatedCode, String bankFullName, String cardType,
+            String bankFullName, String cardType,
             String accountType, String accountNo, String accountName, Map<String, Object> optional) {
         this.totalFee = totalFee;
         this.billNo = billNo;
         this.title = title;
         this.tradeSource = tradeSource;
-        this.bankCode = bankCode;
-        this.bankAssociatedCode = bankAssociatedCode;
         this.bankFullName = bankFullName;
         this.cardType = cardType;
         this.accountType = accountType;
@@ -83,22 +77,6 @@ public class BCTransferParameter {
 
     public void setTradeSource(String tradeSource) {
         this.tradeSource = tradeSource;
-    }
-
-    public String getBankCode() {
-        return bankCode;
-    }
-
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
-    }
-
-    public String getBankAssociatedCode() {
-        return bankAssociatedCode;
-    }
-
-    public void setBankAssociatedCode(String bankAssociatedCode) {
-        this.bankAssociatedCode = bankAssociatedCode;
     }
 
     public String getBankFullName() {

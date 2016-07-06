@@ -39,8 +39,6 @@
     bCTransferParameter.setTotalFee(1);
     bCTransferParameter.setTitle("测试代付");
     bCTransferParameter.setTradeSource("OUT_PC");
-    bCTransferParameter.setBankCode("BOC");
-    bCTransferParameter.setBankAssociatedCode("104305045378");
     bCTransferParameter.setBankFullName("中国银行");
     bCTransferParameter.setCardType("DE");
     bCTransferParameter.setAccountType("C");
