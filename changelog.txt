@@ -1,5 +1,9 @@
-﻿BeeCloud Java Changelog
+BeeCloud Java Changelog
 ============================
+
+v3.2.0 发布日期：2016年07月06日
++ 使用原生包进行http请求
++ 移除BCTransfer bankCode和bankAssociatedCode
 
 v3.1.7 发布日期：2016年06月20日
 + 增加BC_EXPRESS card_no选填参数
