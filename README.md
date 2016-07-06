@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.1.7](https://img.shields.io/badge/Version-v3.1.7-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.2.0](https://img.shields.io/badge/Version-v3.2.0-blue.svg) 
 
 ## 简介
 
@@ -55,7 +55,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.1.7</version>
+    <version>3.2.0</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
@@ -68,7 +68,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.1.7</version>
+    <version>3.2.0</version>
     <exclusions>  //删除beecloud java sdk依赖的包
          <exclusion>  
              <groupId>org.hibernate</groupId>  
@@ -124,7 +124,7 @@ BeeCloud.setSandbox(**true**);
 
 成功发起国内支付接口将会返回带objectId的BCOrder对象。
   
-发起国内支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起国内支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 
 #### <a name="ali_web">支付宝网页调用</a>
 返回的BCOrder对象包含表单支付html和跳转支付url,开发者提交支付表单或者跳转至url完成支付。
@@ -191,7 +191,7 @@ optionalString   |  optional json字符串， 可通过查询获得
 
 成功发起单笔打款将会返回单笔打款跳转url或者空字符串。
   
-发起单笔打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起单笔打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 
 #### <a name="ali_transfer">支付宝单笔打款</a>
 返回跳转打款url,开发者跳转至url完成打款。
@@ -245,7 +245,7 @@ activityName | 红包活动名称 32位，（必填）
 若是直接使用信用卡支付，直接支付成功，返回的BCInternationlOrder对象包含信用卡ID，此ID在快捷支付时需要。  
 若是通过信用卡ID支付，直接支付成功。
   
-发起国际支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起国际支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 
 #### <a name="paypal_paypal">PAYPAL内支付</a>
 ```java
@@ -302,7 +302,7 @@ cardType | 卡类别 visa/mastercard/discover/amex，（必填）
 
 成功发起批量打款将会返回批量打款跳转url。
   
-发起批量打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起批量打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 ```java
 TransfersParameter para = new TransfersParameter();
 para.setBatchNo(batchNo);
@@ -352,7 +352,7 @@ transferNote | 打款备注，（必填）
 
 BC_GATEWAY暂不支持预退款。
 
-发起退款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起退款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 ```java
 BCRefund refund = new BCRefund(billNo, refundNo, 1);
 try {
@@ -414,7 +414,7 @@ messageDetail | 渠道详细信息，默认为"不显示"， 当needDetail为tru
 
 预退款批量审核接口分为批量同意和批量否决，当BCBatchRefund的**agree**属性设置为**false**时，开启批量否决，当BCBatchRefund的**agree**属性为**true**, 开启批量同意，返回的BCBatchRefund对象包含每笔预退款真正退款后的结果消息的idResult（Map<String, String）对象，并在channel为ALI时返回带支付宝退款跳转url的BCBatchRefund对象, 开发者跳转至url输入支付密码完成退款。
 
-发起预退款批量审核异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起预退款批量审核异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 ```java
 BCBatchRefund batchRefundAgree = new BCBatchRefund();
 batchRefundAgree.setIds(Arrays.asList(ids));
@@ -464,7 +464,7 @@ aliRefundUrl | 支付宝批量退款跳转url，支付宝预退款批量同意�
 
 成功发起订单查询接口将会返回BCOrder对象的集合。
 
-发起订单查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起订单查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 ```java
 BCQueryParameter param = new BCQueryParameter();
 param.setNeedDetail(true);//设置返回messgeDetail
@@ -499,7 +499,7 @@ limit |  查询的条数， 默认为10，最大为50。设置为10，表示只�
 
 成功发起订单总数查询接口将会返回订单总数。
 
-发起订单总数查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起订单总数查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 ```java
 BCQueryParameter param = new BCQueryParameter();
 try {
@@ -518,7 +518,7 @@ try {
 
 成功发起单笔订单查询接口将会返回BCOrder对象。
 
-发起单笔订单查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起单笔订单查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 ```java
 try {
     BCOrder result = BCPay.startQueryBillById(id);
@@ -536,7 +536,7 @@ try {
 
 成功发起退款查询接口将会返回BCRefund对象的集合。
 
-发起退款查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起退款查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 ```java
 BCQueryParameter param = new BCQueryParameter();
 param.setChannel(channel);
@@ -574,7 +574,7 @@ limit |  查询的条数， 默认为10，最大为50。设置为10，表示只�
 
 成功发起退款总数查询接口将会返回订单总数。
 
-发起退款总数查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起退款总数查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 ```java
 BCQueryParameter param = new BCQueryParameter();
 try {
@@ -593,7 +593,7 @@ try {
 
 成功发起单笔退款查询接口将会返回BCRefund对象。
 
-发起单笔退款查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起单笔退款查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 ```java
 try {
     BCRefund result = BCPay.startQueryRefundById(id);
@@ -610,7 +610,7 @@ try {
 
 成功发起退款状态更新接口将会返回退款状态字符串（SUCCESS, PROCESSING, FAIL ...）。
 
-发起退款状态更新异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起退款状态更新异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 ```java
 try {
     String result = BCPay.startRefundUpdate(channel, refund_no);
@@ -630,15 +630,13 @@ channel | 渠道类型， 包含WX、YEE、KUAIQIAN和BD（必填）
 
 ### <a name="BCTransfer">BC企业打款</a>
 发起BC企业打款请求。BCTransferParameter对象包含了发起BC企业打款所需要的所有参数。
-发起BC企业打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起BC企业打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 ```java
 BCTransferParameter param = new BCTransferParameter();
 param.setBillNo("1111111111");//设置订单号 8到32位数字和/或字母组合，请自行确保在商户系统中唯一，同一订单号不可重复提交，否则会造成订单重复
 param.setTitle("subject");//设置标题 UTF8编码格式，32个字节内，最长支持16个汉字
 param.setTotalFee(1);//设置下发订单总金额 必须是正整数，单位为分
 param.setTradeSource("OUT_PC");//UTF8编码格式，目前只能填写OUT_PC
-param.setBankCode("BOC");//设置银行缩写，BOC代表中国银行
-param.setBankAssociatedCode("111111");//设置银行联行行号，该值需要用户自己去查询
 param.setBankFullName("中国银行");//银行全称，不能缩写
 param.setCardType("DE");//卡类型 DE代表借记卡，CR代表信用卡，其他值为非法
 param.setAccountType("P");//账户类型 区分对公和对私 P代表私户，C代表公户，其他值为非法
@@ -654,7 +652,7 @@ try {
 
 ### <a name="BCAuth">BC鉴权</a>
 发起BC鉴权请求。BCAuth对象包含了发起BC鉴权所需要的所有参数。
-发起BC鉴权异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx"</mark>。
+发起BC鉴权异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 ```java
     String name = "冯晓波";
 	String idNo = "320504192306171022";
