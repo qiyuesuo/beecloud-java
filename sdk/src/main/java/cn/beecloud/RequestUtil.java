@@ -21,7 +21,7 @@ public class RequestUtil {
 
     private final static String TEST_MODE_SUPPORT_ERROR = "测试模式仅支持国内支付(WX_JSAPI暂不支持)、订单查询、订单总数查询、单笔订单查询";
 
-    private enum REQUEST_TYPE {
+    public enum REQUEST_TYPE {
         POST,
         PUT,
         GET
@@ -77,7 +77,7 @@ public class RequestUtil {
      * @return
      * @throws BCException
      */
-    private static Map<String, Object> request(String requestUrl, Map<String, Object> param, REQUEST_TYPE request_type)
+    public static Map<String, Object> request(String requestUrl, Map<String, Object> param, REQUEST_TYPE request_type)
             throws BCException {
         HttpURLConnection connection = null;
         if (BCCache.getAppID() == null) {
@@ -121,7 +121,7 @@ public class RequestUtil {
                 result.append(line);
             }
 
-            JSONObject jsonObject = JSONObject.fromObject(result);
+            JSONObject jsonObject = JSONObject.fromObject(StrUtil.toStr(result));
             Integer resultCode = jsonObject.getInt("result_code");
             String resultMessage = jsonObject.getString("result_msg");
             String errorDetail = jsonObject.getString("err_detail");

@@ -378,8 +378,9 @@ public class TransferTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate
-                        .getkApiTransfer().substring(14)), withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiTransfer().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap, wxRedpackMap, wxTransferMap);
                 result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
                         RESULT_TYPE.APP_INVALID.name(), TestConstant.MOCK_APP_INVALID_ERRMSG);
@@ -414,8 +415,9 @@ public class TransferTest {
 
         new StrictExpectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate
-                        .getkApiTransfer().substring(14)), withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiTransfer().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
                         RESULT_TYPE.APP_INVALID.name(), TestConstant.MOCK_APP_INVALID_ERRMSG);
             }

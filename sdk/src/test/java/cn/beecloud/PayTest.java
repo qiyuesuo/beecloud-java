@@ -16,6 +16,8 @@ import cn.beecloud.BCEumeration.RESULT_TYPE;
 import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.BCOrder;
 
+import cn.beecloud.RequestUtil.*;
+
 
 /**
  * BeeCloud支付单元测试
@@ -388,11 +390,11 @@ public class PayTest {
             }
 
             mockSandboxWxNativePay(param);
-
+//
             mockSandboxUrlAndHtmlPay(param);
-
+//
             mockSandboxHtmlPay(param);
-
+//
             mockSandboxYeeNoBankCard(param);
 
             return;
@@ -403,9 +405,9 @@ public class PayTest {
         mockWxNativePay(param);
 
         mockUrlAndHtmlPay(param);
-
+//
         mockHtmlPay(param);
-
+//
         mockWxJsapi(param);
         /*--------------------------------------end mock network request and reponse handle-------------*/
     }
@@ -418,14 +420,14 @@ public class PayTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost",
-                        withSubstring(BCUtilPrivate.getkSandboxApiPay().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkSandboxApiPay().substring(19)),
+                        withAny(Map.class), withAny(REQUEST_TYPE.class));
                 returns(returnMap);
 
-                Deencapsulation.invoke(BCPay.class, "doGet",
-                        withSubstring(BCUtilPrivate.getkApiSandboxNotify().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiSandboxNotify().substring(19)),
+                        withAny(Map.class), withAny(REQUEST_TYPE.class));
                 returns(returnMap);
             }
         };
@@ -449,9 +451,9 @@ public class PayTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost",
-                        withSubstring(BCUtilPrivate.getkSandboxApiPay().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkSandboxApiPay().substring(19)),
+                        withAny(Map.class), withAny(REQUEST_TYPE.class));
                 returns(returnMap, returnMap, returnMap, returnMap, returnMap);
                 times = 5;
                 result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
@@ -531,9 +533,9 @@ public class PayTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost",
-                        withSubstring(BCUtilPrivate.getkSandboxApiPay().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkSandboxApiPay().substring(19)),
+                        withAny(Map.class), withAny(REQUEST_TYPE.class));
                 returns(returnMap, returnMap, returnMap);
                 result = new BCException(RESULT_TYPE.RUNTIME_ERORR.ordinal(),
                         RESULT_TYPE.RUNTIME_ERORR.name(), RESULT_TYPE.RUNTIME_ERORR.name());
@@ -591,9 +593,9 @@ public class PayTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost",
-                        withSubstring(BCUtilPrivate.getkSandboxApiPay().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkSandboxApiPay().substring(19)),
+                        withAny(Map.class), withAny(REQUEST_TYPE.class));
                 returns(returnMap);
             }
         };
@@ -616,11 +618,11 @@ public class PayTest {
         returnMap.put("result_msg", "OK");
         returnMap.put("err_detail", "");
 
-        new Expectations(BCPay.class) {
+        new Expectations(RequestUtil.class) {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost",
-                        withSubstring(BCUtilPrivate.getkApiPay().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiPay().substring(19)),
+                        withAny(Map.class), withAny(REQUEST_TYPE.class));
                 returns(returnMap);
                 result = new BCException(RESULT_TYPE.PAY_FACTOR_NOT_SET.ordinal(),
                         RESULT_TYPE.PAY_FACTOR_NOT_SET.name(),
@@ -655,9 +657,9 @@ public class PayTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost",
-                        withSubstring(BCUtilPrivate.getkApiPay().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiPay().substring(19)),
+                        withAny(Map.class), withAny(REQUEST_TYPE.class));
                 returns(returnMap, returnMap, returnMap);
                 result = new BCException(RESULT_TYPE.RUNTIME_ERORR.ordinal(),
                         RESULT_TYPE.RUNTIME_ERORR.name(), RESULT_TYPE.RUNTIME_ERORR.name());
@@ -711,9 +713,9 @@ public class PayTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost",
-                        withSubstring(BCUtilPrivate.getkApiPay().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiPay().substring(19)),
+                        withAny(Map.class), withAny(REQUEST_TYPE.class));
                 returns(returnMap, returnMap, returnMap, returnMap, returnMap);
                 times = 5;
                 result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
@@ -792,9 +794,9 @@ public class PayTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost",
-                        withSubstring(BCUtilPrivate.getkApiPay().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiPay().substring(19)),
+                        withAny(Map.class), withAny(REQUEST_TYPE.class));
                 returns(returnMap);
                 result = new BCException(RESULT_TYPE.CHANNEL_INVALID.ordinal(),
                         RESULT_TYPE.CHANNEL_INVALID.name(), RESULT_TYPE.CHANNEL_INVALID.name());

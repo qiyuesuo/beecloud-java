@@ -46,7 +46,6 @@ public class BCPayTest {
         /**
          * 测试SANDBOX模式
          */
-        BeeCloud.registerApp(TestConstant.KTestAppID, TestConstant.kTestTestSecret, null, null);
         BCCache.setSandbox(true);
         PayTest.testPay();
         BillQueryTest.testQueryBillById();
@@ -61,6 +60,5 @@ public class BCPayTest {
         TransferTest.testTransfer();
         TransfersTest.testTransfers();
         InternationalPayTest.testInternationalPay();
-
     }
 }
