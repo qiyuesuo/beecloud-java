@@ -263,9 +263,9 @@ public class InternationalPayTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost",
-                        withSubstring(BCUtilPrivate.getApiInternationalPay().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getApiInternationalPay().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap, creditCardReturnMap, savedCreditCardReturnMap);
                 result = new BCException(RESULT_TYPE.CHANNEL_ERROR.ordinal(),
                         RESULT_TYPE.CHANNEL_ERROR.name(), TestConstant.MOCK_CHANNEL_ERROR_MSG);

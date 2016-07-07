@@ -309,9 +309,9 @@ public class TransfersTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost",
-                        withSubstring(BCUtilPrivate.getkApiTransfers().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiTransfers().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap);
                 result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
                         RESULT_TYPE.APP_INVALID.name(), TestConstant.MOCK_APP_INVALID_ERRMSG);

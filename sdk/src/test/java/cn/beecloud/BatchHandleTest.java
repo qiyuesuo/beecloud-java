@@ -124,8 +124,9 @@ public class BatchHandleTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPut", withSubstring(BCUtilPrivate
-                        .getApiBatchRefund().substring(14)), withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getApiBatchRefund().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap, returnMapDeny);
                 result = new BCException(RESULT_TYPE.PAY_FACTOR_NOT_SET.ordinal(),
                         RESULT_TYPE.PAY_FACTOR_NOT_SET.name(),

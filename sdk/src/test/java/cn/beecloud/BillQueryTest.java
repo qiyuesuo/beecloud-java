@@ -225,9 +225,9 @@ public class BillQueryTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet",
-                        withSubstring(BCUtilPrivate.getkApiQueryBill().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiQueryBill().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap);
                 result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
                         RESULT_TYPE.APP_INVALID.name(), TestConstant.MOCK_APP_INVALID_ERRMSG);
@@ -288,9 +288,9 @@ public class BillQueryTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet",
-                        withSubstring(BCUtilPrivate.getkApiSandboxQueryBill().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiSandboxQueryBill().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap);
                 result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
                         RESULT_TYPE.APP_INVALID.name(), TestConstant.MOCK_APP_INVALID_ERRMSG);
@@ -351,9 +351,9 @@ public class BillQueryTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet",
-                        withSubstring(BCUtilPrivate.getkApiQueryBillById().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiQueryBillById().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap);
             }
         };
@@ -384,9 +384,9 @@ public class BillQueryTest {
 
         new StrictExpectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet",
-                        withSubstring(BCUtilPrivate.getkApiQueryBillById().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiPay().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
                         RESULT_TYPE.APP_INVALID.name(), RESULT_TYPE.APP_INVALID.name());
             }
@@ -413,9 +413,9 @@ public class BillQueryTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet",
-                        withSubstring(BCUtilPrivate.getkApiSandboxQueryBillById().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiSandboxQueryBillById().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap);
             }
         };
@@ -445,9 +445,9 @@ public class BillQueryTest {
         }
         new StrictExpectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet",
-                        withSubstring(BCUtilPrivate.getkApiSandboxQueryBillById().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiSandboxQueryBillById().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
                         RESULT_TYPE.APP_INVALID.name(), RESULT_TYPE.APP_INVALID.name());
             }
@@ -472,9 +472,9 @@ public class BillQueryTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet",
-                        withSubstring(BCUtilPrivate.getkApiQueryBillCount().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiQueryBillCount().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap);
             }
         };
@@ -499,9 +499,9 @@ public class BillQueryTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet",
-                        withSubstring(BCUtilPrivate.getkApiSandboxQueryBillCount().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiSandboxQueryBillCount().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap);
             }
         };

@@ -358,9 +358,9 @@ public class RefundQueryTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet",
-                        withSubstring(BCUtilPrivate.getkApiQueryRefund().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiQueryRefund().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap);
                 result = new BCException(RESULT_TYPE.APP_INVALID.ordinal(),
                         RESULT_TYPE.APP_INVALID.name(), TestConstant.MOCK_APP_INVALID_ERRMSG);
@@ -418,9 +418,9 @@ public class RefundQueryTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet",
-                        withSubstring(BCUtilPrivate.getkApiQueryRefundCount().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiQueryRefundCount().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap);
             }
         };
@@ -447,9 +447,9 @@ public class RefundQueryTest {
 
         new StrictExpectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet",
-                        withSubstring(BCUtilPrivate.getkApiQueryRefundById().substring(14)),
-                        withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiQueryRefundById().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap);
             }
         };

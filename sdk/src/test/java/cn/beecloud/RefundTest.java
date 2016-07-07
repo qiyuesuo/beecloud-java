@@ -267,8 +267,9 @@ public class RefundTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doPost", withSubstring(BCUtilPrivate
-                        .getkApiRefund().substring(14)), withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiRefund().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMapWithUrl, returnMapWithoutUrl);
                 result = new BCException(RESULT_TYPE.CHANNEL_ERROR.ordinal(),
                         RESULT_TYPE.CHANNEL_ERROR.name(), RESULT_TYPE.CHANNEL_ERROR.name());
@@ -326,8 +327,9 @@ public class RefundTest {
 
         new Expectations() {
             {
-                Deencapsulation.invoke(BCPay.class, "doGet", withSubstring(BCUtilPrivate
-                        .getkApiRefundUpdate().substring(14)), withAny(Map.class));
+                Deencapsulation.invoke(RequestUtil.class, "request",
+                        withSubstring(BCUtilPrivate.getkApiRefundUpdate().substring(19)),
+                        withAny(Map.class), withAny(RequestUtil.REQUEST_TYPE.class));
                 returns(returnMap);
             }
         };

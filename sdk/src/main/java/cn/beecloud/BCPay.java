@@ -9,17 +9,16 @@
  */
 package cn.beecloud;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
@@ -34,12 +33,6 @@ import net.sf.json.JSONObject;
  * @since 2015/7/11
  */
 public class BCPay {
-
-    private final static String NOT_REGISTER = "未注册";
-
-    private final static String NOT_CORRECT_RESPONSE = "响应不正确";
-
-    private final static String NETWORK_ERROR = "网络错误";
 
     private final static String TEST_MODE_SUPPORT_ERROR = "测试模式仅支持国内支付(WX_JSAPI暂不支持)、订单查询、订单总数查询、单笔订单查询";
 
@@ -63,16 +56,16 @@ public class BCPay {
             if (order.getChannel().equals(PAY_CHANNEL.WX_JSAPI)) {
                 throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), TEST_MODE_SUPPORT_ERROR);
             }
-            Map<String, Object> ret = doPost(BCUtilPrivate.getkSandboxApiPay(), param);
+            Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkSandboxApiPay(), param);
             placeSandboxOrder(order, ret);
             // 易宝点卡支付代码调用回调
             if (order.getChannel().equals(PAY_CHANNEL.YEE_NOBANKCARD)) {
-                doGet(BCUtilPrivate.getkApiSandboxNotify() + "/" + BCCache.getAppID() + "/"
+                RequestUtil.doGet(BCUtilPrivate.getkApiSandboxNotify() + "/" + BCCache.getAppID() + "/"
                         + order.getObjectId() + "?para=", new HashMap<String, Object>());
             }
             return order;
         }
-        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiPay(), param);
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiPay(), param);
 
         placeOrder(order, ret);
 
@@ -93,7 +86,7 @@ public class BCPay {
 
         buildAuthParam(param, auth);
 
-        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiAuth(), param);
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiAuth(), param);
 
         placeAuth(auth, ret);
 
@@ -112,7 +105,7 @@ public class BCPay {
         ValidationUtil.validateBCTransfer(bcTransferParameter);
         Map<String, Object> param = new HashMap<String, Object>();
         buildBCTransferParam(param, bcTransferParameter);
-        doPost(BCUtilPrivate.getkApiBCTransfer(), param);
+        RequestUtil.doPost(BCUtilPrivate.getkApiBCTransfer(), param);
     }
 
     /**
@@ -133,7 +126,7 @@ public class BCPay {
 
         buildRefundParam(param, refund);
 
-        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiRefund(), param);
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiRefund(), param);
 
         refund.setObjectId(StrUtil.toStr(ret.get("id")));
         if (ret.containsKey("url")) {
@@ -160,10 +153,10 @@ public class BCPay {
         buildQueryParam(param, para);
 
         if (BCCache.isSandbox()) {
-            Map<String, Object> ret = doGet(BCUtilPrivate.getkApiSandboxQueryBill(), param);
+            Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiSandboxQueryBill(), param);
             return generateBCOrderList((List<Map<String, Object>>) ret.get("bills"));
         }
-        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBill(), param);
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiQueryBill(), param);
 
         return generateBCOrderList((List<Map<String, Object>>) ret.get("bills"));
 
@@ -198,7 +191,7 @@ public class BCPay {
         urlSb.append("/");
         urlSb.append(objectId);
         urlSb.append("?para=");
-        Map<String, Object> ret = doGet(urlSb.toString(), param);
+        Map<String, Object> ret = RequestUtil.doGet(urlSb.toString(), param);
 
         return generateBCOrder((Map<String, Object>) ret.get("pay"));
     }
@@ -220,10 +213,10 @@ public class BCPay {
         buildQueryCountParam(param, para);
 
         if (BCCache.isSandbox()) {
-            Map<String, Object> ret = doGet(BCUtilPrivate.getkApiSandboxQueryBillCount(), param);
+            Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiSandboxQueryBillCount(), param);
             return (Integer) ret.get("count");
         }
-        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryBillCount(), param);
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiQueryBillCount(), param);
 
         return (Integer) ret.get("count");
     }
@@ -246,7 +239,7 @@ public class BCPay {
 
         buildQueryParam(param, para);
 
-        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryRefund(), param);
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiQueryRefund(), param);
 
         return generateBCRefundList((List<Map<String, Object>>) ret.get("refunds"));
     }
@@ -275,7 +268,7 @@ public class BCPay {
         urlSb.append("/");
         urlSb.append(objectId);
         urlSb.append("?para=");
-        Map<String, Object> ret = doGet(urlSb.toString(), param);
+        Map<String, Object> ret = RequestUtil.doGet(urlSb.toString(), param);
 
         return generateBCRefund((Map<String, Object>) ret.get("refund"));
 
@@ -298,7 +291,7 @@ public class BCPay {
         Map<String, Object> param = new HashMap<String, Object>();
         buildQueryCountParam(param, para);
 
-        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiQueryRefundCount(), param);
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiQueryRefundCount(), param);
 
         return (Integer) ret.get("count");
     }
@@ -327,7 +320,7 @@ public class BCPay {
         param.put("channel", StrUtil.toStr(channel));
         param.put("refund_no", refundNo);
 
-        Map<String, Object> ret = doGet(BCUtilPrivate.getkApiRefundUpdate(), param);
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiRefundUpdate(), param);
         return StrUtil.toStr(ret.get("refund_status"));
     }
 
@@ -350,7 +343,7 @@ public class BCPay {
 
         buildInternatioalPayParam(param, order);
 
-        Map<String, Object> ret = doPost(BCUtilPrivate.getApiInternationalPay(), param);
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getApiInternationalPay(), param);
 
         placePayPalOrder(order, ret);
 
@@ -375,7 +368,7 @@ public class BCPay {
 
         buildTransferParam(param, para);
 
-        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfer(), param);
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiTransfer(), param);
 
         if (ret.containsKey("url")) {
             return StrUtil.toStr(ret.get("url"));
@@ -401,7 +394,7 @@ public class BCPay {
 
         buildTransfersParam(param, para);
 
-        Map<String, Object> ret = doPost(BCUtilPrivate.getkApiTransfers(), param);
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiTransfers(), param);
 
         return StrUtil.toStr(ret.get("url"));
     }
@@ -428,7 +421,7 @@ public class BCPay {
         param.put("timestamp", System.currentTimeMillis());
         param.put("app_sign", BCUtilPrivate.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
 
-        Map<String, Object> ret = doPut(BCUtilPrivate.getApiBatchRefund(), param);
+        Map<String, Object> ret = RequestUtil.doPut(BCUtilPrivate.getApiBatchRefund(), param);
 
         if (ret.containsKey("result_map")) {
             batchRefund.setIdResult((Map<String, String>) ret.get("result_map"));
@@ -533,8 +526,6 @@ public class BCPay {
         param.put("bill_no", para.getBillNo());
         param.put("title", para.getTitle());
         param.put("trade_source", para.getTradeSource());
-        param.put("bank_code", para.getBankCode());
-        param.put("bank_associated_code", para.getBankAssociatedCode());
         param.put("bank_fullname", para.getBankFullName());
         param.put("card_type", para.getCardType());
         param.put("account_type", para.getAccountType());
@@ -865,147 +856,6 @@ public class BCPay {
         return map;
     }
 
-    /**
-     * doPost方法，封装rest api POST方式请求
-     *
-     * @param url
-     * 请求url
-     * @param param
-     * 请求参数
-     * @return rest api返回参数
-     * @throws BCException
-     */
-    private static Map<String, Object> doPost(String url, Map<String, Object> param)
-            throws BCException {
-        Client client = BCAPIClient.client;
-        if (client == null) {
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
-        }
-        WebTarget target = client.target(url);
-        try {
-            Response response = target.request().post(
-                    Entity.entity(param, MediaType.APPLICATION_JSON));
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                Integer resultCode = (Integer) ret.get("result_code");
-                String resultMessage = StrUtil.toStr(ret.get("result_msg"));
-                String errorDetail = StrUtil.toStr(ret.get("err_detail"));
-
-                boolean isSuccess = (resultCode == 0);
-                if (isSuccess) {
-                    return ret;
-                } else {
-                    throw new BCException(resultCode, resultMessage, errorDetail);
-                }
-            } else {
-                throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(),
-                        NOT_CORRECT_RESPONSE);
-            }
-        } catch (Exception e) {
-            if (e instanceof BCException) {
-                throw (BCException) e;
-            }
-            e.printStackTrace();
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NETWORK_ERROR + ","
-                    + e.getMessage());
-        }
-    }
-
-    /**
-     * doPut方法，封装rest api PUT方式请求
-     *
-     * @param url
-     * 请求url
-     * @param param
-     * 请求参数
-     * @return rest api返回参数
-     * @throws BCException
-     */
-    private static Map<String, Object> doPut(String url, Map<String, Object> param)
-            throws BCException {
-        Client client = BCAPIClient.client;
-        if (client == null) {
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
-        }
-        WebTarget target = client.target(url);
-        try {
-            Response response = target.request().put(
-                    Entity.entity(param, MediaType.APPLICATION_JSON));
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                Integer resultCode = (Integer) ret.get("result_code");
-                String resultMessage = StrUtil.toStr(ret.get("result_msg"));
-                String errorDetail = StrUtil.toStr(ret.get("err_detail"));
-
-                boolean isSuccess = (resultCode == 0);
-                if (isSuccess) {
-                    return ret;
-                } else {
-                    throw new BCException(resultCode, resultMessage, errorDetail);
-                }
-            } else {
-                throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(),
-                        NOT_CORRECT_RESPONSE);
-            }
-        } catch (Exception e) {
-            if (e instanceof BCException) {
-                throw (BCException) e;
-            }
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), e.getMessage());
-        }
-    }
-
-    /**
-     * doGet方法，封装rest api GET方式请求
-     *
-     * @param url
-     * 请求url
-     * @param param
-     * 请求参数
-     * @return rest api返回参数
-     * @throws BCException
-     */
-    private static Map<String, Object> doGet(String url, Map<String, Object> param)
-            throws BCException {
-        Client client = BCAPIClient.client;
-        if (client == null) {
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(url);
-
-        try {
-            sb.append(URLEncoder.encode(JSONObject.fromObject(param).toString(), "UTF-8"));
-            WebTarget target = client.target(sb.toString());
-            Response response = target.request().get();
-            if (response.getStatus() == 200) {
-                Map<String, Object> ret = response.readEntity(Map.class);
-
-                Integer resultCode = (Integer) ret.get("result_code");
-                String resultMessage = StrUtil.toStr(ret.get("result_msg"));
-                String errorDetail = StrUtil.toStr(ret.get("err_detail"));
-                boolean isSuccess = (resultCode == 0);
-
-                if (isSuccess) {
-                    return ret;
-                } else {
-                    throw new BCException(resultCode, resultMessage, errorDetail);
-                }
-            } else {
-                System.out.println(sb.toString());
-                throw new BCException(-1, RESULT_TYPE.NOT_CORRECT_RESPONSE.name(),
-                        NOT_CORRECT_RESPONSE);
-            }
-        } catch (Exception e) {
-            if (e instanceof BCException) {
-                throw (BCException) e;
-            }
-            throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), e.getMessage());
-        }
-    }
 
     /**
      * 组建返回订单
