@@ -80,7 +80,7 @@ public class RequestUtil {
     public static Map<String, Object> request(String requestUrl, Map<String, Object> param, REQUEST_TYPE request_type)
             throws BCException {
         HttpURLConnection connection = null;
-        if (BCCache.getAppID() == null) {
+        if (param.containsKey("app_id") && StrUtil.empty(param.get("app_id"))) {
             throw new BCException(-2, BCEumeration.RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
         }
         PrintWriter out = null;

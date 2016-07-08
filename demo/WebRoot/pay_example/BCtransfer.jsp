@@ -4,7 +4,6 @@
 <%@ page import="cn.beecloud.*"%>
 <%@ page import="cn.beecloud.BCEumeration.*" %>
 <%@ page import="java.util.Properties" %>
-<%@ page import="org.apache.log4j.Logger" %>
 <%@ include file="loadProperty.jsp" %>
 
 <%
@@ -31,26 +30,34 @@
 <body>
 
 <%
-	Logger log = Logger.getLogger("BCtransfer.jsp");
 	Properties prop = loadProperty();
-    String billNo = BCUtil.generateRandomUUIDPure();
-    BCTransferParameter bCTransferParameter = new BCTransferParameter();
-    bCTransferParameter.setBillNo(billNo);
-    bCTransferParameter.setTotalFee(1);
-    bCTransferParameter.setTitle("测试代付");
-    bCTransferParameter.setTradeSource("OUT_PC");
-    bCTransferParameter.setBankFullName("中国银行");
-    bCTransferParameter.setCardType("DE");
-    bCTransferParameter.setAccountType("C");
-    //测试时，请填写真实号码和姓名
-    bCTransferParameter.setAccountNo("12345678666");
-    bCTransferParameter.setAccountName("大宇宙银河系地球集团");
-    try {
-        BCPay.startBCTransfer(bCTransferParameter);
-        out.println("success");
-    } catch (BCException e) {
-        log.error(e.getMessage(), e);
-        out.println(e.getMessage());
+    String type =  (String)request.getParameter("type");
+    if (type.equals("transfer")) {
+        String billNo = BCUtil.generateRandomUUIDPure();
+        BCTransferParameter bCTransferParameter = new BCTransferParameter();
+        bCTransferParameter.setBillNo(billNo);
+        bCTransferParameter.setTotalFee(1);
+        bCTransferParameter.setTitle("测试代付");
+        bCTransferParameter.setTradeSource("OUT_PC");
+        bCTransferParameter.setBankFullName("中国银行");
+        bCTransferParameter.setCardType("DE");
+        bCTransferParameter.setAccountType("C");
+        //测试时，请填写真实号码和姓名
+        bCTransferParameter.setAccountNo("12345678666");
+        bCTransferParameter.setAccountName("大宇宙银河系地球集团");
+        try {
+            BCPay.startBCTransfer(bCTransferParameter);
+            out.println("success");
+        } catch (BCException e) {
+            out.println(e.getMessage());
+        }
+    } else if (type.equals("fetch_bank")) {
+        try {
+            List<String> banks = BCPay.fetchBCTransfersBanks(BC_TRANSFER_BANK_TYPE.P_CR);
+            out.println(banks.toString());
+        } catch (BCException e) {
+            out.println(e.getMessage());
+        }
     }
 
 %>

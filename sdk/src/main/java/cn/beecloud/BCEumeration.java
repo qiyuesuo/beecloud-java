@@ -69,6 +69,7 @@ public class BCEumeration {
         PAYPAL_SAVED_CREDITCARD,
         BC_GATEWAY,
         BC_EXPRESS,
+        CP,
         CP_WEB
     }
 
@@ -133,5 +134,11 @@ public class BCEumeration {
         mastercard,
         discover,
         amex
+    }
+
+    public enum BC_TRANSFER_BANK_TYPE {
+        P_DE,
+        P_CR,
+        C
     }
 }
