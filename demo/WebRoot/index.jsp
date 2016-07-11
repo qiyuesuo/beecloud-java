@@ -342,6 +342,10 @@ input {
                 <img src="http://beeclouddoc.qiniudn.com/bd.png" alt="BAIDU">
             </li>
             <li onclick="querySwitch(this)">
+                <input type="radio" value="BC" name="querytype">
+                <img src="http://7xavqo.com1.z0.glb.clouddn.com/icon_gateway.png" alt="BC">
+            </li>
+            <li onclick="querySwitch(this)">
                 <input type="radio" value="" name="querytype">
                 <img src="http://beeclouddoc.qiniudn.com/unionpay1122.png" alt="无渠道查询">
             </li>

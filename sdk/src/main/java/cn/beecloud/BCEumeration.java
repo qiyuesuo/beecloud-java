@@ -67,8 +67,10 @@ public class BCEumeration {
         PAYPAL_PAYPAL,
         PAYPAL_CREDITCARD,
         PAYPAL_SAVED_CREDITCARD,
+        BC,
         BC_GATEWAY,
         BC_EXPRESS,
+        BC_APP,
         CP,
         CP_WEB
     }
