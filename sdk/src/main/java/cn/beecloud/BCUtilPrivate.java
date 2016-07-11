@@ -162,6 +162,11 @@ class BCUtilPrivate {
                 + "/rest/sandbox/notify";
     }
 
+    static String getkApiBCTransferBanks() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/bc_transfer/banks?para=";
+    }
+
     static String transferDateFromLongToString(long millisecond) {
         Date date = new Date(millisecond);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -1,6 +1,11 @@
 BeeCloud Java Changelog
 ============================
 
+v3.3.0 发布日期：2016年07月11日
++ 增加查询渠道BC、BC_APP
++ 解决BC_TRANSFER多账户收款bug
++ 增加BC_TRANSFER返回支持银行
+
 v3.2.0 发布日期：2016年07月06日
 + 使用原生包进行http请求
 + 移除BCTransfer bankCode和bankAssociatedCode

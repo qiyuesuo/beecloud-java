@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.2.0](https://img.shields.io/badge/Version-v3.2.0-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.3.0](https://img.shields.io/badge/Version-v3.3.0-blue.svg) 
 
 ## 简介
 
@@ -55,7 +55,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.2.0</version>
+    <version>3.3.0</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
@@ -68,7 +68,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.2.0</version>
+    <version>3.3.0</version>
     <exclusions>  //删除beecloud java sdk依赖的包
          <exclusion>  
              <groupId>org.hibernate</groupId>  
@@ -169,22 +169,7 @@ html   |  支付提交html， 当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或
 wxJSAPIMap   |  微信公众号支付要素，微信公众号支付下单成功时返回
 
 
-<a name="billQueryJump"/>查询返回字段：
 
-key | 说明
----- | -----
-objectId   |  支付订单唯一标识, 可通过查询获得
-billNo   |  商户订单号, 可通过查询获得
-totalFee   |  订单总金额, 可通过查询获得
-title   |  订单标题, 可通过查询获得
-channel   |  渠道类型, 可通过查询获得
-channelTradeNo   |  渠道交易号， 支付完成之后可通过查询获得
-result   |  是否支付， 可通过查询获得
-refundResult   |  是否退款， 可通过查询获得
-revertResult   |  订单是否撤销， 可通过查询获得
-messageDetail   |  渠道详细信息，默认为"不显示"， 当needDetail为true时，并于支付完成之后可通过查询获得
-dateTime   |  订单创建时间，yyyy-MM-dd HH:mm:ss格式，可通过查询获得
-optionalString   |  optional json字符串， 可通过查询获得
 
 ### <a name="transfer">单笔打款</a>
 单笔打款接口接收TransferParameter参数对象，该对象封装了发起单笔打款所需的各个具体参数。  
@@ -389,23 +374,6 @@ objectId | 退款记录唯一标识，发起退款成功后返回
 aliRefundUrl | 阿里退款跳转url，支付宝发起直接退款成功后返回
 
 
-<a name="refundQueryJump"/>查询返回字段：
-
-key | 说明
----- | -----
-objectId | 退款记录唯一标识，可通过查询返回
-billNo | 商户订单号，可通过查询返回
-refundNo | 商户退款单号，可通过查询返回
-totalFee | 订单总金额，可通过查询返回
-refundFee | 退款金额，可通过查询返回
-channel | 渠道类型，可通过查询返回
-optionalString | 附加数据json字符串，可通过查询返回
-title | 标题，可通过查询返回
-finished | 退款是否结束，可通过查询返回
-refunded | 退款是否成功，可通过查询返回
-dateTime   |  订单创建时间，yyyy-MM-dd HH:mm:ss格式，可通过查询获得
-messageDetail | 渠道详细信息，默认为"不显示"， 当needDetail为true时，可通过查询获得
-
 
 ### <a name="refund">预退款批量审核</a>
 预退款批量审核接口接收BCBatchRefund参数对象，该对象封装了发起预退款批量审核所需的各个具体参数。  
@@ -489,9 +457,27 @@ payResult |支付成功与否标识，（选填）
 refundResult | 退款成功与否标识，（选填）
 needDetail | 是否需要返回渠道详细信息，不返回可减少网络开销，（选填）
 skip   |  查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	, （选填）
-limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据
+limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据  
 
-返回的BCOrder集合包含字段参考国内支付部分的[查询返回](#billQueryJump)字段。
+
+返回的BCOrder集合字段意义如下:
+
+<a name="billQueryJump"/>  
+
+key | 说明
+---- | -----
+objectId   |  支付订单唯一标识, 可通过查询获得
+billNo   |  商户订单号, 可通过查询获得
+totalFee   |  订单总金额, 可通过查询获得
+title   |  订单标题, 可通过查询获得
+channel   |  渠道类型, 可通过查询获得
+channelTradeNo   |  渠道交易号， 支付完成之后可通过查询获得
+result   |  是否支付， 可通过查询获得
+refundResult   |  是否退款， 可通过查询获得
+revertResult   |  订单是否撤销， 可通过查询获得
+messageDetail   |  渠道详细信息，默认为"不显示"， 当needDetail为true时，并于支付完成之后可通过查询获得
+dateTime   |  订单创建时间，yyyy-MM-dd HH:mm:ss格式，可通过查询获得
+optionalString   |  optional json字符串， 可通过查询获得
 
 ### <a name="billCountQuery">订单总数查询</a>
 
@@ -528,7 +514,7 @@ try {
 }
 ```
 
-返回的BCOrder对象包含字段参考国内支付部分的[查询返回](#billQueryJump)字段。
+返回的BCOrder对象包含字段参考国内支付部分的[BCOrder集合字段](#billQueryJump)字段。
 
 
 ### <a name="refundQuery">退款查询</a>
@@ -565,7 +551,25 @@ needApproval | 是否是预退款，（选填）
 skip   |  查询起始位置	 默认为0。设置为10，表示忽略满足条件的前10条数据	, （选填）
 limit |  查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据  
 
-返回的BCRefund集合包含字段参考退款部分的[查询返回](#refundQueryJump)字段。
+返回的BCRefund集合字段意义如下：
+
+<a name="refundQueryJump"/>
+
+key | 说明
+---- | -----
+objectId | 退款记录唯一标识，可通过查询返回
+billNo | 商户订单号，可通过查询返回
+refundNo | 商户退款单号，可通过查询返回
+totalFee | 订单总金额，可通过查询返回
+refundFee | 退款金额，可通过查询返回
+channel | 渠道类型，可通过查询返回
+optionalString | 附加数据json字符串，可通过查询返回
+title | 标题，可通过查询返回
+finished | 退款是否结束，可通过查询返回
+refunded | 退款是否成功，可通过查询返回
+dateTime   |  订单创建时间，yyyy-MM-dd HH:mm:ss格式，可通过查询获得
+messageDetail | 渠道详细信息，默认为"不显示"， 当needDetail为true时，可通过查询获得
+
 
 
 ### <a name="refundCountQuery">退款总数查询</a>
@@ -603,7 +607,7 @@ try {
 }
 ```
 
-返回的BCRefund包含字段参考退款部分的[查询返回](#refundQueryJump)字段。
+返回的BCRefund包含字段参考退款部分的[BCRefund集合字段](#refundQueryJump)字段。
 
 ### <a name="RefundStatusQuery">退款状态更新</a>
 退款状态更新接收channel和refundNo参数，__调用参数中，只有当channel是WX、YEE、KUAIQIAN或BD时，才需要并且必须调用退款状态更新接口，其他渠道的退款已经在退款接口中完成__。
