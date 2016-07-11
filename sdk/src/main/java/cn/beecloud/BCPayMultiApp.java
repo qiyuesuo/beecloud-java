@@ -11,15 +11,7 @@ package cn.beecloud;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
-import cn.beecloud.bean.BCBatchRefund;
-import cn.beecloud.bean.BCException;
-import cn.beecloud.bean.BCInternationlOrder;
-import cn.beecloud.bean.BCOrder;
-import cn.beecloud.bean.BCQueryParameter;
-import cn.beecloud.bean.BCRefund;
-import cn.beecloud.bean.ALITransferData;
-import cn.beecloud.bean.TransferParameter;
-import cn.beecloud.bean.TransfersParameter;
+import cn.beecloud.bean.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -49,12 +41,21 @@ public class BCPayMultiApp {
     private String appSecret;
     private String testSecret;
     private String masterSecret;
+    private Boolean sandbox = false;
 
     public BCPayMultiApp(String appId, String testSecret, String appSecret, String masterSecret) {
         this.appId = appId;
         this.testSecret = testSecret;
         this.appSecret = appSecret;
         this.masterSecret = masterSecret;
+    }
+
+    public Boolean isSandbox() {
+        return sandbox;
+    }
+
+    public void setSandbox(Boolean sandbox) {
+        this.sandbox = sandbox;
     }
 
     /**
@@ -72,7 +73,7 @@ public class BCPayMultiApp {
 
         buildPayParam(param, order);
 
-        if (BCCache.isSandbox()) {
+        if (sandbox) {
             if (order.getChannel().equals(PAY_CHANNEL.WX_JSAPI)) {
                 throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), TEST_MODE_SUPPORT_ERROR);
             }
@@ -133,7 +134,7 @@ public class BCPayMultiApp {
         Map<String, Object> param = new HashMap<String, Object>();
         buildQueryParam(param, para);
 
-        if (BCCache.isSandbox()) {
+        if (sandbox) {
             Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiSandboxQueryBill(), param);
             return generateBCOrderList((List<Map<String, Object>>) ret.get("bills"));
         }
@@ -155,14 +156,14 @@ public class BCPayMultiApp {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
-        if (BCCache.isSandbox()) {
+        if (sandbox) {
             param.put("app_sign",
                     this.getAppSignatureWithTestSecret(StrUtil.toStr(param.get("timestamp"))));
         } else {
             param.put("app_sign", this.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
         }
         StringBuilder urlSb = new StringBuilder();
-        if (BCCache.isSandbox()) {
+        if (sandbox) {
             urlSb.append(BCUtilPrivate.getkApiSandboxQueryBillById());
         } else {
             urlSb.append(BCUtilPrivate.getkApiQueryBillById());
@@ -189,7 +190,7 @@ public class BCPayMultiApp {
         Map<String, Object> param = new HashMap<String, Object>();
         buildQueryCountParam(param, para);
 
-        if (BCCache.isSandbox()) {
+        if (sandbox) {
             Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiSandboxQueryBillCount(), param);
             return (Integer) ret.get("count");
         }
@@ -389,6 +390,34 @@ public class BCPayMultiApp {
     }
 
     /**
+     * 代付接口
+     *
+     * @param bcTransferParameter
+     * {@link BCTransferParameter} (必填) 支付参数
+     * @return 调起BeeCloud代付后的返回结果
+     * @throws BCException
+     */
+    public void startBCTransfer(BCTransferParameter bcTransferParameter) throws BCException {
+        ValidationUtil.validateBCTransfer(bcTransferParameter);
+        Map<String, Object> param = new HashMap<String, Object>();
+        buildBCTransferParam(param, bcTransferParameter);
+        RequestUtil.doPost(BCUtilPrivate.getkApiBCTransfer(), param);
+    }
+
+    public List<String> fetchBCTransfersBanks(BCEumeration.BC_TRANSFER_BANK_TYPE type) throws BCException{
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        param.put("type", StrUtil.toStr(type));
+
+        param.put("app_id", this.appId);
+
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiBCTransferBanks(), param);
+
+        return (List<String>) ret.get("bank_list");
+    }
+
+    /**
      * @param sign      Webhook提供的签名
      * @param timestamp Webhook提供的timestamp，注意是String格式
      * @return 签名是否正确
@@ -409,7 +438,7 @@ public class BCPayMultiApp {
 
         param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
-        if (BCCache.isSandbox()) {
+        if (sandbox) {
             param.put("app_sign",
                     this.getAppSignatureWithTestSecret(StrUtil.toStr(param.get("timestamp"))));
         } else {
@@ -489,7 +518,7 @@ public class BCPayMultiApp {
     private void buildQueryParam(Map<String, Object> param, BCQueryParameter para) {
         param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
-        if (BCCache.isSandbox()) {
+        if (sandbox) {
             param.put("app_sign",
                     this.getAppSignatureWithTestSecret(StrUtil.toStr(param.get("timestamp"))));
         } else {
@@ -536,7 +565,7 @@ public class BCPayMultiApp {
     private void buildQueryCountParam(Map<String, Object> param, BCQueryParameter para) {
         param.put("app_id", this.appId);
         param.put("timestamp", System.currentTimeMillis());
-        if (BCCache.isSandbox()) {
+        if (sandbox) {
             param.put("app_sign",
                     this.getAppSignatureWithTestSecret(StrUtil.toStr(param.get("timestamp"))));
         } else {
@@ -867,8 +896,8 @@ public class BCPayMultiApp {
     /**
      * 检查某一借口是否支持测试模式
      */
-    private static void checkTestModeSwitch() throws BCException {
-        if (BCCache.isSandbox()) {
+    private void checkTestModeSwitch() throws BCException {
+        if (sandbox) {
             throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), TEST_MODE_SUPPORT_ERROR);
         }
     }
@@ -881,6 +910,36 @@ public class BCPayMultiApp {
     private String getAppSignatureWithMasterSecret(String timeStamp) {
         String str = appId + timeStamp + masterSecret;
         return BCUtilPrivate.getMessageDigest(str);
+    }
+
+    /**
+     * 构建BC代付rest api参数
+     */
+    private void buildBCTransferParam(Map<String, Object> param, BCTransferParameter para) {
+
+        param.put("app_id", appId);
+        param.put("timestamp", System.currentTimeMillis());
+        if (sandbox) {
+            param.put("app_sign", this.getAppSignatureWithTestSecret(StrUtil.toStr(param
+                    .get("timestamp"))));
+        } else {
+            param.put("app_sign",
+                    this.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
+        }
+        param.put("total_fee", para.getTotalFee());
+        param.put("bill_no", para.getBillNo());
+        param.put("title", para.getTitle());
+        param.put("trade_source", para.getTradeSource());
+        param.put("bank_fullname", para.getBankFullName());
+        param.put("card_type", para.getCardType());
+        param.put("account_type", para.getAccountType());
+        param.put("account_no", para.getAccountNo());
+        param.put("account_name", para.getAccountName());
+        if (!StrUtil.empty(para.getMobile()))
+            param.put("mobile", para.getBankFullName());
+        if (!StrUtil.empty(para.getOptional()))
+            param.put("optional", para.getOptional());
+
     }
 
 }

@@ -285,10 +285,20 @@ input {
     <h2>BC企业打款</h2>
 </div>
 <form action="pay_example/BCtransfer.jsp" method="POST" >
-    <tr><input type="input" name="email" size=10 value ="test@beecloud.cn" /></tr>
+    <tr><input type="input" name="type" size=10 value ="transfer" /></tr>
     <input type="submit" class="button" value="确认BC企业打款">
 </form>
 <hr/>
+
+<div>
+    <h2>获取BC企业打款支持银行</h2>
+</div>
+<form action="pay_example/BCtransfer.jsp" method="POST" >
+    <tr><input type="input" name="type" size=10 value ="fetch_bank" /></tr>
+    <input type="submit" class="button" value="获取BC企业打款支持银行">
+</form>
+<hr/>
+
 
 <div>
     <h2>订单查询及发起退款，退款查询，退款状态查询</h2>
@@ -330,6 +340,10 @@ input {
             <li onclick="querySwitch(this)">
                 <input type="radio" value="BD" name="querytype">
                 <img src="http://beeclouddoc.qiniudn.com/bd.png" alt="BAIDU">
+            </li>
+            <li onclick="querySwitch(this)">
+                <input type="radio" value="BC" name="querytype">
+                <img src="http://7xavqo.com1.z0.glb.clouddn.com/icon_gateway.png" alt="BC">
             </li>
             <li onclick="querySwitch(this)">
                 <input type="radio" value="" name="querytype">

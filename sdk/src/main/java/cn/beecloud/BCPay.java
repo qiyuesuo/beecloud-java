@@ -9,12 +9,6 @@
  */
 package cn.beecloud;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +16,8 @@ import java.util.Map;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
+import cn.beecloud.BCEumeration.BC_TRANSFER_BANK_TYPE;
 import cn.beecloud.bean.*;
-import net.sf.json.JSONObject;
 
 
 /**
@@ -431,6 +425,19 @@ public class BCPay {
         }
 
         return batchRefund;
+    }
+
+    public static List<String> fetchBCTransfersBanks(BC_TRANSFER_BANK_TYPE type) throws BCException{
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        param.put("type", StrUtil.toStr(type));
+
+        param.put("app_id", BCCache.getAppID());
+
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiBCTransferBanks(), param);
+
+        return (List<String>) ret.get("bank_list");
     }
 
     /**
