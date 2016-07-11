@@ -404,6 +404,19 @@ public class BCPayMultiApp {
         RequestUtil.doPost(BCUtilPrivate.getkApiBCTransfer(), param);
     }
 
+    public List<String> fetchBCTransfersBanks(BCEumeration.BC_TRANSFER_BANK_TYPE type) throws BCException{
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        param.put("type", StrUtil.toStr(type));
+
+        param.put("app_id", this.appId);
+
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiBCTransferBanks(), param);
+
+        return (List<String>) ret.get("bank_list");
+    }
+
     /**
      * @param sign      Webhook提供的签名
      * @param timestamp Webhook提供的timestamp，注意是String格式

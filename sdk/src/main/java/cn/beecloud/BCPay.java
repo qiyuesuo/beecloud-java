@@ -433,6 +433,8 @@ public class BCPay {
 
         param.put("type", StrUtil.toStr(type));
 
+        param.put("app_id", BCCache.getAppID());
+
         Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiBCTransferBanks(), param);
 
         return (List<String>) ret.get("bank_list");
