@@ -654,6 +654,18 @@ try {
 }		
 ```
 
+### <a name="BCTransfer">BC企业打款支持银行获取</a>
+发起BC企业打款支持银行获取请求。BC_TRANSFER_BANK_TYPE枚举包含P_DE(对私借记卡)、P_CR(对私信用卡)、C(对公账户)
+发起BC企业打款支持银行获取异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+```java
+	try {
+	    List<String> banks = BCPay.fetchBCTransfersBanks(BC_TRANSFER_BANK_TYPE.P_CR);
+	    out.println(banks.toString());
+	} catch (BCException e) {
+	    out.println(e.getMessage());
+	}		
+```
+
 ### <a name="BCAuth">BC鉴权</a>
 发起BC鉴权请求。BCAuth对象包含了发起BC鉴权所需要的所有参数。
 发起BC鉴权异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
