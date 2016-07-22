@@ -107,7 +107,7 @@ public class RequestUtil {
                 // 获取URLConnection对象对应的输出流
                 out = new PrintWriter(connection.getOutputStream());
                 // 发送请求参数
-                out.print(StrUtil.toStr(JSONObject.fromObject(param)));
+                out.print(new String(StrUtil.toStr(JSONObject.fromObject(param)).getBytes("UTF-8")));
                 // flush输出流的缓冲
                 out.flush();
             }
@@ -115,7 +115,7 @@ public class RequestUtil {
             reponseStatus = connection.getResponseCode();
 
             // 定义BufferedReader输入流来读取URL的响应
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
             String line;
             while ((line = in.readLine()) != null) {
                 result.append(line);
