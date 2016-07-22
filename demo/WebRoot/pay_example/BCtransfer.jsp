@@ -52,6 +52,7 @@
             out.println(e.getMessage());
         }
     } else if (type.equals("fetch_bank")) {
+        //P_DE:对私借记卡,P_CR:对私信用卡,C:对公账户
         try {
             List<String> banks = BCPay.fetchBCTransfersBanks(BC_TRANSFER_BANK_TYPE.P_CR);
             out.println(banks.toString());

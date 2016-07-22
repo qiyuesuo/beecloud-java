@@ -139,8 +139,8 @@ public class BCEumeration {
     }
 
     public enum BC_TRANSFER_BANK_TYPE {
-        P_DE,
-        P_CR,
-        C
+        P_DE, //对私借记卡
+        P_CR, //对私信用卡
+        C //对公账户
     }
 }

@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.3.0](https://img.shields.io/badge/Version-v3.3.0-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.3.1](https://img.shields.io/badge/Version-v3.3.1-blue.svg) 
 
 ## 简介
 
@@ -55,7 +55,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
@@ -68,7 +68,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
     <exclusions>  //删除beecloud java sdk依赖的包
          <exclusion>  
              <groupId>org.hibernate</groupId>  
@@ -652,6 +652,18 @@ try {
 	out.println(ex.getMessage());
 	log.info(ex.getMessage());
 }		
+```
+
+### <a name="BCTransfer">BC企业打款支持银行获取</a>
+发起BC企业打款支持银行获取请求。BC_TRANSFER_BANK_TYPE枚举包含P_DE(对私借记卡)、P_CR(对私信用卡)、C(对公账户)
+发起BC企业打款支持银行获取异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+```java
+	try {
+	    List<String> banks = BCPay.fetchBCTransfersBanks(BC_TRANSFER_BANK_TYPE.P_CR);
+	    out.println(banks.toString());
+	} catch (BCException e) {
+	    out.println(e.getMessage());
+	}		
 ```
 
 ### <a name="BCAuth">BC鉴权</a>
