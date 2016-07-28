@@ -249,6 +249,56 @@ input {
 <hr/>
 
 <div>
+    <h2>订阅支付</h2>
+
+</div>
+<form action="subscription_example/subscription.jsp" method="POST" target="_blank">
+    <div>
+        <ul>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="sms" name="action">
+                <img src="http://beeclouddoc.qiniudn.com/img-sendmessage.png" alt="短信验证">
+            </li>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="subscription" name="action">
+                <img src="http://beeclouddoc.qiniudn.com/icon-subscriptions700x200.png" alt="发起订阅">
+            </li>
+        </ul>
+    </div>
+    <br/><br/>
+    <div style="clear: both;">
+        <input type="submit" class="button" value="发起订阅">
+    </div>
+</form>
+<hr/>
+
+<div>
+    <h2>订阅查询</h2>
+</div>
+<form action="subscription_example/query.jsp" method="POST" target="_blank">
+    <div>
+        <ul>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="subscription_query" name="action">
+                <img src="http://beeclouddoc.qiniudn.com/img-querysubscriptions.png" alt="订阅查询">
+            </li>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="plan_query" name="action">
+                <img src="http://beeclouddoc.qiniudn.com/img-queryplan.png" alt="Plan查询">
+            </li>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="subscription_banks" name="action">
+                <img src="http://beeclouddoc.qiniudn.com/img-querybank.png" alt="订阅支持银行查询">
+            </li>
+        </ul>
+    </div>
+    <br/><br/>
+    <div style="clear: both;">
+        <input type="submit" class="button" value="发起查询">
+    </div>
+</form>
+
+<div>
     <h2>微信、支付宝企业打款</h2>
 
     <p>请选择渠道进行操作</p>

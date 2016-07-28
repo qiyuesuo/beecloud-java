@@ -172,4 +172,29 @@ class BCUtilPrivate {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(date);
     }
+
+    static String getkApiSendSMS() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/sms";
+    }
+
+    static String getkApiSubscription() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/subscription";
+    }
+
+    static String getkApiQueryPlan() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/plan?";
+    }
+
+    static String getkApiQuerySubscription() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/subscription?";
+    }
+
+    static String getkApiSubscriptionBanks() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/subscription_banks?";
+    }
 }
