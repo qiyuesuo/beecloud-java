@@ -51,6 +51,13 @@ public class BCSubscriptionPay {
         return subscription;
     }
 
+    public static String cancelSubscription(BCSubscription subscription) throws BCException{
+
+        Map<String, Object> ret = RequestUtil.doDelete(BCUtilPrivate.getkApiSubscription(), StrUtil.toStr(buildCancelSubscription(subscription)));
+
+        return StrUtil.toStr(ret.get("id"));
+    }
+
     public static Object fetchPlanByCondition(BCPlanQueryParameter para) throws BCException{
         Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiQueryPlan(), buildPlanQueryParam(para));
         if (para.getCountOnly()) {
@@ -205,6 +212,20 @@ public class BCSubscriptionPay {
             sb.append(para.getCardId());
         }
         return StrUtil.toStr(sb);
+    }
+
+    private static StringBuilder buildCancelSubscription(BCSubscription subscription) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("/");
+        sb.append(subscription.getId());
+        sb.append("?");
+        sb.append(buildBasicQueryParam());
+
+        if (subscription.getCancelAtPeriodEnd() != null) {
+            sb.append("?at_period_end=");
+            sb.append(subscription.getCancelAtPeriodEnd());
+        }
+        return sb;
     }
 
     private static StringBuilder buildBasicQueryParam() {

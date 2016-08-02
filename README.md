@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.3.1](https://img.shields.io/badge/Version-v3.3.1-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.4.0](https://img.shields.io/badge/Version-v3.4.0-blue.svg) 
 
 ## 简介
 
@@ -55,7 +55,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.3.1</version>
+    <version>3.4.0</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
@@ -68,7 +68,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.3.1</version>
+    <version>3.4.0</version>
     <exclusions>  //删除beecloud java sdk依赖的包
          <exclusion>  
              <groupId>org.hibernate</groupId>  
@@ -688,6 +688,7 @@ try {
 			out.println(e.getMessage());
 	}
 ```
+
 代码中的参数对象BCAuth封装字段含义如下：
 
 key | 说明
@@ -696,6 +697,7 @@ name | 身份证姓名， （必填）
 idNo | 身份证号， （必填） 
 cardNo | 用户银行卡卡号 ， （必填） 
 mobile | 手机号， （选填）  
+
 
 
 ## 测试模式部分
@@ -713,9 +715,25 @@ mobile | 手机号， （选填）
 ### <a name="sandboxBillQueryById">单笔订单查询</a>
 单笔订单查询接口完全参考[LIVE模式](#billQueryById)单笔订单查询  
 
+
+
+
   
 **其他接口暂不支持测试模式**  
 
+
+## 订阅支付  
+
+### <a name="sendSMS">短信验证码发送</a>  
+发起短信验证码发送接口异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。  
+```java
+    try {
+	    BCSubscriptionSMSResult  smsResult = BCSubscriptionPay.sendSMS("13561341392");
+	    out.println(smsResult.getSmsId());
+	} catch (BCException ex){
+	    out.print(ex.getMessage());
+	}
+```
 
 
 ## Demo

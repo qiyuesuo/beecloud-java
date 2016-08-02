@@ -24,7 +24,8 @@ public class RequestUtil {
     public enum REQUEST_TYPE {
         POST,
         PUT,
-        GET
+        GET,
+        DELETE
     }
 
     /**
@@ -73,6 +74,10 @@ public class RequestUtil {
         return request(requestUrl, param, REQUEST_TYPE.GET);
     }
 
+    public static Map<String, Object> doDelete(String requestUrl, String param) throws BCException {
+        return request(requestUrl, param, REQUEST_TYPE.DELETE);
+    }
+
     /***
      *
      * @param requestUrl
@@ -100,7 +105,7 @@ public class RequestUtil {
         StringBuffer result = new StringBuffer();
         Integer reponseStatus;
         try {
-            if (request_type == REQUEST_TYPE.GET) {
+            if (request_type == REQUEST_TYPE.GET || request_type == REQUEST_TYPE.DELETE) {
                 if (paramIsMap) {
                     requestUrl = requestUrl + URLEncoder.encode(JSONObject.fromObject(param).toString(), "UTF-8");
                 } else {

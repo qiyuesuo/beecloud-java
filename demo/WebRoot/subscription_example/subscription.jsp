@@ -33,9 +33,7 @@
         try {
             BCSubscriptionSMSResult  smsResult = BCSubscriptionPay.sendSMS("13861331391");
             out.println(smsResult.getSmsId());
-            out.println(smsResult.getCode());
             session.setAttribute("smsId", smsResult.getSmsId());
-            session.setAttribute("smsCode", smsResult.getCode());
         } catch (BCException ex){
             out.print(ex.getMessage());
         }
@@ -46,7 +44,7 @@
             subscription.setPlanId("4a009b37-c36a-49d3-b011-d13d43535b96");
             subscription.setBuyerId("rui test buyer id");
             subscription.setSmsId((String)session.getAttribute("smsId"));
-            subscription.setSmsCode((String)session.getAttribute("smsCode"));
+            subscription.setSmsCode("code of your mobile received");
             subscription.setMobile("13861331391");
             subscription.setBankName("交通银行");
             subscription.setCardNo("6222600140019886466");
@@ -59,6 +57,17 @@
 
         } catch (BCException ex){
             out.print(ex.getMessage());
+        }
+    }
+    if (action.equals("subscription_cancel")) {
+        String id;
+        BCSubscription subscription = new BCSubscription();
+        subscription.setId("2ae989af-9cfd-4004-b350-5b4e1cad4d0a");
+        try {
+            id = BCSubscriptionPay.cancelSubscription(subscription);
+            out.print(id);
+        } catch (BCException e) {
+            e.printStackTrace();
         }
     }
 %>
