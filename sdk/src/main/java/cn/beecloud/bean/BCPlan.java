@@ -22,6 +22,8 @@ public class BCPlan extends BCObject{
 
     private Map<String, Object> optional;
 
+    private Boolean valid = false;
+
     private String optionalString;
 
     public Integer getIntervalCount() {
@@ -86,5 +88,13 @@ public class BCPlan extends BCObject{
 
     public void setOptionalString(String optionalString) {
         this.optionalString = optionalString;
+    }
+
+    public Boolean getValid() {
+        return valid;
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid = valid;
     }
 }

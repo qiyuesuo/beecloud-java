@@ -13,7 +13,7 @@ public class BCObject {
 
     private String type;
 
-    private String id;
+    private String objectId;
 
     public Date getCreateDate() {
         return createDate;
@@ -39,11 +39,11 @@ public class BCObject {
         this.type = type;
     }
 
-    public String getId() {
-        return id;
+    public String getObjectId() {
+        return objectId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 }

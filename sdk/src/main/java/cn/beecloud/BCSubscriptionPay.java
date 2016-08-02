@@ -15,7 +15,7 @@ public class BCSubscriptionPay {
      * @return 包含sms_id和code的Map
      * @throws BCException
      */
-    public static BCSubscriptionSMSResult sendSMS(String phone) throws BCException {
+    public static String sendSMS(String phone) throws BCException {
 
 
         Map<String, Object> param = new HashMap<String, Object>();
@@ -24,7 +24,7 @@ public class BCSubscriptionPay {
 
         Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiSendSMS(), param);
 
-        return placeSMSResult(ret);
+        return StrUtil.toStr(ret.get("sms_id"));
     }
 
     /**
@@ -211,13 +211,23 @@ public class BCSubscriptionPay {
             sb.append("card_id=");
             sb.append(para.getCardId());
         }
+        if (para.getStartTime() != null) {
+            sb.append("&");
+            sb.append("created_after=");
+            sb.append(para.getStartTime().getTime());
+        }
+        if (para.getEndTime() != null) {
+            sb.append("&");
+            sb.append("created_before=");
+            sb.append(para.getEndTime().getTime());
+        }
         return StrUtil.toStr(sb);
     }
 
     private static StringBuilder buildCancelSubscription(BCSubscription subscription) {
         StringBuilder sb = new StringBuilder();
         sb.append("/");
-        sb.append(subscription.getId());
+        sb.append(subscription.getObjectId());
         sb.append("?");
         sb.append(buildBasicQueryParam());
 
@@ -244,16 +254,6 @@ public class BCSubscriptionPay {
         sb.append("app_sign=");
         sb.append(BCUtilPrivate.getAppSignature(StrUtil.toStr(currentTime)));
         return sb;
-    }
-
-    /**
-     * 组建SMS返回结果
-     */
-    private static BCSubscriptionSMSResult placeSMSResult(Map<String, Object> ret) {
-        BCSubscriptionSMSResult smsResult = new BCSubscriptionSMSResult();
-        smsResult.setCode(StrUtil.toStr(ret.get("code")));
-        smsResult.setSmsId(StrUtil.toStr(ret.get("sms_id")));
-        return smsResult;
     }
 
     private static List<BCPlan> placePlanList(List<Map<String, Object>> plans) {
@@ -316,7 +316,7 @@ public class BCSubscriptionPay {
             bcPlan.setIntervalCount((Integer) plan.get("interval_count"));
         }
         if (plan.containsKey("id")) {
-            bcPlan.setId(StrUtil.toStr(plan.get("id")));
+            bcPlan.setObjectId(StrUtil.toStr(plan.get("id")));
         }
         if (plan.containsKey("trial_days")) {
             bcPlan.setTrailDays((Integer) plan.get("trial_days"));
@@ -324,12 +324,15 @@ public class BCSubscriptionPay {
         if (plan.containsKey("optional")) {
             bcPlan.setOptionalString(StrUtil.toStr(plan.get("optional")));
         }
+        if (plan.containsKey("valid")) {
+            bcPlan.setValid((Boolean)plan.get("valid"));
+        }
         return bcPlan;
     }
 
     private static void generateBCSubscriptionBean(Map<String, Object> subscription, BCSubscription bcSubscription) {
         if (subscription.containsKey("id")) {
-            bcSubscription.setId(StrUtil.toStr(subscription.get("id")));
+            bcSubscription.setObjectId(StrUtil.toStr(subscription.get("id")));
         }
         if (subscription.containsKey("account_type")) {
             bcSubscription.setAccountType(StrUtil.toStr(subscription.get("account_type")));

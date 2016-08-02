@@ -34,7 +34,7 @@
 
     if (action.equals("subscription_query")) {
         BCSubscriptionQueryParameter param = new BCSubscriptionQueryParameter();
-//        param.setEndTime(new Date());
+        param.setPlanId("83b3da78-b76c-4740-b250-25e240a6957b");
         try {
             Object result = BCSubscriptionPay.fetchSubsciptionByCondition(param);
             if (result instanceof List) {
@@ -51,7 +51,6 @@
     }
     if (action.equals("plan_query")) {
         BCPlanQueryParameter param = new BCPlanQueryParameter();
-        param.setEndTime(new Date());
         param.setNameWithSubstring("订阅");
         try {
             Object result = BCSubscriptionPay.fetchPlanByCondition(param);
@@ -144,6 +143,7 @@
             <th>创建时间</th>
             <th>更新时间</th>
             <th>optional</th>
+            <th>计划是否生效</th>
         </tr>
         <c:forEach var="plan" items="${planList}" varStatus="index">
             <tr align="center">
@@ -154,10 +154,11 @@
                 <td>${plan.type}</td>
                 <td>${plan.currency}</td>
                 <td>${plan.trailDays}</td>
-                <td>${plan.id}</td>
+                <td>${plan.objectId}</td>
                 <td>${plan.createDate}</td>
                 <td>${plan.updateDate}</td>
                 <td>${plan.optionalString}</td>
+                <td>${plan.valid}</td>
             </tr>
         </c:forEach>
         <tr>

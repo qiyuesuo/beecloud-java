@@ -715,26 +715,213 @@ mobile | 手机号， （选填）
 ### <a name="sandboxBillQueryById">单笔订单查询</a>
 单笔订单查询接口完全参考[LIVE模式](#billQueryById)单笔订单查询  
 
-
-
-
   
 **其他接口暂不支持测试模式**  
 
 
 ## 订阅支付  
 
+### 订阅支付详细设计请参考[BeeCloud订阅系统说明](https://github.com/beecloud/beecloud-rest-api/blob/master/subscription/%E8%AE%A2%E9%98%85%E7%B3%BB%E7%BB%9F%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
+
 ### <a name="sendSMS">短信验证码发送</a>  
+成功发起短信验证码接口，输入手机会收到短信
 发起短信验证码发送接口异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。  
 ```java
     try {
-	    BCSubscriptionSMSResult  smsResult = BCSubscriptionPay.sendSMS("13561341392");
-	    out.println(smsResult.getSmsId());
-	} catch (BCException ex){
-	    out.print(ex.getMessage());
-	}
+        String smsId = BCSubscriptionPay.sendSMS("13861331391");
+        out.println(smsId);//保留此smsId以便后续发起订阅使用
+    } catch (BCException ex){
+        out.print(ex.getMessage());
+    }
 ```
 
+### <a name="startSubscription">发起订阅</a>  
+成功发起订阅接口将会返回带objectId的BCSubscription对象。
+发起订阅接口异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
+```java
+try {
+    /**
+     * 以下是通过银行5要素订阅的demo
+     */
+    BCSubscription subscription = new BCSubscription();
+    subscription.setPlanId("4a009b37-c36a-49d3-b011-d13d43535b96");
+    subscription.setBuyerId("demo buyer id");
+    subscription.setSmsId(smsId);//验证码发送接口返回的smsId
+    subscription.setSmsCode("code of your mobile received");//收到的短信验证码
+    subscription.setMobile("13661331392");
+    subscription.setBankName("交通银行");
+    subscription.setCardNo("6222630140019836463");
+    subscription.setIdName("冯小刚");
+    subscription.setIdNo("350503198606271013");
+    BCSubscription result = BCSubscriptionPay.startSubscription(subscription);
+    out.println(result.getCardId());
+    out.println(result.getValid());
+    out.println(result.getStatus());
+    out.println(result.getObject());
+
+    } catch (BCException ex){
+        out.print(ex.getMessage());
+    }
+    
+    /**
+     * 以下是直接通过cardId订阅的demo
+     */
+    BCSubscription subscription = new BCSubscription();
+    subscription.setCardId("第一次成功订阅后通过webhook获得");
+    subscription.setSmsId(smsId);//验证码发送接口返回的smsId
+    subscription.setSmsCode("code of your mobile received");//收到的短
+    BCSubscription result = BCSubscriptionPay.startSubscription(subscription);
+    out.print(result.getStatus());
+    
+ ```  
+ <a name="subscriptionJump"/>
+代码中的参数对象BCSubscription封装字段含义如下：
+
+key | 说明
+---- | -----
+buyerId | 订阅的buyer ID，可以是用户email，也可以是商户系统中的用户ID， （必填） 
+planId | 对应的计划id	， （必填） 
+smsId | 短信验证码id， （必填）
+smsCode | 短信验证码， （必填）
+cardId | 第一次订阅成功的情况下，webhook会返回，之后订阅可以直接使用cardId代替以下5个参数	， 即（{bank_name、card_no、id_name、id_no、mobile}和{cardId} 二选一）（必填） 
+bankName | 订阅用户银行名称（支持列表可参考API获取支持银行列表) ， （选填） 
+cardNo | 订阅用户银行卡号， （选填）  
+idName | 订阅用户身份证姓名， （选填） 
+idNo | 订阅用户身份证号， （选填） 
+mobile | 订阅用户银行预留手机号， （选填）
+amount | 对于类似收取电费的场景，计划的收费金额fee应当是电费的单价，用户每月使用的度数在订阅中的amount设置，在每次扣款时间点之前，商户的系统需要更新每个注册用户对应订阅的amount数值， 默认1（选填）
+trialEnd | 试用截止时间点，默认值为null，如果设置了，当前订阅直接从trial_end的下一天进行第一次扣费，之后按照计划中设定的时间间隔，周期性扣费。该参量可以用来统一订阅用户的收费时间， （选填）
+optional | 补充说明， （选填） 
+couponId | 优惠券id， 只在查询时返回
+last4 | 优惠券id， 只在查询时返回
+status | 订阅状态， 只在查询时返回
+valid | 订阅是否生效， 只在查询时返回
+
+
+### <a name="cancelSubscription">取消订阅</a>  
+成功取消订阅接口将会返回订阅id
+发起取消订阅接口异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
+```java
+String id;
+BCSubscription subscription = new BCSubscription();
+subscription.setObjectId("2ae989af-9cfd-4004-b350-5b4e1cad4d0a");
+try {
+    id = BCSubscriptionPay.cancelSubscription(subscription);
+    out.print(id);
+} catch (BCException e) {
+    e.printStackTrace();
+}
+```
+
+### <a name="subscription_query">订阅查询</a>  
+成功发起订阅查询接口将会返回BCSubscription对象集合
+发起订阅查询接口异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
+```java
+BCSubscriptionQueryParameter param = new BCSubscriptionQueryParameter();
+param.setPlanId("xxxxxxxxxxxxx");
+try {
+    Object result = BCSubscriptionPay.fetchSubsciptionByCondition(param);
+    if (result instanceof List) {
+        List<BCSubscription> subscriptions = (List<BCSubscription>)result;
+    } else {
+        out.print(result);
+    }
+} catch (BCException ex) {
+    ex.printStackTrace();
+    out.println(ex.getMessage());
+}
+```
+
+代码中的参数对象BCSubscriptionQueryParameter封装字段含义如下：
+
+key | 说明
+---- | -----
+buyerId | 订阅的buyer ID，可以是用户email，也可以是商户系统中的用户ID，（选填）
+planId | 对应的计划id，（选填）
+cardId | 第一次订阅成功后webhook返回，（选填）
+countOnly | 仅返回满足条件的subscription的集合数量，（选填）
+startTime | 起始时间， Date类型，（选填）
+endTime | 结束时间， Date类型， （选填）
+skip | 查询起始位置 默认为0。设置为10，表示忽略满足条件的前10条数据 , （选填）
+limit | 查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据， （选填）
+
+返回BCSubscription参数含义参考[BCSubscription集合](#subscriptionJump)
+
+
+
+### <a name="plan_query">订阅计划查询</a>  
+成功发起订阅计划查询接口将会返回BCPlan对象集合
+发起订阅计划查询接口异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
+```java
+BCPlanQueryParameter param = new BCPlanQueryParameter();
+param.setNameWithSubstring("订阅");
+try {
+    Object result = BCSubscriptionPay.fetchPlanByCondition(param);
+    if (result instanceof List) {
+        List<BCPlan> plans = (List<BCPlan>)result;
+    } else {
+        out.print(result);
+    }
+} catch (BCException ex) {
+    ex.printStackTrace();
+    out.println(ex.getMessage());
+}
+```
+代码中的参数对象BCPlanQueryParameter封装字段含义如下：
+
+key | 说明
+---- | -----
+name | 计划名，（选填）
+nameWithSubstring | 计划名子字符串查询，（选填）
+interval | 周期间隔，（选填）
+intervalCount | 周期数，（选填）
+trialDays | 试用天数，（选填）
+countOnly | 仅返回满足条件的subscription的集合数量，（选填）
+startTime | 起始时间， Date类型，（选填）
+endTime | 结束时间， Date类型， （选填）
+skip | 查询起始位置 默认为0。设置为10，表示忽略满足条件的前10条数据 , （选填）
+limit | 查询的条数， 默认为10，最大为50。设置为10，表示只查询满足条件的10条数据， （选填）
+
+返回BCPlan对象含义如下:
+
+key | 说明
+---- | -----
+name | 计划名
+interval | 收费周期单位，只能是day、week、month、year
+intervalCount | 和interval共同定义收费周期，例如interval=month intervalCount=3，那么每3个月收费一次，最大的收费间隔为1年(1 year, 12 months, or 52 weeks).
+trialDays | 试用天数
+valid | 计划是否生效
+currency | ISO货币名
+valid | 计划是否生效
+optional | 键值对，用于补充说明
+
+
+### <a name="plan_query">订阅支持银行查询</a>  
+成功发起订阅支持银行查询接口将会返回BSubscriptionBanks对象
+发起订阅支持银行查询接口异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
+```java
+try {
+    SubscriptionBanks banks = BCSubscriptionPay.fetchSubscrptionBanks();
+    out.println("banks:" + banks.getBankList().toString());
+    out.println("<br/><br/>");
+    out.println("common_banks:" + banks.getCommonBankList().toString());
+} catch (BCException ex) {
+    ex.printStackTrace();
+    out.println(ex.getMessage());
+}
+```
+
+### <a name="subscription_webhook">订阅Webhook</a>
+•对于订阅结果的推送，transaction_id就是创建订阅时返回的订阅id，transaction\_type为SUBSCRIPTION，sub\_channel\_type为BC\_SUBSCRIPTION，message\_detail中包含用户相关的注册信息. 其中的card_id注意留存
+
+•对于订阅收费结果的推送，transaction\_id为收费订单记录的订单号bill\_no，transaction\_type为PAY，sub\_channel\_type为BC\_SUBSCRIPTION，transaction\_fee为本次收费金额，message\_detail中包含用户相关的注册信息，例如其中的buyer\_id可以定位收取的是商户系统的那个用户的费用，plan\_id和subscription\_id可以帮助用户定位是哪个计划的哪个订阅
+
+•参考demo中的 webhook\_receiver\_subscription.jsp
 
 ## Demo
 项目文件夹demo为我们的样例项目，详细展示如何使用java sdk.  

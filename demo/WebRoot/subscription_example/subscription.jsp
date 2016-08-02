@@ -31,29 +31,41 @@
 
     if (action.equals("sms")) {
         try {
-            BCSubscriptionSMSResult  smsResult = BCSubscriptionPay.sendSMS("13861331391");
-            out.println(smsResult.getSmsId());
-            session.setAttribute("smsId", smsResult.getSmsId());
+            String smsId = BCSubscriptionPay.sendSMS("13461351392");
+            out.println(smsId);
+            session.setAttribute("smsId", smsId);
         } catch (BCException ex){
             out.print(ex.getMessage());
         }
     }
     if (action.equals("subscription")) {
         try {
+            /**
+             * 以下是通过银行5要素订阅的demo
+             */
             BCSubscription subscription = new BCSubscription();
-            subscription.setPlanId("4a009b37-c36a-49d3-b011-d13d43535b96");
-            subscription.setBuyerId("rui test buyer id");
-            subscription.setSmsId((String)session.getAttribute("smsId"));
-            subscription.setSmsCode("code of your mobile received");
-            subscription.setMobile("13861331391");
+            subscription.setPlanId("3e55bcfa-3805-46a3-bb2a-ba63247f8f18");
+            subscription.setBuyerId("demo buyer id");
+            subscription.setSmsId("378d65c2-b46c-4f7e-861c-0dca80b01149");//发送验证码接口返回的id
+            subscription.setSmsCode("0415");//收到的短信验证码
+            subscription.setMobile("13841335392");
             subscription.setBankName("交通银行");
-            subscription.setCardNo("6222600140019886466");
-            subscription.setIdName("冯睿");
-            subscription.setIdNo("320503198306271012");
+            subscription.setCardNo("6242600110019686443");
+            subscription.setIdName("冯小刚");
+            subscription.setIdNo("320703198706271022");
             BCSubscription result = BCSubscriptionPay.startSubscription(subscription);
             out.println(result.getCardId());
             out.println(result.getValid());
             out.println(result.getStatus());
+
+            /**
+             * 以下是直接通过cardId订阅的demo
+             */
+//            subscription.setCardId("d6282212-1e9b-4f45-8977-8482a497d55a");
+//            subscription.setPlanId("83b22a78-b76c-4740-3350-25e5h0a69571");
+//            subscription.setBuyerId("demo buyer id with cardId");
+//            BCSubscription result = BCSubscriptionPay.startSubscription(subscription);
+//            out.print(result.getStatus());
 
         } catch (BCException ex){
             out.print(ex.getMessage());
@@ -62,7 +74,7 @@
     if (action.equals("subscription_cancel")) {
         String id;
         BCSubscription subscription = new BCSubscription();
-        subscription.setId("2ae989af-9cfd-4004-b350-5b4e1cad4d0a");
+        subscription.setObjectId("a4543422-48ef-b31c-9b4f-c0eb9fc8c002");
         try {
             id = BCSubscriptionPay.cancelSubscription(subscription);
             out.print(id);

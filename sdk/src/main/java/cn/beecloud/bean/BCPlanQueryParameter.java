@@ -17,6 +17,8 @@ public class BCPlanQueryParameter {
 
     private Boolean countOnly = false;
 
+    private String name;
+
     private String nameWithSubstring;
 
     private String interval;
@@ -95,5 +97,13 @@ public class BCPlanQueryParameter {
 
     public void setTrialDays(Integer trialDays) {
         this.trialDays = trialDays;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
