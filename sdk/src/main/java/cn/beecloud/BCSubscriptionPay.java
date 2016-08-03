@@ -2,21 +2,25 @@ package cn.beecloud;
 
 import cn.beecloud.bean.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
- * Created by rui on 16/7/26.
+ * BeeCloud 订阅支付核心类， 包括短信验证、发起订阅、取消订阅、订阅查询、订阅计划查询、订阅支持银行查询等接口
+ *
+ * @author Ray
+ * @since 2016/8/3
  */
 public class BCSubscriptionPay {
     /**
      * 发送验证码接口
      *
      * @param phone
-     * @return 包含sms_id和code的Map
+     * @return 包含smsId
      * @throws BCException
      */
     public static String sendSMS(String phone) throws BCException {
-
 
         Map<String, Object> param = new HashMap<String, Object>();
 
@@ -31,11 +35,9 @@ public class BCSubscriptionPay {
      * 发起订阅
      *
      * @param subscription
-     * @return 包含sms_id和code的Map
+     * @return BCSubscription对象
      * @throws BCException
      */
-
-
     public static BCSubscription startSubscription(BCSubscription subscription) throws BCException {
 
         Map<String, Object> param = new HashMap<String, Object>();
@@ -51,6 +53,13 @@ public class BCSubscriptionPay {
         return subscription;
     }
 
+    /**
+     * 取消订阅
+     *
+     * @param subscription
+     * @return 取消的BCSubscription对象的id
+     * @throws BCException
+     */
     public static String cancelSubscription(BCSubscription subscription) throws BCException{
 
         Map<String, Object> ret = RequestUtil.doDelete(BCUtilPrivate.getkApiSubscription(), StrUtil.toStr(buildCancelSubscription(subscription)));
@@ -58,6 +67,13 @@ public class BCSubscriptionPay {
         return StrUtil.toStr(ret.get("id"));
     }
 
+    /**
+     * 订阅计划查询
+     *
+     * @param para
+     * @return BCPlan对象集合或集合数量
+     * @throws BCException
+     */
     public static Object fetchPlanByCondition(BCPlanQueryParameter para) throws BCException{
         Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiQueryPlan(), buildPlanQueryParam(para));
         if (para.getCountOnly()) {
@@ -66,6 +82,13 @@ public class BCSubscriptionPay {
         return placePlanList((List<Map<String, Object>>) ret.get("plans"));
     }
 
+    /**
+     * 订阅查询
+     *
+     * @param para
+     * @return BCSubscription对象集合或集合数量
+     * @throws BCException
+     */
     public static Object fetchSubsciptionByCondition(BCSubscriptionQueryParameter para) throws BCException {
         Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiQuerySubscription(), buildSubscriptionQueryParam(para));
         if (para.getCountOnly()) {
@@ -74,6 +97,12 @@ public class BCSubscriptionPay {
         return placeSubscriptionList((List<Map<String, Object>>) ret.get("subscriptions"));
     }
 
+    /**
+     * 订阅支持银行查询
+     *
+     * @return SubscriptionBanks对象包含bankList和commonBankList
+     * @throws BCException
+     */
     public static SubscriptionBanks fetchSubscrptionBanks() throws BCException{
         Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiSubscriptionBanks(), StrUtil.toStr(buildBasicQueryParam()));
         return placeSubscriptionBanks(ret);
@@ -90,6 +119,9 @@ public class BCSubscriptionPay {
         param.put("phone", StrUtil.toStr(phone));
     }
 
+    /**
+     * 构建发起订阅参数
+     */
     private static void buildSubscriptionParam(Map<String, Object> param, BCSubscription subscription) {
         param.put("app_id", BCCache.getAppID());
         param.put("timestamp", System.currentTimeMillis());
@@ -135,11 +167,6 @@ public class BCSubscriptionPay {
     private static String buildPlanQueryParam(BCPlanQueryParameter para) {
         StringBuilder sb = buildBasicQueryParam();
 
-        if (para.getSkip() != null) {
-            sb.append("&");
-            sb.append("timestamp=");
-            sb.append(para.getSkip());
-        }
         if (para.getLimit() != null) {
             sb.append("&");
             sb.append("limit=");
@@ -168,7 +195,20 @@ public class BCSubscriptionPay {
         if (para.getNameWithSubstring() != null) {
             sb.append("&");
             sb.append("name_with_substring=");
-            sb.append(para.getNameWithSubstring());
+            try {
+                sb.append(URLEncoder.encode(para.getNameWithSubstring(), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        if (para.getName() != null) {
+            sb.append("&");
+            sb.append("name=");
+            try {
+                sb.append(URLEncoder.encode(para.getName(), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
         if (para.getInterval() != null) {
             sb.append("&");
@@ -188,6 +228,9 @@ public class BCSubscriptionPay {
         return StrUtil.toStr(sb);
     }
 
+    /**
+     * 构建Subscription查询rest api参数
+     */
     private static String buildSubscriptionQueryParam(BCSubscriptionQueryParameter para) {
         StringBuilder sb = buildBasicQueryParam();
 
@@ -199,17 +242,29 @@ public class BCSubscriptionPay {
         if (para.getBuyerId() != null) {
             sb.append("&");
             sb.append("buyer_id=");
-            sb.append(para.getBuyerId());
+            try {
+                sb.append(URLEncoder.encode(para.getBuyerId(), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
         if (para.getPlanId() != null) {
             sb.append("&");
             sb.append("plan_id=");
-            sb.append(para.getPlanId());
+            try {
+                sb.append(URLEncoder.encode(para.getPlanId(), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
         if (para.getCardId() != null) {
             sb.append("&");
             sb.append("card_id=");
-            sb.append(para.getCardId());
+            try {
+                sb.append(URLEncoder.encode(para.getCardId(), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
         if (para.getStartTime() != null) {
             sb.append("&");
@@ -224,6 +279,9 @@ public class BCSubscriptionPay {
         return StrUtil.toStr(sb);
     }
 
+    /**
+     * 构建取消订阅rest api参数
+     */
     private static StringBuilder buildCancelSubscription(BCSubscription subscription) {
         StringBuilder sb = new StringBuilder();
         sb.append("/");
@@ -232,12 +290,15 @@ public class BCSubscriptionPay {
         sb.append(buildBasicQueryParam());
 
         if (subscription.getCancelAtPeriodEnd() != null) {
-            sb.append("?at_period_end=");
+            sb.append("&at_period_end=");
             sb.append(subscription.getCancelAtPeriodEnd());
         }
         return sb;
     }
 
+    /**
+     * 构建基础rest api参数(app_id, timestamp, app_sign)
+     */
     private static StringBuilder buildBasicQueryParam() {
         StringBuilder sb = new StringBuilder();
         if (!StrUtil.empty(BCCache.getAppID())) {
@@ -256,6 +317,9 @@ public class BCSubscriptionPay {
         return sb;
     }
 
+    /**
+     * 组装BCPlan list
+     */
     private static List<BCPlan> placePlanList(List<Map<String, Object>> plans) {
         List<BCPlan> bcPlanList = new ArrayList<BCPlan>();
         for (Map<String, Object> plan : plans) {
@@ -266,6 +330,9 @@ public class BCSubscriptionPay {
         return bcPlanList;
     }
 
+    /**
+     * 组装BCSubscription list
+     */
     private static List<BCSubscription> placeSubscriptionList(List<Map<String, Object>> subscriptions) {
         List<BCSubscription> subscriptionList = new ArrayList<BCSubscription>();
         for (Map<String, Object> subscription : subscriptions) {
@@ -276,11 +343,17 @@ public class BCSubscriptionPay {
         return subscriptionList;
     }
 
+    /**
+     * 组装BCSubscription
+     */
     private static BCSubscription placeSubsciption(BCSubscription subscription, Map<String, Object> ret) {
         generateBCSubscriptionBean(ret, subscription);
         return subscription;
     }
 
+    /**
+     * 组装订阅返回银行
+     */
     private static SubscriptionBanks placeSubscriptionBanks(Map<String, Object> ret) {
         SubscriptionBanks banks = new SubscriptionBanks();
         banks.setBankList((List)ret.get("banks"));
@@ -310,7 +383,7 @@ public class BCSubscriptionPay {
             bcPlan.setName(StrUtil.toStr(plan.get("name")));
         }
         if (plan.containsKey("interval")) {
-            bcPlan.setInterval(StrUtil.toStr(plan.get("interval")));
+            bcPlan.setInterval(BCEumeration.BC_PLAN_INTERVAL.valueOf(StrUtil.toStr(plan.get("interval"))));
         }
         if (plan.containsKey("interval_count")) {
             bcPlan.setIntervalCount((Integer) plan.get("interval_count"));

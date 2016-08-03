@@ -724,7 +724,7 @@ mobile | 手机号， （选填）
 ### 订阅支付详细设计请参考[BeeCloud订阅系统说明](https://github.com/beecloud/beecloud-rest-api/blob/master/subscription/%E8%AE%A2%E9%98%85%E7%B3%BB%E7%BB%9F%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
 
 ### <a name="sendSMS">短信验证码发送</a>  
-成功发起短信验证码接口，输入手机会收到短信。  
+成功发起短信验证码接口返回短信验证码id，输入手机会收到短信验证码。  
 发起短信验证码发送接口异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。  
 ```java
     try {
@@ -755,10 +755,10 @@ try {
     subscription.setIdName("冯小刚");
     subscription.setIdNo("350503198606271013");
     BCSubscription result = BCSubscriptionPay.startSubscription(subscription);
-    out.println(result.getCardId());
+    out.println(result.getCardId());//保留待直接通过cardId发起订阅
     out.println(result.getValid());
     out.println(result.getStatus());
-    out.println(result.getObject());
+    out.println(result.getObject());//保留待取消订阅时使用
 
     } catch (BCException ex){
         out.print(ex.getMessage());
@@ -782,7 +782,7 @@ key | 说明
 ---- | -----
 buyerId | 订阅的buyer ID，可以是用户email，也可以是商户系统中的用户ID， （必填） 
 planId | 对应的计划id	， （必填） 
-smsId | 短信验证码id， （必填）
+smsId | 短信验证码id，通过短信验证接口获得，（必填）
 smsCode | 短信验证码， （必填）
 cardId | 第一次订阅成功的情况下，webhook会返回，之后订阅可以直接使用cardId代替以下5个参数	， 即（{bank_name、card_no、id_name、id_no、mobile}和{cardId} 二选一）（必填） 
 bankName | 订阅用户银行名称（支持列表可参考API获取支持银行列表) ， （选填） 
@@ -793,7 +793,10 @@ mobile | 订阅用户银行预留手机号， （选填）
 amount | 对于类似收取电费的场景，计划的收费金额fee应当是电费的单价，用户每月使用的度数在订阅中的amount设置，在每次扣款时间点之前，商户的系统需要更新每个注册用户对应订阅的amount数值， 默认1（选填）
 trialEnd | 试用截止时间点，默认值为null，如果设置了，当前订阅直接从trialEnd的下一天进行第一次扣费，之后按照计划中设定的时间间隔，周期性扣费。该参量可以用来统一订阅用户的收费时间， （选填）
 optional | 补充说明， （选填） 
+cancelAtPeriodEnd | 是否在到期扣款后再取消订阅，默认为false, 即立即使该订阅失效, 如为true, 则在期数结束扣款后使该订阅失效,（选填） 
+objectId | 订阅id， 成功发起订阅时返回
 couponId | 优惠券id， 只在查询时返回
+accountType | 账户类型， 只在查询时返回
 last4 | 银行卡号后4位， 只在查询时返回
 status | 订阅状态， 只在查询时返回
 valid | 订阅是否生效， 只在查询时返回
@@ -807,6 +810,7 @@ valid | 订阅是否生效， 只在查询时返回
 String id;
 BCSubscription subscription = new BCSubscription();
 subscription.setObjectId("2ae989af-9cfd-4004-b350-5b4e1cad4d0a");
+subscription.setCancelAtPeriodEnd(true);
 try {
     id = BCSubscriptionPay.cancelSubscription(subscription);
     out.print(id);
@@ -814,6 +818,8 @@ try {
     e.printStackTrace();
 }
 ```
+
+代码中参数含义参考[BCSubscription含义](#subscriptionJump)中的objectId和cancelAtPeriodEnd
 
 ### <a name="subscription_query">订阅查询</a>  
 成功发起订阅查询接口将会返回BCSubscription对象集合或者满足条件的BCSubscription数量。
@@ -890,6 +896,7 @@ limit | 查询的条数， 默认为10，最大为50。设置为10，表示只�
 
 key | 说明
 ---- | -----
+objectId | 订阅计划id
 name | 计划名
 interval | 收费周期单位，只能是day、week、month、year
 intervalCount | 和interval共同定义收费周期，例如interval=month intervalCount=3，那么每3个月收费一次，最大的收费间隔为1年(1 year, 12 months, or 52 weeks).
