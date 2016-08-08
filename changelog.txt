@@ -3,6 +3,7 @@ BeeCloud Java Changelog
 
 v3.4.0 发布日期：2016年08月02日
 + 增加订阅支付
++ ALI_WAP新增选填参数useApp
 
 v3.3.1 发布日期：2016年07月22日
 + 解决中文乱码问题
