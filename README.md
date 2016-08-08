@@ -162,6 +162,7 @@ cardNo | 点卡卡号，每种卡的要求不一样，例如易宝支持的QQ币
 cardPwd | 点卡密码，简称卡密当channel 参数为YEE_NOBANKCARD时必填，（选填）
 frqid | 点卡类型编码：<br>骏网一卡通(JUNNET)<br>盛大卡(SNDACARD)<br>神州行(SZX)<br>征途卡(ZHENGTU)<br>Q币卡(QQCARD)<br>联通卡(UNICOM)<br>久游卡(JIUYOU)<br>易充卡(YICHONGCARD)<br>网易卡(NETEASE)<br>完美卡(WANMEI)<br>搜狐卡(SOHU)<br>电信卡(TELECOM)<br>纵游一卡通(ZONGYOU)<br>天下一卡通(TIANXIA)<br>天宏一卡通(TIANHONG)<br>32 一卡通(THIRTYTWOCARD)<br>当channel 参数为YEE_NOBANKCARD时必填，（选填）
 bcExpressCardNo | 为BC_EXPRESS指定卡号，当channel 参数为BC_EXPRESS时选填，（选填）
+useApp | 是否尝试掉起支付宝APP原生支付， 默认为false, ALI_WAP的选填参数，（选填）
 objectId   |  支付订单唯一标识, 下单成功后返回
 codeUrl   |  微信扫码code url， 微信扫码支付下单成功时返回
 url   |  支付跳转url，当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或 YEE_WAP 或 YEE_WEB 或 BD_WEB 或 BD_WAP，并且下单成功时返回

@@ -513,6 +513,9 @@ public class BCPay {
         if (para.getBcExpressCardNo() != null) {
             param.put("card_no", StrUtil.toStr(para.getBcExpressCardNo()));
         }
+        if (para.isUseApp() != null) {
+            param.put("use_app", para.isUseApp());
+        }
     }
 
     /**

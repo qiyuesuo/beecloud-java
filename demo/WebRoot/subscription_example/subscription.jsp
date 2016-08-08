@@ -75,6 +75,7 @@
         String id;
         BCSubscription subscription = new BCSubscription();
         subscription.setObjectId("a4543422-48ef-b31c-9b4f-c0eb9fc8c002");
+        subscription.setCancelAtPeriodEnd(true);
         try {
             id = BCSubscriptionPay.cancelSubscription(subscription);
             out.print(id);

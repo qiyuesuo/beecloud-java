@@ -34,7 +34,7 @@
 
     if (action.equals("subscription_query")) {
         BCSubscriptionQueryParameter param = new BCSubscriptionQueryParameter();
-        param.setBuyerId("demo buyer id with cardId");
+        param.setBuyerId("test_cmf");
         try {
             Object result = BCSubscriptionPay.fetchSubsciptionByCondition(param);
             if (result instanceof List) {
@@ -51,11 +51,7 @@
     }
     if (action.equals("plan_query")) {
         BCPlanQueryParameter param = new BCPlanQueryParameter();
-        param.setNameWithSubstring("订阅");
-        param.setName("订阅测试计划");
-        param.setInterval(BCEumeration.BC_PLAN_INTERVAL.day);
-        param.setIntervalCount(1);
-        param.setTrialDays(0);
+        param.setNameWithSubstring("订阅测试");
 
         try {
             Object result = BCSubscriptionPay.fetchPlanByCondition(param);
