@@ -24,7 +24,8 @@ public class RequestUtil {
     public enum REQUEST_TYPE {
         POST,
         PUT,
-        GET
+        GET,
+        DELETE
     }
 
     /**
@@ -69,6 +70,14 @@ public class RequestUtil {
         return request(requestUrl, param, REQUEST_TYPE.GET);
     }
 
+    public static Map<String, Object> doGet(String requestUrl, String param) throws BCException {
+        return request(requestUrl, param, REQUEST_TYPE.GET);
+    }
+
+    public static Map<String, Object> doDelete(String requestUrl, String param) throws BCException {
+        return request(requestUrl, param, REQUEST_TYPE.DELETE);
+    }
+
     /***
      *
      * @param requestUrl
@@ -77,10 +86,18 @@ public class RequestUtil {
      * @return
      * @throws BCException
      */
-    public static Map<String, Object> request(String requestUrl, Map<String, Object> param, REQUEST_TYPE request_type)
+    public static Map<String, Object> request(String requestUrl, Object param, REQUEST_TYPE request_type)
             throws BCException {
         HttpURLConnection connection = null;
-        if (StrUtil.empty(param.get("app_id"))) {
+        Object appId;
+        Boolean paramIsMap = true;
+        if (param instanceof Map) {//参数为Map
+            appId = ((Map)param).get("app_id");
+        } else {//参数为String
+            appId = StrUtil.toStr(param).contains("app_id")?new Object():null;
+            paramIsMap = false;
+        }
+        if (StrUtil.empty(appId)) {
             throw new BCException(-2, BCEumeration.RESULT_TYPE.OTHER_ERROR.name(), NOT_REGISTER);
         }
         PrintWriter out = null;
@@ -88,8 +105,12 @@ public class RequestUtil {
         StringBuffer result = new StringBuffer();
         Integer reponseStatus;
         try {
-            if (request_type == REQUEST_TYPE.GET) {
-                requestUrl = requestUrl + URLEncoder.encode(JSONObject.fromObject(param).toString(), "UTF-8");
+            if (request_type == REQUEST_TYPE.GET || request_type == REQUEST_TYPE.DELETE) {
+                if (paramIsMap) {
+                    requestUrl = requestUrl + URLEncoder.encode(JSONObject.fromObject(param).toString(), "UTF-8");
+                } else {
+                    requestUrl = requestUrl + param;
+                }
             }
             URL url = new URL(requestUrl);
             connection = (HttpURLConnection) url.openConnection();

@@ -143,4 +143,11 @@ public class BCEumeration {
         P_CR, //对私信用卡
         C //对公账户
     }
+
+    public enum BC_PLAN_INTERVAL {
+        day,
+        week,
+        month,
+        year
+    }
 }
