@@ -92,7 +92,6 @@
             <th>手机号码</th>
             <th>身份证号码</th>
             <th>姓名</th>
-            <th>Coupon ID</th>
             <th>Valid</th>
             <th>订阅状态</th>
             <th>账号类型</th>
@@ -113,7 +112,6 @@
                 <td>${subscription.mobile}</td>
                 <td>${subscription.idNo}</td>
                 <td>${subscription.idName}</td>
-                <td>${subscription.couponId}</td>
                 <td>${subscription.valid}</td>
                 <td>${subscription.status}</td>
                 <td>${subscription.accountType}</td>
@@ -139,7 +137,7 @@
             <th>intervalCount</th>
             <th>类型</th>
             <th>currency</th>
-            <th>trailDays</th>
+            <th>trialDays</th>
             <th>id</th>
             <th>创建时间</th>
             <th>更新时间</th>
@@ -154,7 +152,7 @@
                 <td>${plan.intervalCount}</td>
                 <td>${plan.type}</td>
                 <td>${plan.currency}</td>
-                <td>${plan.trailDays}</td>
+                <td>${plan.trialDays}</td>
                 <td>${plan.objectId}</td>
                 <td>${plan.createDate}</td>
                 <td>${plan.updateDate}</td>

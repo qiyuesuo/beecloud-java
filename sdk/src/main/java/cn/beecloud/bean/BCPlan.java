@@ -22,7 +22,7 @@ public class BCPlan extends BCObject{
 
     private String currency;
 
-    private Integer trailDays;
+    private Integer trialDays;
 
     private Map<String, Object> optional;
 
@@ -101,17 +101,17 @@ public class BCPlan extends BCObject{
     }
 
     /**
-     * 访问字段 {@link #trailDays}
+     * 访问字段 {@link #trialDays}
      */
-    public Integer getTrailDays() {
-        return trailDays;
+    public Integer getTrialDays() {
+        return trialDays;
     }
 
     /**
-     * 设置字段 {@link #trailDays}
+     * 设置字段 {@link #trialDays}
      */
     public void setTrailDays(Integer trailDays) {
-        this.trailDays = trailDays;
+        this.trialDays = trailDays;
     }
 
     /**
