@@ -64,6 +64,8 @@ public class BCOrder {
 
     private boolean revertResult;
 
+    private Boolean useApp;
+
     private String messageDetail = "不显示";
 
     private String dateTime;
@@ -527,5 +529,20 @@ public class BCOrder {
      */
     public void setBcExpressCardNo(String bcExpressCardNo) {
         this.bcExpressCardNo = bcExpressCardNo;
+    }
+
+    /**
+     * 访问字段 {@link #useApp}
+     */
+    public Boolean isUseApp() {
+        return useApp;
+    }
+
+    /**
+     * @param useApp
+     * 是否尝试掉起支付宝APP原生支付， 默认为false, (ALI_WAP)的选填参数 (选填)
+     */
+    public void setUseApp(Boolean useApp) {
+        this.useApp = useApp;
     }
 }
