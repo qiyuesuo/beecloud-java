@@ -516,6 +516,9 @@ public class BCPay {
         if (para.isUseApp() != null) {
             param.put("use_app", para.isUseApp());
         }
+        if (para.getNotifyUrl() != null) {
+            param.put("notify_url", para.getNotifyUrl());
+        }
     }
 
     /**

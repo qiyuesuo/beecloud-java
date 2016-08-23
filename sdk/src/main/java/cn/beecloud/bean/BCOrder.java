@@ -40,6 +40,8 @@ public class BCOrder {
 
     private String returnUrl;
 
+    private String notifyUrl;
+
     private Integer billTimeout;
 
     private String openId;
@@ -153,6 +155,21 @@ public class BCOrder {
      */
     public void setReturnUrl(String returnUrl) {
         this.returnUrl = returnUrl;
+    }
+
+    /**
+     * 访问字段 {@link #notifyUrl}
+     */
+    public String getNotifyUrl() {
+        return notifyUrl;
+    }
+
+    /**
+     * @param notifyUrl
+     * 异步回调地址 (选填)
+     */
+    public void setNotifyUrl(String notifyUrl) {
+        this.notifyUrl = notifyUrl;
     }
 
     /**
