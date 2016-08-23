@@ -146,6 +146,7 @@
             break;
         case WX_NATIVE:
             try {
+                bcOrder.setNotifyUrl("https:///apidynamic.beecloud.cn/test");
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
