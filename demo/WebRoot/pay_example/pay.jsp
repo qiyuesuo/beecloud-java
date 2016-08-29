@@ -140,6 +140,18 @@
                 out.println(e.getMessage());
             }
             break;
+        case BC_NATIVE:
+            try {
+                bcOrder.setTotalFee(1);
+//                bcOrder.setReturnUrl(bcExpressReturnUrl);
+                bcOrder = BCPay.startBCPay(bcOrder);
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
+            break;
         case WX:
             break;
         case WX_APP:
@@ -496,12 +508,12 @@
     }
     var type = '<%=type%>';
     var codeUrl;
-    var success = '<%=success%>'
-    if (type == 'WX_NATIVE') {
+    var success = '<%=success%>';
+    if (type == 'WX_NATIVE' || type == 'BC_NATIVE') {
         codeUrl = '<%=bcOrder.getCodeUrl()%>';
     }
 
-    if (type == 'WX_NATIVE' || 'true' == success) {
+    if (type == 'WX_NATIVE' || 'true' == success || type == 'BC_NATIVE') {
         makeqrcode();
     }
 

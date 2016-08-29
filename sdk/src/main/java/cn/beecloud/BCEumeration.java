@@ -71,6 +71,8 @@ public class BCEumeration {
         BC_GATEWAY,
         BC_EXPRESS,
         BC_APP,
+        BC_NATIVE,
+        BC_WX_WAP,
         CP,
         CP_WEB
     }
