@@ -48,8 +48,9 @@ BeeCloud网关支付
 
 1.从[github](https://github.com/beecloud/beecloud-java/releases)或者[demo](https://github.com/beecloud/beecloud-java/tree/master/demo/WebRoot/WEB-INF/lib)中下载带依赖的jar文件,然后导入到自己的工程依赖包中
 
+2.若系统编码不是UTF-8，请在java启动参数里加入 -Dfile.encoding=UTF-8
 
-2.若是工程采用maven进行依赖配置，可在自己工程的pom.xml文件里加入以下配置
+3.若是工程采用maven进行依赖配置，可在自己工程的pom.xml文件里加入以下配置
 
 ```xml
 <dependency>   
@@ -60,7 +61,7 @@ BeeCloud网关支付
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
 
-3.SDK jar包导入项目时报找不到依赖包或者报NoSuchMethodException异常等问题，可能的原因:相同jar包依赖不同导致的冲突，相同jar包版本不同导致的冲突，解决方法如下：
+4.SDK jar包导入项目时报找不到依赖包或者报NoSuchMethodException异常等问题，可能的原因:相同jar包依赖不同导致的冲突，相同jar包版本不同导致的冲突，解决方法如下：
 
 
 1).使用Maven配置依赖引入sdk, 删掉导致冲突的SDK的依赖包。例如
