@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.4.2](https://img.shields.io/badge/Version-v3.4.2-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.4.3](https://img.shields.io/badge/Version-v3.4.3-blue.svg) 
 
 ## 简介
 
@@ -48,20 +48,18 @@ BeeCloud网关支付
 
 1.从[github](https://github.com/beecloud/beecloud-java/releases)或者[demo](https://github.com/beecloud/beecloud-java/tree/master/demo/WebRoot/WEB-INF/lib)中下载带依赖的jar文件,然后导入到自己的工程依赖包中
 
-2.若系统编码不是UTF-8，请在java启动参数里加入 -Dfile.encoding=UTF-8
-
-3.若是工程采用maven进行依赖配置，可在自己工程的pom.xml文件里加入以下配置
+2.若是工程采用maven进行依赖配置，可在自己工程的pom.xml文件里加入以下配置
 
 ```xml
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.4.2</version>
+    <version>3.4.3</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
 
-4.SDK jar包导入项目时报找不到依赖包或者报NoSuchMethodException异常等问题，可能的原因:相同jar包依赖不同导致的冲突，相同jar包版本不同导致的冲突，解决方法如下：
+3.SDK jar包导入项目时报找不到依赖包或者报NoSuchMethodException异常等问题，可能的原因:相同jar包依赖不同导致的冲突，相同jar包版本不同导致的冲突，解决方法如下：
 
 
 1).使用Maven配置依赖引入sdk, 删掉导致冲突的SDK的依赖包。例如
@@ -69,7 +67,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.4.2</version>
+    <version>3.4.3</version>
     <exclusions>  //删除beecloud java sdk依赖的包
          <exclusion>  
              <groupId>org.hibernate</groupId>  
