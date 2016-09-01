@@ -482,6 +482,15 @@ public class BCPayMultiApp {
         if (para.getGatewayBank() != null) {
             param.put("bank", StrUtil.toStr(para.getGatewayBank()));
         }
+        if (para.getBcExpressCardNo() != null) {
+            param.put("card_no", StrUtil.toStr(para.getBcExpressCardNo()));
+        }
+        if (para.isUseApp() != null) {
+            param.put("use_app", para.isUseApp());
+        }
+        if (para.getNotifyUrl() != null) {
+            param.put("notify_url", para.getNotifyUrl());
+        }
     }
 
     private Object getAppSignatureWithTestSecret(String timestamp) {
@@ -795,6 +804,7 @@ public class BCPayMultiApp {
         order.setObjectId(StrUtil.toStr(ret.get("id")));
         switch (order.getChannel()) {
             case WX_NATIVE:
+            case BC_NATIVE:
                 if (ret.containsKey("code_url") && null != ret.get("code_url")) {
                     order.setCodeUrl(StrUtil.toStr(ret.get("code_url")));
                 }
@@ -812,10 +822,13 @@ public class BCPayMultiApp {
                 }
                 break;
             case UN_WEB:
+            case UN_WAP:
             case JD_WAP:
             case JD_WEB:
             case KUAIQIAN_WAP:
             case KUAIQIAN_WEB:
+            case BC_GATEWAY:
+            case CP_WEB:
                 if (ret.containsKey("html") && null != ret.get("html")) {
                     order.setHtml(StrUtil.toStr(ret.get("html")));
                 }
@@ -824,6 +837,7 @@ public class BCPayMultiApp {
             case YEE_WEB:
             case BD_WEB:
             case BD_WAP:
+            case BC_EXPRESS:
                 if (ret.containsKey("url") && null != ret.get("url")) {
                     order.setUrl(StrUtil.toStr(ret.get("url")));
                 }
