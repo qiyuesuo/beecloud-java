@@ -73,6 +73,7 @@ public class BCEumeration {
         BC_APP,
         BC_NATIVE,
         BC_WX_WAP,
+        BC_ALI_QRCODE,
         CP,
         CP_WEB
     }

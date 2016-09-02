@@ -116,6 +116,7 @@ public class RequestUtil {
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(request_type.name());
             connection.setRequestProperty("Content-Type", "application/json");
+//            connection.setRequestProperty("Charset", "UTF-8");
 
             connection.setReadTimeout(5000);
             connection.setConnectTimeout(5000);
@@ -126,11 +127,11 @@ public class RequestUtil {
                 connection.setDoOutput(true);
                 // Send request
                 // 获取URLConnection对象对应的输出流
-                out = new PrintWriter(connection.getOutputStream());
-                // 发送请求参数
-                out.print(new String(StrUtil.toStr(JSONObject.fromObject(param)).getBytes("UTF-8")));
+                OutputStream outputStream = connection.getOutputStream();
+                outputStream.write(StrUtil.toStr(JSONObject.fromObject(param)).getBytes("UTF-8"));
+                outputStream.close();
                 // flush输出流的缓冲
-                out.flush();
+//                out.flush();
             }
 
             reponseStatus = connection.getResponseCode();
