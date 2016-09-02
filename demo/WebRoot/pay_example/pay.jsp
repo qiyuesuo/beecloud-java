@@ -143,7 +143,17 @@
         case BC_NATIVE:
             try {
                 bcOrder.setTotalFee(1);
-//                bcOrder.setReturnUrl(bcExpressReturnUrl);
+                bcOrder = BCPay.startBCPay(bcOrder);
+                out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
+            break;
+        case BC_ALI_QRCODE:
+            try {
+                bcOrder.setTotalFee(1);
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
@@ -509,11 +519,11 @@
     var type = '<%=type%>';
     var codeUrl;
     var success = '<%=success%>';
-    if (type == 'WX_NATIVE' || type == 'BC_NATIVE') {
+    if (type == 'WX_NATIVE' || type == 'BC_NATIVE' || 'BC_ALI_QRCODE') {
         codeUrl = '<%=bcOrder.getCodeUrl()%>';
     }
 
-    if (type == 'WX_NATIVE' || 'true' == success || type == 'BC_NATIVE') {
+    if (type == 'WX_NATIVE' || 'true' == success || type == 'BC_NATIVE' || 'BC_ALI_QRCODE') {
         makeqrcode();
     }
 
