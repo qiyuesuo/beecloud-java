@@ -226,6 +226,10 @@ input {
                 <input type="radio" value="BC_NATIVE" name="paytype">
                 <img src="http://beeclouddoc.qiniudn.com/icon-bcwxsm.png" alt="BC NATIVE">
             </li>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="BC_ALI_QRCODE" name="paytype">
+                <img src="http://beeclouddoc.qiniudn.com/icon-bcalism.png" alt="BC ALI QRCODE">
+            </li>
         </ul>
     </div>
     <div style="clear: both;">
