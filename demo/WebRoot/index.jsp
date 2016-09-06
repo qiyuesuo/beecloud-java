@@ -125,7 +125,7 @@ input {
 </head>
 <body>
 <%
-    BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "4bfdd244-574d-4bf3-b034-0c751ed34fee", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2");
+    BeeCloud.registerApp("e66e760b-0f78-44bb-a9ae-b22729d51678", "4bfdd244-574d-4bf3-b034-0c751ed34fee", "6fb7db77-96ed-46ef-ae10-1118ee564dd3", "e14ae2db-608c-4f8b-b863-c8c18953eef2");
 %>
 <div>
     <h2>应付总额： ¥0.01</h2>
@@ -148,6 +148,10 @@ input {
             </li>
             <li onclick="paySwitch(this)">
                 <input type="radio" value="WX_JSAPI" name="paytype">
+                <img src="http://7xavqo.com1.z0.glb.clouddn.com/wechatgzh.png" alt="">
+            </li>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="BC_WX_JSAPI" name="paytype">
                 <img src="http://7xavqo.com1.z0.glb.clouddn.com/wechatgzh.png" alt="">
             </li>
             <li onclick="paySwitch(this)">

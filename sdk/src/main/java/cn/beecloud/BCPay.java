@@ -884,6 +884,7 @@ public class BCPay {
                 }
                 break;
             case WX_JSAPI:
+            case BC_WX_JSAPI:
                 order.setWxJSAPIMap(generateWXJSAPIMap(ret));
                 break;
             case ALI_WEB:

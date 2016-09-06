@@ -21,7 +21,7 @@
 	   说明： 支付处理页面， 用于发起比可网络支付系统的请求，包括支付宝、微信、银联、易宝、京东、百度、快钱等渠道以及境外支付渠道PAYPAL
 	   以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
 	   该代码仅供学习和研究使用，只是提供一个参考。
-	
+
 	//***********页面功能说明***********
 		 该页面可以在本机电脑测试。
 	//********************************
@@ -68,7 +68,7 @@
     String jsapipackage = "";
     String signType = "";
     String paySign = "";
-    
+
     //以下是每个渠道的return url
     String aliReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/aliReturnUrl.jsp";
     String unReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/unReturnUrl.jsp";
@@ -216,6 +216,37 @@
                         log.error(e.getMessage(), e);
                         out.println(e.getMessage());
                     }
+                }
+            }
+
+            break;
+
+        case BC_WX_JSAPI:
+            //微信 公众号id（读取配置文件conf.properties）及微信 redirec_uri
+            String openidUrl = "http://wxactivity.beecloud.cn/activity/getopenid.php?callbackurl=" + URLEncoder.encode("http://lcapitest.beecloud.cn/pay_example/pay.jsp?paytype=" + channel);
+            if (request.getParameter("openid") == null || request.getParameter("openid").toString().equals("")) {
+//                String redirectUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + wxJSAPIAppId + "&redirect_uri=" + encodedWSJSAPIRedirectUrl + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
+                log.info("wx jsapi redirct url:" + openidUrl);
+                System.out.println(openidUrl);
+                response.sendRedirect(openidUrl);
+            } else {
+                String openId = request.getParameter("openid");
+                bcOrder.setOpenId(openId);
+                try {
+                    bcOrder = BCPay.startBCPay(bcOrder);
+                    out.println(bcOrder.getObjectId());
+                    System.out.print(bcOrder.getObjectId());
+
+                    Map<String, String> map = bcOrder.getWxJSAPIMap();
+                    jsapiAppid = map.get("appId").toString();
+                    timeStamp = map.get("timeStamp").toString();
+                    nonceStr = map.get("nonceStr").toString();
+                    jsapipackage = map.get("package").toString();
+                    signType = map.get("signType").toString();
+                    paySign = map.get("paySign").toString();
+                } catch (BCException e) {
+                    log.error(e.getMessage(), e);
+                    out.println(e.getMessage());
                 }
             }
 
@@ -372,7 +403,7 @@
                 out.println(e.getMessage());
             }
             break;
-		
+
         case PAYPAL_PAYPAL:
         	internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_PAYPAL);
         	internationalOrder.setBillNo(billNo);
@@ -390,7 +421,7 @@
                  out.println(e.getMessage());
              }
              break;
-        
+
         case PAYPAL_CREDITCARD:
             /*
              * 请传入用户信用卡信息，包括:cardNo、expireMonth、expireYear、cvv、firstName、lastName
@@ -421,7 +452,7 @@
                 out.println(e.getMessage());
             }
             break;
-            
+
         case PAYPAL_SAVED_CREDITCARD:
             Object creditCardId = request.getSession().getAttribute("creditCardId");
             if (creditCardId == null) {
