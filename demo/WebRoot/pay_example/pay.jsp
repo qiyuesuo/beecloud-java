@@ -223,7 +223,7 @@
 
         case BC_WX_JSAPI:
             //微信 公众号id（读取配置文件conf.properties）及微信 redirec_uri
-            String openidUrl = "http://wxactivity.beecloud.cn/activity/getopenid.php?callbackurl=" + URLEncoder.encode("http://lcapitest.beecloud.cn/pay_example/pay.jsp?paytype=" + channel);
+            String openidUrl = "http://wxactivity.beecloud.cn/activity/getopenid.php?callbackurl=" + URLEncoder.encode("http://lcapitest.beecloud.cn/demo/pay_example/pay.jsp?paytype=" + channel);
             if (request.getParameter("openid") == null || request.getParameter("openid").toString().equals("")) {
 //                String redirectUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + wxJSAPIAppId + "&redirect_uri=" + encodedWSJSAPIRedirectUrl + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
                 log.info("wx jsapi redirct url:" + openidUrl);
