@@ -223,7 +223,17 @@
             }
 
             break;
-
+        case BC_WX_SCAN:
+            try {
+                bcOrder.setAuthCode("130184055779336435");
+                bcOrder = BCPay.startBCPay(bcOrder);
+                out.println(bcOrder.getObjectId());
+                out.println(bcOrder.isResult());
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
+            break;
         case UN_WEB:
         case UN_WAP:
             bcOrder.setReturnUrl(unReturnUrl);

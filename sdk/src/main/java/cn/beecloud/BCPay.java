@@ -67,6 +67,31 @@ public class BCPay {
     }
 
     /**
+     * BeeCloud线下支付接口
+     *
+     * @param order
+     * {@link BCOrder} (必填) 支付参数
+     * @return 调起BeeCloud支付后的返回结果
+     * @throws BCException
+     */
+    public static BCOrder startBCOfflinePay(BCOrder order) throws BCException {
+
+        ValidationUtil.validateBCPay(order);
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildPayParam(param, order);
+
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiOfflinePay(), param);
+
+        placeOfflineOrder(order, ret);
+
+        return order;
+    }
+
+
+
+    /**
      * 鉴权接口
      *
      * @param auth
@@ -519,6 +544,9 @@ public class BCPay {
         if (para.getNotifyUrl() != null) {
             param.put("notify_url", para.getNotifyUrl());
         }
+        if (para.getAuthCode() != null) {
+            param.put("auth_code", para.getAuthCode());
+        }
     }
 
     /**
@@ -918,6 +946,17 @@ public class BCPay {
                 }
             default:
                 break;
+        }
+    }
+
+    /*
+     * 组建offline order
+     */
+    private static void placeOfflineOrder(BCOrder order, Map<String, Object> ret) {
+        order.setObjectId(StrUtil.toStr(ret.get("id")));
+        boolean payResult = (Boolean)ret.get("pay_result");
+        if (payResult) {
+            order.setResult(true);
         }
     }
 

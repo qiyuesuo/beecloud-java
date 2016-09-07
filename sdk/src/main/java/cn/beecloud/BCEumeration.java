@@ -75,6 +75,8 @@ public class BCEumeration {
         BC_WX_WAP,
         BC_ALI_QRCODE,
         BC_WX_JSAPI,
+        BC_WX_SCAN,
+        BC_ALI_SCAN,
         CP,
         CP_WEB
     }
