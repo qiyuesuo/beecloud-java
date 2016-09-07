@@ -1,6 +1,9 @@
 BeeCloud Java Changelog
 ============================
 
+v3.4.6 发布日期：2016年09月07日
++ 增加渠道BC_WX_JSAPI
+
 v3.4.5 发布日期：2016年09月02日
 + 增加渠道BC_ALI_QRCODE
 
