@@ -224,9 +224,10 @@
 
             break;
         case BC_WX_SCAN:
+        case BC_ALI_SCAN:
             try {
-                bcOrder.setAuthCode("130184055779336435");
-                bcOrder = BCPay.startBCPay(bcOrder);
+                bcOrder.setAuthCode("130145749397413855");
+                bcOrder = BCPay.startBCOfflinePay(bcOrder);
                 out.println(bcOrder.getObjectId());
                 out.println(bcOrder.isResult());
             } catch (BCException e) {
@@ -531,11 +532,10 @@
     var type = '<%=type%>';
     var codeUrl;
     var success = '<%=success%>';
-    if (type == 'WX_NATIVE' || type == 'BC_NATIVE' || 'BC_ALI_QRCODE') {
+    if (type == 'WX_NATIVE' || type == 'BC_NATIVE' || type == 'BC_ALI_QRCODE') {
         codeUrl = '<%=bcOrder.getCodeUrl()%>';
     }
-
-    if (type == 'WX_NATIVE' || 'true' == success || type == 'BC_NATIVE' || 'BC_ALI_QRCODE') {
+    if (type == 'WX_NATIVE' || 'true' == success || type == 'BC_NATIVE' || type == 'BC_ALI_QRCODE') {
         makeqrcode();
     }
 
