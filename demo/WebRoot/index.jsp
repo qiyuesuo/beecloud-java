@@ -151,6 +151,10 @@ input {
                 <img src="http://7xavqo.com1.z0.glb.clouddn.com/wechatgzh.png" alt="">
             </li>
             <li onclick="paySwitch(this)">
+                <input type="radio" value="BC_WX_JSAPI" name="paytype">
+                <img src="http://7xavqo.com1.z0.glb.clouddn.com/wechatgzh.png" alt="">
+            </li>
+            <li onclick="paySwitch(this)">
                 <input type="radio" value="UN_WEB" name="paytype">
                 <img src="http://beeclouddoc.qiniudn.com/unionpay.png" alt="">
             </li>
@@ -229,6 +233,10 @@ input {
             <li onclick="paySwitch(this)">
                 <input type="radio" value="BC_ALI_QRCODE" name="paytype">
                 <img src="http://beeclouddoc.qiniudn.com/icon-bcalism.png" alt="BC ALI QRCODE">
+            </li>
+            <li onclick="paySwitch(this)">
+                <input type="radio" value="BC_WX_SCAN" name="paytype">
+                <img src="http://beeclouddoc.qiniudn.com/icon-bcalism.png" alt="BC WX SCAN">
             </li>
         </ul>
     </div>

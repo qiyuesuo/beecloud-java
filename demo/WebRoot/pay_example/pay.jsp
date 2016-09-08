@@ -1,8 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ page import="cn.beecloud.bean.*"%>
-<%@ page import="cn.beecloud.*"%>
 <%@ page import="cn.beecloud.BCEumeration.*" %>
+<%@ page import="cn.beecloud.BCPay" %>
+<%@ page import="cn.beecloud.BCUtil" %>
+<%@ page import="cn.beecloud.bean.BCException" %>
+<%@ page import="cn.beecloud.bean.BCInternationlOrder" %>
+<%@ page import="cn.beecloud.bean.BCOrder" %>
+<%@ page import="cn.beecloud.bean.CreditCardInfo" %>
 <%@ page import="java.io.BufferedReader" %>
 <%@ page import="java.io.InputStreamReader" %>
 <%@ page import="java.net.HttpURLConnection" %>
@@ -11,21 +15,20 @@
 <%@ page import="java.util.Properties" %>
 <%@ page import="net.sf.json.JSONObject" %>
 <%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="java.lang.Thread" %>
 <%@ include file="loadProperty.jsp" %>
 <%
-   /*
-	   功能：用户支付
-	   版本：1.0
-	   日期：2015-11-21
-	   说明： 支付处理页面， 用于发起比可网络支付系统的请求，包括支付宝、微信、银联、易宝、京东、百度、快钱等渠道以及境外支付渠道PAYPAL
-	   以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
-	   该代码仅供学习和研究使用，只是提供一个参考。
-	
-	//***********页面功能说明***********
-		 该页面可以在本机电脑测试。
-	//********************************
-	*/
+    /*
+        功能：用户支付
+        版本：1.0
+        日期：2015-11-21
+        说明： 支付处理页面， 用于发起比可网络支付系统的请求，包括支付宝、微信、银联、易宝、京东、百度、快钱等渠道以及境外支付渠道PAYPAL
+        以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
+        该代码仅供学习和研究使用，只是提供一个参考。
+
+     //***********页面功能说明***********
+          该页面可以在本机电脑测试。
+     //********************************
+     */
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -68,7 +71,7 @@
     String jsapipackage = "";
     String signType = "";
     String paySign = "";
-    
+
     //以下是每个渠道的return url
     String aliReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/aliReturnUrl.jsp";
     String unReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/unReturnUrl.jsp";
@@ -78,11 +81,10 @@
     String jdWebReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/jdWebReturnUrl.jsp";
     String kqReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/kqReturnUrl.jsp";
     String bdReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/bdReturnUrl.jsp";
-	String paypalReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/paypalReturnUrl.jsp";
-	String bcGatewayReturnUrl = "http://localhost:8081/return_url_example/bcGatewayReturnUrl.jsp";
+    String paypalReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/paypalReturnUrl.jsp";
+    String bcGatewayReturnUrl = "http://localhost:8081/return_url_example/bcGatewayReturnUrl.jsp";
     String bcExpressReturnUrl = "http://localhost:8081/return_url_example/bcExpressReturnUrl.jsp";
     String cpReturnUrl = "http://localhost:8080/PC-Web-Pay-Demo/return_url_example/cpReturnUrl.jsp";
-
 
     switch (channel) {
 
@@ -180,11 +182,12 @@
             break;
 
         case WX_JSAPI:
+        case BC_WX_JSAPI:
             //微信 公众号id（读取配置文件conf.properties）及微信 redirec_uri
             Properties prop = loadProperty();
             String wxJSAPIAppId = prop.get("wxJSAPIAppId").toString();
             String wxJSAPISecret = prop.get("wxJSAPISecret").toString();
-            String wxJSAPIRedirectUrl = "http://javademo.beecloud.cn/demo/pay_example/pay.jsp?paytype=WX_JSAPI";
+            String wxJSAPIRedirectUrl = "http://javademo.beecloud.cn/demo/pay_example/pay.jsp?paytype=" + channel;
             String encodedWSJSAPIRedirectUrl = URLEncoder.encode(wxJSAPIRedirectUrl);
             if (request.getParameter("code") == null || request.getParameter("code").toString().equals("")) {
                 String redirectUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + wxJSAPIAppId + "&redirect_uri=" + encodedWSJSAPIRedirectUrl + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
@@ -220,7 +223,17 @@
             }
 
             break;
-
+        case BC_WX_SCAN:
+            try {
+                bcOrder.setAuthCode("130184055779336435");
+                bcOrder = BCPay.startBCPay(bcOrder);
+                out.println(bcOrder.getObjectId());
+                out.println(bcOrder.isResult());
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
+            break;
         case UN_WEB:
         case UN_WAP:
             bcOrder.setReturnUrl(unReturnUrl);
@@ -248,12 +261,11 @@
             }
             break;
 
-
         case YEE_WAP:
             bcOrder.setReturnUrl(yeeWapReturnUrl);
             Object identityId = session.getAttribute("identityId");
             if (identityId == null) {
-                identityId = UUID.randomUUID().toString().replace("-","");
+                identityId = UUID.randomUUID().toString().replace("-", "");
                 session.setAttribute("identityId", identityId);
             }
             bcOrder.setIdentityId(identityId.toString());
@@ -323,7 +335,7 @@
             }
             break;
         case KUAIQIAN_WEB:
-        	bcOrder.setReturnUrl(kqReturnUrl);
+            bcOrder.setReturnUrl(kqReturnUrl);
             try {
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
@@ -372,75 +384,75 @@
                 out.println(e.getMessage());
             }
             break;
-		
+
         case PAYPAL_PAYPAL:
-        	internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_PAYPAL);
-        	internationalOrder.setBillNo(billNo);
-        	internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
-        	internationalOrder.setTitle("paypal test");
-        	internationalOrder.setTotalFee(1);
-        	internationalOrder.setReturnUrl(paypalReturnUrl);
-        	 try {
-        		 internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
-        		 out.println(internationalOrder.getObjectId());
-        		 Thread.sleep(3000);
-        		 response.sendRedirect(internationalOrder.getUrl());
-             } catch (BCException e) {
-                 log.error(e.getMessage(), e);
-                 out.println(e.getMessage());
-             }
-             break;
-        
-        case PAYPAL_CREDITCARD:
-            /*
-             * 请传入用户信用卡信息，包括:cardNo、expireMonth、expireYear、cvv、firstName、lastName
-             * 以及cardType(visa/mastercard/discover/amex)
-             */
-        	CreditCardInfo creditCardInfo = new CreditCardInfo();
-        	creditCardInfo.setCardNo("5183182005528540");
-        	creditCardInfo.setExpireMonth(11);
-        	creditCardInfo.setExpireYear(19);
-        	creditCardInfo.setCvv(350);
-        	creditCardInfo.setFirstName("SAN");
-        	creditCardInfo.setLastName("ZHANG");
-        	creditCardInfo.setCardType(CARD_TYPE.mastercard);
-        	internationalOrder.setBillNo(billNo);
-        	internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_CREDITCARD);
-        	internationalOrder.setCreditCardInfo(creditCardInfo);
-        	internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
-        	internationalOrder.setTitle("paypal credit card test");
-        	internationalOrder.setTotalFee(1);
-        	try {
-       			internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
-       			out.println("PAYPAL_CREDITCARD 支付成功！");
-       			out.println(internationalOrder.getObjectId());
-       			out.println(internationalOrder.getCreditCardId());
-       			request.getSession().setAttribute("creditCardId", internationalOrder.getCreditCardId());
+            internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_PAYPAL);
+            internationalOrder.setBillNo(billNo);
+            internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
+            internationalOrder.setTitle("paypal test");
+            internationalOrder.setTotalFee(1);
+            internationalOrder.setReturnUrl(paypalReturnUrl);
+            try {
+                internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
+                out.println(internationalOrder.getObjectId());
+                Thread.sleep(3000);
+                response.sendRedirect(internationalOrder.getUrl());
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
                 out.println(e.getMessage());
             }
             break;
-            
+
+        case PAYPAL_CREDITCARD:
+            /*
+             * 请传入用户信用卡信息，包括:cardNo、expireMonth、expireYear、cvv、firstName、lastName
+             * 以及cardType(visa/mastercard/discover/amex)
+             */
+            CreditCardInfo creditCardInfo = new CreditCardInfo();
+            creditCardInfo.setCardNo("5183182005528540");
+            creditCardInfo.setExpireMonth(11);
+            creditCardInfo.setExpireYear(19);
+            creditCardInfo.setCvv(350);
+            creditCardInfo.setFirstName("SAN");
+            creditCardInfo.setLastName("ZHANG");
+            creditCardInfo.setCardType(CARD_TYPE.mastercard);
+            internationalOrder.setBillNo(billNo);
+            internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_CREDITCARD);
+            internationalOrder.setCreditCardInfo(creditCardInfo);
+            internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
+            internationalOrder.setTitle("paypal credit card test");
+            internationalOrder.setTotalFee(1);
+            try {
+                internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
+                out.println("PAYPAL_CREDITCARD 支付成功！");
+                out.println(internationalOrder.getObjectId());
+                out.println(internationalOrder.getCreditCardId());
+                request.getSession().setAttribute("creditCardId", internationalOrder.getCreditCardId());
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
+            break;
+
         case PAYPAL_SAVED_CREDITCARD:
             Object creditCardId = request.getSession().getAttribute("creditCardId");
             if (creditCardId == null) {
                 out.println("信用卡ID信息不存在，请先通过信用卡支付获取ID再进行快捷支付！");
             } else {
-	        	internationalOrder.setBillNo(billNo);
-	        	internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_SAVED_CREDITCARD);
-	        	internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
-	        	internationalOrder.setTitle("PAYPAL_SAVED_CREDITCARD test");
-	        	internationalOrder.setTotalFee(1);
-	        	internationalOrder.setBillNo(request.getSession().getAttribute("creditCardId").toString());
-	        	try {
-	       			internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
-	       			out.println(internationalOrder.getObjectId());
-	       			out.println("PAYPAL_SAVED_CREDITCARD 支付成功！");
-	            } catch (BCException e) {
-	                log.error(e.getMessage(), e);
-	                out.println(e.getMessage());
-	            }
+                internationalOrder.setBillNo(billNo);
+                internationalOrder.setChannel(PAY_CHANNEL.PAYPAL_SAVED_CREDITCARD);
+                internationalOrder.setCurrency(PAYPAL_CURRENCY.USD);
+                internationalOrder.setTitle("PAYPAL_SAVED_CREDITCARD test");
+                internationalOrder.setTotalFee(1);
+                internationalOrder.setBillNo(request.getSession().getAttribute("creditCardId").toString());
+                try {
+                    internationalOrder = BCPay.startBCInternatioalPay(internationalOrder);
+                    out.println(internationalOrder.getObjectId());
+                    out.println("PAYPAL_SAVED_CREDITCARD 支付成功！");
+                } catch (BCException e) {
+                    log.error(e.getMessage(), e);
+                    out.println(e.getMessage());
+                }
             }
             break;
 

@@ -58,6 +58,8 @@ public class BCOrder {
 
     private String identityId;
 
+    private String authCode;
+
     private String channelTradeNo;
 
     private boolean result;
@@ -561,5 +563,20 @@ public class BCOrder {
      */
     public void setUseApp(Boolean useApp) {
         this.useApp = useApp;
+    }
+
+    /**
+     * 访问字段 {@link #authCode}
+     */
+    public String getAuthCode() {
+        return authCode;
+    }
+
+    /**
+     * @param authCode
+     * BC_WX_SCAN或者BC_ALI_SCAN必传参数, (必填)
+     */
+    public void setAuthCode(String authCode) {
+        this.authCode = authCode;
     }
 }
