@@ -181,7 +181,7 @@ BeeCloud线下支付接口接收BCOrder参数对象，该对象封装了发起Be
 #### <a name="bc_ali_scan">BeeCloud 支付宝被扫支付</a>
 
 ```java
-BCOrder bcOrder = new BCOrder(PAY_CHANNEL.BC_ALI_SCAN, 1, billNo, title);                bcOrder.setAuthCode("xxxxxxxx");  
+BCOrder bcOrder = new  BCOrder(PAY_CHANNEL.BC_ALI_SCAN, 1, billNo, title);                  bcOrder.setAuthCode("xxxxxxxx");  
 try {
     bcOrder = BCPay.startBCOfflinePay(bcOrder);
     out.println(bcOrder.getObjectId());
