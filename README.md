@@ -170,6 +170,34 @@ html   |  支付提交html， 当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或
 wxJSAPIMap   |  微信公众号支付要素，微信公众号支付下单成功时返回
 
 
+  
+### <a name="offline">BeeCloud线下支付</a>
+BeeCloud线下支付接口接收BCOrder参数对象，该对象封装了发起BeeCloud线下支付所需的各个具体参数。  
+
+成功发起BeeCloud线下支付接口将会返回带objectId的BCOrder对象。
+  
+发起BeeCloud线下支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+  
+#### <a name="bc_ali_scan">BeeCloud 支付宝被扫支付</a>
+
+```java
+BCOrder bcOrder = new BCOrder(PAY_CHANNEL.BC_ALI_SCAN, 1, billNo, title);                bcOrder.setAuthCode("xxxxxxxx");
+
+try {
+    bcOrder = BCPay.startBCOfflinePay(bcOrder);
+    out.println(bcOrder.getObjectId());
+    out.println(bcOrder.isResult());
+} catch (BCException e) {
+    log.error(e.getMessage(), e);
+    out.println(e.getMessage());
+}
+```
+代码中的参数对象BCOrder封装字段含义参考[国内支付](#payParam)。以下字段是BeeCloud线下支付特有字段值:
+
+key | 说明
+---- | -----
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>BC_ALI_SCAN Beecloud支付宝被扫支付<br>BC_WX_SCAN Beecloud微信被扫支付，（必填）
+
 
 
 ### <a name="transfer">单笔打款</a>
