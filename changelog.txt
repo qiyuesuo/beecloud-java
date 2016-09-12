@@ -1,6 +1,9 @@
 BeeCloud Java Changelog
 ============================
 
+v3.4.8 发布日期：2016年09月12日
++ 增加渠道BC_WX_WAP
+
 v3.4.7 发布日期：2016年09月08日
 + 增加渠道BC_WX_SCAN、BC_ALI_SCAN
 
