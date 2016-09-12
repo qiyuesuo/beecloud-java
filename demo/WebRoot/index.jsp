@@ -244,7 +244,7 @@ input {
             </li>
             <li onclick="paySwitch(this)">
                 <input type="radio" value="BC_WX_WAP" name="paytype">
-                <img src="http://beeclouddoc.qiniudn.com/icon-zfbbs.pn" alt="BC WX WAP">
+                <img src="http://beeclouddoc.qiniudn.com/icon-bcwxwap.png" alt="BC WX WAP">
             </li>
         </ul>
     </div>
