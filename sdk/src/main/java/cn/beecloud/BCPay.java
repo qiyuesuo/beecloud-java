@@ -941,6 +941,7 @@ public class BCPay {
             case BD_WEB:
             case BD_WAP:
             case BC_EXPRESS:
+            case BC_WX_WAP:
                 if (ret.containsKey("url") && null != ret.get("url")) {
                     order.setUrl(StrUtil.toStr(ret.get("url")));
                 }

@@ -372,7 +372,17 @@
                 out.println(e.getMessage());
             }
             break;
-
+        case BC_WX_WAP:
+            try {
+                bcOrder = BCPay.startBCPay(bcOrder);
+                System.out.println(bcOrder.getObjectId());
+                response.sendRedirect(bcOrder.getUrl());
+                Thread.sleep(3000);
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
+            break;
         case BD_WAP:
             bcOrder.setReturnUrl(bdReturnUrl);
             try {
