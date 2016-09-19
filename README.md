@@ -63,7 +63,8 @@ BeeCloud网关支付
 
 
 1).使用Maven配置依赖引入sdk, 删掉导致冲突的SDK的依赖包。例如
-```
+
+```xml
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
@@ -127,6 +128,7 @@ BeeCloud.setSandbox(**true**);
 
 #### <a name="ali_web">支付宝网页调用</a>
 返回的BCOrder对象包含表单支付html和跳转支付url,开发者提交支付表单或者跳转至url完成支付。
+
 ```java
 BCOrder bcOrder = new BCOrder(PAY_CHANNEL.ALI_WEB, 1, billNo, title);
 bcOrder.setBillTimeout(360);
@@ -142,31 +144,31 @@ try {
 }
 ```
 
-<a name="payParam"/>代码中的参数对象BCOrder封装字段含义如下：
+<a name="payParam"/></a>代码中的参数对象BCOrder封装字段含义如下：
 请求参数及返回字段：
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX_NATIVE 微信公众号二维码支付<br/>WX_JSAPI 微信公众号支付<br/>ALI_WEB 支付宝网页支付<br/>ALI_QRCODE 支付宝内嵌二维码支付<br>ALI_WAP 支付宝移动网页支付 <br/>UN_WEB 银联网页支付<br/>UN_WAP 银联移动网页支付<br>JD_WEB 京东网页支付<br/> JD_WAP 京东移动网页支付<br/> YEE_WEB 易宝网页支付<br/> YEE_WAP 易宝移动网页支付<br/> YEE_NOBANKCARD 易宝点卡支付<br> KUAIQIAN_WEB 快钱网页支付<br/> KUAIQIAN_WAP 快钱移动网页支付<br/>BD_WEB 百度网页支付<br>BD_WAP 百度移动网页支付<br>BC_GATEWAY BeeCloud网关支付<br>BC_EXPRESS BeeCloud快捷支付<br>BC_NATIVE BeeCloud微信扫码支付<br>BC_ALI_QRCODE BeeCloud阿里扫码支付<br>BC_WX_JSAPI BeeCloud微信公众号支付<br>BC_WX_WAP BeeCloud微信手机WAP支付，（必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX\_NATIVE 微信公众号二维码支付<br/>WX\_JSAPI 微信公众号支付<br/>ALI\_WEB 支付宝网页支付<br/>ALI\_QRCODE 支付宝内嵌二维码支付<br>ALI\_WAP 支付宝移动网页支付 <br/>UN\_WEB 银联网页支付<br/>UN\_WAP 银联移动网页支付<br>JD\_WEB 京东网页支付<br/> JD\_WAP 京东移动网页支付<br/> YEE\_WEB 易宝网页支付<br/> YEE\_WAP 易宝移动网页支付<br/> YEE\_NOBANKCARD 易宝点卡支付<br> KUAIQIAN\_WEB 快钱网页支付<br/> KUAIQIAN\_WAP 快钱移动网页支付<br/>BD\_WEB 百度网页支付<br>BD\_WAP 百度移动网页支付<br>BC\_GATEWAY BeeCloud网关支付<br>BC\_EXPRESS BeeCloud快捷支付<br>BC\_NATIVE BeeCloud微信扫码支付<br>BC\_ALI\_QRCODE BeeCloud阿里扫码支付<br>BC\_WX\_JSAPI BeeCloud微信公众号支付<br>BC\_WX\_WAP BeeCloud微信手机WAP支付，（必填）
 totalFee | 订单总金额， 只能为整数，单位为分，例如 1，（必填）
 billNo | 商户订单号, 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如(201506101035040000001),（必填）
 title | 订单标题， 32个字节内，最长支持16个汉字，（必填）
 optional | 附加数据， 用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据，（选填）
-returnUrl | 同步返回页面	， 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径，必须为http://或者https://开头。当 channel 参数为 ALI_WEB 或 ALI_QRCODE 或 UN_WEB 或 JD_WEB 或 JD_WAP时为必填，（选填）
+returnUrl | 同步返回页面	， 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径，必须为http://或者https://开头。当 channel 参数为 ALI\_WEB 或 ALI\_QRCODE 或 UN\_WEB 或 JD\_WEB 或 JD\_WAP时为必填，（选填）
 notifyUrl | 异步回调地址，（选填）
-openId | 微信公众号支付(WX_JSAPI)必填，（选填）
-showUrl | 商品展示地址，当channel为ALI_WEB时选填，需以http://开头的完整路径，例如：http://www.商户网址.com/myorder，（选填）
-qrPayMode | 二维码类型，ALI_QRCODE的必填参数，二维码类型含义<br>MODE_BRIEF_FRONT： 订单码-简约前置模式, 对应 iframe 宽度不能小于 600px, 高度不能小于 300px<br>MODE_FRONT： 订单码-前置模式, 对应 iframe 宽度不能小于 300px, 高度不能小于 600px<br>MODE_MINI_FRONT： 订单码-迷你前置模式, 对应 iframe 宽度不能小于 75px, 高度不能小于 75px ，（选填）
+openId | 微信公众号支付(WX\_JSAPI)必填，（选填）
+showUrl | 商品展示地址，当channel为ALI\_WEB时选填，需以http://开头的完整路径，例如：http://www.商户网址.com/myorder，（选填）
+qrPayMode | 二维码类型，ALI_QRCODE的必填参数，二维码类型含义<br>MODE_BRIEF_FRONT： 订单码-简约前置模式, 对应 iframe 宽度不能小于 600px, 高度不能小于 300px<br>MODE\_FRONT： 订单码-前置模式, 对应 iframe 宽度不能小于 300px, 高度不能小于 600px<br>MODE\_MINI\_FRONT： 订单码-迷你前置模式, 对应 iframe 宽度不能小于 75px, 高度不能小于 75px ，（选填）
 billTimeoutValue | 订单失效时间，单位秒，非零正整数，建议最短失效时间间隔必须大于360秒，快钱不支持此参数。例如：360（选填）
-cardNo | 点卡卡号，每种卡的要求不一样，例如易宝支持的QQ币卡号是9位的，江苏省内部的QQ币卡号是15位，易宝不支付，当channel 参数为YEE_NOBANKCARD时必填，（选填）
-cardPwd | 点卡密码，简称卡密当channel 参数为YEE_NOBANKCARD时必填，（选填）
-frqid | 点卡类型编码：<br>骏网一卡通(JUNNET)<br>盛大卡(SNDACARD)<br>神州行(SZX)<br>征途卡(ZHENGTU)<br>Q币卡(QQCARD)<br>联通卡(UNICOM)<br>久游卡(JIUYOU)<br>易充卡(YICHONGCARD)<br>网易卡(NETEASE)<br>完美卡(WANMEI)<br>搜狐卡(SOHU)<br>电信卡(TELECOM)<br>纵游一卡通(ZONGYOU)<br>天下一卡通(TIANXIA)<br>天宏一卡通(TIANHONG)<br>32 一卡通(THIRTYTWOCARD)<br>当channel 参数为YEE_NOBANKCARD时必填，（选填）
-bcExpressCardNo | 为BC_EXPRESS指定卡号，当channel 参数为BC_EXPRESS时选填，（选填）
-useApp | 是否尝试掉起支付宝APP原生支付， 默认为false, ALI_WAP的选填参数，（选填）
+cardNo | 点卡卡号，每种卡的要求不一样，例如易宝支持的QQ币卡号是9位的，江苏省内部的QQ币卡号是15位，易宝不支付，当channel 参数为YEE\_NOBANKCARD时必填，（选填）
+cardPwd | 点卡密码，简称卡密当channel 参数为YEE\_NOBANKCARD时必填，（选填）
+frqid | 点卡类型编码：<br>骏网一卡通(JUNNET)<br>盛大卡(SNDACARD)<br>神州行(SZX)<br>征途卡(ZHENGTU)<br>Q币卡(QQCARD)<br>联通卡(UNICOM)<br>久游卡(JIUYOU)<br>易充卡(YICHONGCARD)<br>网易卡(NETEASE)<br>完美卡(WANMEI)<br>搜狐卡(SOHU)<br>电信卡(TELECOM)<br>纵游一卡通(ZONGYOU)<br>天下一卡通(TIANXIA)<br>天宏一卡通(TIANHONG)<br>32 一卡通(THIRTYTWOCARD)<br>当channel 参数为YEE\_NOBANKCARD时必填，（选填）
+bcExpressCardNo | 为BC\_EXPRESS指定卡号，当channel 参数为BC_EXPRESS时选填，（选填）
+useApp | 是否尝试掉起支付宝APP原生支付， 默认为false, ALI\_WAP的选填参数，（选填）
 objectId   |  支付订单唯一标识, 下单成功后返回
 codeUrl   |  微信扫码code url， 微信扫码支付（包括BeeCloud微信扫码支付）下单成功时返回
-url   |  支付跳转url，当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或 YEE_WAP 或 YEE_WEB 或 BD_WEB 或 BD_WAP，并且下单成功时返回
-html   |  支付提交html， 当渠道为ALI_WEB 或 ALI_QRCODE 或 ALI_WAP 或 UN_WEB 或 UN_WAP 或 JD_WAP 或 JD_WEB 或 KUAIQIAN_WAP 或 KUAIQIAN_WEB，并且下单成功时返回
+url   |  支付跳转url，当渠道为ALI\_WEB 或 ALI\_QRCODE 或 ALI\_WAP 或 YEE\_WAP 或 YEE\_WEB 或 BD\_WEB 或 BD\_WAP，并且下单成功时返回
+html   |  支付提交html， 当渠道为ALI\_WEB 或 ALI\_QRCODE 或 ALI\_WAP 或 UN\_WEB 或 UN\_WAP 或 JD\_WAP 或 JD\_WEB 或 KUAIQIAN\_WAP 或 KUAIQIAN\_WEB，并且下单成功时返回
 wxJSAPIMap   |  微信公众号支付要素，微信公众号支付下单成功时返回
 
 
@@ -195,7 +197,7 @@ try {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>BC_ALI_SCAN Beecloud支付宝被扫支付<br>BC_WX_SCAN Beecloud微信被扫支付，（必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>BC\_ALI\_SCAN Beecloud支付宝被扫支付<br>BC\_WX\_SCAN Beecloud微信被扫支付，（必填）
 
 
 
@@ -208,6 +210,7 @@ channel | 渠道类型， 根据不同场景选择不同的支付方式，包含
 
 #### <a name="ali_transfer">支付宝单笔打款</a>
 返回跳转打款url,开发者跳转至url完成打款。
+
 ```java
 TransferParameter param = new TransferParameter();
 param.setChannel(TRANSFER_CHANNEL.ALI_TRANSFER);
@@ -230,7 +233,7 @@ try {
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>ALI_TRANSFER 支付宝单笔打款<br/>WX_REDPACK 微信红包<br/>WX_TRANSFER 微信单笔打款，（必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>ALI\_TRANSFER 支付宝单笔打款<br/>WX\_REDPACK 微信红包<br/>WX\_TRANSFER 微信单笔打款，（必填）
 transferNo | 打款单号，支付宝为11-32位数字字母组合， 微信为10位数字，（必填）
 totalFee | 打款金额，此次打款的金额,单位分,正整数(微信红包1.00-200元，微信打款>=1元)，（必填）
 description | 打款说明，此次打款的说明，（必填）
@@ -261,6 +264,7 @@ activityName | 红包活动名称 32位，（必填）
 发起国际支付异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 
 #### <a name="paypal_paypal">PAYPAL内支付</a>
+
 ```java
 BCInternationlOrder internationalOrder = new BCInternationlOrder();
 /*
@@ -286,16 +290,16 @@ internationalOrder.setReturnUrl(paypalReturnUrl);
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>PAYPAL_PAYPAL paypal内支付<br/>PAYPAL_CREDITCARD 使用信用卡支付<br/>PAYPAL_SAVED_CREDITCARD 使用存储的信用卡id支付（必填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>PAYPAL\_PAYPAL paypal内支付<br/>PAYPAL\_CREDITCARD 使用信用卡支付<br/>PAYPAL\_SAVED\_CREDITCARD 使用存储的信用卡id支付（必填）
 totalFee | 订单总金额， 只能为整数，单位为分，例如 1，（必填）
 billNo | 商户订单号, 8到32个字符内，数字和/或字母组合，确保在商户系统中唯一, 例如(201506101035040000001),（必填）
 title | 订单标题， 32个字节内，最长支持16个汉字，（必填）
 currency | 货币种类代码，包含：<br/>AUD<br/>BRL<br/>CAD<br/>CZK<br/>DKK<br/>EUR<br/>HKD<br/>HUF<br/>ILS<br/>JPY<br/>MYR<br/>MXN<br/>TWD<br/>NZD<br/>NOK<br/>PHP<br/>PLN<br/>GBP<br/>SGD<br/>SEK<br/>CHF<br/>THB<br/>TRY<br/>THB<br/>USD（必填）
-creditCardInfo | 信用卡信息， 当channel为PAYPAL_CREDITCARD必填， （选填）
-creditCardId | 信用卡id，当使用PAYPAL_CREDITCARD支付完成后会返回一个信用卡id， 当channel为PAYPAL_SAVED_CREDITCARD必填，（选填）
-returnUrl | 同步返回页面	， 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。当channel为PAYPAL_PAYPAL时为必填，（选填）
+creditCardInfo | 信用卡信息， 当channel为PAYPAL\_CREDITCARD必填， （选填）
+creditCardId | 信用卡id，当使用PAYPAL\_CREDITCARD支付完成后会返回一个信用卡id， 当channel为PAYPAL\_SAVED\_CREDITCARD必填，（选填）
+returnUrl | 同步返回页面	， 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。当channel为PAYPAL\_PAYPAL时为必填，（选填）
 objectId | 境外支付订单唯一标识, 下单成功后返回
-url | 当channel 为PAYPAL_PAYPAL时返回，跳转支付的url
+url | 当channel 为PAYPAL\_PAYPAL时返回，跳转支付的url
 
 信用卡信息对象CreditCardInfo封装字段含义如下：
 
@@ -316,6 +320,7 @@ cardType | 卡类别 visa/mastercard/discover/amex，（必填）
 成功发起批量打款将会返回批量打款跳转url。
   
 发起批量打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
 ```java
 TransfersParameter para = new TransfersParameter();
 para.setBatchNo(batchNo);
@@ -366,6 +371,7 @@ transferNote | 打款备注，（必填）
 BC_GATEWAY暂不支持预退款。
 
 发起退款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
 ```java
 BCRefund refund = new BCRefund(billNo, refundNo, 1);
 try {
@@ -411,6 +417,7 @@ aliRefundUrl | 阿里退款跳转url，支付宝发起直接退款成功后返�
 预退款批量审核接口分为批量同意和批量否决，当BCBatchRefund的**agree**属性设置为**false**时，开启批量否决，当BCBatchRefund的**agree**属性为**true**, 开启批量同意，返回的BCBatchRefund对象包含每笔预退款真正退款后的结果消息的idResult（Map<String, String）对象，并在channel为ALI时返回带支付宝退款跳转url的BCBatchRefund对象, 开发者跳转至url输入支付密码完成退款。
 
 发起预退款批量审核异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
 ```java
 BCBatchRefund batchRefundAgree = new BCBatchRefund();
 batchRefundAgree.setIds(Arrays.asList(ids));
@@ -461,6 +468,7 @@ aliRefundUrl | 支付宝批量退款跳转url，支付宝预退款批量同意�
 成功发起订单查询接口将会返回BCOrder对象的集合。
 
 发起订单查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
 ```java
 BCQueryParameter param = new BCQueryParameter();
 param.setNeedDetail(true);//设置返回messgeDetail
@@ -473,11 +481,11 @@ try {
 }
 ```
 
-代码中的参数对象BCQueryParameter封装字段含义如下：<a name="billQueryParam"/>
+代码中的参数对象BCQueryParameter封装字段含义如下：<a name="billQueryParam"/></a>
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付<br>UN_WAP 银联移动网页支付<br>KUAIQIAN<br>KUAIQIAN_WEB 快钱网页支付<br>KUAIQIAN_WAP 快钱移动网页支付<br>YEE<br>YEE_WEB 易宝网页支付<br>YEE_WAP 易宝移动网页支付<br>YEE_NOBANKCARD 易宝点卡支付<br>JD<br>JD_WEB 京东网页支付<br>JD_WAP 京东移动网页支付<br>PAYPAL<br>PAYPAL_SANDBOX<br>PAYPAL_LIVE<br>BD<br>BD_WEB 百度网页支付<br>BD_APP 百度APP支付<br>BD_WAP 百度移动网页支付,（选填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX\_APP 微信手机APP支付<br>WX\_NATIVE 微信公众号二维码支付<br>WX\_JSAPI 微信公众号支付<br>ALI<br>ALI\_APP 支付宝APP支付<br>ALI\_WEB 支付宝网页支付<br>ALI\_QRCODE<br>ALI\_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN\_APP 银联APP支付<br>UN\_WEB 银联网页支付<br>UN\_WAP 银联移动网页支付<br>KUAIQIAN<br>KUAIQIAN\_WEB 快钱网页支付<br>KUAIQIAN\_WAP 快钱移动网页支付<br>YEE<br>YEE\_WEB 易宝网页支付<br>YEE\_WAP 易宝移动网页支付<br>YEE\_NOBANKCARD 易宝点卡支付<br>JD<br>JD\_WEB 京东网页支付<br>JD\_WAP 京东移动网页支付<br>PAYPAL<br>PAYPAL\_SANDBOX<br>PAYPAL\_LIVE<br>BD<br>BD\_WEB 百度网页支付<br>BD\_APP 百度APP支付<br>BD\_WAP 百度移动网页支付,（选填）
 billNo | 商户订单号，String类型，（选填）
 startTime | 起始时间， Date类型，（选填）  
 endTime | 结束时间， Date类型， （选填）  
@@ -490,7 +498,7 @@ limit |  查询的条数， 默认为10，最大为50。设置为10，表示只�
 
 返回的BCOrder集合字段意义如下:
 
-<a name="billQueryJump"/>  
+<a name="billQueryJump"/></a>
 
 key | 说明
 ---- | -----
@@ -514,6 +522,7 @@ optionalString   |  optional json字符串， 可通过查询获得
 成功发起订单总数查询接口将会返回订单总数。
 
 发起订单总数查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
 ```java
 BCQueryParameter param = new BCQueryParameter();
 try {
@@ -533,6 +542,7 @@ try {
 成功发起单笔订单查询接口将会返回BCOrder对象。
 
 发起单笔订单查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
 ```java
 try {
     BCOrder result = BCPay.startQueryBillById(id);
@@ -551,6 +561,7 @@ try {
 成功发起退款查询接口将会返回BCRefund对象的集合。
 
 发起退款查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
 ```java
 BCQueryParameter param = new BCQueryParameter();
 param.setChannel(channel);
@@ -565,11 +576,11 @@ try {
 }
 ```
 
-代码中的参数对象BCQueryParameter封装字段含义如下：<a name="refundQueryParam"/>
+代码中的参数对象BCQueryParameter封装字段含义如下：<a name="refundQueryParam"/></a>
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX_APP 微信手机APP支付<br>WX_NATIVE 微信公众号二维码支付<br>WX_JSAPI 微信公众号支付<br>ALI<br>ALI_APP 支付宝APP支付<br>ALI_WEB 支付宝网页支付<br>ALI_QRCODE<br>ALI_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN_APP 银联APP支付<br>UN_WEB 银联网页支付<br>UN_WAP 银联移动网页支付<br>KUAIQIAN<br>KUAIQIAN_WEB 快钱网页支付<br>KUAIQIAN_WAP 快钱移动网页支付<br>YEE<br>YEE_WEB 易宝网页支付<br>YEE_WAP 易宝移动网页支付<br>JD<br>JD_WEB 京东网页支付<br>JD_WAP<br>BD<br>BD_WEB 百度网页支付<br>BD_APP 百度APP支付<br>BD_WAP 京东移动网页支付，（选填）
+channel | 渠道类型， 根据不同场景选择不同的支付方式，包含：<br>WX<br>WX\_APP 微信手机APP支付<br>WX\_NATIVE 微信公众号二维码支付<br>WX\_JSAPI 微信公众号支付<br>ALI<br>ALI\_APP 支付宝APP支付<br>ALI\_WEB 支付宝网页支付<br>ALI\_QRCODE<br>ALI\_WAP 支付宝移动网页支付 支付宝内嵌二维码支付<br>UN<br>UN\_APP 银联APP支付<br>UN\_WEB 银联网页支付<br>UN\_WAP 银联移动网页支付<br>KUAIQIAN<br>KUAIQIAN\_WEB 快钱网页支付<br>KUAIQIAN\_WAP 快钱移动网页支付<br>YEE<br>YEE\_WEB 易宝网页支付<br>YEE\_WAP 易宝移动网页支付<br>JD<br>JD\_WEB 京东网页支付<br>JD\_WAP<br>BD<br>BD\_WEB 百度网页支付<br>BD\_APP 百度APP支付<br>BD\_WAP 京东移动网页支付，（选填）
 billNo | 商户订单号， 32个字符内，数字和/或字母组合，确保在商户系统中唯一, （选填）
 refundNo | 商户退款单号， 格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”	，（选填）
 startTime | 起始时间， Date类型，（选填）  
@@ -581,7 +592,7 @@ limit |  查询的条数， 默认为10，最大为50。设置为10，表示只�
 
 返回的BCRefund集合字段意义如下：
 
-<a name="refundQueryJump"/>
+<a name="refundQueryJump"/></a>
 
 key | 说明
 ---- | -----
@@ -607,6 +618,7 @@ messageDetail | 渠道详细信息，默认为"不显示"， 当needDetail为tru
 成功发起退款总数查询接口将会返回订单总数。
 
 发起退款总数查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
 ```java
 BCQueryParameter param = new BCQueryParameter();
 try {
@@ -626,6 +638,7 @@ try {
 成功发起单笔退款查询接口将会返回BCRefund对象。
 
 发起单笔退款查询异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
 ```java
 try {
     BCRefund result = BCPay.startQueryRefundById(id);
@@ -643,6 +656,7 @@ try {
 成功发起退款状态更新接口将会返回退款状态字符串（SUCCESS, PROCESSING, FAIL ...）。
 
 发起退款状态更新异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
 ```java
 try {
     String result = BCPay.startRefundUpdate(channel, refund_no);
@@ -663,6 +677,7 @@ channel | 渠道类型， 包含WX、YEE、KUAIQIAN和BD（必填）
 ### <a name="BCTransfer">BC企业打款</a>
 发起BC企业打款请求。BCTransferParameter对象包含了发起BC企业打款所需要的所有参数。
 发起BC企业打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
 ```java
 BCTransferParameter param = new BCTransferParameter();
 param.setBillNo("1111111111");//设置订单号 8到32位数字和/或字母组合，请自行确保在商户系统中唯一，同一订单号不可重复提交，否则会造成订单重复
@@ -683,8 +698,9 @@ try {
 ```
 
 ### <a name="BCTransfer">BC企业打款支持银行获取</a>
-发起BC企业打款支持银行获取请求。BC_TRANSFER_BANK_TYPE枚举包含P_DE(对私借记卡)、P_CR(对私信用卡)、C(对公账户)
+发起BC企业打款支持银行获取请求。BC\_TRANSFER\_BANK\_TYPE枚举包含P\_DE(对私借记卡)、P\_CR(对私信用卡)、C(对公账户)
 发起BC企业打款支持银行获取异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
 ```java
 	try {
 	    List<String> banks = BCPay.fetchBCTransfersBanks(BC_TRANSFER_BANK_TYPE.P_CR);
@@ -697,6 +713,7 @@ try {
 ### <a name="BCAuth">BC鉴权</a>
 发起BC鉴权请求。BCAuth对象包含了发起BC鉴权所需要的所有参数。
 发起BC鉴权异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+
 ```java
     String name = "冯晓波";
 	String idNo = "320504192306171022";
@@ -754,6 +771,7 @@ mobile | 手机号， （选填）
 ### <a name="sendSMS">短信验证码发送</a>  
 成功发起短信验证码接口返回短信验证码id，输入手机会收到短信验证码。  
 发起短信验证码发送接口异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。  
+
 ```java
     try {
         String smsId = BCSubscriptionPay.sendSMS("13861331391");
@@ -801,10 +819,9 @@ try {
     subscription.setSmsCode("code of your mobile received");//收到的短
     BCSubscription result = BCSubscriptionPay.startSubscription(subscription);
     out.print(result.getStatus());
-    
- ```  
- <a name="subscriptionJump"/>
-代码中的参数对象BCSubscription封装字段含义如下：
+```
+
+<a name="subscriptionJump"></a>代码中的参数对象BCSubscription封装字段含义如下：
 
 key | 说明
 ---- | -----
@@ -985,7 +1002,7 @@ try {
 请参考demo中的 paypalReturnUrl.jsp
 
 •关于weekhook的接收  
-请参考demo中的 webhook_receiver.jsp以及webhook_sandbox_receiver.jsp  
+请参考demo中的 webhook_receiver.jsp以及webhook\_sandbox\_receiver.jsp  
 文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
 
 ## 测试
@@ -993,7 +1010,7 @@ try {
 - 导入sdk至eclipse或者IDEA, 在src/test/java包下找到BCPayTest类，运行javaSDKTest()方法。
 
 ## 常见问题
-- 根据app_id找不到对应的APP/keyspace或者app_sign不正确,或者timestamp不是当前UTC，可能的原因：系统时间不准确 app_id和secret填写不正确，请以此排查如下：
+- 根据app\_id找不到对应的APP/keyspace或者app\_sign不正确,或者timestamp不是当前UTC，可能的原因：系统时间不准确 app_id和secret填写不正确，请以此排查如下：
 1.appid和appSecret填写是否一致  
 2.校准系统时间
 - 支付宝吊起支付返回调试错误，请回到请求来源地，重新发起请求。错误代码ILLEGAL_PARTNER，可能的原因：使用了测试账号test@beecloud.cn的支付宝支付参数。请使用自己申请的支付账号。
