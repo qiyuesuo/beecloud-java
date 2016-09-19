@@ -8,14 +8,14 @@
 
 SDK支持以下支付渠道：
 
-支付宝web/wap
-微信扫码/微信内JSAPI
-银联web/wap
-京东web/wap
-易宝web/wap
-百度web/wap
-paypal
-BeeCloud网关支付
+支付宝web/wap  
+微信扫码/微信内JSAPI/微信WAP  
+银联web/wap  
+京东web/wap  
+易宝web/wap  
+百度web/wap  
+paypal  
+BeeCloud网关支付  
 提供（国内/国际）支付、（预）退款、 查询、 打款、 BeeCloud企业打款功能
 
 本SDK的是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api)开发的Java SDK，适用于JRE 1.6及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
