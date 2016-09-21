@@ -109,6 +109,7 @@
 <c:if test="${billSize != null and billSize !=0}">
     <table border="3" class="table">
         <tr>
+            <th>id</th>
             <th>订单号</th>
             <th>总金额</th>
             <th>标题</th>
@@ -125,6 +126,7 @@
         </tr>
         <c:forEach var="bill" items="${bills}" varStatus="index">
             <tr>
+                <td>${bill.objectId}</td>
                 <td>${bill.billNo}</td>
                 <td>${bill.totalFee}</td>
                 <td>${bill.title}</td>
