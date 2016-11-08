@@ -715,7 +715,7 @@ public class BCPay {
     private static void buildQueryOfflineStatusParam(Map<String, Object> param, String bill_no, PAY_CHANNEL channel) {
         param.put("app_id", BCCache.getAppID());
         param.put("timestamp", System.currentTimeMillis());
-        param.put("app_sign", BCUtilPrivate.getAppSignatureWithTestSecret(StrUtil.toStr(param
+        param.put("app_sign", BCUtilPrivate.getAppSignature(StrUtil.toStr(param
                 .get("timestamp"))));
         param.put("bill_no", bill_no);
         if (channel != null) {
