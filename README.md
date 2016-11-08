@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.4.8](https://img.shields.io/badge/Version-v3.4.8-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.4.9](https://img.shields.io/badge/Version-v3.4.9-blue.svg) 
 
 ## 简介
 
@@ -54,7 +54,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.4.8</version>
+    <version>3.4.9</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
@@ -68,7 +68,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.4.8</version>
+    <version>3.4.9</version>
     <exclusions>  //删除beecloud java sdk依赖的包
          <exclusion>  
              <groupId>org.hibernate</groupId>  
@@ -158,7 +158,7 @@ returnUrl | 同步返回页面	， 支付渠道处理完请求后,当前页面�
 notifyUrl | 异步回调地址，（选填）
 openId | 微信公众号支付(WX\_JSAPI)必填，（选填）
 showUrl | 商品展示地址，当channel为ALI\_WEB时选填，需以http://开头的完整路径，例如：http://www.商户网址.com/myorder，（选填）
-qrPayMode | 二维码类型，ALI_QRCODE的必填参数，二维码类型含义<br>MODE_BRIEF_FRONT： 订单码-简约前置模式, 对应 iframe 宽度不能小于 600px, 高度不能小于 300px<br>MODE\_FRONT： 订单码-前置模式, 对应 iframe 宽度不能小于 300px, 高度不能小于 600px<br>MODE\_MINI\_FRONT： 订单码-迷你前置模式, 对应 iframe 宽度不能小于 75px, 高度不能小于 75px ，（选填）
+qrPayMode | 二维码类型，ALI\_QRCODE的必填参数，二维码类型含义<br>MODE\_BRIEF\_FRONT： 订单码-简约前置模式, 对应 iframe 宽度不能小于 600px, 高度不能小于 300px<br>MODE\_FRONT： 订单码-前置模式, 对应 iframe 宽度不能小于 300px, 高度不能小于 600px<br>MODE\_MINI\_FRONT： 订单码-迷你前置模式, 对应 iframe 宽度不能小于 75px, 高度不能小于 75px ，（选填）
 billTimeoutValue | 订单失效时间，单位秒，非零正整数，建议最短失效时间间隔必须大于360秒，快钱不支持此参数。例如：360（选填）
 cardNo | 点卡卡号，每种卡的要求不一样，例如易宝支持的QQ币卡号是9位的，江苏省内部的QQ币卡号是15位，易宝不支付，当channel 参数为YEE\_NOBANKCARD时必填，（选填）
 cardPwd | 点卡密码，简称卡密当channel 参数为YEE\_NOBANKCARD时必填，（选填）
