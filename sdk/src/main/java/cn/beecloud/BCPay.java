@@ -241,6 +241,21 @@ public class BCPay {
     }
 
     /**
+     * 查询订单状态接口, 只为线下订单服务, 限定渠道为 WX_NATIVE、WX_SCAN、ALI_OFFLINE_QRCODE、ALI_SCAN、BC_ALI_SCAN、BC_WX_SCAN
+     * @param bill_no 待查询订单号 (必填)
+     * @param channel 待查询订单渠道 (选填)
+     * @return
+     * @throws BCException
+     */
+    public static boolean queryOfflineBillStatus(String bill_no, PAY_CHANNEL channel) throws BCException{
+        Map<String, Object> param = new HashMap<String, Object>();
+        buildQueryOfflineStatusParam(param, bill_no, channel);
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getApiOfflineStatusUrl(), param);
+        Boolean b = (Boolean) ret.get("pay_result");
+        return b == null ? false : b;
+    }
+
+    /**
      * 退款记录查询（批量）接口
      *
      * @param para
@@ -600,6 +615,7 @@ public class BCPay {
         }
         if (para.getOptional() != null && para.getOptional().size() > 0)
             param.put("optional", para.getOptional());
+        param.put("refund_account", para.getRefund_account());
     }
 
     /**
@@ -687,6 +703,23 @@ public class BCPay {
         }
         if (para.getNeedApproval() != null && para.getNeedApproval()) {
             param.put("need_approval", para.getNeedApproval());
+        }
+    }
+
+    /**
+     * 构建查询/更新线下订单状态参数
+     * @param param
+     * @param bill_no
+     * @param channel
+     */
+    private static void buildQueryOfflineStatusParam(Map<String, Object> param, String bill_no, PAY_CHANNEL channel) {
+        param.put("app_id", BCCache.getAppID());
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign", BCUtilPrivate.getAppSignature(StrUtil.toStr(param
+                .get("timestamp"))));
+        param.put("bill_no", bill_no);
+        if (channel != null) {
+            param.put("channel", channel.toString());
         }
     }
 
@@ -1039,11 +1072,12 @@ public class BCPay {
     }
 
     /**
-     * 检查某一借口是否支持测试模式
+     * 检查某一接口是否支持测试模式
      */
     private static void checkTestModeSwitch() throws BCException {
         if (BCCache.isSandbox()) {
             throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), TEST_MODE_SUPPORT_ERROR);
         }
     }
+
 }
