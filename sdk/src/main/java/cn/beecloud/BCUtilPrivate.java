@@ -202,4 +202,9 @@ class BCUtilPrivate {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
                 + "/subscription_banks?";
     }
+
+    public static String getApiOfflineStatusUrl() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/offline/bill/status";
+    }
 }

@@ -43,6 +43,9 @@ public class BCRefund {
 
     private String messageDetail = "不显示";
 
+    //微信退款时可选参数0代表未结算金额,1代表可用余额金额
+    private int refund_account = 0;
+
     /**
      * 构造函数，参数为发起退款的3个必填参数
      * 
@@ -282,5 +285,13 @@ public class BCRefund {
      */
     public void setOptionalString(String optionalString) {
         this.optionalString = optionalString;
+    }
+
+    public int getRefund_account() {
+        return refund_account;
+    }
+
+    public void setRefund_account(int refund_account) {
+        this.refund_account = refund_account;
     }
 }
