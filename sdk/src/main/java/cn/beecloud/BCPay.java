@@ -553,6 +553,9 @@ public class BCPay {
         if (para.getBcExpressCardNo() != null) {
             param.put("card_no", StrUtil.toStr(para.getBcExpressCardNo()));
         }
+        if (para.getLimitCredit() != null) {
+            param.put("limit_credit", para.getLimitCredit().booleanValue());
+        }
         if (para.isUseApp() != null) {
             param.put("use_app", para.isUseApp());
         }
