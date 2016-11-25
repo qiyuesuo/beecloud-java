@@ -973,11 +973,19 @@ public class BCPay {
             case YEE_WEB:
             case BD_WEB:
             case BD_WAP:
-            case BC_EXPRESS:
             case BC_WX_WAP:
                 if (ret.containsKey("url") && null != ret.get("url")) {
                     order.setUrl(StrUtil.toStr(ret.get("url")));
                 }
+                break;
+            case BC_EXPRESS:
+                if (ret.containsKey("url") && null != ret.get("url")) {
+                    order.setUrl(StrUtil.toStr(ret.get("url")));
+                }
+                if (ret.containsKey("html") && null != ret.get("html")) {
+                    order.setHtml(StrUtil.toStr(ret.get("html")));
+                }
+                break;
             default:
                 break;
         }
