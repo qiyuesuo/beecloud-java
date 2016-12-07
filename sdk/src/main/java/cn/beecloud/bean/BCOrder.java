@@ -78,6 +78,8 @@ public class BCOrder {
 
     private String bcExpressCardNo;
 
+    private Boolean limitCredit;
+
 
     public BCOrder() {}
 
@@ -578,5 +580,13 @@ public class BCOrder {
      */
     public void setAuthCode(String authCode) {
         this.authCode = authCode;
+    }
+
+    public Boolean getLimitCredit() {
+        return limitCredit;
+    }
+
+    public void setLimitCredit(Boolean limitCredit) {
+        this.limitCredit = limitCredit;
     }
 }
