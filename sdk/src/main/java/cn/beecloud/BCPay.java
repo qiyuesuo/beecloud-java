@@ -565,6 +565,9 @@ public class BCPay {
         if (para.getAuthCode() != null) {
             param.put("auth_code", para.getAuthCode());
         }
+        if (para.getLimitCredit() != null) {
+            param.put("limit_credit", para.getLimitCredit().booleanValue());
+        }
     }
 
     /**
