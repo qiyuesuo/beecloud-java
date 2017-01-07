@@ -80,6 +80,10 @@ public class BCOrder {
 
     private Boolean limitCredit;
 
+    private String idNo;
+
+    private String idHolder;
+
 
     public BCOrder() {}
 
@@ -588,5 +592,21 @@ public class BCOrder {
 
     public void setLimitCredit(Boolean limitCredit) {
         this.limitCredit = limitCredit;
+    }
+
+    public String getIdNo() {
+        return idNo;
+    }
+
+    public void setIdNo(String idNo) {
+        this.idNo = idNo;
+    }
+
+    public String getIdHolder() {
+        return idHolder;
+    }
+
+    public void setIdHolder(String idHolder) {
+        this.idHolder = idHolder;
     }
 }
