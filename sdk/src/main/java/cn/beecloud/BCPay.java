@@ -1073,6 +1073,16 @@ public class BCPay {
         }
     }
 
+    private static List<String> generateBCGateWayBankList(List<String> bills) {
+        List<String> bankList = new ArrayList<String>();
+        for (Map<String, Object> bill : bills) {
+            BCOrder bcOrder = new BCOrder();
+            generateBCOrderBean(bill, bcOrder);
+            bcOrderList.add(bcOrder);
+        }
+        return bcOrderList;
+    }
+
     /**
      * 组建返回鉴权
      */
@@ -1089,12 +1099,36 @@ public class BCPay {
     }
 
     /**
+     * 构建查询银行卡rest api参数
+     */
+    private static void buildGateWayBanksParam(Map<String, Object> param, BCGateWayBanks para) {
+        param.put("app_id", BCCache.getAppID());
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign",
+                    BCUtilPrivate.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
+        if (para.getCardType() != null) {
+            param.put("card_type", StrUtil.toStr(para.getCardType()));
+        }
+        if (para.getPayType() != null) {
+            param.put("pay_type", para.getPayType());
+        }
+    }
+
+    /**
      * 检查某一接口是否支持测试模式
      */
     private static void checkTestModeSwitch() throws BCException {
         if (BCCache.isSandbox()) {
             throw new BCException(-2, RESULT_TYPE.OTHER_ERROR.name(), TEST_MODE_SUPPORT_ERROR);
         }
+    }
+
+    public static List<String> getGateWayBanks(BCGateWayBanks para) throws BCException {
+        Map<String, Object> param = new HashMap<String, Object>();
+        buildGateWayBanksParam(param, para);
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiQueryBill(), param);
+
+        return generateBCOrderList((List<Map<String, Object>>) ret.get("bills"));
     }
 
 }

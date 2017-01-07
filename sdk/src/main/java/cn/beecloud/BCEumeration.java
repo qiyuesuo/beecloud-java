@@ -121,23 +121,6 @@ public class BCEumeration {
         USD
     }
 
-    public enum GATEWAY_BANK {
-        CMB,
-        ICBC,
-        CCB,
-        BOC,
-        ABC,
-        BOCM,
-        SPDB,
-        GDB,
-        CITIC,
-        CEB,
-        CIB,
-        SDB,
-        CMBC
-
-    }
-
     public enum CARD_TYPE {
         visa,
         mastercard,

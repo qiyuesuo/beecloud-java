@@ -359,7 +359,7 @@ public class PayTest {
         }
         param.setFrqid(frqid);
 
-        BCEumeration.GATEWAY_BANK gatewayBank = param.getGatewayBank();
+        String gatewayBank = param.getGatewayBank();
         try {
             param.setGatewayBank(null);
             param.setChannel(PAY_CHANNEL.BC_GATEWAY);
@@ -841,6 +841,6 @@ public class PayTest {
         param.setOpenId(openId);
         param.setQrPayMode(qrPayMode);
         param.setIdentityId(identityId);
-        param.setGatewayBank(BCEumeration.GATEWAY_BANK.ABC);
+        param.setGatewayBank("中国银行");
     }
 }

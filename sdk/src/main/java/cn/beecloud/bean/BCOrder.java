@@ -1,11 +1,10 @@
 package cn.beecloud.bean;
 
-import cn.beecloud.BCEumeration;
+
 import java.util.Map;
 
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.QR_PAY_MODE;
-import cn.beecloud.BCEumeration.GATEWAY_BANK;
 
 
 /**
@@ -74,7 +73,7 @@ public class BCOrder {
 
     private String dateTime;
 
-    private GATEWAY_BANK gatewayBank;
+    private String gatewayBank;
 
     private String bcExpressCardNo;
 
@@ -521,23 +520,15 @@ public class BCOrder {
     /**
      * 访问字段 {@link #gatewayBank}
      */
-    public GATEWAY_BANK getGatewayBank() {
+    public String getGatewayBank() {
         return gatewayBank;
     }
 
     /**
      * @param gatewayBank
-     * BeeCloud网关支付支持银行，包含： {@link GATEWAY_BANK#CMB}: 招商银行
-     * {@link GATEWAY_BANK#ICBC}: 工商银行 {@link GATEWAY_BANK#CCB}:
-     * 建设银行（暂时不支持） {@link GATEWAY_BANK#BOC}: 中国银行
-     * {@link GATEWAY_BANK#ABC}: 农业银行 {@link GATEWAY_BANK#BOCM}: 交通银行
-     * {@link GATEWAY_BANK#SPDB}: 浦发银行 {@link GATEWAY_BANK#GDB}: 广发银行
-     * {@link GATEWAY_BANK#CITIC}: 中信银行 {@link GATEWAY_BANK#CEB}:
-     * 光大银行 {@link GATEWAY_BANK#CIB}: 兴业银行
-     * {@link GATEWAY_BANK#SDB}: 平安银行
-     * {@link GATEWAY_BANK#CMBC}: 民生银行 (选填)，channel为BC_GATEWAY时必填
+     * BeeCloud网关支付支持银行
      */
-    public void setGatewayBank(GATEWAY_BANK gatewayBank) {
+    public void setGatewayBank(String gatewayBank) {
         this.gatewayBank = gatewayBank;
     }
 
@@ -596,7 +587,7 @@ public class BCOrder {
 
     /**
      * @param limitCredit
-     * 支付时限制信用卡(选填)
+     * 支付时限制信用卡 (选填)
      */
     public void setLimitCredit(Boolean limitCredit) {
         this.limitCredit = limitCredit;
@@ -611,7 +602,7 @@ public class BCOrder {
 
     /**
      * @param idNo
-     * 身份证号(选填)
+     * 身份证号 (选填)
      */
     public void setIdNo(String idNo) {
         this.idNo = idNo;
@@ -626,7 +617,7 @@ public class BCOrder {
 
     /**
      * @param idHolder
-     * 姓名(选填)
+     * 姓名 (选填)
      */
     public void setIdHolder(String idHolder) {
         this.idHolder = idHolder;
