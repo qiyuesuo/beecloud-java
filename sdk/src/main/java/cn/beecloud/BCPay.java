@@ -128,6 +128,21 @@ public class BCPay {
     }
 
     /**
+     * 代付V2接口
+     *
+     * @param bcv2TransferParameter
+     * {@link BCV2TransferParameter} (必填) 支付参数
+     * @return 调起BeeCloud代付后的返回结果
+     * @throws BCException
+     */
+    public static void startBCV2Transfer(BCV2TransferParameter bcv2TransferParameter) throws BCException {
+        ValidationUtil.validateBCV2Transfer(bcv2TransferParameter);
+        Map<String, Object> param = new HashMap<String, Object>();
+        buildBCTransferParam(param, bcTransferParameter);
+        RequestUtil.doPost(BCUtilPrivate.getkApiBCTransfer(), param);
+    }
+
+    /**
      * 退款接口
      *
      * @param refund
@@ -564,6 +579,9 @@ public class BCPay {
         }
         if (para.getAuthCode() != null) {
             param.put("auth_code", para.getAuthCode());
+        }
+        if (para.getBankName() != null) {
+            param.put("bank_name", para.getBankName());
         }
     }
 

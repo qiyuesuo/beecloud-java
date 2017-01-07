@@ -80,6 +80,8 @@ public class BCOrder {
 
     private Boolean limitCredit;
 
+    private String bankName;
+
 
     public BCOrder() {}
 
@@ -588,5 +590,13 @@ public class BCOrder {
 
     public void setLimitCredit(Boolean limitCredit) {
         this.limitCredit = limitCredit;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }
