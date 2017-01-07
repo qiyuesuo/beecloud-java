@@ -586,26 +586,48 @@ public class BCOrder {
         this.authCode = authCode;
     }
 
+    /**
+     * 访问字段 {@link #limitCredit}
+     */
     public Boolean getLimitCredit() {
         return limitCredit;
     }
 
+
+    /**
+     * @param limitCredit
+     * 支付时限制信用卡(选填)
+     */
     public void setLimitCredit(Boolean limitCredit) {
         this.limitCredit = limitCredit;
     }
 
+    /**
+     * 访问字段 {@link #idNo}
+     */
     public String getIdNo() {
         return idNo;
     }
 
+    /**
+     * @param idNo
+     * 身份证号(选填)
+     */
     public void setIdNo(String idNo) {
         this.idNo = idNo;
     }
 
+    /**
+     * 访问字段 {@link #idHolder}
+     */
     public String getIdHolder() {
         return idHolder;
     }
 
+    /**
+     * @param idHolder
+     * 姓名(选填)
+     */
     public void setIdHolder(String idHolder) {
         this.idHolder = idHolder;
     }
