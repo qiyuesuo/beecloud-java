@@ -30,6 +30,8 @@ public class BCTransferParameter {
 
     private Map<String, Object> optional;
 
+    private String channel;
+
     public BCTransferParameter() {};
 
     public BCTransferParameter(Integer totalFee, String billNo, String title, String tradeSource,
@@ -135,4 +137,11 @@ public class BCTransferParameter {
         this.optional = optional;
     }
 
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
 }
