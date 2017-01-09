@@ -83,6 +83,8 @@ public class BCOrder {
 
     private String idHolder;
 
+    private String payType;
+
 
     public BCOrder() {}
 
@@ -621,5 +623,13 @@ public class BCOrder {
      */
     public void setIdHolder(String idHolder) {
         this.idHolder = idHolder;
+    }
+
+    public String getPayType() {
+        return payType;
+    }
+
+    public void setPayType(String payType) {
+        this.payType = payType;
     }
 }

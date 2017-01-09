@@ -210,6 +210,6 @@ class BCUtilPrivate {
 
     public static String getGateWayBankListUrl() {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
-                + "/rest/bc_gateway/banks";
+                + "/rest/bc_gateway/banks?para=";
     }
 }

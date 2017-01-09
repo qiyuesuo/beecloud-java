@@ -571,6 +571,10 @@ public class BCPay {
         if (para.getIdHolder() != null) {
             param.put("id_holder", para.getIdHolder());
         }
+
+        if (para.getPayType() != null) {
+            param.put("pay_type", para.getPayType());
+        }
     }
 
     /**
