@@ -138,7 +138,7 @@ public class BCPay {
     public static void startBCUserTransfer(BCTransferParameter bcTransferParameter) throws BCException {
         ValidationUtil.validateBCTransfer(bcTransferParameter);
         Map<String, Object> param = new HashMap<String, Object>();
-        buildBCTransferParam(param, bcTransferParameter);
+        buildBCUserTransferParam(param, bcTransferParameter);
         RequestUtil.doPost(BCUtilPrivate.getUserApiBCTransfer(), param);
     }
 
@@ -612,6 +612,37 @@ public class BCPay {
         param.put("trade_source", para.getTradeSource());
         param.put("bank_fullname", para.getBankFullName());
         param.put("card_type", para.getCardType());
+        param.put("account_type", para.getAccountType());
+        param.put("account_no", para.getAccountNo());
+        param.put("account_name", para.getAccountName());
+        if (!StrUtil.empty(para.getMobile()))
+            param.put("mobile", para.getBankFullName());
+        if (!StrUtil.empty(para.getOptional()))
+            param.put("optional", para.getOptional());
+
+    }
+
+    /**
+     * 构建BCUser代付rest api参数
+     */
+    private static void buildBCUserTransferParam(Map<String, Object> param, BCTransferParameter para) {
+
+        param.put("app_id", BCCache.getAppID());
+        param.put("timestamp", System.currentTimeMillis());
+        if (BCCache.isSandbox()) {
+            param.put("app_sign", BCUtilPrivate.getAppSignatureWithTestSecret(StrUtil.toStr(param
+                    .get("timestamp"))));
+        } else {
+            param.put("app_sign",
+                    BCUtilPrivate.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
+        }
+        param.put("total_fee", para.getTotalFee());
+        param.put("bill_no", para.getBillNo());
+        param.put("title", para.getTitle());
+        param.put("trade_source", para.getTradeSource());
+        param.put("bank_fullname", para.getBankFullName());
+        param.put("card_type", para.getCardType());
+        param.put("channel", para.getChannel());
         param.put("account_type", para.getAccountType());
         param.put("account_no", para.getAccountNo());
         param.put("account_name", para.getAccountName());
