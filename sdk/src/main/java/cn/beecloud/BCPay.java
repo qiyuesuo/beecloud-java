@@ -1073,16 +1073,6 @@ public class BCPay {
         }
     }
 
-    private static List<String> generateBCGateWayBankList(List<String> bills) {
-        List<String> bankList = new ArrayList<String>();
-        for (Map<String, Object> bill : bills) {
-            BCOrder bcOrder = new BCOrder();
-            generateBCOrderBean(bill, bcOrder);
-            bcOrderList.add(bcOrder);
-        }
-        return bcOrderList;
-    }
-
     /**
      * 组建返回鉴权
      */
@@ -1126,9 +1116,9 @@ public class BCPay {
     public static List<String> getGateWayBanks(BCGateWayBanks para) throws BCException {
         Map<String, Object> param = new HashMap<String, Object>();
         buildGateWayBanksParam(param, para);
-        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiQueryBill(), param);
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getGateWayBankListUrl(), param);
 
-        return generateBCOrderList((List<Map<String, Object>>) ret.get("bills"));
+        return (List<String>) ret.get("banks");
     }
 
 }
