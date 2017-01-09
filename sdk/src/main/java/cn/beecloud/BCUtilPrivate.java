@@ -212,4 +212,14 @@ class BCUtilPrivate {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
                 + "/rest/bc_gateway/banks?para=";
     }
+
+    public static String getTransferBankListUrl() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/bc_user_transfer/banks?para=";
+    }
+
+    static String getUserApiBCTransfer() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/bc_user_transfer";
+    }
 }

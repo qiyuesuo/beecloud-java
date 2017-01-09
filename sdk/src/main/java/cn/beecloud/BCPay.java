@@ -128,6 +128,21 @@ public class BCPay {
     }
 
     /**
+     * User代付接口
+     *
+     * @param bcTransferParameter
+     * {@link BCTransferParameter} (必填) 支付参数
+     * @return 调起BeeCloud代付后的返回结果
+     * @throws BCException
+     */
+    public static void startBCUserTransfer(BCTransferParameter bcTransferParameter) throws BCException {
+        ValidationUtil.validateBCTransfer(bcTransferParameter);
+        Map<String, Object> param = new HashMap<String, Object>();
+        buildBCTransferParam(param, bcTransferParameter);
+        RequestUtil.doPost(BCUtilPrivate.getUserApiBCTransfer(), param);
+    }
+
+    /**
      * 退款接口
      *
      * @param refund
@@ -1109,6 +1124,19 @@ public class BCPay {
     }
 
     /**
+     * 构建查询银行卡rest api参数
+     */
+    private static void buildTransferBanksParam(Map<String, Object> param, BCTransferBanks para) {
+        param.put("app_id", BCCache.getAppID());
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign",
+                BCUtilPrivate.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
+        if (para.getType() != null) {
+            param.put("type", StrUtil.toStr(para.getType()));
+        }
+    }
+
+    /**
      * 检查某一接口是否支持测试模式
      */
     private static void checkTestModeSwitch() throws BCException {
@@ -1121,6 +1149,14 @@ public class BCPay {
         Map<String, Object> param = new HashMap<String, Object>();
         buildGateWayBanksParam(param, para);
         Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getGateWayBankListUrl(), param);
+
+        return (List<String>) ret.get("banks");
+    }
+
+    public static List<String> getTransferBanks(BCTransferBanks para) throws BCException {
+        Map<String, Object> param = new HashMap<String, Object>();
+        buildTransferBanksParam(param, para);
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getTransferBankListUrl(), param);
 
         return (List<String>) ret.get("banks");
     }
