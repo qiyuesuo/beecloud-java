@@ -85,6 +85,8 @@ public class BCOrder {
 
     private String payType;
 
+    private String buyerId;
+
 
     public BCOrder() {}
 
@@ -631,5 +633,13 @@ public class BCOrder {
 
     public void setPayType(String payType) {
         this.payType = payType;
+    }
+
+    public String getBuyerId() {
+        return buyerId;
+    }
+
+    public void setBuyerId(String buyerId) {
+        this.buyerId = buyerId;
     }
 }
