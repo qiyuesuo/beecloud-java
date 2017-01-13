@@ -170,6 +170,10 @@ codeUrl   |  微信扫码code url， 微信扫码支付（包括BeeCloud微信�
 url   |  支付跳转url，当渠道为ALI\_WEB 或 ALI\_QRCODE 或 ALI\_WAP 或 YEE\_WAP 或 YEE\_WEB 或 BD\_WEB 或 BD\_WAP，并且下单成功时返回
 html   |  支付提交html， 当渠道为ALI\_WEB 或 ALI\_QRCODE 或 ALI\_WAP 或 UN\_WEB 或 UN\_WAP 或 JD\_WAP 或 JD\_WEB 或 KUAIQIAN\_WAP 或 KUAIQIAN\_WEB，并且下单成功时返回
 wxJSAPIMap   |  微信公众号支付要素，微信公众号支付下单成功时返回
+idNo | 身份证号 选填
+idHolder | 与idNo对应的真实姓名，仅当idNo有值时，才为必填
+payType | 网关支付时，区分B2B,B2C，取值范围是字符串B2B,B2C，其他值非法，选填
+buyerId | 购买者的id
 
 
   
