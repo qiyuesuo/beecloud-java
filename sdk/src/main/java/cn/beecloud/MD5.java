@@ -60,7 +60,7 @@ class MD5 {
      * @throws SignatureException
      * @throws UnsupportedEncodingException
      */
-    private static byte[] getContentBytes(String content, String charset) {
+     static byte[] getContentBytes(String content, String charset) {
         if (charset == null || "".equals(charset)) {
             return content.getBytes();
         }

@@ -164,6 +164,26 @@ public class ValidationUtil {
 
     private final static String OPTIONAL_EMPTY = "optional 不能为空！";
 
+    private final static String BEEPAYTRANSFER_PARAM_EMPTY = "beepaytransfer参数不能为空！";
+
+    private final static String BEEPAYTRANSFER_WITHDRAWAMOUNT_EMPTY = "自动打款 withdrawAmount 必须是正整数!";
+
+    private final static String BEEPAYTRANSFER_BILLNO_EMPTY = "自动打款 billNo 不能为空!";
+
+    private final static String BEEPAYTRANSFER_TRANSFERTYPE_EMPTY = "自动打款transferType对公对私标识不正确!";
+
+    private final static String BEEPAYTRANSFER_BANKNAME_EMPTY = "自动打款 bankName 不能为空!";
+
+    private final static String BEEPAYTRANSFER_BANKACCOUNTNO_EMPTY = "自动打款 bankAccountNo 不能为空!";
+
+    private final static String BEEPAYTRANSFER_BANKACCOUNTNAME_EMPTY = "自动打款 bankAccountName 不能为空!";
+
+    private final static String BEEPAYTRANSFER_BANKCODE_EMPTY = "自动打款 bankCode不能为空!";
+
+    private final static String BEEPAYTRANSFER_NOTE_EMPTY = "自动打款 note不能为空!";
+
+
+
     static void validateQueryRefundStatus(PAY_CHANNEL channel, String refundNo) throws BCException {
         if (channel == null) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
@@ -365,7 +385,11 @@ public class ValidationUtil {
                 && !para.getChannel().equals(PAY_CHANNEL.JD)
                 && !para.getChannel().equals(PAY_CHANNEL.KUAIQIAN)
                 && !para.getChannel().equals(PAY_CHANNEL.BD)
-                && !para.getChannel().equals(PAY_CHANNEL.BC_GATEWAY)) {
+                && !para.getChannel().equals(PAY_CHANNEL.BC_GATEWAY)
+                && !para.getChannel().equals(PAY_CHANNEL.BC_WX_JSAPI)
+                && !para.getChannel().equals(PAY_CHANNEL.BC_NATIVE)
+                && !para.getChannel().equals(PAY_CHANNEL.BC_ALI_QRCODE)
+                && !para.getChannel().equals(PAY_CHANNEL.BC_ALI_SCAN)) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), CHANNEL_INVALID_FOR_REFUND);
         } else if (!para.getRefundNo().startsWith(
@@ -501,6 +525,38 @@ public class ValidationUtil {
                 && para.getAccountName() == null) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), TRANSFER_ACCOUNT_NAME_EMPTY);
+        }
+    }
+
+    static void validateBeePayTransfer(BeePayTransferParameter para) throws BCException {
+        if (para == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BEEPAYTRANSFER_PARAM_EMPTY);
+        } else if (para.getWithdrawAmount() == null||para.getWithdrawAmount().intValue()<=0) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BEEPAYTRANSFER_WITHDRAWAMOUNT_EMPTY);
+        }else if (para.getBillNo() == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BEEPAYTRANSFER_BILLNO_EMPTY);
+        }else if (para.getTransferType() == null||(!"1".equals(para.getTransferType())&&!"2".equals(para.getTransferType()))) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BEEPAYTRANSFER_TRANSFERTYPE_EMPTY);
+        }else if (para.getBankName() == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BEEPAYTRANSFER_BANKNAME_EMPTY);
+        }else if (para.getBankAccountNo() == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BEEPAYTRANSFER_BANKACCOUNTNO_EMPTY);
+        }else if (para.getBankAccountName() == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BEEPAYTRANSFER_BANKACCOUNTNAME_EMPTY);
+        }else if (para.getBankCode() == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BEEPAYTRANSFER_BANKCODE_EMPTY);
+        }
+        else if (para.getNote() == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BEEPAYTRANSFER_NOTE_EMPTY);
         }
     }
 
