@@ -116,11 +116,6 @@ class BCUtilPrivate {
                 + "/rest/transfer";
     }
 
-    static String getApiBeePayTransfer() {
-        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
-                +"/rest/gateway/bc_transfer";
-    }
-
     static String getkApiTransfers() {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
                 + "/rest/transfers";

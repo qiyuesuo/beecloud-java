@@ -428,26 +428,7 @@ public class BCPay {
         return "";
     }
 
-    /**
-     * BeePay自动打款 - 打款到银行卡
-     *
-     * @param para
-     * {@link BeePayTransferParameter} （必填）打款参数
-     * @return
-     * @throws BCException
-     */
-    public static String startBeePayTransfer(BeePayTransferParameter para) throws BCException {
-        ValidationUtil.validateBeePayTransfer(para);
-        Map<String, Object> param = new HashMap<String, Object>();
-        buildBeePayTransferParam(param, para);
-        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getApiBeePayTransfer(), param);
-        if(ret.containsKey("result_code")&&"0".equals(StrUtil.toStr(ret.get("result_code")))&&ret.containsKey("id")){
-            return StrUtil.toStr(ret.get("id"));
-        }else if(ret.containsKey("err_detail")){
-            return StrUtil.toStr(ret.get("err_detail"));
-        }
-        return "";
-    }
+
 
 
 
@@ -530,32 +511,28 @@ public class BCPay {
      * （必填） Webhook提供的timestamp，注意是String格式
      * @return 验签结果
      */
-    public static boolean verifySign(String sign, String timestamp) {
+/*    public static boolean verifySign(String sign, String timestamp) {
         String mySign = MD5.sign(BCCache.getAppID() + BCCache.getAppSecret(), timestamp, "UTF-8");
 
         if (sign.equals(mySign))
             return true;
         else
             return false;
-    }
+    }*/
 
     /**
      * webbook verifysign
      * @return
      */
-    public static boolean verifySignature(String string) {
-        JSONObject jsonObject = JSONObject.fromObject(string);
-        String mySign = MD5.sign(BCCache.getAppID() + BCCache.getAppSecret(), jsonObject.getString("timestamp"), "UTF-8");
-        if (!jsonObject.getString("sign").equals(mySign))
-            return false;
-
+    public static boolean verifySign(String signature,String transactionId,String transactionType,String channelType,
+                                     String transactionFee) {
         String masterKey = BCCache.getMasterKey();
 
         StringBuffer toSign = new StringBuffer();
-        toSign.append(BCCache.getAppID()).append(jsonObject.getString("transaction_id"))
-                .append(jsonObject.getString("transaction_type")).append(jsonObject.getString("channel_type"))
-                .append(jsonObject.get("transaction_fee"));
-         boolean isVerified = MD5.verify(toSign.toString(), jsonObject.getString("signature"), masterKey, "UTF-8");
+        toSign.append(BCCache.getAppID()).append(transactionId)
+                .append(transactionType).append(channelType)
+                .append(transactionFee);
+         boolean isVerified = MD5.verify(toSign.toString(), signature, masterKey, "UTF-8");
         if (!isVerified) {
             return false;
         }
@@ -563,28 +540,21 @@ public class BCPay {
     }
 
     /**
-     * 生成webhook 的 两个sing  成功返回  老的sign+","+新的sign
+     * 生成webhook 的 两个sing
      * webbook verifysign
      * @return
      */
-    public static String generateSignature(String string) {
-        StringBuffer result = new StringBuffer();
-        JSONObject jsonObject = JSONObject.fromObject(string);
-        String mySign = MD5.sign(BCCache.getAppID() + BCCache.getAppSecret(), jsonObject.getString("timestamp"), "UTF-8");
-        result.append(mySign);
-        String masterKey = BCCache.getMasterKey();
-
+    public static String generateSignature(String transactionId,String transactionType,String channelType,
+                                           String transactionFee) {
         StringBuffer toSign = new StringBuffer();
-        toSign.append(BCCache.getAppID()).append(jsonObject.getString("transaction_id"))
-                .append(jsonObject.getString("transaction_type")).append(jsonObject.getString("channel_type"))
-                .append(jsonObject.get("transaction_fee")).append(masterKey);
-
+        toSign.append(BCCache.getAppID()).append(transactionId)
+                .append(transactionType).append(channelType)
+                .append(transactionFee);
         if (StrUtil.empty(toSign) ) {
-            return result.toString();
+            return "";
         }
         String mysign2 = DigestUtils.md5Hex(MD5.getContentBytes(toSign.toString(),"UTF-8"));
-        result.append(",").append(mysign2);
-        return result.toString();
+        return mysign2;
     }
 
 
@@ -919,33 +889,6 @@ public class BCPay {
         if (para.getAccountName() != null) {
             param.put("account_name", para.getAccountName());
         }
-    }
-
-    /**
-     * 构建自动打款rest api参数
-     */
-    private static void buildBeePayTransferParam(Map<String, Object> param, BeePayTransferParameter para) {
-        param.put("app_id", BCCache.getAppID());
-        param.put("timestamp", System.currentTimeMillis());
-        param.put("app_sign", BCUtilPrivate.getAppSignatureWithMasterSecret(StrUtil.toStr(param
-                .get("timestamp"))));
-        param.put("withdraw_amount", para.getWithdrawAmount());
-        param.put("bill_no", para.getBillNo());
-        param.put("transfer_type", para.getTransferType());
-        param.put("bank_name", para.getBankName());
-        param.put("bank_account_no", para.getBankAccountNo());
-        param.put("bank_account_name", para.getBankAccountName());
-        param.put("bank_code", para.getBankCode());
-        //(app_id + bill_no + withdraw_amount + bank_account_no + master_secret 的MD5生成的签名(32字符十六进制)，进行验签。请在发起请求时自行按照此方式计算signature.
-        StringBuffer toCheck = new StringBuffer();
-        toCheck.append(BCCache.getAppID()).append(para.getBillNo()).append(para.getWithdrawAmount()).append(para.getBankAccountNo()).append(BCCache.getMasterKey());
-        String signature=DigestUtils.md5Hex(MD5.getContentBytes(toCheck.toString(),"UTF-8"));
-        param.put("signature", signature);
-        param.put("note", para.getNote());
-        if(null!=para.getOptional())
-            param.put("optional", para.getOptional());
-        if(null!=para.getNotifyUrl())
-            param.put("notify_url", para.getNotifyUrl());
     }
 
     /**

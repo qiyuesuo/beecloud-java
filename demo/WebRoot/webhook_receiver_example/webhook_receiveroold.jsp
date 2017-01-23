@@ -20,19 +20,27 @@
 <%!
     Logger log = Logger.getLogger(this.getClass());
 
-      boolean verifySign(String text,String masterKey,String signature) {
-        boolean isVerified = verify(text, signature, masterKey, "UTF-8");
-        if (!isVerified) {
+    boolean verify(String sign, String text, String key, String input_charset) {
+        text = text + key;
+        String mysign = DigestUtils.md5Hex(getContentBytes(text, input_charset));
+        log.info("mysign:" + mysign);
+
+        long timeDifference = System.currentTimeMillis() - Long.valueOf(key);
+        log.info("timeDifference:" + timeDifference);
+        if (mysign.equals(sign) && timeDifference <= 300000) {
+            return true;
+        } else {
             return false;
         }
-        return true;
     }
 
+    boolean verifySign(String sign, String timestamp) {
+        log.info("sign:" + sign);
+        log.info("timestamp:" + timestamp);
 
-     boolean verify(String text, String sign, String key, String inputCharset) {
-        text = text + key;
-        String mysign = DigestUtils.md5Hex(getContentBytes(text, inputCharset));
-        return mysign.equals(sign);
+        return verify(sign, BCCache.getAppID() + BCCache.getAppSecret(),
+                timestamp, "UTF-8");
+
     }
 
     byte[] getContentBytes(String content, String charset) {
@@ -48,13 +56,7 @@
 %>
 
 <%
-
-    Logger log = Logger.getLogger(this.getClass());
-    String appID="c5d1cba1-5e3f-4ba0-941d-9b0a371fe719";
-    String testSecret="4bfdd244-574d-4bf3-b034-0c751ed34fee";
-    String appSecret="39a7a518-9ac8-4a9e-87bc-7885f33cf18c";
-    String masterSecret="39a7a518-9ac8-4a9e-87bc-7885f33cf18c";
-    BeeCloud.registerApp(appID,testSecret, appSecret, masterSecret);
+    BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719",  "4bfdd244-574d-4bf3-b034-0c751ed34fee", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c");
     StringBuffer json = new StringBuffer();
     String line = null;
 
@@ -68,19 +70,14 @@
     } catch (Exception e) {
         e.printStackTrace();
     }
+
     JSONObject jsonObj = JSONObject.fromObject(json.toString());
 
-    String signature = jsonObj.getString("signature");
-    String transactionId=jsonObj.getString("transaction_id");
-    String transactionType=jsonObj.getString("transaction_type");
-    String channelType=jsonObj.getString("channel_type");
-    String transactionFee=jsonObj.getString("transaction_fee");
+    String sign = jsonObj.getString("sign");
+    String timestamp = jsonObj.getString("timestamp");
 
-    StringBuffer toSign = new StringBuffer();
-    toSign.append(BCCache.getAppID()).append(transactionId)
-            .append(transactionType).append(channelType)
-            .append(transactionFee);
-   boolean status = verifySign(toSign.toString(),masterSecret,signature);
+    boolean status = verifySign(sign, timestamp);
+
     if (status) { //验证成功
         out.println("success"); //请不要修改或删除
 
