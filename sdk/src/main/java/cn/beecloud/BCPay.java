@@ -664,6 +664,8 @@ public class BCPay {
         param.put("account_type", para.getAccountType());
         param.put("account_no", para.getAccountNo());
         param.put("account_name", para.getAccountName());
+        if (!StrUtil.empty(para.getNotifyUrl()))
+            param.put("notify_url", para.getNotifyUrl());
         if (!StrUtil.empty(para.getMobile()))
             param.put("mobile", para.getBankFullName());
         if (!StrUtil.empty(para.getOptional()))

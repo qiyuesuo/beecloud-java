@@ -32,6 +32,8 @@ public class BCTransferParameter {
 
     private String channel;
 
+    private String notifyUrl;
+
     public BCTransferParameter() {};
 
     public BCTransferParameter(Integer totalFee, String billNo, String title, String tradeSource,
@@ -143,5 +145,13 @@ public class BCTransferParameter {
 
     public void setChannel(String channel) {
         this.channel = channel;
+    }
+
+    public String getNotifyUrl() {
+        return notifyUrl;
+    }
+
+    public void setNotifyUrl(String notifyUrl) {
+        this.notifyUrl = notifyUrl;
     }
 }
