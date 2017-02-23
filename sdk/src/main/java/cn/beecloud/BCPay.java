@@ -1050,6 +1050,7 @@ public class BCPay {
             case WX_NATIVE:
             case BC_NATIVE:
             case BC_ALI_QRCODE:
+            case BC_ALI_WAP:
                 if (ret.containsKey("code_url") && null != ret.get("code_url")) {
                     order.setCodeUrl(StrUtil.toStr(ret.get("code_url")));
                 }
