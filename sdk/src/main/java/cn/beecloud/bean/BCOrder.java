@@ -87,6 +87,8 @@ public class BCOrder {
 
     private String buyerId;
 
+    private String cardType;
+
 
     public BCOrder() {}
 
@@ -641,5 +643,13 @@ public class BCOrder {
 
     public void setBuyerId(String buyerId) {
         this.buyerId = buyerId;
+    }
+
+    public String getCardType() {
+        return cardType;
+    }
+
+    public void setCardType(String cardType) {
+        this.cardType = cardType;
     }
 }
