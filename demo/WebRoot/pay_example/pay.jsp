@@ -118,7 +118,7 @@
         case BC_GATEWAY:
             try {
                 bcOrder.setReturnUrl(bcGatewayReturnUrl);
-                bcOrder.setGatewayBank(GATEWAY_BANK.CMB);
+                bcOrder.setGatewayBank("交通银行");//或者  中国银行
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
                 Thread.sleep(3000);
