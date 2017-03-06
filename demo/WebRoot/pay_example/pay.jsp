@@ -134,9 +134,8 @@
                 bcOrder.setReturnUrl(bcExpressReturnUrl);
                 bcOrder.setBcExpressCardNo("3221620240019686366");
                 bcOrder = BCPay.startBCPay(bcOrder);
-                out.println(bcOrder.getObjectId());
-                Thread.sleep(3000);
-                response.sendRedirect(bcOrder.getUrl());
+                String html=bcOrder.getHtml().replaceAll("<","&lt").replaceAll(">","&gt");
+                out.println(html);
             } catch (BCException e) {
                 log.error(e.getMessage(), e);
                 out.println(e.getMessage());
