@@ -118,8 +118,8 @@ public class RequestUtil {
             connection.setRequestProperty("Content-Type", "application/json");
 //            connection.setRequestProperty("Charset", "UTF-8");
 
-            connection.setReadTimeout(5000);
-            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(30000);
+            connection.setConnectTimeout(30000);
             connection.setDoInput(true);
 
             // POST || PUT
