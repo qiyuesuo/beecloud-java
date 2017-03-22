@@ -1,6 +1,6 @@
 ## BeeCloud Java SDK (Open Source)
 [![Build Status](https://travis-ci.org/beecloud/beecloud-java.svg?branch=master)](https://travis-ci.org/beecloud/beecloud-java)
-![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.4.16](https://img.shields.io/badge/Version-v3.4.16-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![v3.4.17](https://img.shields.io/badge/Version-v3.4.17-blue.svg) 
 
 ## 简介
 
@@ -54,7 +54,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.4.16</version>
+    <version>3.4.17</version>
 </dependency>
 ```
 工程名以及版本号需要保持更新。（更新可参考本项目的pom.xml，文件最顶端）
@@ -68,7 +68,7 @@ BeeCloud网关支付
 <dependency>   
     <groupId>cn.beecloud</groupId>
     <artifactId>beecloud-java-sdk</artifactId>
-    <version>3.4.16</version>
+    <version>3.4.17</version>
     <exclusions>  //删除beecloud java sdk依赖的包
          <exclusion>  
              <groupId>org.hibernate</groupId>  

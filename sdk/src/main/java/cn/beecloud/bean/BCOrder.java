@@ -89,6 +89,8 @@ public class BCOrder {
 
     private String cardType;
 
+    private  Map<String,Object> resultMap;
+
 
     public BCOrder() {}
 
@@ -619,6 +621,14 @@ public class BCOrder {
      */
     public String getIdHolder() {
         return idHolder;
+    }
+
+    public Map<String, Object> getResultMap() {
+        return resultMap;
+    }
+
+    public void setResultMap(Map<String, Object> resultMap) {
+        this.resultMap = resultMap;
     }
 
     /**

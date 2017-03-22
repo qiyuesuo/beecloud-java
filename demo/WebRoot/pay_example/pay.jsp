@@ -163,10 +163,6 @@
                 out.println(e.getMessage());
             }
             break;
-        case WX:
-            break;
-        case WX_APP:
-            break;
         case WX_NATIVE:
             try {
                 bcOrder.setNotifyUrl("https:///apidynamic.beecloud.cn/test");
@@ -179,7 +175,6 @@
                 out.println(e.getMessage());
             }
             break;
-
         case WX_JSAPI:
         case BC_WX_JSAPI:
             //微信 公众号id（读取配置文件conf.properties）及微信 redirec_uri
@@ -465,39 +460,27 @@
                 }
             }
             break;
-
-        case WX_SCAN:
-            break;
-        case ALI:
-            break;
-        case ALI_APP:
-            break;
-        case ALI_SCAN:
-            break;
-        case ALI_OFFLINE_QRCODE:
-            break;
-        case UN:
-            break;
-        case UN_APP:
-            break;
-        case YEE:
-            break;
-        case JD:
-            break;
-        case KUAIQIAN:
-            break;
-        case BD:
-            break;
-        case BD_APP:
-            break;
-        case PAYPAL:
-            break;
-        case PAYPAL_SANDBOX:
-            break;
-        case PAYPAL_LIVE:
-            break;
         default:
-            break;
+            /**
+             *  在index.jsp 加上渠道  下面代码,方便查看支付信息
+                <li onclick="paySwitch(this)">
+                <input type="radio" value="支付渠道" name="paytype">
+                <button>BC_ALI_WAP</button>
+                </li>
+             **/
+            //WX_APP,ALI_APP
+            try {
+                bcOrder.setTotalFee(1);
+                bcOrder.setReturnUrl("http://www.baidu.com");
+                bcOrder = BCPay.startBCPay(bcOrder);
+                Map<String,Object> resultMap=bcOrder.getResultMap();
+                for (Map.Entry<String, Object> entry : resultMap.entrySet()) {
+                    out.print(entry.getKey()+"="+resultMap.get(entry.getKey())+",");
+                }
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
     }
 %>
 <%!

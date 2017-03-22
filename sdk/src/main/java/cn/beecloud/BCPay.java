@@ -1050,6 +1050,7 @@ public class BCPay {
      */
     private static void placeOrder(BCOrder order, Map<String, Object> ret) {
         order.setObjectId(StrUtil.toStr(ret.get("id")));
+        order.setResultMap(ret);
         switch (order.getChannel()) {
             case WX_NATIVE:
             case BC_NATIVE:
