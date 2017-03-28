@@ -643,6 +643,9 @@ public class BCPay {
         if (para.getCardType() != null) {
             param.put("card_type", para.getCardType());
         }
+        if(para.getStoreId()!=null){
+            param.put("store_id", para.getStoreId());
+        }
     }
 
     /**

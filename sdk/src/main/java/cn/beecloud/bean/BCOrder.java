@@ -91,6 +91,8 @@ public class BCOrder {
 
     private  Map<String,Object> resultMap;
 
+    private String storeId;
+
 
     public BCOrder() {}
 
@@ -661,5 +663,17 @@ public class BCOrder {
 
     public void setCardType(String cardType) {
         this.cardType = cardType;
+    }
+
+    /**
+     * 订单
+     * @return
+     */
+    public String getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
     }
 }
