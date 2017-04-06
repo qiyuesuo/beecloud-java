@@ -499,8 +499,9 @@ public class BCPay {
 
         Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiBCTransferBanks(), param);
 
-        return (List<String>) ret.get("bank_list");
+        return (List<String>) ret.get("banks");
     }
+
 
     /**
      * Webhook接收签名验证接口
