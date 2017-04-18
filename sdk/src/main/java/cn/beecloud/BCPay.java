@@ -1063,8 +1063,8 @@ public class BCPay {
                 if (ret.containsKey("code_url") && null != ret.get("code_url")) {
                     order.setCodeUrl(StrUtil.toStr(ret.get("code_url")));
                 }
-                break;
-            case WX_JSAPI:*/
+                break;*/
+            case WX_JSAPI:
             case BC_WX_JSAPI:
                 order.setWxJSAPIMap(generateWXJSAPIMap(ret));
                 break;
