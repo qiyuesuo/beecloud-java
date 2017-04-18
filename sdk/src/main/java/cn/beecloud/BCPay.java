@@ -1056,7 +1056,7 @@ public class BCPay {
         order.setObjectId(StrUtil.toStr(ret.get("id")));
         order.setResultMap(ret);
         switch (order.getChannel()) {
-            case WX_NATIVE:
+            /*case WX_NATIVE:
             case BC_NATIVE:
             case BC_ALI_QRCODE:
             case BC_ALI_WAP:
@@ -1064,11 +1064,11 @@ public class BCPay {
                     order.setCodeUrl(StrUtil.toStr(ret.get("code_url")));
                 }
                 break;
-            case WX_JSAPI:
+            case WX_JSAPI:*/
             case BC_WX_JSAPI:
                 order.setWxJSAPIMap(generateWXJSAPIMap(ret));
                 break;
-            case ALI_WEB:
+            /*case ALI_WEB:
             case ALI_QRCODE:
             case ALI_WAP:
                 if (ret.containsKey("html") && null != ret.get("html") && ret.containsKey("url")
@@ -1098,6 +1098,7 @@ public class BCPay {
                     order.setUrl(StrUtil.toStr(ret.get("url")));
                 }
                 break;
+            case BC_ALI_WEB:
             case BC_EXPRESS:
                 if (ret.containsKey("url") && null != ret.get("url")) {
                     order.setUrl(StrUtil.toStr(ret.get("url")));
@@ -1105,8 +1106,23 @@ public class BCPay {
                 if (ret.containsKey("html") && null != ret.get("html")) {
                     order.setHtml(StrUtil.toStr(ret.get("html")));
                 }
-                break;
+                break;*/
             default:
+                if (ret.containsKey("code_url") && null != ret.get("code_url")) {
+                    order.setCodeUrl(StrUtil.toStr(ret.get("code_url")));
+                }
+                if (ret.containsKey("url") && null != ret.get("url")) {
+                    order.setUrl(StrUtil.toStr(ret.get("url")));
+                }
+                if (ret.containsKey("html") && null != ret.get("html")) {
+                    order.setHtml(StrUtil.toStr(ret.get("html")));
+                }
+                if(StrUtil.empty(order.getUrl())&&!StrUtil.empty(order.getCodeUrl())){
+                    order.setUrl(order.getCodeUrl());
+                }
+                if(StrUtil.empty(order.getCodeUrl())&&!StrUtil.empty(order.getUrl())){
+                    order.setCodeUrl(order.getUrl());
+                }
                 break;
         }
     }
