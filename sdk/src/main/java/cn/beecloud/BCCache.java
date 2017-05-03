@@ -102,7 +102,7 @@ public class BCCache {
     		try {
 				prop.load(inputStream);
 				String host = prop.getProperty("backend");
-				if (!host.trim().equals("")) {
+				if (!"".equals(StrUtil.toStr(host).trim())) {
 					apiHostArray[0] = "http://" + host + ":8080";
 					apiHostArray[1] = "http://" + host + ":8080";
 					apiHostArray[2] = "http://" + host + ":8080";
