@@ -123,11 +123,11 @@ public class BCPay {
      * @return 调起BeeCloud代付后的返回结果
      * @throws BCException
      */
-    public static void startBCTransfer(BCTransferParameter bcTransferParameter) throws BCException {
+    public static Map<String, Object> startBCTransfer(BCTransferParameter bcTransferParameter) throws BCException {
         ValidationUtil.validateBCTransfer(bcTransferParameter);
         Map<String, Object> param = new HashMap<String, Object>();
         buildBCTransferParam(param, bcTransferParameter);
-        RequestUtil.doPost(BCUtilPrivate.getkApiBCTransfer(), param);
+        return RequestUtil.doPost(BCUtilPrivate.getkApiBCTransfer(), param);
     }
 
     /**
