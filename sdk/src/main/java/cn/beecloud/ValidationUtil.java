@@ -104,6 +104,12 @@ public class ValidationUtil {
 
     private final static String CHANNEL_EMPTY = "channel 不能为空！";
 
+    private final static String BILLID_EMPTY = "billId 不能为空！";
+
+    private final static String TOKEN_EMPTY = "token 不能为空！";
+
+    private final static String VERIFYCODE_EMPTY = "verifyCode 不能为空！";
+
     private final static String YEE_NOBANCARD_FACTOR_EMPTY = "cardNo, cardPwd, frqid 不能为空！";
 
     private final static String REFUND_NO_FORMAT_INVALID = "refundNo 是格式为当前日期加3-24位数字字母（不能为000）流水号的字符串！ ";
@@ -301,6 +307,26 @@ public class ValidationUtil {
                 }
             }
     }
+
+
+    static void validateBCBillConfirm(BCBillConfirm para) throws BCException {
+
+        if (para == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), PAY_PARAM_EMPTY);
+        }
+        if (StrUtil.empty(para.getBillId())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BILLID_EMPTY);
+        } else  if (StrUtil.empty(para.getToken())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), TOKEN_EMPTY);
+        } else  if (StrUtil.empty(para.getVerifyCode())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), VERIFYCODE_EMPTY);
+        }
+    }
+
 
     static void validateBCTransfer(BCTransferParameter para) throws BCException {
 

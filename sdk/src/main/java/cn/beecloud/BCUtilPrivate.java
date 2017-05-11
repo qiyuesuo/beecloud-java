@@ -71,6 +71,11 @@ class BCUtilPrivate {
                 + "/rest/bill";
     }
 
+    static String getkApiBillConfirm() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/bill/confirm";
+    }
+
     static String getkApiOfflinePay() {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
                 + "/rest/offline/bill";

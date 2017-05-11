@@ -93,6 +93,8 @@ public class BCOrder {
 
     private String storeId;
 
+    private String token;
+
 
     public BCOrder() {}
 
@@ -675,5 +677,16 @@ public class BCOrder {
 
     public void setStoreId(String storeId) {
         this.storeId = storeId;
+    }
+
+    public String getToken() {
+        return token;
+    }
+    /**
+     * @param token
+     * token
+     */
+    public void setToken(String token) {
+        this.token = token;
     }
 }
