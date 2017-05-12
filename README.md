@@ -317,52 +317,26 @@ firstName | 用户名字，（必填）
 lastName | 用户的姓，（必填）
 cardType | 卡类别 visa/mastercard/discover/amex，（必填）
 
+### <a name="confirm">认证支付</a>
+认证接口接收BCBillConfirm参数对象，该对象封装了发起认证支付所需的各个具体参数。  
 
-### <a name="transfer">批量打款</a>
-批量打款接口接收TransfersParameter参数对象，该对象封装了发起批量打款所需的各个具体参数。  
-
-成功发起批量打款将会返回批量打款跳转url。
+EC_EXPRESS 支付指定的渠道需要进行认证支付
   
-发起批量打款异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
+发起认证异常情况将抛出BCException, 开发者需要捕获此异常进行相应失败操作 开发者可根据异常消息判断异常的具体信息，异常信息的格式为<mark>"resultCode:xxx;resultMsg:xxx;errDetail:xxx(;responseCode:xxx)"</mark>。
 
 ```java
-TransfersParameter para = new TransfersParameter();
-para.setBatchNo(batchNo);
-para.setAccountName(accountName);
-para.setTransferDataList(list);
-para.setChannel(PAY_CHANNEL.ALI);
-List<ALITransferData> list = new ArrayList<ALITransferData>();
-ALITransferData data1 = new ALITransferData("transfertest11223", "13584809743", "袁某某", 1, "赏赐");
-ALITransferData data2 = new ALITransferData("transfertest11224", "13584809742", "张某某", 1, "赏赐");
-list.add(data1);
-list.add(data2);
-try {
-    String url = BCPay.startTransfers(para);
-    response.sendRedirect(url);
-} catch (BCException e) {
-    log.error(e.getMessage(), e);
-    out.println(e.getMessage());
-}
-```
+BeeCloud.registerApp("appid", "", "appSecret", "masterSecret");
+BCBillConfirm confirm=new BCBillConfirm("支付返回的token","支付返回的id","手机短信验证码");
+Map<String, Object> map= BCPay.billConfirm(confirm);
+System.out.print(map.toString());```
 
-代码中的TransfersParameter封装字段含义如下：
+代码中的BCBillConfirm封装字段含义如下：
 
 key | 说明
 ---- | -----
-channel | 渠道类型， 暂时只支持ALI，（必填）
-batchNo | 批量付款批号， 此次批量付款的唯一标示，11-32位数字字母组合，（必填）
-accountName | 付款方的支付宝账户名, 支付宝账户名称,例如:毛毛，（必填）  
-transferDataList |  付款的详细数据 {ALITransferData} 的 List集合，（必填）  
-
-付款详细数据对象ALITransferData封装字段含义如下：
-
-key | 说明
----- | -----
-transferId | 付款流水号，32位以内数字字母，（必填）
-receiverAccount | 收款方账户，（必填）
-receiverName | 收款方账号姓名，（必填）
-transferFee | 打款金额，单位为分，（必填）
-transferNote | 打款备注，（必填）
+token | 支付返回的token（必填）
+billId | 支付返回的订单id（必填）
+verifyCode | 短信验证码（必填）    
 
 
 ### <a name="refund">退款</a>
