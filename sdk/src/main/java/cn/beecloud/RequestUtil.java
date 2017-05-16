@@ -117,9 +117,13 @@ public class RequestUtil {
             connection.setRequestMethod(request_type.name());
             connection.setRequestProperty("Content-Type", "application/json");
 //            connection.setRequestProperty("Charset", "UTF-8");
-
-            connection.setReadTimeout(30000);
-            connection.setConnectTimeout(30000);
+            if(BCCache.getNetworkTimeout()>0){
+                connection.setReadTimeout(BCCache.getNetworkTimeout());
+                connection.setConnectTimeout(BCCache.getNetworkTimeout());
+            }else {
+                connection.setReadTimeout(30000);
+                connection.setConnectTimeout(30000);
+            }
             connection.setDoInput(true);
 
             // POST || PUT
