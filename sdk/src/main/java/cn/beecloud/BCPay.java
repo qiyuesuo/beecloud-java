@@ -146,11 +146,11 @@ public class BCPay {
      * @return 调起BeeCloud代付后的返回结果
      * @throws BCException
      */
-    public static void startBCTransfer(BCTransferParameter bcTransferParameter) throws BCException {
+    public static Map<String, Object> startBCTransfer(BCTransferParameter bcTransferParameter) throws BCException {
         ValidationUtil.validateBCTransfer(bcTransferParameter);
         Map<String, Object> param = new HashMap<String, Object>();
         buildBCTransferParam(param, bcTransferParameter);
-        RequestUtil.doPost(BCUtilPrivate.getkApiBCTransfer(), param);
+        return RequestUtil.doPost(BCUtilPrivate.getkApiBCTransfer(), param);
     }
 
     /**
@@ -519,7 +519,7 @@ public class BCPay {
 
         Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiBCTransferBanks(), param);
 
-        return (List<String>) ret.get("bank_list");
+        return (List<String>) ret.get("banks");
     }
 
     /**
@@ -663,6 +663,11 @@ public class BCPay {
         if (para.getCardType() != null) {
             param.put("card_type", para.getCardType());
         }
+
+        if(para.getStoreId()!=null){
+            param.put("store_id", para.getStoreId());
+        }
+
     }
 
     /**
@@ -1094,20 +1099,22 @@ public class BCPay {
      */
     private static void placeOrder(BCOrder order, Map<String, Object> ret) {
         order.setObjectId(StrUtil.toStr(ret.get("id")));
+        order.setResultMap(ret);
+
         switch (order.getChannel()) {
-            case WX_NATIVE:
+            /*case WX_NATIVE:
             case BC_NATIVE:
             case BC_ALI_QRCODE:
             case BC_ALI_WAP:
                 if (ret.containsKey("code_url") && null != ret.get("code_url")) {
                     order.setCodeUrl(StrUtil.toStr(ret.get("code_url")));
                 }
-                break;
+                break;*/
             case WX_JSAPI:
             case BC_WX_JSAPI:
                 order.setWxJSAPIMap(generateWXJSAPIMap(ret));
                 break;
-            case ALI_WEB:
+            /*case ALI_WEB:
             case ALI_QRCODE:
             case ALI_WAP:
                 if (ret.containsKey("html") && null != ret.get("html") && ret.containsKey("url")
@@ -1137,6 +1144,7 @@ public class BCPay {
                     order.setUrl(StrUtil.toStr(ret.get("url")));
                 }
                 break;
+            case BC_ALI_WEB:
             case BC_EXPRESS:
                 if (ret.containsKey("url") && null != ret.get("url")) {
                     order.setUrl(StrUtil.toStr(ret.get("url")));
@@ -1144,10 +1152,30 @@ public class BCPay {
                 if (ret.containsKey("html") && null != ret.get("html")) {
                     order.setHtml(StrUtil.toStr(ret.get("html")));
                 }
-                break;
+                break;*/
             default:
+                if (ret.containsKey("code_url") && null != ret.get("code_url")) {
+                    order.setCodeUrl(StrUtil.toStr(ret.get("code_url")));
+                }
+                if (ret.containsKey("url") && null != ret.get("url")) {
+                    order.setUrl(StrUtil.toStr(ret.get("url")));
+                }
+                if (ret.containsKey("html") && null != ret.get("html")) {
+                    order.setHtml(StrUtil.toStr(ret.get("html")));
+                }
+                if(StrUtil.empty(order.getUrl())&&!StrUtil.empty(order.getCodeUrl())){
+                    order.setUrl(order.getCodeUrl());
+                }
+                if(StrUtil.empty(order.getCodeUrl())&&!StrUtil.empty(order.getUrl())){
+                    order.setCodeUrl(order.getUrl());
+                }
+
                 break;
         }
+        if(ret.containsKey("token")){
+            order.setToken(StrUtil.toStr(ret.get("token")));
+        }
+
     }
 
     /*
