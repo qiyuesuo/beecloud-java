@@ -368,6 +368,26 @@ public class ValidationUtil {
 
     }
 
+    static void validateBCT0Transfer(BCT0TransferParameter para) throws BCException {
+
+        if (para == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), PAY_PARAM_EMPTY);
+        }
+        if (StrUtil.empty(para.getBillNo())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_EMPTY);
+        } else if (StrUtil.empty(para.getTotalFee())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), TOTAL_FEE_EMPTY);
+        } else if (para.getBillNo() != null && !para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_FORMAT_INVALID);
+        }
+
+
+    }
+
     static void validateBCRefund(BCRefund para) throws BCException {
         if (para == null) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),

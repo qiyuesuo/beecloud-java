@@ -2,10 +2,8 @@ package cn.beecloud;
 
 import static junit.framework.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import cn.beecloud.bean.BCT0TransferParameter;
+import java.util.*;
 
 import mockit.Deencapsulation;
 import mockit.Expectations;
@@ -17,7 +15,7 @@ import cn.beecloud.BCEumeration.RESULT_TYPE;
 import cn.beecloud.bean.BCException;
 import cn.beecloud.bean.ALITransferData;
 import cn.beecloud.bean.TransfersParameter;
-
+import org.junit.Test;
 
 /**
  * 批量打款单元测试
@@ -343,5 +341,19 @@ public class TransfersTest {
         param.setBatchNo(batchNo);
         param.setChannel(channel);
         param.setTransferDataList(list);
+    }
+
+    @Test
+    public void testT0Transfer() {
+        BeeCloud.registerApp("c89a3345-48ae-495c-96e1-dd34fb95ff3a", "",
+                "6d43ee31-3b6e-44ea-b0e1-b37e8d3448a6", "5a45285b-75e7-475c-9296-d11bb5d06620");
+        BCT0TransferParameter p = new BCT0TransferParameter(101, UUID.randomUUID().toString().replaceAll("-", ""),
+                "1", "中国银行", "6217856101009660486", "高健峰", "boc", "test", "", null);
+        try {
+            Map<String, Object> result = BCPay.startBCT0transfer(p);
+            System.out.println(result);
+        } catch (BCException e) {
+            e.printStackTrace();
+        }
     }
 }

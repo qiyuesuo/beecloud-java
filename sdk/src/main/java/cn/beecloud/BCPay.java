@@ -9,18 +9,17 @@
  */
 package cn.beecloud;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
+import cn.beecloud.BCEumeration.BC_TRANSFER_BANK_TYPE;
 import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
-import cn.beecloud.BCEumeration.BC_TRANSFER_BANK_TYPE;
 import cn.beecloud.bean.*;
-import net.sf.json.JSONObject;
-import org.apache.commons.codec.digest.DigestUtils;
 
 
 /**
@@ -67,28 +66,6 @@ public class BCPay {
         placeOrder(order, ret);
 
         return order;
-    }
-
-
-    /**
-     * (认证支付)确认支付接口
-     *
-     * @param confirm
-     * {@link BCBillConfirm} (必填) 支付rfa参数
-     * @return 调起BeeCloud支付后的返回结果
-     * @throws BCException
-     */
-    public static  Map<String, Object>  billConfirm(BCBillConfirm confirm) throws BCException {
-
-        ValidationUtil.validateBCBillConfirm(confirm);
-
-        Map<String, Object> param = new HashMap<String, Object>();
-
-        buildBillConfirmParam(param, confirm);
-
-        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiBillConfirm(), param);
-
-        return ret;
     }
 
     /**
@@ -145,26 +122,23 @@ public class BCPay {
      * @return 调起BeeCloud代付后的返回结果
      * @throws BCException
      */
-    public static Map<String, Object> startBCTransfer(BCTransferParameter bcTransferParameter) throws BCException {
+    public static void startBCTransfer(BCTransferParameter bcTransferParameter) throws BCException {
         ValidationUtil.validateBCTransfer(bcTransferParameter);
         Map<String, Object> param = new HashMap<String, Object>();
         buildBCTransferParam(param, bcTransferParameter);
-        return RequestUtil.doPost(BCUtilPrivate.getkApiBCTransfer(), param);
+        RequestUtil.doPost(BCUtilPrivate.getkApiBCTransfer(), param);
     }
 
     /**
-     * User代付接口
+     * T0余额代付接口
      *
-     * @param bcTransferParameter
-     * {@link BCTransferParameter} (必填) 支付参数
-     * @return 调起BeeCloud代付后的返回结果
-     * @throws BCException
+     *
      */
-    public static void startBCUserTransfer(BCTransferParameter bcTransferParameter) throws BCException {
-        ValidationUtil.validateBCTransfer(bcTransferParameter);
+    public static Map<String, Object> startBCT0transfer(BCT0TransferParameter bcTransferParameter) throws BCException {
+        ValidationUtil.validateBCT0Transfer(bcTransferParameter);
         Map<String, Object> param = new HashMap<String, Object>();
-        buildBCUserTransferParam(param, bcTransferParameter);
-        RequestUtil.doPost(BCUtilPrivate.getUserApiBCTransfer(), param);
+        buildBCT0TransferParam(param, bcTransferParameter);
+        return RequestUtil.doPost(BCUtilPrivate.getkApiBCT0Transfer(), param);
     }
 
     /**
@@ -521,9 +495,8 @@ public class BCPay {
 
         Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getkApiBCTransferBanks(), param);
 
-        return (List<String>) ret.get("banks");
+        return (List<String>) ret.get("bank_list");
     }
-
 
     /**
      * Webhook接收签名验证接口
@@ -666,28 +639,6 @@ public class BCPay {
         if (para.getCardType() != null) {
             param.put("card_type", para.getCardType());
         }
-        if(para.getStoreId()!=null){
-            param.put("store_id", para.getStoreId());
-        }
-    }
-
-    /**
-     * 构建认证支付rest api参数
-     */
-    private static void buildBillConfirmParam(Map<String, Object> param, BCBillConfirm para) {
-
-        param.put("app_id", BCCache.getAppID());
-        param.put("timestamp", System.currentTimeMillis());
-        if (BCCache.isSandbox()) {
-            param.put("app_sign", BCUtilPrivate.getAppSignatureWithTestSecret(StrUtil.toStr(param
-                    .get("timestamp"))));
-        } else {
-            param.put("app_sign",
-                    BCUtilPrivate.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
-        }
-        param.put("token", para.getToken());
-        param.put("bc_bill_id", para.getBillId());
-        param.put("verify_code", para.getVerifyCode());
     }
 
     /**
@@ -717,6 +668,30 @@ public class BCPay {
             param.put("notify_url", para.getNotifyUrl());
         if (!StrUtil.empty(para.getMobile()))
             param.put("mobile", para.getBankFullName());
+        if (!StrUtil.empty(para.getOptional()))
+            param.put("optional", para.getOptional());
+
+    }
+
+    /**
+     * 构建BC代付rest api参数
+     */
+    private static void buildBCT0TransferParam(Map<String, Object> param, BCT0TransferParameter para) {
+
+        param.put("app_id", BCCache.getAppID());
+        param.put("withdraw_amount", para.getTotalFee());
+        param.put("bill_no", para.getBillNo());
+        param.put("note", para.getNote());
+        param.put("transfer_type", para.getTransferType());
+        param.put("bank_name", para.getBankName());
+        param.put("bank_account_no", para.getBankAccountNo());
+        param.put("bank_account_name", para.getBankAccountName());
+        param.put("bank_code", para.getBankCode());
+        param.put("signature",
+                BCUtilPrivate.masterSign(BCCache.getAppID() + para.getBillNo() + para.getTotalFee()
+                        + para.getBankAccountNo()));
+        if (!StrUtil.empty(para.getNotifyUrl()))
+            param.put("notify_url", para.getNotifyUrl());
         if (!StrUtil.empty(para.getOptional()))
             param.put("optional", para.getOptional());
 
@@ -1095,21 +1070,20 @@ public class BCPay {
      */
     private static void placeOrder(BCOrder order, Map<String, Object> ret) {
         order.setObjectId(StrUtil.toStr(ret.get("id")));
-        order.setResultMap(ret);
         switch (order.getChannel()) {
-            /*case WX_NATIVE:
+            case WX_NATIVE:
             case BC_NATIVE:
             case BC_ALI_QRCODE:
             case BC_ALI_WAP:
                 if (ret.containsKey("code_url") && null != ret.get("code_url")) {
                     order.setCodeUrl(StrUtil.toStr(ret.get("code_url")));
                 }
-                break;*/
+                break;
             case WX_JSAPI:
             case BC_WX_JSAPI:
                 order.setWxJSAPIMap(generateWXJSAPIMap(ret));
                 break;
-            /*case ALI_WEB:
+            case ALI_WEB:
             case ALI_QRCODE:
             case ALI_WAP:
                 if (ret.containsKey("html") && null != ret.get("html") && ret.containsKey("url")
@@ -1139,7 +1113,6 @@ public class BCPay {
                     order.setUrl(StrUtil.toStr(ret.get("url")));
                 }
                 break;
-            case BC_ALI_WEB:
             case BC_EXPRESS:
                 if (ret.containsKey("url") && null != ret.get("url")) {
                     order.setUrl(StrUtil.toStr(ret.get("url")));
@@ -1147,27 +1120,9 @@ public class BCPay {
                 if (ret.containsKey("html") && null != ret.get("html")) {
                     order.setHtml(StrUtil.toStr(ret.get("html")));
                 }
-                break;*/
-            default:
-                if (ret.containsKey("code_url") && null != ret.get("code_url")) {
-                    order.setCodeUrl(StrUtil.toStr(ret.get("code_url")));
-                }
-                if (ret.containsKey("url") && null != ret.get("url")) {
-                    order.setUrl(StrUtil.toStr(ret.get("url")));
-                }
-                if (ret.containsKey("html") && null != ret.get("html")) {
-                    order.setHtml(StrUtil.toStr(ret.get("html")));
-                }
-                if(StrUtil.empty(order.getUrl())&&!StrUtil.empty(order.getCodeUrl())){
-                    order.setUrl(order.getCodeUrl());
-                }
-                if(StrUtil.empty(order.getCodeUrl())&&!StrUtil.empty(order.getUrl())){
-                    order.setCodeUrl(order.getUrl());
-                }
                 break;
-        }
-        if(ret.containsKey("token")){
-            order.setToken(StrUtil.toStr(ret.get("token")));
+            default:
+                break;
         }
     }
 
