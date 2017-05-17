@@ -68,6 +68,30 @@ public class BCPay {
         return order;
     }
 
+
+    /**
+     * (认证支付)确认支付接口
+     *
+     * @param confirm
+     * {@link BCBillConfirm} (必填) 支付rfa参数
+     * @return 调起BeeCloud支付后的返回结果
+     * @throws BCException
+     */
+    public static  Map<String, Object>  billConfirm(BCBillConfirm confirm) throws BCException {
+
+        ValidationUtil.validateBCBillConfirm(confirm);
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildBillConfirmParam(param, confirm);
+
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiBillConfirm(), param);
+
+        return ret;
+    }
+
+
+
     /**
      * BeeCloud线下支付接口
      *
@@ -1270,5 +1294,25 @@ public class BCPay {
 
         return (List<String>) ret.get("banks");
     }
+
+    /**
+     * 构建认证支付rest api参数
+     */
+    private static void buildBillConfirmParam(Map<String, Object> param, BCBillConfirm para) {
+
+        param.put("app_id", BCCache.getAppID());
+        param.put("timestamp", System.currentTimeMillis());
+        if (BCCache.isSandbox()) {
+            param.put("app_sign", BCUtilPrivate.getAppSignatureWithTestSecret(StrUtil.toStr(param
+                    .get("timestamp"))));
+        } else {
+            param.put("app_sign",
+                    BCUtilPrivate.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
+        }
+        param.put("token", para.getToken());
+        param.put("bc_bill_id", para.getBillId());
+        param.put("verify_code", para.getVerifyCode());
+    }
+
 
 }
