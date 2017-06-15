@@ -95,6 +95,8 @@ public class BCOrder {
 
     private String token;
 
+    private String tradeNo;
+
 
     public BCOrder() {}
 
@@ -688,5 +690,13 @@ public class BCOrder {
      */
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getTradeNo() {
+        return tradeNo;
+    }
+
+    public void setTradeNo(String tradeNo) {
+        this.tradeNo = tradeNo;
     }
 }

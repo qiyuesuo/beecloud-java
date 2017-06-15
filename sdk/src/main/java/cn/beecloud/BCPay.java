@@ -1114,6 +1114,11 @@ public class BCPay {
             case BC_WX_JSAPI:
                 order.setWxJSAPIMap(generateWXJSAPIMap(ret));
                 break;
+            case BC_ALI_JSAPI:
+                if (ret.containsKey("trade_no") && null != ret.get("trade_no")) {
+                    order.setTradeNo(StrUtil.toStr(ret.get("trade_no")));
+                }
+                break;
             /*case ALI_WEB:
             case ALI_QRCODE:
             case ALI_WAP:

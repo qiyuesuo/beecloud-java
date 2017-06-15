@@ -270,7 +270,7 @@ public class ValidationUtil {
                 .equals(PAY_CHANNEL.JD_WAP))) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), RETURN_URL_EMPTY);
-        } else if (para.getChannel().equals(PAY_CHANNEL.WX_JSAPI)
+        } else if ((para.getChannel().equals(PAY_CHANNEL.WX_JSAPI) || para.getChannel().equals(PAY_CHANNEL.BC_WX_JSAPI) || para.getChannel().equals(PAY_CHANNEL.BC_ALI_JSAPI))
                 && StrUtil.empty(para.getOpenId())) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
                     RESULT_TYPE.PARAM_INVALID.name(), OPENID_EMPTY);

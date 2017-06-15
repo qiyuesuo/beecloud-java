@@ -81,7 +81,8 @@ public class BCEumeration {
         BC_WX_SCAN,
         BC_ALI_SCAN,
         CP,
-        CP_WEB
+        CP_WEB,
+        BC_ALI_JSAPI
     }
 
     public enum TRANSFER_CHANNEL {
