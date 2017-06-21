@@ -39,6 +39,7 @@ public class RequestUtil {
      * @throws BCException
      */
     public static Map<String, Object> doPost(String requestUrl, Map<String, Object> param) throws BCException {
+        addBcAnalysis(param);
         return request(requestUrl, param, REQUEST_TYPE.POST);
     }
 
@@ -76,6 +77,12 @@ public class RequestUtil {
 
     public static Map<String, Object> doDelete(String requestUrl, String param) throws BCException {
         return request(requestUrl, param, REQUEST_TYPE.DELETE);
+    }
+
+    private static void addBcAnalysis(Map<String, Object> param) {
+        Map<String, Object> bcAnalysis = new HashMap<String, Object>();
+        bcAnalysis.put("sdk_version", "JAVA_" + BeeCloud.kBeeCloudVersionString);
+        param.put("bc_analysis", bcAnalysis);
     }
 
     /***

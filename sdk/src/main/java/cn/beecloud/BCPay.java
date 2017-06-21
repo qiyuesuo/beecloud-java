@@ -603,6 +603,9 @@ public class BCPay {
         if (para.getOptional() != null && para.getOptional().size() > 0) {
             param.put("optional", para.getOptional());
         }
+        if (para.getAnalysis() != null && para.getAnalysis().size() > 0) {
+            param.put("analysis", para.getAnalysis());
+        }
         if (para.getOpenId() != null) {
             param.put("openid", para.getOpenId());
         }

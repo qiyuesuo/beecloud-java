@@ -37,6 +37,10 @@ public class BCOrder {
 
     private String optionalString;
 
+    private Map<String, Object> analysis;
+
+    private String analysisString;
+
     private String returnUrl;
 
     private String notifyUrl;
@@ -160,6 +164,21 @@ public class BCOrder {
      */
     public void setOptional(Map<String, Object> optional) {
         this.optional = optional;
+    }
+
+    /**
+     * 访问字段 {@link #optional}
+     */
+    public Map<String, Object> getAnalysis() {
+        return analysis;
+    }
+
+    /**
+     * @param analysis
+     * 附加分析数据，用户自定义的参数，该字段主要用于商户携带订单的自定义数据以便对客户数据进行分析 (选填)
+     */
+    public void setAnalysis(Map<String, Object> analysis) {
+        this.analysis = analysis;
     }
 
     /**
@@ -529,6 +548,20 @@ public class BCOrder {
      */
     public void setOptionalString(String optionalString) {
         this.optionalString = optionalString;
+    }
+
+    /**
+     * 设置字段 {@link #analysisString}
+     */
+    public void setAnalysisString(String analysisString) {
+        this.analysisString = analysisString;
+    }
+
+    /**
+     * @return analysis json字符串
+     */
+    public String getAnalysisString() {
+        return analysisString;
     }
 
     /**
