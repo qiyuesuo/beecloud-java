@@ -349,11 +349,11 @@ public class TransfersTest {
                 "6d43ee31-3b6e-44ea-b0e1-b37e8d3448a6", "5a45285b-75e7-475c-9296-d11bb5d06620");
         BCT0TransferParameter p = new BCT0TransferParameter(101, UUID.randomUUID().toString().replaceAll("-", ""),
                 "1", "中国银行", "6217856101009660486", "高健峰", "boc", "test", "", null);
-        try {
-            Map<String, Object> result = BCPay.startBCT0transfer(p);
-            System.out.println(result);
-        } catch (BCException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Map<String, Object> result = BCPay.startBCT0transfer(p);
+//            System.out.println(result);
+//        } catch (BCException e) {
+//            e.printStackTrace();
+//        }
     }
 }

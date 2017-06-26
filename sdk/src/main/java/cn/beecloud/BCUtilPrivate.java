@@ -233,6 +233,21 @@ class BCUtilPrivate {
                 + "/rest/bc_user_transfer";
     }
 
+    static String getApiUser() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/user";
+    }
+
+    static String getApiUsers() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/users";
+    }
+
+    static String getApiHistoryBills() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/history_bills";
+    }
+
     public static String masterSign(String s) {
         String toSign = s + BCCache.getMasterKey();
         return getMessageDigest(toSign);

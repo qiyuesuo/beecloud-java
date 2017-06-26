@@ -509,6 +509,24 @@ public class BCPay {
         return batchRefund;
     }
 
+    /**
+     * 历史数据补全接口（批量）
+     *
+     * @param historyBills
+     * {@link BCHistoryBills} (必填) 历史数据参数
+     * @return 调起历史数据补后的返回结果
+     * @throws BCException
+     */
+    public static Map<String, Object> historyBills(BCHistoryBills historyBills) throws BCException {
+        ValidationUtil.validateBCHistoryBills(historyBills);
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("bill_info", historyBills.getBillInfo());
+        param.put("app_id", BCCache.getAppID());
+        param.put("timestamp", Long.valueOf(historyBills.getTimeStamp()));
+        param.put("app_sign", BCUtilPrivate.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
+        return RequestUtil.doPut(BCUtilPrivate.getApiHistoryBills(), param);
+    }
+
     public static List<String> fetchBCTransfersBanks(BC_TRANSFER_BANK_TYPE type) throws BCException{
 
         Map<String, Object> param = new HashMap<String, Object>();

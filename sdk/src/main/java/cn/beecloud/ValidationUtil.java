@@ -4,6 +4,8 @@ import cn.beecloud.BCEumeration.PAY_CHANNEL;
 import cn.beecloud.BCEumeration.RESULT_TYPE;
 import cn.beecloud.BCEumeration.TRANSFER_CHANNEL;
 import cn.beecloud.bean.*;
+import org.apache.commons.collections.CollectionUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -169,6 +171,32 @@ public class ValidationUtil {
     private final static String ACCOUNT_NAME_EMPTY = "accountName 不能为空！";
 
     private final static String OPTIONAL_EMPTY = "optional 不能为空！";
+
+    private final static String USER_PARAM_EMPTY = "用户参数不能为空！";
+
+    private final static String APP_ID_EMPTY = "appId 不能为空！";
+
+    private final static String TIMESTAMP_EMPTY = "appId 不能为空！";
+
+    private final static String BUYER_ID_EMPTY = "buyerId 不能为空！";
+
+    private final static String NAME_EMPTY = "name 不能为空！";
+
+    private final static String ID_NO_EMPTY = "idNo 不能为空！";
+
+    private final static String CARD_NO_EMPTY = "cardNo 不能为空！";
+
+    private final static String MOBILE_EMPTY = "mobile 不能为空！";
+
+    private final static String BANK_NAME_EMPTY = "bankName 不能为空！";
+
+    private final static String EMAIL_EMPTY = "email 不能为空！";
+
+    private final static String BUYER_IDS_EMPTY = "buyerIds 不能为空！";
+
+    private final static String BUYER_TYPE_EMPTY = "buyerType 不能为空！";
+
+    private final static String BILL_INFO_EMPTY = "billInfo 不能为空！";
 
     static void validateQueryRefundStatus(PAY_CHANNEL channel, String refundNo) throws BCException {
         if (channel == null) {
@@ -600,6 +628,80 @@ public class ValidationUtil {
                             RESULT_TYPE.PARAM_INVALID.name(), TITLE_FORMAT_INVALID);
                 }
             }
+        }
+    }
+
+    static void validateBCUserRegister(BCUserInfo para) throws BCException {
+
+        if (para == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), USER_PARAM_EMPTY);
+        } else if (StrUtil.empty(BCCache.getAppID())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), APP_ID_EMPTY);
+        } else if (StrUtil.empty(para.getTimeStamp())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), TIMESTAMP_EMPTY);
+        } else if (StrUtil.empty(para.getBuyerId())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BUYER_ID_EMPTY);
+        }
+    }
+
+    static void validateBCUsersImport(BCUsers para) throws BCException {
+
+        if (para == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), USER_PARAM_EMPTY);
+        } else if (StrUtil.empty(BCCache.getAppID())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), APP_ID_EMPTY);
+        } else if (StrUtil.empty(para.getTimeStamp())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), TIMESTAMP_EMPTY);
+        } else if (StrUtil.empty(para.getEmail())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), EMAIL_EMPTY);
+        } else if (CollectionUtils.isEmpty(para.getBuyerIds())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BUYER_IDS_EMPTY);
+        }
+    }
+
+    static void validateBCUsersQuery(BCUsersQuery para) throws BCException {
+
+        if (para == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), USER_PARAM_EMPTY);
+        } else if (StrUtil.empty(BCCache.getAppID())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), APP_ID_EMPTY);
+        } else if (StrUtil.empty(para.getTimeStamp())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), TIMESTAMP_EMPTY);
+        } else if (StrUtil.empty(para.getEmail())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), EMAIL_EMPTY);
+        } else if (StrUtil.empty(para.getBuyerType())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BUYER_TYPE_EMPTY);
+        }
+    }
+
+    static void validateBCHistoryBills(BCHistoryBills para) throws BCException {
+
+        if (para == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), USER_PARAM_EMPTY);
+        } else if (StrUtil.empty(BCCache.getAppID())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), APP_ID_EMPTY);
+        } else if (StrUtil.empty(para.getTimeStamp())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), TIMESTAMP_EMPTY);
+        } else if (StrUtil.empty(para.getBillInfo())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BILL_INFO_EMPTY);
         }
     }
 }

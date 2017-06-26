@@ -4,10 +4,10 @@ package cn.beecloud;
  * User: joseph Date: 14/11/30
  */
 public class TestConstant {
-    public static String KTestAppID = "c5d1cba1-5e3f-4ba0-941d-9b0a371fe719";
-    public static String kTestAppSecret = "39a7a518-9ac8-4a9e-87bc-7885f33cf18c";
-    public static String kTestTestSecret = "4bfdd244-574d-4bf3-b034-0c751ed34fee";
-    public static String kTestMasterSecret = "e14ae2db-608c-4f8b-b863-c8c18953eef2";
+    public static String KTestAppID = "37117929-ad89-4299-8dee-dc471733fdb1";
+    public static String kTestAppSecret = "9d57f8ba-8c5d-44fb-8be0-856c014a3a68";
+    public static String kTestTestSecret = "3728e32b-2a77-463b-906f-83198956d176";
+    public static String kTestMasterSecret = "2c5fcbaa-d4f6-40a2-aadf-bd41146fb83d";
     public static String kTestTable = "java_sdk_test";
     public static String outRefundNo = "2015062611111";
     public static String BILL_NO_WITH_SPECIAL_CHARACTER = "billno123!@#";

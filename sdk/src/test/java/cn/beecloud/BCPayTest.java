@@ -1,5 +1,6 @@
 package cn.beecloud;
 
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import mockit.integration.junit4.JMockit;
 
 
@@ -43,6 +44,11 @@ public class BCPayTest {
         InternationalPayTest.testInternationalPay();
         TransferTest.testBCTransfer();
 
+//        UserTest.testUserRegister();
+        UserTest.testUserBatchImport();
+        UserTest.testUserBatchQuery();
+        HistoryBillsTest.testHistoryBills();
+
         /**
          * 测试SANDBOX模式
          */
@@ -60,5 +66,10 @@ public class BCPayTest {
         TransferTest.testTransfer();
         TransfersTest.testTransfers();
         InternationalPayTest.testInternationalPay();
+
+//        UserTest.testUserRegister();
+//        UserTest.testUserBatchImport();
+//        UserTest.testUserBatchQuery();
+//        HistoryBillsTest.testHistoryBills();
     }
 }
