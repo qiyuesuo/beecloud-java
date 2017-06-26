@@ -1,6 +1,5 @@
 package cn.beecloud;
 
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import mockit.integration.junit4.JMockit;
 
 
@@ -44,7 +43,7 @@ public class BCPayTest {
         InternationalPayTest.testInternationalPay();
         TransferTest.testBCTransfer();
 
-//        UserTest.testUserRegister();
+        UserTest.testUserRegister();
         UserTest.testUserBatchImport();
         UserTest.testUserBatchQuery();
         HistoryBillsTest.testHistoryBills();
