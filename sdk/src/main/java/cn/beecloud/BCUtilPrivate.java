@@ -91,6 +91,11 @@ class BCUtilPrivate {
                 + "/auth";
     }
 
+    static String getkApiCardSign() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/card/sign";
+    }
+
     static String getkApiRefund() {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
                 + "/rest/refund";

@@ -35,6 +35,8 @@ public class TestConstant {
     public static String YEE_NOBANKCARD_PWD = "121684730734269992";
     public static String YEE_NOBANKCARD_FRQID = "SZX";
 
+    public static String BC_CARD_ID = "";
+
     public static String WXJSAPI_OPEN_ID = "ofEy7uL6p-pgwF7SoPrzD8GqvZ0";
     public static String YEE_WAP_IDENTITY_ID = "aabbbccddee11122334455";
     public static String YEE_WAP_IDENTITY_ID_MORE_THAN_50 = "123456789012345678901234567890123456789012345678901";
@@ -141,6 +143,8 @@ public class TestConstant {
     public final static String CHANNEL_EMPTY = "channel 不能为空！";
 
     public final static String YEE_NOBANCARD_FACTOR_EMPTY = "cardNo, cardPwd, frqid 不能为空！";
+
+    public final static String BC_CARD_CHARGE_FACTOR_EMPTY = "cardId不能为空！";
 
     public final static String GATEWAY_BANK_EMPTY = "bank 不能为空！";
 
