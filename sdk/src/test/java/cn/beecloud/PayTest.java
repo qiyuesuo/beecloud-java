@@ -36,6 +36,7 @@ public class PayTest {
     static String cardNo = TestConstant.YEE_NOBANKCARD_NO;
     static String cardPwd = TestConstant.YEE_NOBANKCARD_PWD;
     static String frqid = TestConstant.YEE_NOBANKCARD_FRQID;
+    static String cardId = TestConstant.BC_CARD_ID;
     static String openId = TestConstant.WXJSAPI_OPEN_ID;
     static QR_PAY_MODE qrPayMode = QR_PAY_MODE.MODE_BRIEF_FRONT;
     static String identityId = TestConstant.YEE_WAP_IDENTITY_ID;
@@ -316,6 +317,21 @@ public class PayTest {
         }
         param.setQrPayMode(qrPayMode);
         //
+        try {
+            param.setCardId(null);
+            param.setChannel(PAY_CHANNEL.BC_CARD_CHARGE);
+            BCPay.startBCPay(param);
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+        } catch (Exception e) {
+            Assert.assertTrue(e.getMessage(), e instanceof BCException);
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(TestConstant.BC_CARD_CHARGE_FACTOR_EMPTY));
+        }
+        param.setCardId(cardId);
+
+
         try {
             param.setCardNo(null);
             param.setChannel(PAY_CHANNEL.YEE_NOBANKCARD);

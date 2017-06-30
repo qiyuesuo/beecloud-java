@@ -82,7 +82,8 @@ public class BCEumeration {
         BC_ALI_SCAN,
         CP,
         CP_WEB,
-        BC_ALI_JSAPI
+        BC_ALI_JSAPI,
+        BC_CARD_CHARGE
     }
 
     public enum TRANSFER_CHANNEL {

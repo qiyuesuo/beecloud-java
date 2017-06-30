@@ -55,6 +55,8 @@ public class BCOrder {
 
     private String cardNo;
 
+    private String cardId;
+
     private String cardPwd;
 
     private String frqid;
@@ -307,6 +309,23 @@ public class BCOrder {
     public void setCardNo(String cardNo) {
         this.cardNo = cardNo;
     }
+
+    /**
+     * 访问字段 {@link #cardId}
+     */
+    public String getCardId() {
+        return cardId;
+    }
+
+    /**
+     * @param cardId
+     * channel为BC_CARD_CHARGE时,必传
+     */
+    public void setCardId(String cardId) {
+        this.cardId = cardId;
+    }
+
+
 
     /**
      * 访问字段 {@link #cardPwd}

@@ -138,6 +138,29 @@ public class BCPay {
         return auth;
     }
 
+
+    /**
+     * 银行卡实名认证及代付签约接口
+     *
+     * @param cardSign
+     * {@link BCCardSign} (必填) 银行卡实名认证及代付签约接参数
+     * @return 调起BeeCloud银行卡实名认证及代付签约接口的返回结果
+     * @throws BCException
+     */
+    public static BCCardSign startBCCardSign(BCCardSign cardSign) throws BCException {
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildBcCardSignParam(param, cardSign);
+
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiCardSign(), param);
+
+        placeCardSign(cardSign, ret);
+
+        return cardSign;
+    }
+
+
     /**
      * 代付接口
      *
@@ -689,6 +712,10 @@ public class BCPay {
             param.put("store_id", para.getStoreId());
         }
 
+        if (para.getCardId() != null) {
+            param.put("card_id", para.getCardId());
+        }
+
     }
 
     /**
@@ -1010,6 +1037,26 @@ public class BCPay {
     }
 
     /**
+     * 构建实名认证及签约rest api参数
+     */
+    private static void buildBcCardSignParam(Map<String, Object> param, BCCardSign cardSign) {
+
+        param.put("app_id", BCCache.getAppID());
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign",
+                BCUtilPrivate.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
+        param.put("id_name", StrUtil.toStr(cardSign.getIdName()));
+        param.put("id_no", StrUtil.toStr(cardSign.getIdNo()));
+        param.put("card_no", StrUtil.toStr(cardSign.getCardNo()));
+        param.put("mobile", StrUtil.toStr(cardSign.getMobile()));
+        param.put("bank", StrUtil.toStr(cardSign.getBank()));
+
+        if (cardSign.getNotifyUrl() != null) {
+            param.put("notify_url", StrUtil.toStr(cardSign.getNotifyUrl()));
+        }
+    }
+
+    /**
      * 生成返回BCOrder list
      */
     private static List<BCOrder> generateBCOrderList(List<Map<String, Object>> bills) {
@@ -1289,6 +1336,15 @@ public class BCPay {
         }
         if (ret.containsKey("card_id") && null != ret.get("card_id")) {
             auth.setCardId(StrUtil.toStr(ret.get("card_id")));
+        }
+    }
+
+    /**
+     * 组建返回银行卡实名认证及签约
+     */
+    private static void placeCardSign(BCCardSign cardSign, Map<String, Object> ret) {
+        if (ret.containsKey("card_id") && null != ret.get("card_id")) {
+            cardSign.setCardId(StrUtil.toStr(ret.get("card_id")));
         }
     }
 
