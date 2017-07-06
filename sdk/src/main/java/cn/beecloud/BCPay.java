@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jdk.nashorn.internal.parser.JSONParser;
+import net.sf.json.JSONObject;
+import net.sf.json.util.JSONUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import cn.beecloud.BCEumeration.BC_TRANSFER_BANK_TYPE;
@@ -1424,5 +1427,160 @@ public class BCPay {
         param.put("verify_code", para.getVerifyCode());
     }
 
+    /**
+     * 构建打款查询rest api参数
+     */
+    private static void buildTransferQueryParam(Map<String, Object> param, BCTransferQueryParameter para) {
+        param.put("app_id", BCCache.getAppID());
+        param.put("timestamp", System.currentTimeMillis());
+        if (BCCache.isSandbox()) {
+            param.put("app_sign", BCUtilPrivate.getAppSignatureWithTestSecret(StrUtil.toStr(param
+                    .get("timestamp"))));
+        } else {
+            param.put("app_sign",
+                    BCUtilPrivate.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
+        }
+        if (para.getBillNo() != null) {
+            param.put("bill_no", para.getBillNo());
+        }
+        if (para.getNeedDetail() != null) {
+            param.put("need_detail", para.getNeedDetail());
+        }
+        if (para.getTransferStatus() != null) {
+            param.put("transfer_status", para.getTransferStatus().toString());
+        }
+        if (para.getStartTime() != null) {
+            param.put("start_time", para.getStartTime().getTime());
+        }
+        if (para.getEndTime() != null) {
+            param.put("end_time", para.getEndTime());
+        }
+        if (para.getStartTime() != null) {
+            param.put("start_time", para.getStartTime().getTime());
+        }
+        if (para.getEndTime() != null) {
+            param.put("end_time", para.getEndTime().getTime());
+        }
+        if (para.getSkip() != null) {
+            param.put("skip", para.getSkip());
+        }
+        if (para.getLimit() != null) {
+            param.put("limit", para.getLimit());
+        }
+
+    }
+
+    /**
+     * 构建打款订单总数查询rest api参数
+     */
+    private static void buildTransferQueryCountParam(Map<String, Object> param, BCTransferQueryParameter para) {
+        param.put("app_id", BCCache.getAppID());
+        param.put("timestamp", System.currentTimeMillis());
+        if (BCCache.isSandbox()) {
+            param.put("app_sign", BCUtilPrivate.getAppSignatureWithTestSecret(StrUtil.toStr(param
+                    .get("timestamp"))));
+        } else {
+            param.put("app_sign",
+                    BCUtilPrivate.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
+        }
+        if (para.getBillNo() != null) {
+            param.put("bill_no", para.getBillNo());
+        }
+        if (para.getTransferStatus() != null) {
+            param.put("transfer_status", para.getTransferStatus().toString());
+        }
+        if (para.getStartTime() != null) {
+            param.put("start_time", para.getStartTime().getTime());
+        }
+        if (para.getEndTime() != null) {
+            param.put("end_time", para.getEndTime().getTime());
+        }
+
+    }
+
+    /**
+     * 打款订单查询接口
+     *
+     * @param para
+     * {@link BCTransferQueryParameter} （必填）打款订单查询参数
+     * @return 打款订单查询返回的结果
+     * @throws BCException
+     */
+    @SuppressWarnings("unchecked")
+    public static List<BCTransferOrder> startTransferQuery(BCTransferQueryParameter para) throws BCException {
+        ValidationUtil.validateQueryTransfer(para);
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildTransferQueryParam(param, para);
+
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getApiQueryTransfer(), param);
+
+        return generateBCTransferOrderList((List<Map<String, Object>>) ret.get("bills"));
+
+    }
+
+    /**
+     * 打款订单总数查询接口
+     *
+     * @param para
+     * {@link BCTransferQueryParameter} （必填）打款订单总数查询参数
+     * @return 打款订单总数查询返回的结果
+     * @throws BCException
+     */
+    public static Integer startTransferQueryCount(BCTransferQueryParameter para) throws BCException {
+
+        ValidationUtil.validateQueryTransfer(para);
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildTransferQueryCountParam(param, para);
+
+        Map<String, Object> ret = RequestUtil.doGet(BCUtilPrivate.getApiQueryTransferCount(), param);
+
+        return (Integer) ret.get("count");
+    }
+
+    /**
+     * 生成返回BCTransferOrder list
+     */
+    private static List<BCTransferOrder> generateBCTransferOrderList(List<Map<String, Object>> transferOrders) {
+
+        List<BCTransferOrder> bcTransferOrderList = new ArrayList<BCTransferOrder>();
+        for (Map<String, Object> transferOrder : transferOrders) {
+            BCTransferOrder bcTransferOrder = new BCTransferOrder();
+            generateBCTransferOrderBean(transferOrder, bcTransferOrder);
+            bcTransferOrderList.add(bcTransferOrder);
+        }
+        return bcTransferOrderList;
+    }
+
+    /**
+     * 构建返回BCTransferOrder bean
+     */
+    private static void generateBCTransferOrderBean(Map<String, Object> transferOrder, BCTransferOrder bcTransferOrder) {
+        bcTransferOrder.setId(StrUtil.toStr(transferOrder.get("id")));
+        bcTransferOrder.setBillNo(StrUtil.toStr(transferOrder.get("bill_no")));
+        bcTransferOrder.setTotalFee((Integer) transferOrder.get("total_fee"));
+        bcTransferOrder.setTitle(StrUtil.toStr(transferOrder.get("title")));
+        bcTransferOrder.setSpayResult(((Boolean) transferOrder.get("spay_result")));
+        bcTransferOrder.setTradeNo(StrUtil.toStr(transferOrder.get("trade_no")));
+        bcTransferOrder.setOptionalString(StrUtil.toStr(transferOrder.get("optional")));
+        if (!StrUtil.empty(transferOrder.get("optional"))) {
+            JSONObject jsonObject = JSONObject.fromObject(transferOrder.get("optional"));
+            bcTransferOrder.setOptional(JSONUtils.getProperties(jsonObject));
+        }
+        bcTransferOrder.setCreateTime(BCUtilPrivate.transferDateFromLongToString((Long) transferOrder
+                .get("create_time")));
+        bcTransferOrder.setMessageDetail(StrUtil.toStr(transferOrder.get("message_detail")));
+        if (!StrUtil.empty(transferOrder.get("transfer_status"))) {
+            bcTransferOrder.setTransferStatus(BCEumeration.TRANSFER_STATUS.valueOf(StrUtil.toStr(transferOrder.get("transfer_status"))));
+        }
+
+        bcTransferOrder.setAccountName(StrUtil.toStr(transferOrder.get("account_name")));
+        bcTransferOrder.setAccountNo(StrUtil.toStr(transferOrder.get("account_no")));
+        bcTransferOrder.setBankFullName(StrUtil.toStr(transferOrder.get("bank_full_name")));
+        bcTransferOrder.setNotifyUrl(StrUtil.toStr(transferOrder.get("notify_url")));
+    }
 
 }

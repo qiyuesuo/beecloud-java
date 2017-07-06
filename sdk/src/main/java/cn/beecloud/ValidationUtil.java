@@ -704,4 +704,18 @@ public class ValidationUtil {
                     RESULT_TYPE.PARAM_INVALID.name(), BILL_INFO_EMPTY);
         }
     }
+
+    static void validateQueryTransfer(BCTransferQueryParameter para) throws BCException {
+        if (para == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), QUERY_PARAM_EMPTY);
+        } else if (!StrUtil.empty(para.getBillNo())
+                && !para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_FORMAT_INVALID);
+        } else if (para.getLimit() != null && (para.getLimit() > 50 || para.getLimit() < 10)) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), LIMIT_FORMAT_INVALID);
+        }
+    }
 }

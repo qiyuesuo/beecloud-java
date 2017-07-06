@@ -48,6 +48,9 @@ public class BCPayTest {
         UserTest.testUserBatchQuery();
         HistoryBillsTest.testHistoryBills();
 
+        TransferQueryTest.testTransferQuery();
+        TransferQueryTest.testTransferQueryCount();
+
         /**
          * 测试SANDBOX模式
          */

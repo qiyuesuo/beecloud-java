@@ -253,6 +253,16 @@ class BCUtilPrivate {
                 + "/rest/history_bills";
     }
 
+    static String getApiQueryTransfer() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/transfers?para=";
+    }
+
+    static String getApiQueryTransferCount() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/transfers/count?para=";
+    }
+
     public static String masterSign(String s) {
         String toSign = s + BCCache.getMasterKey();
         return getMessageDigest(toSign);

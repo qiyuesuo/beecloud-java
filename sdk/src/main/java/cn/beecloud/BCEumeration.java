@@ -144,4 +144,10 @@ public class BCEumeration {
         month,
         year
     }
+
+    public enum TRANSFER_STATUS {
+        SUCCESS,
+        FAIL,
+        PROCESSING
+    }
 }
