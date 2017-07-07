@@ -416,6 +416,37 @@ public class ValidationUtil {
 
     }
 
+    static void validateBCT1Transfer(BCT1TransferParameter para) throws BCException {
+        if (para == null) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), PAY_PARAM_EMPTY);
+        }
+        if (StrUtil.empty(para.getBillNo())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_EMPTY);
+        }
+        if (!para.getBillNo().matches("[0-9A-Za-z]{8,32}")) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BILL_NO_FORMAT_INVALID);
+        }
+        if (StrUtil.empty(para.getTotalFee())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), TOTAL_FEE_EMPTY);
+        }
+        if (StrUtil.empty(para.getBankAccountName())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), ACCOUNT_NAME_EMPTY);
+        }
+        if (StrUtil.empty(para.getBankAccountNo())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), ACCOUNT_NO_EMPTY);
+        }
+        if (StrUtil.empty(para.getBankName())) {
+            throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),
+                    RESULT_TYPE.PARAM_INVALID.name(), BANK_NAME_EMPTY);
+        }
+    }
+
     static void validateBCRefund(BCRefund para) throws BCException {
         if (para == null) {
             throw new BCException(RESULT_TYPE.PARAM_INVALID.ordinal(),

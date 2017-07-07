@@ -192,6 +192,18 @@ public class BCPay {
     }
 
     /**
+     * T1余额代付接口
+     *
+     *
+     */
+    public static Map<String, Object> startBCT1transfer(BCT1TransferParameter bcTransferParameter) throws BCException {
+        ValidationUtil.validateBCT1Transfer(bcTransferParameter);
+        Map<String, Object> param = new HashMap<String, Object>();
+        buildBCT1TransferParam(param, bcTransferParameter);
+        return RequestUtil.doPost(BCUtilPrivate.getkApiBCT1Transfer(), param);
+    }
+
+    /**
      * 退款接口
      *
      * @param refund
@@ -772,6 +784,26 @@ public class BCPay {
                         + para.getBankAccountNo()));
         if (!StrUtil.empty(para.getNotifyUrl()))
             param.put("notify_url", para.getNotifyUrl());
+        if (!StrUtil.empty(para.getOptional()))
+            param.put("optional", para.getOptional());
+
+    }
+
+    /**
+     * 构建BC T1代付rest api参数
+     */
+    private static void buildBCT1TransferParam(Map<String, Object> param, BCT1TransferParameter para) {
+
+        param.put("app_id", BCCache.getAppID());
+        param.put("total_fee", para.getTotalFee());
+        param.put("bill_no", para.getBillNo());
+        param.put("is_personal", para.getIsPersonal());
+        param.put("bank_name", para.getBankName());
+        param.put("bank_account_no", para.getBankAccountNo());
+        param.put("bank_account_name", para.getBankAccountName());
+        param.put("signature",
+                BCUtilPrivate.masterSign(BCCache.getAppID() + para.getBillNo() + para.getTotalFee()
+                        + para.getBankAccountNo()));
         if (!StrUtil.empty(para.getOptional()))
             param.put("optional", para.getOptional());
 

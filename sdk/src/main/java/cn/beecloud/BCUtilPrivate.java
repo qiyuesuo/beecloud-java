@@ -71,6 +71,15 @@ class BCUtilPrivate {
                 + "/rest/gateway/bc_transfer";
     }
 
+    static String getkApiBCT1Transfer() {
+        /*
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/t1express/transfer";
+        */
+        return "http://123.56.82.71:8080/" + BCUtilPrivate.kApiVersion
+                + "/rest/t1express/transfer";
+    }
+
     static String getkApiPay() {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
                 + "/rest/bill";
