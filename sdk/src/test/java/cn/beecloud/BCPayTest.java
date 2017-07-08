@@ -1,11 +1,16 @@
 package cn.beecloud;
 
+import cn.beecloud.bean.BCException;
+import cn.beecloud.bean.BCT1TransferParameter;
 import mockit.integration.junit4.JMockit;
 
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
