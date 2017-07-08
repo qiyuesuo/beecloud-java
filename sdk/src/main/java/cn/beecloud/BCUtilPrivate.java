@@ -72,11 +72,7 @@ class BCUtilPrivate {
     }
 
     static String getkApiBCT1Transfer() {
-        /*
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
-                + "/rest/t1express/transfer";
-        */
-        return "http://123.56.82.71:8080/" + BCUtilPrivate.kApiVersion
                 + "/rest/t1express/transfer";
     }
 
