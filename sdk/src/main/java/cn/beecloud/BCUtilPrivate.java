@@ -101,6 +101,16 @@ class BCUtilPrivate {
                 + "/card/sign";
     }
 
+    static String getkApiSyncCardVerify() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/card/sync_verify";
+    }
+
+    static String getkApiSyncCardSign() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/card/sync_sign";
+    }
+
     static String getkApiRefund() {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
                 + "/rest/refund";

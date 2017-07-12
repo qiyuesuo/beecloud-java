@@ -165,6 +165,44 @@ public class BCPay {
 
 
     /**
+     * 银行卡同步实名认证接口
+     *
+     * @param cardSign
+     * {@link BCCardSign} (必填) 银行卡同步实名认证参数
+     * @return 调起BeeCloud银行卡同步实名认证接口的返回结果
+     * @throws BCException
+     */
+    public static BCCardSign startBCSyncCardVerify(BCCardSign cardSign) throws BCException {
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildBcCardSignParam(param, cardSign);
+
+        Map<String, Object> ret = RequestUtil.doPost(BCUtilPrivate.getkApiSyncCardVerify(), param);
+
+        placeCardSign(cardSign, ret);
+
+        return cardSign;
+    }
+
+    /**
+     * 银行卡同步签约接口
+     * @param cardId
+     * {@link String} (必填) 银行卡同步实名认证后返回的card_id
+     * @return 调起BeeCloud银行卡同步签约接口的返回结果
+     * @throws BCException
+     */
+    public static Map<String, Object> startBCSyncCardSign(String cardId) throws BCException {
+
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        buildBcSyncCardSignParam(param, cardId);
+
+        return RequestUtil.doPost(BCUtilPrivate.getkApiSyncCardSign(), param);
+    }
+
+
+    /**
      * 代付接口
      *
      * @param bcTransferParameter
@@ -1089,6 +1127,18 @@ public class BCPay {
         if (cardSign.getNotifyUrl() != null) {
             param.put("notify_url", StrUtil.toStr(cardSign.getNotifyUrl()));
         }
+    }
+
+    /**
+     * 构建同步签约rest api参数
+     */
+    private static void buildBcSyncCardSignParam(Map<String, Object> param, String cardId) {
+
+        param.put("app_id", BCCache.getAppID());
+        param.put("timestamp", System.currentTimeMillis());
+        param.put("app_sign",
+                BCUtilPrivate.getAppSignature(StrUtil.toStr(param.get("timestamp"))));
+        param.put("card_id", cardId);
     }
 
     /**
