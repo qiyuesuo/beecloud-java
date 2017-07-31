@@ -35,6 +35,7 @@ public class BCEumeration {
         WX_APP,
         WX_NATIVE,
         WX_JSAPI,
+        WX_WAP,
         WX_SCAN,
         ALI,
         ALI_APP,
