@@ -278,14 +278,14 @@ class BCUtilPrivate {
                 + "/rest/transfers/count?para=";
     }
 
-    static String getkApiQueryCouponTemplateById(String objectid) {
-        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
-                + "/rest/coupon/template/" + objectid;
-    }
-
     static String getkApiQueryCouponTemplate() {
         return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
-                + "/rest/coupon/template/";
+                + "/rest/coupon/template";
+    }
+
+    static String getkApiCoupon() {
+        return BCCache.apiHostArray[(int) (Math.random() * 4)] + "/" + BCUtilPrivate.kApiVersion
+                + "/rest/coupon";
     }
 
     public static String masterSign(String s) {
