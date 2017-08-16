@@ -133,7 +133,9 @@ public class BCCouponManage {
         bcCoupon.setUpdatedAt((Long) couponMap.get("updated_at"));
         bcCoupon.setStartTime((Long) couponMap.get("start_time"));
         bcCoupon.setEndTime((Long) couponMap.get("end_time"));
-        bcCoupon.setUseTime((Long) couponMap.get("use_time"));
+        if (null == couponMap.get("use_time")) {
+            bcCoupon.setUseTime((Long) couponMap.get("use_time"));
+        }
 
         return bcCoupon;
     }
@@ -194,15 +196,15 @@ public class BCCouponManage {
         bcCouponTemplate.setDiscount(StrUtil.parseFloat(StrUtil.toStr(couponTemplateMap.get("discount"))));
         bcCouponTemplate.setTotalCount(StrUtil.parseInt(StrUtil.toStr(couponTemplateMap.get("total_count"))));
         bcCouponTemplate.setMaxCountPerUser(StrUtil.parseInt(StrUtil.toStr(couponTemplateMap.get("max_count_per_user"))));
-        bcCouponTemplate.setDeliverCount(StrUtil.parseInt(StrUtil.toStr(couponTemplateMap.get("max_count_per_user"))));
-        bcCouponTemplate.setUseCount(StrUtil.parseInt(StrUtil.toStr(couponTemplateMap.get("max_count_per_user"))));
-        bcCouponTemplate.setExpiryType(StrUtil.parseInt(StrUtil.toStr(couponTemplateMap.get("id"))));
-        bcCouponTemplate.setStartTime(StrUtil.parseLong(StrUtil.toStr(couponTemplateMap.get("id"))));
-        bcCouponTemplate.setEndTime(StrUtil.parseLong(StrUtil.toStr(couponTemplateMap.get("id"))));
-        bcCouponTemplate.setDeliveryValidDays(StrUtil.parseInt(StrUtil.toStr(couponTemplateMap.get("id"))));
-        bcCouponTemplate.setStatus(StrUtil.parseInt(StrUtil.toStr(couponTemplateMap.get("id"))));
-        bcCouponTemplate.setMchAccount(StrUtil.toStr(couponTemplateMap.get("id")));
-        bcCouponTemplate.setAppId(StrUtil.toStr(couponTemplateMap.get("id")));
+        bcCouponTemplate.setDeliverCount(StrUtil.parseInt(StrUtil.toStr(couponTemplateMap.get("deliver_count"))));
+        bcCouponTemplate.setUseCount(StrUtil.parseInt(StrUtil.toStr(couponTemplateMap.get("use_count"))));
+        bcCouponTemplate.setExpiryType(StrUtil.parseInt(StrUtil.toStr(couponTemplateMap.get("expiry_type"))));
+        bcCouponTemplate.setStartTime(StrUtil.parseLong(StrUtil.toStr(couponTemplateMap.get("start_time"))));
+        bcCouponTemplate.setEndTime(StrUtil.parseLong(StrUtil.toStr(couponTemplateMap.get("end_time"))));
+        bcCouponTemplate.setDeliveryValidDays(StrUtil.parseInt(StrUtil.toStr(couponTemplateMap.get("delivery_valid_days"))));
+        bcCouponTemplate.setStatus(StrUtil.parseInt(StrUtil.toStr(couponTemplateMap.get("status"))));
+        bcCouponTemplate.setMchAccount(StrUtil.toStr(couponTemplateMap.get("mch_account")));
+        bcCouponTemplate.setAppId(StrUtil.toStr(couponTemplateMap.get("app_id")));
 
         return bcCouponTemplate;
     }
