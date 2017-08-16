@@ -769,6 +769,9 @@ public class BCPay {
             param.put("card_id", para.getCardId());
         }
 
+        if (para.getCouponId() != null) {
+            param.put("coupon_id", para.getCouponId());
+        }
     }
 
     /**
@@ -1208,6 +1211,10 @@ public class BCPay {
         }
         bcOrder.setRefundResult((Boolean) bill.get("refund_result"));
         bcOrder.setRevertResult((Boolean) bill.get("revert_result"));
+        // for coupon usage
+        bcOrder.setBillFee((Integer) bill.get("bill_fee"));
+        bcOrder.setDiscount((Integer) bill.get("discount"));
+        bcOrder.setCouponId((String) bill.get("coupon_id"));
     }
 
     /**

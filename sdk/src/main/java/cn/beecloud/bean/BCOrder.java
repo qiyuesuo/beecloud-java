@@ -103,6 +103,11 @@ public class BCOrder {
 
     private String tradeNo;
 
+    private String couponId;
+
+    private Integer billFee;
+
+    private Integer discount;
 
     public BCOrder() {}
 
@@ -750,5 +755,29 @@ public class BCOrder {
 
     public void setTradeNo(String tradeNo) {
         this.tradeNo = tradeNo;
+    }
+
+    public String getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(String couponId) {
+        this.couponId = couponId;
+    }
+
+    public Integer getBillFee() {
+        return billFee;
+    }
+
+    public void setBillFee(Integer billFee) {
+        this.billFee = billFee;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
     }
 }
