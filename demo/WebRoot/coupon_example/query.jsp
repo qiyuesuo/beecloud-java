@@ -21,7 +21,7 @@
 <%
 	try {
 	    BCQueryCouponParam queryCouponParam = new BCQueryCouponParam();
-	    queryCouponParam.setStatus(1);
+	    queryCouponParam.setStatus(0);
 	    List<BCCoupon> bcCoupons = BCCouponManage.startQueryCoupons(queryCouponParam);
 	    pageContext.setAttribute("bcCoupons", bcCoupons);
 	    pageContext.setAttribute("bcCouponsSize", bcCoupons.size()); 
@@ -32,7 +32,6 @@
 <c:if test="${bcCouponsSize != null and bcCouponsSize !=0}">
     <table border="3" class="table">
         <tr>
-            <th>template</th>
             <th>用户id</th>
             <th>状态</th>
             <th>分发时间</th>
@@ -43,9 +42,15 @@
         </tr>
         <c:forEach var="bcCoupon" items="${bcCoupons}" varStatus="index">
             <tr>
-                <td>${bcCoupon.template}</td>
 	            <td>${bcCoupon.userId}</td>
-	            <td>${bcCoupon.status}</td>
+	            <td>
+	            	<c:if test="${bcCoupon.status == 0}">
+	            		未使用
+	            	</c:if>
+	            	<c:if test="${bcCoupon.status == 1}">
+	            		已使用
+	            	</c:if>
+	            </td>
 	            <td>${bcCoupon.createdAt}</td>
 	            <td>${bcCoupon.updatedAt}</td>
 	            <td>${bcCoupon.startTime}</td>

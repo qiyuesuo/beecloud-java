@@ -23,12 +23,13 @@
 </head>
 <body>
 <%
-	String templateId = "9c01f250-df9d-482e-bb88-42fd55f4a10c";
-	String userId = "201708112";
+	String templateId = "c8eee5a6-e8c9-410e-a7e1-23583011a42d";
+	String userId = "aa2@bc.com";
 	String couponId = "";
 	try {
 	    BCCoupon bcCoupon = BCCouponManage.startCouponDistribute(templateId, userId);
 	    couponId = bcCoupon.getId();
+	    System.out.println(couponId);
 	} catch (BCException e) {
 		out.println(e.getMessage());
 	}

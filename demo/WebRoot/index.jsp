@@ -452,6 +452,64 @@ input {
     </div>
 </form>
 
+<hr/>
+<div>
+    <h2>根据ID查询优惠券模板记录</h2>
+    
+    <form action="couponTemplate_example/queryById.jsp" method="POST" target="_blank">
+	
+	    <div style="clear: both;">
+	        <input type="submit" class="button" value="优惠券模板查询">
+	    </div>
+	</form>
+</div>
+
+<div>
+    <h2>根据条件查询优惠券模板记录</h2>
+    
+    <form action="couponTemplate_example/query.jsp" method="POST" target="_blank">
+	
+	    <div style="clear: both;">
+	        <input type="submit" class="button" value="优惠券模板查询">
+	    </div>
+	</form>
+</div>
+
+<hr/>
+<div>
+    <h2>发放优惠券</h2>
+    
+    <form action="coupon_example/grantCoupon.jsp" method="POST" target="_blank">
+	
+	    <div style="clear: both;">
+	        <input type="submit" class="button" value="发放优惠券">
+	    </div>
+	</form>
+</div>
+
+<div>
+    <h2>根据ID查询优惠券记录</h2>
+    
+    <form action="coupon_example/queryById.jsp" method="POST" target="_blank">
+    	<input type="text" name="couponId" style="display:block;width:300px;height:25px">
+	
+	    <div style="clear: both;">
+	        <input type="submit" class="button" value="优惠券查询">
+	    </div>
+	</form>
+</div>
+
+<div>
+    <h2>根据条件查询优惠券记录</h2>
+    
+    <form action="coupon_example/query.jsp" method="POST" target="_blank">
+	
+	    <div style="clear: both;">
+	        <input type="submit" class="button" value="优惠券查询">
+	    </div>
+	</form>
+</div>
+
 </body>
 <script type="text/javascript">
     function paySwitch(that) {

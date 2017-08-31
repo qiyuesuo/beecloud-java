@@ -26,7 +26,7 @@
 	String couponId = request.getParameter("couponId");
 
 	try {
-	    BCCoupon bcCoupon = BCCouponManage.startQueryCouponById(couponId);
+	    BCCoupon bcCoupon = BCCouponManage.startQueryCouponById("dd7b827a-c452-41c2-987c-8d130fc5af20");
 	    pageContext.setAttribute("bcCoupon", bcCoupon);
 	} catch (BCException e) {
 		out.println(e.getMessage());
@@ -36,7 +36,6 @@
 <c:if test="${bcCoupon != null}">
     <table border="3" class="table">
         <tr>
-            <th>template</th>
             <th>用户id</th>
             <th>状态</th>
             <th>分发时间</th>
@@ -46,9 +45,15 @@
             <th>使用时间</th>
         </tr>
         <tr align="center">
-            <td>${bcCoupon.template}</td>
             <td>${bcCoupon.userId}</td>
-            <td>${bcCoupon.status}</td>
+            <td>
+            	<c:if test="${bcCoupon.status == 0}">
+            		未使用
+            	</c:if>
+            	<c:if test="${bcCoupon.status == 1}">
+            		已使用
+            	</c:if>
+            </td>
             <td>${bcCoupon.createdAt}</td>
             <td>${bcCoupon.updatedAt}</td>
             <td>${bcCoupon.startTime}</td>
