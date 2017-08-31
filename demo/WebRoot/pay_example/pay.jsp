@@ -46,6 +46,8 @@
     //模拟商户的交易编号、标题、金额、附加数据
     String billNo = BCUtil.generateRandomUUIDPure();
     String title = "demo测试";
+    String couponId = "dcda932e-75a6-48f3-8b9f-c8111ce61e09";
+    String userId = "201708112";
     Map<String, Object> optional = new HashMap<String, Object>();
     optional.put("rui", "feng");
 
@@ -63,6 +65,8 @@
     BCInternationlOrder internationalOrder = new BCInternationlOrder();
     bcOrder.setBillTimeout(360);
     bcOrder.setOptional(optional);
+    bcOrder.setBuyerId(userId);
+    bcOrder.setCouponId(couponId);
 
     //以下是WX_JSAPI（公众号内支付）用到的返回参数，需要在页面的js用到
     String jsapiAppid = "";
