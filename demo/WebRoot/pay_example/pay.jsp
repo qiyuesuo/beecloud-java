@@ -46,8 +46,8 @@
     //模拟商户的交易编号、标题、金额、附加数据
     String billNo = BCUtil.generateRandomUUIDPure();
     String title = "demo测试";
-    String couponId = "dcda932e-75a6-48f3-8b9f-c8111ce61e09";
-    String userId = "201708112";
+    String couponId = "dd7b827a-c452-41c2-987c-8d130fc5af20";
+    String userId = "aa2@bc.com"; 
     Map<String, Object> optional = new HashMap<String, Object>();
     optional.put("rui", "feng");
 
