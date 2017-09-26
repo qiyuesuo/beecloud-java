@@ -390,6 +390,19 @@ public class PayTest {
         }
         param.setGatewayBank(gatewayBank);
 
+        try {
+            param.setReturnUrl(null);
+            param.setChannel(PAY_CHANNEL.BC_QQ_NATIVE);
+            BCPay.startBCPay(param);
+            Assert.fail(TestConstant.ASSERT_MESSAGE_BCEXCEPTION_NOT_THROWN);
+        } catch (Exception e) {
+            Assert.assertTrue(e.getMessage(), e instanceof BCException);
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(RESULT_TYPE.PARAM_INVALID.name()));
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().contains(TestConstant.RETURN_URL_EMPTY));
+        }
+
 
         if (BCCache.isSandbox()) {
 

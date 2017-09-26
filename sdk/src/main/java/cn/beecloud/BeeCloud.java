@@ -11,8 +11,8 @@ public class BeeCloud {
     /**
      * BeeCloud JAVA SDK release version.
      */
-    public static final String kBeeCloudVersionString = "3.5.2";
-    public static final double kBeeCloudVersionNumber = 3.52;
+    public static final String kBeeCloudVersionString = "3.5.3";
+    public static final double kBeeCloudVersionNumber = 3.53;
 
     /**
      * 设置appID、appSecret、masterSecret，在程序开始时运行一遍即可
