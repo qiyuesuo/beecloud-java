@@ -1214,7 +1214,7 @@ public class BCPay {
         // for coupon usage
         bcOrder.setBillFee((Integer) bill.get("bill_fee"));
         bcOrder.setDiscount((Integer) bill.get("discount"));
-        bcOrder.setCouponId((String) bill.get("coupon_id"));
+        bcOrder.setCouponId(StrUtil.toStr(bill.get("coupon_id")));
     }
 
     /**
