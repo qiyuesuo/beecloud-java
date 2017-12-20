@@ -804,6 +804,7 @@ public class BCPayMultiApp {
         order.setObjectId(StrUtil.toStr(ret.get("id")));
         switch (order.getChannel()) {
             case WX_NATIVE:
+            case WX_WAP:
             case BC_NATIVE:
                 if (ret.containsKey("code_url") && null != ret.get("code_url")) {
                     order.setCodeUrl(StrUtil.toStr(ret.get("code_url")));

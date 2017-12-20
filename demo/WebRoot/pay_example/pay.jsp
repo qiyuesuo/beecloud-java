@@ -42,7 +42,10 @@
 <%
 
     Logger log = Logger.getLogger("pay.jsp");
-
+    String ip = request.getRemoteAddr();
+    if (request.getHeader("X-Real-IP")!=null && !"".equals(request.getHeader("X-Real-IP"))) {
+        ip = request.getHeader("X-Real-IP").toString();
+    }
     //模拟商户的交易编号、标题、金额、附加数据
     String billNo = BCUtil.generateRandomUUIDPure();
     String title = "demo测试";
@@ -172,6 +175,23 @@
                 bcOrder.setNotifyUrl("https:///apidynamic.beecloud.cn/test");
                 bcOrder = BCPay.startBCPay(bcOrder);
                 out.println(bcOrder.getObjectId());
+                Thread.sleep(3000);
+                success = true;
+            } catch (BCException e) {
+                log.error(e.getMessage(), e);
+                out.println(e.getMessage());
+            }
+            break;
+        case WX_WAP:
+            try {
+                bcOrder.setTotalFee(1);
+                Map<String,Object> analysisMap = new HashMap<String,Object>();
+                analysisMap.put("ip", ip);
+                bcOrder.setAnalysis(analysisMap);
+                bcOrder.setReturnUrl("http://www.baidu.com");
+                bcOrder = BCPay.startBCPay(bcOrder);
+             
+                out.println("<a href='"+bcOrder.getUrl()+"'>点击支付</a>");
                 Thread.sleep(3000);
                 success = true;
             } catch (BCException e) {
