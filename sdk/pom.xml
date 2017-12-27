@@ -9,7 +9,7 @@
 	</parent>
 
 	<groupId>cn.beecloud</groupId>
-	<artifactId>beecloud-java-sdk</artifactId>
+	<artifactId>beecloud-javasdk</artifactId>
 	<version>3.5.5</version>
 
 	<properties>
